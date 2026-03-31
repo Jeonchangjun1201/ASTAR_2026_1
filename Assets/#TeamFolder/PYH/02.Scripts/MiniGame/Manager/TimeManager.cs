@@ -1,16 +1,39 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
-public class TimeManager : MonoBehaviour
+namespace PYH.Manager
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class TimeManager : MonoBehaviour
     {
-        
-    }
+        private bool _init;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        [SerializeField] private int _maxTime = 50;
+        [SerializeField] private int _currentTime = 0;
+
+        public event Action OnTimerEndEvent;
+
+        public void Initialize()
+        {
+            if (_init) return;
+
+            _init = true;
+
+            StartCoroutine(Timer());
+        }
+
+        private IEnumerator Timer()
+        {
+            _currentTime = _maxTime;
+
+            while (_currentTime > 0)
+            {
+                _currentTime -= 1;
+                Debug.Log(_currentTime);
+                yield return new WaitForSeconds(1);
+            }
+
+            OnTimerEndEvent?.Invoke();
+        }
     }
 }

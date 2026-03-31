@@ -148,7 +148,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.3, z: 0}
-  m_LocalScale: {x: 11.99952, y: 0.5, z: 11.99952}
+  m_LocalScale: {x: 13, y: 0.5, z: 13}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1666910669}
@@ -243,9 +243,7 @@ GameObject:
   - component: {fileID: 184510334}
   - component: {fileID: 184510333}
   - component: {fileID: 184510332}
-  - component: {fileID: 184510337}
   - component: {fileID: 184510335}
-  - component: {fileID: 184510336}
   m_Layer: 0
   m_Name: Other Player
   m_TagString: Untagged
@@ -360,47 +358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  _rigd: {fileID: 0}
   index: 0
---- !u!114 &184510336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184510330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa71189d53478e54e9a8eecf200712b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Movement
---- !u!54 &184510337
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184510330}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &236195272
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,9 +518,7 @@ GameObject:
   - component: {fileID: 365619692}
   - component: {fileID: 365619691}
   - component: {fileID: 365619690}
-  - component: {fileID: 365619696}
   - component: {fileID: 365619694}
-  - component: {fileID: 365619695}
   m_Layer: 0
   m_Name: Other Player
   m_TagString: Untagged
@@ -677,47 +633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  _rigd: {fileID: 0}
   index: 0
---- !u!114 &365619695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 365619689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa71189d53478e54e9a8eecf200712b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Movement
---- !u!54 &365619696
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 365619689}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &370024037
 GameObject:
   m_ObjectHideFlags: 0
@@ -727,12 +643,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 370024041}
+  - component: {fileID: 370024042}
   - component: {fileID: 370024040}
   - component: {fileID: 370024039}
   - component: {fileID: 370024038}
-  - component: {fileID: 370024044}
-  - component: {fileID: 370024042}
-  - component: {fileID: 370024043}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -847,93 +761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  _rigd: {fileID: 0}
   index: 0
---- !u!114 &370024043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 370024037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa71189d53478e54e9a8eecf200712b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Movement
---- !u!54 &370024044
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 370024037}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!1 &603233356
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 603233358}
-  - component: {fileID: 603233357}
-  m_Layer: 0
-  m_Name: TimeManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &603233357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 603233356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec5ce636e13e4bf4f95694e02fab24b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PYH.Manager.TimeManager
-  _maxTime: 50
-  _currentTime: 0
---- !u!4 &603233358
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 603233356}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.57719, y: 0.55, z: 1.21332}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &737397975
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,9 +774,7 @@ GameObject:
   - component: {fileID: 737397979}
   - component: {fileID: 737397978}
   - component: {fileID: 737397977}
-  - component: {fileID: 737397982}
   - component: {fileID: 737397980}
-  - component: {fileID: 737397981}
   m_Layer: 0
   m_Name: Other Player
   m_TagString: Untagged
@@ -1063,47 +889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  _rigd: {fileID: 0}
   index: 0
---- !u!114 &737397981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 737397975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa71189d53478e54e9a8eecf200712b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Movement
---- !u!54 &737397982
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 737397975}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &753171178
 GameObject:
   m_ObjectHideFlags: 0
@@ -1340,9 +1126,8 @@ GameObject:
   - component: {fileID: 889314216}
   - component: {fileID: 889314215}
   - component: {fileID: 889314214}
-  - component: {fileID: 889314217}
   m_Layer: 0
-  m_Name: OverZone
+  m_Name: Ground #1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1441,18 +1226,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889314212}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &889314217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 889314212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19564061ae6943948a3fa4452ffa5b09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PYH.MiniGame.OverZone
 --- !u!1 &977130692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,52 +1260,6 @@ Transform:
   - {fileID: 753171179}
   - {fileID: 1678767000}
   m_Father: {fileID: 1666910669}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1076742850
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1076742852}
-  - component: {fileID: 1076742851}
-  m_Layer: 0
-  m_Name: MiniGameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1076742851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1076742850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fa020bc08a7766429da1661eae994ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PYH.Manager.MiniGameManager
-  _humanGolf: {fileID: 2065923137}
-  _timeManager: {fileID: 603233357}
---- !u!4 &1076742852
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1076742850}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.57719, y: 0.55, z: 1.21332}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1436968431
 GameObject:
@@ -1673,9 +1400,7 @@ GameObject:
   - component: {fileID: 1487464329}
   - component: {fileID: 1487464328}
   - component: {fileID: 1487464327}
-  - component: {fileID: 1487464332}
   - component: {fileID: 1487464330}
-  - component: {fileID: 1487464331}
   m_Layer: 0
   m_Name: Other Player
   m_TagString: Untagged
@@ -1790,47 +1515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  _rigd: {fileID: 0}
   index: 0
---- !u!114 &1487464331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1487464325}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa71189d53478e54e9a8eecf200712b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Movement
---- !u!54 &1487464332
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1487464325}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &1666910668
 GameObject:
   m_ObjectHideFlags: 0
@@ -2165,9 +1850,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1892079861}
   - {fileID: 1436968433}
-  - {fileID: 1076742852}
-  - {fileID: 2065923138}
-  - {fileID: 603233358}
   - {fileID: 1666910669}
+  - {fileID: 2065923138}
   - {fileID: 370024041}
   - {fileID: 236195273}

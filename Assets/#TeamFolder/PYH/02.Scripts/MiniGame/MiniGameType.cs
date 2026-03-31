@@ -1,6 +1,8 @@
-using UnityEngine;
-
-public class MiniGameType
+namespace PYH.MiniGame
 {
-    
+    public enum MiniGameType
+    {
+        None = 0,
+        HumanGolf
+    }
 }
