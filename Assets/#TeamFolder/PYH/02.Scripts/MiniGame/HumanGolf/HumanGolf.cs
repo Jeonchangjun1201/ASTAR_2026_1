@@ -36,8 +36,9 @@ namespace PYH.MiniGame
 
         public void OutPlayer(Player player, int index)
         {
+            Debug.Log($"{player.gameObject.name} 플레이어, 이벤트 해제");
+
             CurrentPlayer--;
-            PlayerList[index] = null;
             player.OnOutPlayerEvent -= OutPlayer;
             player.DelPlayer();
         }
@@ -46,20 +47,25 @@ namespace PYH.MiniGame
         {
             PlayerAllDelEvent();
 
+            if (CurrentPlayer == MaxPlayer)
+            {
+                Debug.Log("All Player Def.");
+            }
+
             List<int> winPlayerIndex = new List<int>();
 
             for (int i = 0; i < PlayerList.Length; i++)
             {
-                if (PlayerList[i] != null)
+                if (PlayerList[i].gameObject.activeSelf)
                 {
-                    winPlayerIndex.Append(i);
+                    Debug.Log($"Player {PlayerList[i].index}, Win.");
                 }
             }
 
-            foreach (int playerIndex in winPlayerIndex)
-            {
-                Debug.Log($"Player {playerIndex}, Win.");
-            }
+            //foreach (int playerIndex in winPlayerIndex)
+            //{
+            //    Debug.Log($"Player {playerIndex}, Win.");
+            //}
         }
 
         private void PlayerAllDelEvent()

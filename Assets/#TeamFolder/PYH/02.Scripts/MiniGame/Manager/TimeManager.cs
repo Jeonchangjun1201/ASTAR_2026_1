@@ -29,7 +29,6 @@ namespace PYH.Manager
             while (_currentTime > 0)
             {
                 _currentTime -= 1;
-                Debug.Log(_currentTime);
                 yield return new WaitForSeconds(1);
             }
 

@@ -26,7 +26,7 @@ namespace PYH.Player
         public void DelPlayer()
         {
             Debug.Log($"Player {gameObject.name} Is Dead ");
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         public void OverPlayer()
         {
