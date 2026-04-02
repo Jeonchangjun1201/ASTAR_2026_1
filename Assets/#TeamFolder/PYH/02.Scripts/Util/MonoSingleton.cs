@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
+namespace PYH.Util
 {
-    private static T _instance = null;
+    public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
+    {
+        private static T _instance = null;
 
-    // To be implemented. . .
+        // To be implemented. . .
+    }
 }

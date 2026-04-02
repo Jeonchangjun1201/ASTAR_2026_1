@@ -1,16 +1,14 @@
-using UnityEngine;
-
-public class IMiniGame : MonoBehaviour
+namespace PYH.MiniGame
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    using Player;
 
-    // Update is called once per frame
-    void Update()
+    public interface IMiniGame
     {
-        
+        Player[] PlayerList { get; } // Players, Currently Playing a MiniGame
+        int MaxPlayer { get; } // Maximum Players at The Start
+        int CurrentPlayer { get; } // Uh, You know that Right?
+
+        void Initialize();
+        void GameEnd();
     }
 }
