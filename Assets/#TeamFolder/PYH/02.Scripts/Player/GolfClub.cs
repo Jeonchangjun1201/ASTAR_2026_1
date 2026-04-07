@@ -1,21 +1,26 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace PYH.Player
 {
     public class GolfClub : MonoBehaviour
     {
-        [SerializeField] private float _power;
+        [SerializeField] private float _maxPower;
+        [SerializeField] private float _powerMultpler;
         [SerializeField] private Player _owner;
 
-        private void OnCollisionEnter(Collision collision)
+        [SerializeField] private float _perPower;
+
+        private void Update()
         {
-            if (collision.gameObject.TryGetComponent(out Player player))
+            if (Mouse.current.leftButton.isPressed)
             {
-                if (player != _owner)
-                {
-                    player.Push(_owner.gameObject.transform.forward, _power);
-                    Debug.Log("PUSH!");
-                }
+                _perPower = Mathf.Clamp((_perPower + (1 * _powerMultpler) * Time.deltaTime), 0, 100);
+            }
+            else
+            {
+                _perPower = 0;
+                Debug.Log("Swing!");
             }
         }
     }

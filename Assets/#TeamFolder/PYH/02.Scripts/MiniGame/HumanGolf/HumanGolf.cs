@@ -32,6 +32,8 @@ namespace PYH.MiniGame
                 player.index = i;
                 player.OnOutPlayerEvent += OutPlayer;
             }
+
+            CurrentPlayer = PlayerList.Length;
         }
 
         public void OutPlayer(Player player, int index)
@@ -41,6 +43,11 @@ namespace PYH.MiniGame
             CurrentPlayer--;
             player.OnOutPlayerEvent -= OutPlayer;
             player.DelPlayer();
+
+            if (CurrentPlayer == 1)
+            {
+                Debug.Log($"GAME SET!");
+            }
         }
 
         public void GameEnd()
