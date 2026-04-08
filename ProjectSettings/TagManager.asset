@@ -3,9 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags:
-  - Wall
-  - Ball
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -28,8 +26,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - ForTestPlayer
+  - ForTestGround
   - 
   - 
   - 
