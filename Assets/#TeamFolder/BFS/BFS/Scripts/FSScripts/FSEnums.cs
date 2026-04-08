@@ -8,4 +8,9 @@ namespace GDH
         BLUE,
         YELLOW
     }
+    public enum FSCameraView
+    {
+        GAME = 1,
+        SCREEN
+    }
 }

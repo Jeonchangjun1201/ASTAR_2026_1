@@ -8,6 +8,7 @@ namespace GDH
     public class PlayerInputSOBFS : ScriptableObject, BFSTempPlayerControls.IPlayerActions
     {
         public event Action<Vector2> OnMovementKeyPressed;
+        public event Action OnJumpKeyPressed;
 
         BFSTempPlayerControls _controls;
 
@@ -30,8 +31,14 @@ namespace GDH
         }
         public void OnMove(InputAction.CallbackContext context)
         {
-                Vector2 movementInput = context.ReadValue<Vector2>();
-                OnMovementKeyPressed?.Invoke(movementInput);
+            Vector2 movementInput = context.ReadValue<Vector2>();
+            OnMovementKeyPressed?.Invoke(movementInput);
+        }
+
+        public void OnJump(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                OnJumpKeyPressed?.Invoke();
         }
     }
 }

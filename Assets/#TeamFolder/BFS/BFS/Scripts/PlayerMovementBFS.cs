@@ -11,20 +11,21 @@ namespace GDH
         private Vector3 _movementDirection;
         private Vector3 _velocity;
         private float _verticalVelocity = 0;
-        private float _moveSpeed = 0.4f;
+        private float _moveSpeed = 0.3f;
         private float _gravity = -9.8f;
 
-        public void Initialize(Transform trm, CharacterController controller)
+        public void Initialize(PlayerBFS player, CharacterController controller)
         {
-            _targetTrm = trm;
-            _controller = controller;
-            _player = GetComponentInParent<PlayerBFS>();
-
+            _player = player;
+            _targetTrm = player.transform;
             _player.PlayerInput.OnMovementKeyPressed += SetMovementDirection;
+            _player.PlayerInput.OnJumpKeyPressed += Jump;
+            _controller = controller;
         }
         private void OnDestroy()
         {
             _player.PlayerInput.OnMovementKeyPressed -= SetMovementDirection;
+            _player.PlayerInput.OnJumpKeyPressed -= Jump;
         }
         private void SetMovementDirection(Vector2 movementInput)
         {
@@ -36,7 +37,10 @@ namespace GDH
             ApplyGravity();
             MoveCharacter();
         }
-
+        private void Jump()
+        {
+            _verticalVelocity += 1.5f;
+        }
         private void CalculateMovement()
         {
             _velocity = _movementDirection * _moveSpeed;
