@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace PYH.Player
 {
-    public class Movement : MonoBehaviour
+    public class Movement : PlayerModuleBase
     {
         private Vector3 _calcDir;
 
@@ -11,12 +11,12 @@ namespace PYH.Player
         private Rigidbody _rigid;
         private bool _canMove = true;
         private bool _init;
-        public void Initialize(Rigidbody rigid)
+        public override void Initialize(Player player)
         {
             if (_init) return;
 
             _init = true;
-            _rigid = rigid;
+            _rigid = player.Rigid;
         }
 
         private void FixedUpdate()
