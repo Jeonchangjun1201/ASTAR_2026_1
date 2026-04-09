@@ -1,20 +1,15 @@
-using KSY.GameCore;
+using KSY.ClientCore.User;
 using KSY.Utility;
 using UnityEngine;
 
-namespace KSY.ClientCore.User
+namespace KSY.GameCore
 {
-    public class PlayerData
+    public abstract class PlayerData
     {
-        public PlayerData(UserData user, MainGameTeamType currentTeam = MainGameTeamType.None, int score = 0)
-        {
-            this._user = user;
-            this.CurrentTeam = currentTeam;
-            this.Score = score;
-        }
-
+        //플레이어 정보
+        public UserData User { get; private set; }
         //플레이어의 팀
-        public MainGameTeamType CurrentTeam { get; private set; } = MainGameTeamType.None; 
+        public TeamType CurrentTeam { get; private set; }
         //플레이어 점수에 대한 접근을 제어하는 프로퍼티
         private int Score
         {
@@ -28,12 +23,14 @@ namespace KSY.ClientCore.User
                 _socre = sum;
             }
         }
-        //플레이어 정보
-        private UserData _user;
         //플레이어 점수
         private int _socre;
-        //팀을 정하는 메서드
-        public void SetTeam(MainGameTeamType type = MainGameTeamType.None) => CurrentTeam = type;
+
+        //Init용 함수들
+        protected void SetTeam(TeamType type) => this.CurrentTeam = type;
+        protected void SetUserData(UserData user) => this.User = user;
+        protected void SetScore(int score) => this.Score = score;
+
         //플레이어의 점수를 증가시키는 메서드
         public int IncreaseScore(int score = 1)
         {

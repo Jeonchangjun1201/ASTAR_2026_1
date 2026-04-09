@@ -1,4 +1,4 @@
-namespace KSY.GameCore
+namespace KSY.GameCore.MainGame
 {
     public enum MainGameTeamMode
     {
@@ -11,9 +11,6 @@ namespace KSY.GameCore
 
         // 1vs1vs1vs1: 개인전
         FreeForAll_4P,
-
-        // 1vsAll: 한 명과 나머지의 대결
-        OneVsAll,
     }
 }
 

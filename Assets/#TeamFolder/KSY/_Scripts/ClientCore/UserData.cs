@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace KSY.ClientCore.User
 {
     public readonly struct UserData
