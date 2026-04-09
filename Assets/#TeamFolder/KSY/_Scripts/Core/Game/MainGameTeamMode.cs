@@ -1,6 +1,6 @@
 namespace KSY.GameCore
 {
-    public enum GameTeamMode
+    public enum MainGameTeamMode
     {
         None = 0,
         // 1vs1: 두 명이서 서로 대결
