@@ -27,6 +27,7 @@ namespace GDH
         PlateQue plateQue = new PlateQue();
         public event Action<PlateColor> OnPlateAdded;
         private Dictionary<PlateColor, IFSPlate> _plateDict = new Dictionary<PlateColor, IFSPlate>();
+        private PlateColor _prevColor;
 
         private void Awake()
         {
@@ -36,7 +37,9 @@ namespace GDH
         }
         public void EnqueuePlate()
         {
-            PlateColor plate = (PlateColor)UnityEngine.Random.Range(0, 4);
+            PlateColor plate;
+            plate = (PlateColor)UnityEngine.Random.Range(0, 4);
+            _prevColor = plate;
             plateQue.AddPlateToQueue(plate);
             Debug.Log($"<color=green>{plate}</color>");
             OnPlateAdded?.Invoke(plate);

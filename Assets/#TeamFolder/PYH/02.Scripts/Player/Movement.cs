@@ -22,7 +22,7 @@ namespace PYH.Player
 
         private void FixedUpdate()
         {
-            _rigid.linearVelocity = _calcDir;
+            _rigid.AddForce(_calcDir);
         }
 
         public void OnMove(InputValue value) // For Test Movement

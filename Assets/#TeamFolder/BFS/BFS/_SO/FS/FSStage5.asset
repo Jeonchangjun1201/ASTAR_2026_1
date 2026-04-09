@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7daa6fe29743a1f429e5e661c16a07be, type: 3}
-  m_Name: FSStage4
+  m_Name: FSStage5
   m_EditorClassIdentifier: Assembly-CSharp::GDH.FSStageSO
-  <ColorDelayTime>k__BackingField: 0.3
-  <ColorCount>k__BackingField: 10
-  <StageIndex>k__BackingField: 4
-  <PlateDisappearDuration>k__BackingField: 0.8
+  <ColorDelayTime>k__BackingField: 0.1
+  <ColorCount>k__BackingField: 40
+  <StageIndex>k__BackingField: 5
+  <PlateDisappearDuration>k__BackingField: 1
   <CountDownTime>k__BackingField: 1
