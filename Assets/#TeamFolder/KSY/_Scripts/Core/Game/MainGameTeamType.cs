@@ -1,6 +1,6 @@
 ﻿namespace KSY.GameCore
 {
-    public enum TeamType
+    public enum MainGameTeamType
     {
         None=0,
         red,
