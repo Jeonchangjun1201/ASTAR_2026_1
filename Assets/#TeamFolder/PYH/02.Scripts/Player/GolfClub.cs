@@ -10,7 +10,7 @@ namespace PYH.Player
         [SerializeField] private float _maxPower;
         [SerializeField] private float _powerMultpler;
 
-        [SerializeField] private float _perPower;
+        [SerializeField] private float _perPower = 0;
 
         private Coroutine _swingCoroutine;
         private bool _isSwing;
