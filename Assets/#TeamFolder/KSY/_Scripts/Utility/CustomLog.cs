@@ -20,15 +20,15 @@ namespace KSY.Utility
             UnityEngine.Debug.Log($"[DEBUG] <color=#{hexColor}>{message}</color>");
         }
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
-        public static void LogWarning(object message, Object context = null)
+        public static void LogWarning(object message)
         {
-            UnityEngine.Debug.LogWarning($"[WARNING] {message}", context);
+            UnityEngine.Debug.LogWarning($"[WARNING] {message}");
         }
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
-        public static void LogError(object message, Object context = null)
+        public static void LogError(object message)
         {
             // 에러 로그는 릴리스에서도 보고 싶다면 [Conditional]을 빼면 됩니다.
-            UnityEngine.Debug.LogError($"[ERROR] {message}", context);
+            UnityEngine.Debug.LogError($"[ERROR] {message}");
         }
     }
 }
