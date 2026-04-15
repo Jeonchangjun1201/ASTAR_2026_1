@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Splines;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.UI.GridLayoutGroup;
 
 namespace PYH.Player
 {
@@ -17,7 +15,6 @@ namespace PYH.Player
         private Dictionary<Type, PlayerModuleBase> moduleDict;
         public event Action<Player, int> OnOutPlayerEvent;
         public int index;
-
         private bool _isOver;
 
         private void Awake()

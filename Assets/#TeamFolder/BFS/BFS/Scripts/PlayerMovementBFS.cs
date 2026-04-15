@@ -13,6 +13,7 @@ namespace GDH
         private float _verticalVelocity = 0;
         private float _moveSpeed = 0.3f;
         private float _gravity = -9.8f;
+        private bool _canJump = true;
 
         public void Initialize(PlayerBFS player, CharacterController controller)
         {
@@ -39,7 +40,9 @@ namespace GDH
         }
         private void Jump()
         {
+            if (!_canJump) return;
             _verticalVelocity += 1.5f;
+            _canJump = false;
         }
         private void CalculateMovement()
         {
@@ -65,6 +68,8 @@ namespace GDH
         private void MoveCharacter()
         {
             _controller.Move(_velocity);
+            if (_controller.isGrounded && _canJump is false)
+                _canJump = true;
         }
     }
 }

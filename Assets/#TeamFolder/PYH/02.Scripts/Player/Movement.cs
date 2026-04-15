@@ -8,6 +8,7 @@ namespace PYH.Player
         private Vector3 _calcDir;
 
         [SerializeField] private float _speed;
+        [SerializeField] private float _gravity;
         private Rigidbody _rigid;
         private bool _canMove = true;
         private bool _init;
@@ -21,7 +22,7 @@ namespace PYH.Player
 
         private void FixedUpdate()
         {
-            _rigid.AddForce(_calcDir);
+            _rigid.linearVelocity = (_calcDir);
         }
 
         public void OnMove(InputValue value) // For Test Movement
@@ -31,7 +32,7 @@ namespace PYH.Player
             Vector2 calcDir = value.Get<Vector2>() * _speed;
 
             _calcDir = new Vector3(calcDir.x,
-                0,
+                _rigid.linearVelocity.y,
                 calcDir.y);
         }
     }
