@@ -1,4 +1,7 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,11 +10,15 @@ namespace PYH.Player
     public class GolfClub : PlayerModuleBase
     {
         private Player _owner;
+        [SerializeField] private LayerMask _whatIsPlayer;
+        [SerializeField] private float hitboxDistance;
+        [SerializeField] private float hitboxSize;
         [SerializeField] private float _maxPower;
         [SerializeField] private float _powerMultpler;
 
         [SerializeField] private float _perPower = 0;
 
+        [SerializeField] private GameObject _visual;
         private Coroutine _swingCoroutine;
         private bool _isSwing;
 
@@ -24,11 +31,18 @@ namespace PYH.Player
         {
             if (Mouse.current.leftButton.isPressed && !_isSwing)
             {
+                _visual.transform.localRotation = Quaternion.Euler(-25, 0, 0);
+
                 _perPower = Mathf.Clamp((_perPower + (1 * _powerMultpler) * Time.deltaTime), 0, 100);
             }
-            else if (!Mouse.current.leftButton.isPressed && _isSwing)
+            else if (Mouse.current.leftButton.wasReleasedThisFrame && !_isSwing)
             {
-                _swingCoroutine = StartCoroutine(SwingHitbox());
+                if (_swingCoroutine != null)
+                {
+                    _swingCoroutine = null;
+                }
+
+                _swingCoroutine ??= StartCoroutine(SwingHitbox());
             }
         }
 
@@ -37,36 +51,46 @@ namespace PYH.Player
             _isSwing = true;
             Debug.Log("Swing!");
 
+            _visual.transform.localRotation = Quaternion.Euler(90, 0, 0);
+
+            List<Collider> hitted = new List<Collider>();
+
             for (int i = 0; i < 5; i++)
             {
-                // 플레이어가 바라보는 방향에서 N좌표 앞 만큼 오버랩 박스 감지
-
-                // 만약 감지 성공 시 코루틴을 멈추고 해당 감지된 플레이어들의 리스트를
-                // 가져와 함수 호출
-                // SwingPlayers
-                yield return new WaitForSeconds(0.75f);
+                Collider[] hits = Physics.OverlapSphere(
+                    (transform.position + transform.forward) * hitboxDistance,
+                    hitboxSize,
+                    _whatIsPlayer);
             }
 
-            _perPower = 0;
+            _visual.transform.localRotation = Quaternion.Euler(0, 0, 0); 
+           _perPower = 0;
+
+            yield return new WaitForSeconds(0.25f);
+
             _isSwing = false;
         }
 
-        private void SwingPlayers(Player[] players)
+        private void SwingPlayers(List<Collider> hitted, Collider[] hits)
         {
-            _swingCoroutine = null;
-
-            foreach (Player player in players)
+            if (hits.Length != 0)
             {
-                player.Push(Vector3.zero, (_maxPower / 100) * _perPower);
-            }
+                foreach (Collider a in hits)
+                {
+                    if (hitted.Contains(a)) continue;
 
-            _perPower = 0;
-            _isSwing = false;
+                    if (a.gameObject.TryGetComponent(out Player player))
+                    {
+                        player.Push(transform.position + transform.forward, (_maxPower / 100) * _perPower);
+                    }
+                    hitted.Add(a);
+                }
+            }
         }
 
         private void OnDrawGizmos()
         {
-            
+            Gizmos.DrawSphere((transform.position + transform.forward) * hitboxDistance, hitboxSize);
         }
     }
 
