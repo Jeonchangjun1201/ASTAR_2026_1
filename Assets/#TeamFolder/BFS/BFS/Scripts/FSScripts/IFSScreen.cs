@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace GDH
+namespace BFS
 {
     public interface IFSScreen
     {

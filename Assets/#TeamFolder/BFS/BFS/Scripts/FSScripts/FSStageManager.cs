@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
-namespace GDH
+namespace BFS
 {
     public class FSStageManager : MonoBehaviour
     {

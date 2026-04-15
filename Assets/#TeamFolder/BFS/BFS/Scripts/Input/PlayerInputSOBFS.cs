@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-namespace GDH
+namespace BFS
 {
 
     [CreateAssetMenu(fileName = "PlayerInputSOBFS", menuName = "BFS_SO/PlayerInputSOBFS")]

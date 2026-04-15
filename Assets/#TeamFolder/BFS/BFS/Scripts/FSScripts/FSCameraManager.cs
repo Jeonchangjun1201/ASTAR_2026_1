@@ -1,6 +1,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
-namespace GDH
+namespace BFS
 {
     public class FSCameraManager : MonoBehaviour
     {

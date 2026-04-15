@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-namespace GDH
+namespace BFS
 {
     [CreateAssetMenu(fileName = "PlayerInputSOTOW", menuName = "BFS_SO/PlayerInputSOTOW")]
     public class PlayerInputSOTOW : ScriptableObject, TOWControls.IPlayerActions

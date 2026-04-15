@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-namespace GDH
+namespace BFS
 {
     public class PlayerMovementBFS : MonoBehaviour
     {
