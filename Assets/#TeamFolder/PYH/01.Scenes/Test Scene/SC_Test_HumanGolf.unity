@@ -295,9 +295,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
   index: 0
 --- !u!54 &97558168
 Rigidbody:
@@ -631,9 +628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
   index: 0
 --- !u!54 &280015655
 Rigidbody:
@@ -902,6 +896,7 @@ GameObject:
   - component: {fileID: 370024042}
   - component: {fileID: 370024043}
   - component: {fileID: 370024046}
+  - component: {fileID: 370024047}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1017,9 +1012,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 4194304
   index: 0
 --- !u!114 &370024043
 MonoBehaviour:
@@ -1183,12 +1175,28 @@ MonoBehaviour:
   _whatIsPlayer:
     serializedVersion: 2
     m_Bits: 2097152
-  hitboxDistance: 0.5
-  hitboxSize: {x: 1, y: 1, z: 1}
+  hitboxDistance: 1
+  hitboxSize: 1
   _maxPower: 25
-  _powerMultpler: 25
+  _powerMultpler: 100
   _perPower: 0
   _visual: {fileID: 1350344108}
+--- !u!114 &370024047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370024037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cb51121989b1184baf00c17c5fbe26f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.TestLookMousePointer
+  visual: {fileID: 370024037}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 6291456
 --- !u!1 &461320452
 GameObject:
   m_ObjectHideFlags: 0
@@ -2178,9 +2186,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
   index: 0
 --- !u!54 &854098450
 Rigidbody:
@@ -2924,9 +2929,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
   index: 0
 --- !u!54 &1084786747
 Rigidbody:
