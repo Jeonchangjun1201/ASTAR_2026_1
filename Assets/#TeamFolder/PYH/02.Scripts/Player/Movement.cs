@@ -9,6 +9,7 @@ namespace PYH.Player
 
         [SerializeField] private float _speed;
         [SerializeField] private float _gravity;
+        [SerializeField] private CharacterController _characterController;
         private Rigidbody _rigid;
         private bool _canMove = true;
         private bool _init;
@@ -23,6 +24,10 @@ namespace PYH.Player
         private void FixedUpdate()
         {
             _rigid.linearVelocity = (_calcDir);
+            if (!_characterController.isGrounded)
+            {
+                _rigid.AddForce(Vector3.down * _gravity);
+            }
         }
 
         public void OnMove(InputValue value) // For Test Movement
