@@ -10,6 +10,7 @@ namespace BFS
         private AbstractTeamTOW[] playerList;                                                                                           // Array that contains players(absctract class)
         private RopeTOW _rope;
         private TOWScoreManager _scoreManager;
+        private TOWTimeManager _timeManager;
 
         private void Awake()
         {
@@ -21,8 +22,9 @@ namespace BFS
             }
             _scoreManager = new TOWScoreManager(playerList);                                                                            // Constructor; sends playerList to ScoreManager then instantiates
             _rope = GetComponentInChildren<RopeTOW>();
-            qteManager.Initialize(_rope, playerList, _scoreManager);                                                                    // Initialize Key minigame manager
-
+            qteManager.Initialize(_rope, playerList, _scoreManager);                                                                    // Initialize Key minigame manager4
+            _timeManager = new TOWTimeManager();
+            _timeManager.OnTimerEnd += EndGame;
         }
         private void Update()                                                                                                           // TEMPORARY; FOR DEBUGGING
         {
@@ -34,10 +36,31 @@ namespace BFS
             {
                 Debug.Log($"{_scoreManager.CheckTeamScore(2)} - TeamTwo");
             }
+            if(Keyboard.current.spaceKey.wasPressedThisFrame)
+            {
+                StartGame();
+            }
+            _timeManager.UpdateTimer();
         }
         private void OnDestroy()
         {
             _scoreManager.OnDestroyThen();                                                                                              // On destroy then calls it so score manager can unsub
+            _timeManager.OnTimerEnd -= EndGame;
+        }
+
+        public void StartGame()
+        {
+            Debug.Log("START!");
+            qteManager.StartMinigame();
+            _timeManager.StartTimer(gameTime);
+        }
+
+        public void EndGame()
+        {
+            qteManager.EndMinigame();
+            Debug.Log("FINISH!");                                                                                                       // TEMPORARY; for debugging
+            Debug.Log(_scoreManager.scoreBoard[(PlayerTeamTOW)1].CompareTo(_scoreManager.scoreBoard[(PlayerTeamTOW)2]) == 1 
+                ? "TEAM ONE IS NUMBER ONE!" : "TEAM TWO TAKES THE FIRST PLACE!");
         }
     }
 
