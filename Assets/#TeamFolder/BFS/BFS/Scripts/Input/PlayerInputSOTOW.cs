@@ -4,11 +4,11 @@ using UnityEngine.InputSystem;
 namespace BFS
 {
     [CreateAssetMenu(fileName = "PlayerInputSOTOW", menuName = "BFS_SO/PlayerInputSOTOW")]
-    public class PlayerInputSOTOW : ScriptableObject, TOWControls.IPlayerActions
+    public class PlayerInputSOTOW : ScriptableObject, TOWControls.IPlayerActions                 // Input SO specifically made for Tug of war minigame... I will skip descriptions
     {
-        public event Action<Vector2> OnMovementInputPressed;
+        public event Action<Vector2> OnMovementInputPressed;                              
 
-        private TOWControls _controls;
+        private TOWControls _controls;                                                           
 
         private void OnEnable()
         {
