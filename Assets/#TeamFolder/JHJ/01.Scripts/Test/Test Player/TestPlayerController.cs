@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace JHJ.Scripts.Test.TestPlayer
 {
-    // 💡 1. 4명의 플레이어를 구분할 '이름표(Enum)'를 만듦
+    
     public enum PlayerIndex
     {
         P1, P2, P3, P4
@@ -12,7 +12,7 @@ namespace JHJ.Scripts.Test.TestPlayer
     [RequireComponent(typeof(Rigidbody))]
     public class TestPlayerController : MonoBehaviour
     {
-        [Header("이 캐릭터는 몇 번 플레이어입니까?")]
+        [Header("이 캐릭터는 몇 번 플레이어인지")]
         [SerializeField] private PlayerIndex _playerIndex; 
 
         public Rigidbody RidCompo { get; private set; }
