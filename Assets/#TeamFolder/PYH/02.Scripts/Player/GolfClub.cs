@@ -61,6 +61,8 @@ namespace PYH.Player
                     (transform.position + transform.forward) * hitboxDistance,
                     hitboxSize,
                     _whatIsPlayer);
+
+                SwingPlayers(hitted, hits);
             }
 
             _visual.transform.localRotation = Quaternion.Euler(0, 0, 0); 

@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 4109102}
   - component: {fileID: 4109101}
   - component: {fileID: 4109100}
+  - component: {fileID: 4109103}
   m_Layer: 0
   m_Name: Ground #2
   m_TagString: Untagged
@@ -231,6 +232,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4109098}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &4109103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4109098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13273987311532a4c8cb22e41fbcdf5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MinimeolGround
 --- !u!1 &97558164
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,9 +308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
   index: 0
 --- !u!54 &97558168
 Rigidbody:
@@ -631,9 +641,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
   index: 0
 --- !u!54 &280015655
 Rigidbody:
@@ -902,6 +909,7 @@ GameObject:
   - component: {fileID: 370024042}
   - component: {fileID: 370024043}
   - component: {fileID: 370024046}
+  - component: {fileID: 370024047}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1017,9 +1025,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 4194304
   index: 0
 --- !u!114 &370024043
 MonoBehaviour:
@@ -1183,12 +1188,28 @@ MonoBehaviour:
   _whatIsPlayer:
     serializedVersion: 2
     m_Bits: 2097152
-  hitboxDistance: 0.5
-  hitboxSize: {x: 1, y: 1, z: 1}
-  _maxPower: 25
-  _powerMultpler: 25
+  hitboxDistance: 1
+  hitboxSize: 1
+  _maxPower: 15
+  _powerMultpler: 100
   _perPower: 0
   _visual: {fileID: 1350344108}
+--- !u!114 &370024047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370024037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cb51121989b1184baf00c17c5fbe26f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.TestLookMousePointer
+  visual: {fileID: 370024037}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 6291456
 --- !u!1 &461320452
 GameObject:
   m_ObjectHideFlags: 0
@@ -1631,6 +1652,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5ce636e13e4bf4f95694e02fab24b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Manager.TimeManager
+  OnTickInitEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4109103}
+        m_TargetAssemblyTypeName: MiniGame.HumanGolf.MinimalGround, Assembly-CSharp
+        m_MethodName: SetStartTick
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 50
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTickStartEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4109103}
+        m_TargetAssemblyTypeName: MiniGame.HumanGolf.MinimalGround, Assembly-CSharp
+        m_MethodName: StartResize
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTickEndEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4109103}
+        m_TargetAssemblyTypeName: MiniGame.HumanGolf.MinimalGround, Assembly-CSharp
+        m_MethodName: StopResize
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _maxTime: 50
   _currentTime: 0
 --- !u!4 &603233358
@@ -2178,9 +2244,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
   index: 0
 --- !u!54 &854098450
 Rigidbody:
@@ -2924,9 +2987,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1904e3365bf3a44b06b2b9f60f6958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Player.Player
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
   index: 0
 --- !u!54 &1084786747
 Rigidbody:
