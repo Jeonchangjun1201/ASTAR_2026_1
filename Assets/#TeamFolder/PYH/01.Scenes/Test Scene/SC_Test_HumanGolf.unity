@@ -257,6 +257,7 @@ GameObject:
   - component: {fileID: 97558170}
   - component: {fileID: 97558169}
   - component: {fileID: 97558168}
+  - component: {fileID: 97558172}
   - component: {fileID: 97558167}
   - component: {fileID: 97558166}
   m_Layer: 21
@@ -275,7 +276,7 @@ Transform:
   m_GameObject: {fileID: 97558164}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.5, y: 1.5, z: 2}
+  m_LocalPosition: {x: 0, y: 1.5, z: -11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -295,7 +296,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
   _speed: 0
-  _gravity: 0
+  _gravity: 100
+  _characterController: {fileID: 97558172}
 --- !u!114 &97558167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,6 +418,31 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 97558164}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!143 &97558172
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97558164}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0
+  m_Radius: 0
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &124380842
 GameObject:
   m_ObjectHideFlags: 0
@@ -590,6 +617,7 @@ GameObject:
   - component: {fileID: 280015657}
   - component: {fileID: 280015656}
   - component: {fileID: 280015655}
+  - component: {fileID: 280015659}
   - component: {fileID: 280015654}
   - component: {fileID: 280015653}
   m_Layer: 21
@@ -608,7 +636,7 @@ Transform:
   m_GameObject: {fileID: 280015651}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.5, y: 1.5, z: 9}
+  m_LocalPosition: {x: 0, y: 1.5, z: 11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -628,7 +656,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
   _speed: 0
-  _gravity: 0
+  _gravity: 100
+  _characterController: {fileID: 280015659}
 --- !u!114 &280015654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -749,6 +778,31 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 280015651}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!143 &280015659
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280015651}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0
+  m_Radius: 0
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &310715752
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,6 +959,7 @@ GameObject:
   - component: {fileID: 370024039}
   - component: {fileID: 370024045}
   - component: {fileID: 370024038}
+  - component: {fileID: 370024048}
   - component: {fileID: 370024044}
   - component: {fileID: 370024042}
   - component: {fileID: 370024043}
@@ -1005,8 +1060,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 370024037}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000046193594, y: -0.00000034272668, z: 1.4566125e-13, w: 1}
-  m_LocalPosition: {x: 0.00000017881393, y: 6.5, z: -0.00000035762787}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 6.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1039,7 +1094,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
   _speed: 10
-  _gravity: 1.5
+  _gravity: 100
+  _characterController: {fileID: 370024048}
 --- !u!54 &370024044
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1209,7 +1265,32 @@ MonoBehaviour:
   visual: {fileID: 370024037}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 6291456
+    m_Bits: 4194304
+--- !u!143 &370024048
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370024037}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0
+  m_Radius: 0
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &461320452
 GameObject:
   m_ObjectHideFlags: 0
@@ -2193,6 +2274,7 @@ GameObject:
   - component: {fileID: 854098452}
   - component: {fileID: 854098451}
   - component: {fileID: 854098450}
+  - component: {fileID: 854098454}
   - component: {fileID: 854098449}
   - component: {fileID: 854098448}
   m_Layer: 21
@@ -2211,7 +2293,7 @@ Transform:
   m_GameObject: {fileID: 854098446}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5, y: 1.5, z: -9.5}
+  m_LocalPosition: {x: 11, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2231,7 +2313,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
   _speed: 0
-  _gravity: 0
+  _gravity: 100
+  _characterController: {fileID: 854098454}
 --- !u!114 &854098449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2352,6 +2435,31 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 854098446}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!143 &854098454
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854098446}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0
+  m_Radius: 0
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &889314212
 GameObject:
   m_ObjectHideFlags: 0
@@ -2871,7 +2979,7 @@ Transform:
   m_GameObject: {fileID: 1010408921}
   serializedVersion: 2
   m_LocalRotation: {x: 0.36945018, y: -0.00000081236675, z: 0.00000032660944, w: 0.92925054}
-  m_LocalPosition: {x: 0.00000017881393, y: 23.5, z: -18}
+  m_LocalPosition: {x: 0, y: 23.5, z: -18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2936,6 +3044,7 @@ GameObject:
   - component: {fileID: 1084786749}
   - component: {fileID: 1084786748}
   - component: {fileID: 1084786747}
+  - component: {fileID: 1084786751}
   - component: {fileID: 1084786746}
   - component: {fileID: 1084786745}
   m_Layer: 21
@@ -2954,7 +3063,7 @@ Transform:
   m_GameObject: {fileID: 1084786743}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9, y: 1.5, z: -3.5}
+  m_LocalPosition: {x: -11, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2974,7 +3083,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
   _speed: 0
-  _gravity: 0
+  _gravity: 100
+  _characterController: {fileID: 1084786751}
 --- !u!114 &1084786746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3095,6 +3205,31 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1084786743}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!143 &1084786751
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084786743}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0
+  m_Radius: 0
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1097838263
 GameObject:
   m_ObjectHideFlags: 0
@@ -4460,7 +4595,7 @@ Transform:
   m_GameObject: {fileID: 1892079858}
   serializedVersion: 2
   m_LocalRotation: {x: 0.36945018, y: -0.0000008106527, z: 0.00000032229823, w: 0.92925054}
-  m_LocalPosition: {x: 0.00000017881393, y: 23.5, z: -18}
+  m_LocalPosition: {x: 0, y: 23.5, z: -18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

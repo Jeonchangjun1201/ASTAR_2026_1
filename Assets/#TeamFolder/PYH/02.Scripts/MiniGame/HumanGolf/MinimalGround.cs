@@ -36,8 +36,8 @@ namespace MiniGame.HumanGolf
             while (_currentTick > 0)
             {
                 _currentTick -= 0.01f;
-                transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(0, 0, 0), 0.001f);
-                yield return new WaitForSeconds(0.01f);
+                transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(0, 0, 0), 0.001f * Time.deltaTime);
+                yield return new WaitForSeconds(1f);
             }
             
             transform.localScale = Vector3.zero;
