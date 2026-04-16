@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-namespace GDH
+namespace BFS
 {
     public class FSGameManager : MonoBehaviour
     {

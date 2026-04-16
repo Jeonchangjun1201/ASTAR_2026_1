@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace GDH
+namespace BFS
 {
     [CreateAssetMenu(fileName = "FSStageSO", menuName = "BFS_SO/FSStageSO")]
     public class FSStageSO : ScriptableObject

@@ -1,20 +1,16 @@
 using System;
 using UnityEngine;
-namespace GDH
+namespace BFS
 {
     public class RopePull : AbstractTeamTOW
     {
-        public override void Initialize(PlayerTeamTOW team, IRopeTOW rope)
+        public override void Initialize(PlayerTeamTOW team, PlayerTOW player)
         {
-            base.Initialize(team, rope);
+            base.Initialize(team, player);
         }
-        public override void ReceiveScore(int score)
+        public override void ReceiveScore(ITeamTOW team, int score)
         {
-            base.ReceiveScore(score);
-        }
-        public override void SendInput(IRopeTOW rope, Vector2 input)
-        {
-            base.SendInput(rope, input);
+            base.ReceiveScore(team, score);
         }
     }
 

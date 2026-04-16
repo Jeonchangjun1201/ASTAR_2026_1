@@ -1,39 +1,39 @@
+using System;
 using UnityEngine;
-namespace GDH
+namespace BFS
 {
     public abstract class AbstractTeamTOW : MonoBehaviour, ITeamTOW
     {
-        protected int score;
+        public event Action<ITeamTOW, int> OnScoreGain;
         protected PlayerTOW _player;
         public PlayerTeamTOW Team { get; protected set; }
         public IRopeTOW Rope { get; protected set; }
 
-        public virtual void Initialize(PlayerTeamTOW team, IRopeTOW rope)
+        public Action<ITeamTOW, Vector2> OnInputPressed { get; set; }
+
+        public string ObjectName { get; protected set; }                              // TEMPORARY; FOR DEBUGGING
+
+        public virtual void Initialize(PlayerTeamTOW team, PlayerTOW player)
         {
             Team = team;
-            Rope = rope;
-            Rope.InitializeTeam(this);
-            _player = GetComponentInParent<PlayerTOW>();
-
-            Debug.Assert(_player != null, "PLAYER IS MISSING! - FAILED TO APPLY PLAYER");
-
+            _player = player;
             _player.InputSO.OnMovementInputPressed += HandleMovekeyPressed;
+            ObjectName = GetComponentInParent<PlayerTOW>().gameObject.name;
         }
         protected virtual void OnDestroy()
         {
             _player.InputSO.OnMovementInputPressed -= HandleMovekeyPressed;
         }
-        public virtual void ReceiveScore(int score)
+        public virtual void ReceiveScore(ITeamTOW team, int score)
         {
-            this.score += score;
-            Debug.Log($"{Team} - {this.score}");
+            OnScoreGain?.Invoke(team, score);
         }
-        public virtual void SendInput(IRopeTOW rope, Vector2 input)
+        private void HandleMovekeyPressed(Vector2 vt)
         {
-            rope.GetInput(input, this);
+            if (!_player.IsTarget)
+                return;
+            OnInputPressed?.Invoke(this, vt);
         }
-
-        private void HandleMovekeyPressed(Vector2 vt) => SendInput(Rope, vt);
     }
 
 }
