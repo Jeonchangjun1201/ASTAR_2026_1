@@ -1652,6 +1652,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec5ce636e13e4bf4f95694e02fab24b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PYH.Manager.TimeManager
+  OnTickInitEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4109103}
+        m_TargetAssemblyTypeName: MiniGame.HumanGolf.MinimalGround, Assembly-CSharp
+        m_MethodName: SetStartTick
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 50
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTickStartEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4109103}
+        m_TargetAssemblyTypeName: MiniGame.HumanGolf.MinimalGround, Assembly-CSharp
+        m_MethodName: StartResize
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTickEndEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4109103}
+        m_TargetAssemblyTypeName: MiniGame.HumanGolf.MinimalGround, Assembly-CSharp
+        m_MethodName: StopResize
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _maxTime: 50
   _currentTime: 0
 --- !u!4 &603233358
