@@ -1,0 +1,24 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/GameModule/UIToolkits/Popup%20window%20view.uss?fileID=7433441132597879392&amp;guid=8d0a0f3a3a39fd747ba69c8764f5b35e&amp;type=3#Popup window view" />
+    <ui:VisualElement name="TopContainer" style="flex-basis: 120px; background-color: rgb(138, 138, 138); flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: flex-start;">
+        <Test.DataButton name="Button1" button-index="1" text="버튼 1" class="btn-blue" style="-unity-font-definition: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=22c64dde50f259e448e90a4d469af915&amp;type=3#NotInter-Regular&quot;);" />
+        <Test.DataButton name="Button2" text="버튼 2" button-index="2" class="btn-blue" />
+        <Test.DataButton name="Button3" button-index="3" text="버튼 3" class="btn-blue" />
+    </ui:VisualElement>
+    <ui:VisualElement name="PopUpWindow" class="Pop-up-Window open" style="top: -1px; left: 0;">
+        <ui:VisualElement name="PopUpContainer" class="Pop-up-Container">
+            <ui:VisualElement name="Header" style="background-color: rgb(255, 255, 255); justify-content: center; align-self: auto; flex-basis: 70px; align-items: stretch; padding-right: 20px; padding-left: 20px;">
+                <ui:Label text="이건 헤더입니다" style="font-size: 30px; color: rgb(0, 0, 0);" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Buttons" style="flex-basis: 50px; border-top-width: 3px; border-left-color: rgb(0, 20, 255); border-right-color: rgb(0, 20, 255); border-top-color: rgb(0, 20, 255); border-bottom-color: rgb(0, 20, 255); align-items: center; justify-content: flex-start; flex-direction: row;">
+                <Test.DataButton text="장비" button-index="1" name="DataButton1" class="btn-blue" />
+                <Test.DataButton text="인벤토리" button-index="2" name="DataButton2" class="btn-blue" />
+                <Test.DataButton text="설정" button-index="3" name="DataButton3" class="btn-blue" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Content" style="flex-grow: 1; margin-top: 1px; border-left-color: rgb(204, 44, 44); border-right-color: rgb(204, 44, 44); border-top-color: rgb(204, 44, 44); border-bottom-color: rgb(204, 44, 44); border-top-width: 1px; border-bottom-width: 1px; background-color: rgb(4, 139, 255);" />
+            <ui:VisualElement name="Footer" style="align-items: flex-end; flex-basis: 70px; justify-content: center;">
+                <ui:Button text="Button" name="CloseBtn" class="btn-blue" style="align-items: flex-end; justify-content: center; padding-right: 20px; padding-left: 20px; margin-top: 0;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
