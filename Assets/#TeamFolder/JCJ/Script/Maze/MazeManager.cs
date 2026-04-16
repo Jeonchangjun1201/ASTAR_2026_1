@@ -29,6 +29,7 @@ namespace _TeamFolder.JCJ.Script
         private int[,] _mazeData; // 맵 데이터 
         private List<GameObject> _spawnedObjects = new List<GameObject>(); // 소환된 벽이나 바닥들 모아둔 리스트
         
+        [SerializeField] private Material _mazeMaterial;
         [Header("Test")]
         [SerializeField] private AlgorithmType _algorithmType = AlgorithmType.Prim;
         void Awake() => Instance = this;
@@ -109,49 +110,6 @@ namespace _TeamFolder.JCJ.Script
                     }
                 }
             }
-            
-            CombineMazeMesh(container);
-        }
-
-        private void CombineMazeMesh(GameObject container)// 모든 자식 벽들의 콜라이더와 메쉬를 하나로 합침(최적화 작업)
-        {
-            MeshFilter[] meshFilters = container.GetComponentsInChildren<MeshFilter>();
-            CombineInstance[] combine = new CombineInstance[meshFilters.Length];
-
-            // 벽 프리팹의 머티리얼을 미리 가져옴
-            Material mazeMaterial = _wallPrefab.GetComponent<MeshRenderer>().sharedMaterial;
-
-            for (int i = 0; i < meshFilters.Length; i++)
-            {
-                combine[i].mesh = meshFilters[i].sharedMesh;
-                // 부모(container) 좌표계 기준으로 위치 계산
-                combine[i].transform = container.transform.worldToLocalMatrix * meshFilters[i].transform.localToWorldMatrix;
-                
-                // 개별 벽 오브젝트의 렌더러와 콜라이더를 꺼서 메모리 중복 방지
-                meshFilters[i].gameObject.GetComponent<Renderer>().enabled = false;
-                if (meshFilters[i].gameObject.TryGetComponent<Collider>(out var col))
-                {
-                    col.enabled = false;
-                }
-            }
-
-            // 새로운 통합 메쉬 생성
-            Mesh finalMesh = new Mesh();
-            finalMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // 많은 수의 폴리곤 대응
-            finalMesh.CombineMeshes(combine);
-
-            // 컨테이너에 통합된 메쉬와 렌더러 추가
-            MeshFilter mf = container.AddComponent<MeshFilter>();
-            mf.mesh = finalMesh;
-
-            MeshRenderer mr = container.AddComponent<MeshRenderer>();
-            mr.material = mazeMaterial;
-
-            // 단 하나의 통합 콜라이더 생성 (메모리 최적화의 핵심)
-            container.AddComponent<MeshCollider>();
-            
-            // 물리 연산 최적화를 위해 정적 개체로 설정
-            container.isStatic = true;
         }
 
         private void SpawnPlayers(int count)//플레이어 스폰

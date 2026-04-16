@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4852ae58-994e-43a2-87c2-6313d5eeb80c" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+    <list default="true" id="6b790abe-9782-466e-857a-afde7cd993d9" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Maze/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Maze/Player.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Maze/Wall.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Maze/Wall.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Player_.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Player_.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Scene/MazeScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Scene/MazeScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/MazeManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/MazeManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.probuilder/Settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.probuilder/Settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/URPProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

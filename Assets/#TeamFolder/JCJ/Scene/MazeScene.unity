@@ -312,7 +312,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 64ba6c72e3ef1e549a99ffb902487f11, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -388,14 +388,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 306334a55aaf4bac8fa75cbbe4e0f4bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.MazeManager
-  _width: 11
-  _height: 11
+  _width: 21
+  _height: 21
   _cellSize: 3
+  _playerCount: 1
   _wallPrefab: {fileID: 5205680776005661826, guid: 3fdfe42711c695b459c73da7e15b470d, type: 3}
   _goalPrefab: {fileID: 2886360355532394757, guid: 622d0e80069e5c041ac397e6cc3a8ee9, type: 3}
   _playerPrefab: {fileID: 171135741889248583, guid: 8f304dd320116f1429b72e045d4d84f9, type: 3}
   _goalAudioSettings: {fileID: 11400000, guid: 76d24fb8adbbfb14989741a5eeb33155, type: 2}
   _rankService: {fileID: 1893482718}
+  _mazeMaterial: {fileID: 2100000, guid: 18f63ff904099034daf971dac5b32582, type: 2}
   _algorithmType: 1
 --- !u!4 &810642396
 Transform:
@@ -967,6 +969,7 @@ GameObject:
   - component: {fileID: 1686060984}
   - component: {fileID: 1686060983}
   - component: {fileID: 1686060986}
+  - component: {fileID: 1686060987}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1015,7 +1018,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1041,8 +1044,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1686060982}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: -0.000000022562734, y: -0.000000010281912, z: -2.3198806e-16, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1092,6 +1095,38 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1686060987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686060982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
+  ShowDebugText: 0
+  ShowCameraFrustum: 1
+  IgnoreTimeScale: 0
+  WorldUpOverride: {fileID: 0}
+  ChannelMask: -1
+  UpdateMethod: 2
+  BlendUpdateMethod: 1
+  LensModeOverride:
+    Enabled: 0
+    DefaultMode: 2
+  DefaultBlend:
+    Style: 1
+    Time: 2
+    CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  CustomBlends: {fileID: 0}
 --- !u!1 &1824762219
 GameObject:
   m_ObjectHideFlags: 0
