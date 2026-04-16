@@ -1,16 +1,16 @@
 using UnityEngine;
 namespace BFS
 {
-    public class FSPlate : MonoBehaviour, IFSPlate
+    public class FSPlate : MonoBehaviour, IFSPlate                                            // Class for colored plates
     {
-        [field: SerializeField] public PlateColor PlateColor { get; set; }
-        [SerializeField] MeshRenderer meshRenderer;
+        [field: SerializeField] public PlateColor PlateColor { get; protected set; }          // PlateColor enum as property
+        private MeshRenderer _meshRenderer;                                                   // Mesh Renderer
 
         private void Awake()
         {
-            Color color = new Color();
+            Color color = new Color();                                                        // Declare local variable for Color
 
-            switch (PlateColor)
+            switch (PlateColor)                                                               // Changes color to match the value of PlateColor enum
             {
                 case PlateColor.RED:
                     color = Color.red;
@@ -25,8 +25,8 @@ namespace BFS
                     color = Color.yellow;
                     break;
             }
-
-            meshRenderer.material.color = color;
+            _meshRenderer = GetComponent<MeshRenderer>();
+            _meshRenderer.material.color = color;
         }
         public void Appear()
         {

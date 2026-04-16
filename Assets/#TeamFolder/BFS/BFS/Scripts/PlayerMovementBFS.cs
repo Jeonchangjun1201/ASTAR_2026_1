@@ -19,8 +19,8 @@ namespace BFS
         {
             _player = player;
             _targetTrm = player.transform;
-            _player.PlayerInput.OnMovementKeyPressed += SetMovementDirection;
-            _player.PlayerInput.OnJumpKeyPressed += Jump;
+            _player.PlayerInput.OnMovementKeyPressed += SetMovementDirection;               // Movement subs
+            _player.PlayerInput.OnJumpKeyPressed += Jump;                                   // Jump subs
             _controller = controller;
         }
         private void OnDestroy()
@@ -28,17 +28,17 @@ namespace BFS
             _player.PlayerInput.OnMovementKeyPressed -= SetMovementDirection;
             _player.PlayerInput.OnJumpKeyPressed -= Jump;
         }
-        private void SetMovementDirection(Vector2 movementInput)
+        private void SetMovementDirection(Vector2 movementInput)                            // Movement Direction Sets
         {
             _movementDirection = new Vector3(movementInput.x, 0f, movementInput.y);
         }
         private void FixedUpdate()
         {
-            CalculateMovement();
+            CalculateMovement();                                                            // Calculating Movement
             ApplyGravity();
-            MoveCharacter();
+            MoveCharacter();                                                                // Movement Method
         }
-        private void Jump()
+        private void Jump()                                                                 // Jump Method(Activates along with movement)
         {
             if (!_canJump) return;
             _verticalVelocity += 1.5f;

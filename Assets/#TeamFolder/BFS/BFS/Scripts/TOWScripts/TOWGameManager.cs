@@ -3,26 +3,28 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 namespace BFS
 {
-    public class TOWGameManager : MonoBehaviour
+    public class TOWGameManager : MonoBehaviour                                                                                         // Tug Of War manager script
     {
         [SerializeField] private TOWKeyQTEManager qteManager;
-        private AbstractTeamTOW[] playerList;
+        [SerializeField] private float gameTime;
+        private AbstractTeamTOW[] playerList;                                                                                           // Array that contains players(absctract class)
         private RopeTOW _rope;
         private TOWScoreManager _scoreManager;
 
         private void Awake()
         {
-            playerList = GetComponentsInChildren<AbstractTeamTOW>();
+            playerList = GetComponentsInChildren<AbstractTeamTOW>();                                                                    // Collect players attached to game manager
             int cnt = 0;
-            foreach (RopePull rp in playerList)
+            foreach (RopePull rp in playerList)                                                                                         // Initialize each player; apply team, and player script attached to them 
             {
                 rp.Initialize(cnt++ % 2 == 0 ? PlayerTeamTOW.TEAMONE : PlayerTeamTOW.TEAMTWO, rp.GetComponentInParent<PlayerTOW>());
             }
-            _scoreManager = new TOWScoreManager(playerList);
+            _scoreManager = new TOWScoreManager(playerList);                                                                            // Constructor; sends playerList to ScoreManager then instantiates
             _rope = GetComponentInChildren<RopeTOW>();
-            qteManager.Initialize(_rope, playerList, _scoreManager);
+            qteManager.Initialize(_rope, playerList, _scoreManager);                                                                    // Initialize Key minigame manager
+
         }
-        private void Update()                                           // TEMPORARY; FOR DEBUGGING
+        private void Update()                                                                                                           // TEMPORARY; FOR DEBUGGING
         {
             if(Keyboard.current.digit1Key.wasPressedThisFrame)
             {
@@ -35,7 +37,7 @@ namespace BFS
         }
         private void OnDestroy()
         {
-            _scoreManager.OnDestroyThen();
+            _scoreManager.OnDestroyThen();                                                                                              // On destroy then calls it so score manager can unsub
         }
     }
 
