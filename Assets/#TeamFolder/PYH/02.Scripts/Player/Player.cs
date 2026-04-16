@@ -1,24 +1,23 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Splines;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.UI.GridLayoutGroup;
 
 namespace PYH.Player
 {
     [RequireComponent(typeof(Rigidbody))]
     public class Player : MonoBehaviour
     {
-        public LayerMask groundLayer;
         public Rigidbody Rigid { get; private set; }
         private Movement _movement;
         private Dictionary<Type, PlayerModuleBase> moduleDict;
         public event Action<Player, int> OnOutPlayerEvent;
         public int index;
-
         private bool _isOver;
+
+        private bool isPush;
 
         private void Awake()
         {
@@ -33,27 +32,7 @@ namespace PYH.Player
                 module.Initialize(this);
             }
         }
-        private void Update()
-        {
-            Rotation(GetPointerPos());
-        }
 
-        private void Rotation(Vector3 dir)
-        {
-            if (dir.magnitude < 0.01f) return;
-
-            dir.y = 0;
-            transform.forward = dir.normalized;
-        }
-        private Vector3 GetPointerPos()
-        {
-            Ray camRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(camRay, out RaycastHit hit, Camera.main.farClipPlane, groundLayer))
-            {
-                return hit.point;
-            }
-            return Vector3.zero;
-        }
         public void DelPlayer()
         {
             Debug.Log($"Player {gameObject.name} Is Dead ");
@@ -79,8 +58,26 @@ namespace PYH.Player
 
         public void Push(Vector3 dir, float force)
         {
+            if (isPush) return;
+            
             Debug.Log("Push!");
-            Rigid.AddForce(dir * force, ForceMode.Impulse);
+            StartCoroutine(PushCoroutine(dir, force));
+        }
+
+        private IEnumerator PushCoroutine(Vector3 dir, float force)
+        {
+            float lastTime = Time.time;
+
+            isPush = true;
+            
+            while (lastTime < Time.time + 5)
+            {
+                Rigid.AddForce(dir * force, ForceMode.Impulse);
+
+                yield return null;
+            }
+            
+            isPush = false;
         }
     }
 }

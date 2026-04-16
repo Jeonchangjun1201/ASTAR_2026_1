@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c8d05a3f2bb0f444a04c4cf602a7325, type: 3}
+  m_Name: FSStageListSO
+  m_EditorClassIdentifier: Assembly-CSharp::GDH.FSStageListSO
+  <FSStageList>k__BackingField:
+  - {fileID: 11400000, guid: e24b2cd2457fc1b449bd8a95d1bbddd1, type: 2}
+  - {fileID: 11400000, guid: dfd5ecfc855d5ae48b3d295f02b38b66, type: 2}
+  - {fileID: 11400000, guid: 84ff14b2d1fcade4391150636e51b238, type: 2}
+  - {fileID: 11400000, guid: d4a1311cf82ba40459c9c72317330feb, type: 2}
+  - {fileID: 11400000, guid: 083757e64956b2a4285412196decc1c9, type: 2}
