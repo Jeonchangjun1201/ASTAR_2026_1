@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using PYH.Util;
+using UnityEngine;
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
-    public class PaintScoreManager : MonoBehaviour
+    public class PaintScoreManager : MonoSingleton<PaintScoreManager>
     {
         [Header("계산 설정")]
         [SerializeField] private RenderTexture _paintCanvas; // 우리가 색칠할 메인 캔바스
@@ -16,13 +17,39 @@ namespace JHJ.Scripts.EatingthegroundGame
 
         private void Start()
         {
-            // 1. 텍스쳐 크기랑 같은 종이? 도화지? 만들기
+            // 1. 텍스쳐 크기랑 같은 종이? 도화지? 같은 거 만들기
             _tempTexture = new Texture2D(_paintCanvas.width, _paintCanvas.height, TextureFormat.RGBA32, false);
 
-            //일정 타이머 마다 퍼센테이지를 계산
+            //1초마다 퍼센 테이지를 계산
             InvokeRepeating(nameof(CalculatePaintPercentage), 1f, _checkInterval);
         }
 
+        [SerializeField] private PaintingGameTimer _gameTimer; // 타이머 스크립트 연결
+
+        private void OnEnable()
+        {
+            // 타이머의 '종료 이벤트'를 구독합니다. (게임이 끝나면 HandleGameEnd 함수 실행)
+            if (_gameTimer != null)
+                _gameTimer.OnGameEnded += HandleGameEnd;
+        }
+
+        private void OnDisable()
+        {
+            // 오브젝트가 꺼질 때는 꼭 구독을 해제해야 메모리 누수가 없습니다.
+            if (_gameTimer != null)
+                _gameTimer.OnGameEnded -= HandleGameEnd;
+        }
+
+        private void HandleGameEnd()
+        {
+            
+            CalculatePaintPercentage();//여기서 전체 결과 계산
+
+            // _uiManager.ShowResultScreen(scores); 요건 나중에 UI에 반영 했을 때 예시
+
+            //여기서 겜 끝나고 정보 전달하면 됨
+        }
+    
         private void CalculatePaintPercentage()
         {
             if (_paintCanvas == null) return;
@@ -56,8 +83,6 @@ namespace JHJ.Scripts.EatingthegroundGame
                 //만약 도화지가 하얀색(아무것도 안 칠해져 있으면) 넘기기
                 if (pColor.r > 0.95f && pColor.g > 0.95f && pColor.b > 0.95f) continue;
 
-                bool isMatched = false; 
-
                 for (int p = 0; p < _playerColors.Length; p++)
                 {
                     
@@ -66,7 +91,6 @@ namespace JHJ.Scripts.EatingthegroundGame
                         Mathf.Abs(pColor.b - _playerColors[p].b) < 1f)
                     {
                         playerScores[p]++;
-                        isMatched = true;
                         break;
                     }
                 }
@@ -83,9 +107,7 @@ namespace JHJ.Scripts.EatingthegroundGame
         public Color GetPlayerColor(int playerIndex)
         {
             if (playerIndex >= 0 && playerIndex < _playerColors.Length)
-            {
                 return _playerColors[playerIndex];
-            }
             return Color.white; 
         }
 
