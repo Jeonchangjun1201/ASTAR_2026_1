@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2509cf774b5b4ce479b58f9adb30430b, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.TileGame.GameConfig
+  countdownSeconds: 4
+  roundDuration: 90
+  playerLives: 1
+  playerScale: 0.4
+  respawnInvuln: 1.5
+  respawnDelay: 1.2
+  colorCallFirstDelay: 18
+  colorCallInterval: 18
+  colorCallWarnDuration: 2
+  colorCallMinTiles: 6
+  scorePerSecondAlive: 1
+  scorePerColorCallSurvived: 50
+  scoreLastSurvivor: 200
+  scoreTimerSurvivor: 100
+  hexRadius: 2
+  hexHeight: 0.55
+  hexGap: 0
+  useLayerVerticalSpacing: 1
+  layerVerticalSpacing: 6
+  stepDelay: 1.2
+  warnDuration: 0.45
+  fallDuration: 1
+  fallDistance: 15
+  bombDelay: 1.5
+  bombRadius: 2.5
+  webDuration: 1.8
+  webSpeedRatio: 0.45
+  balloonForce: 12
+  balloonDuration: 1.2
+  trampolineForce: 18
+  trampolineMaxBounces: 3
+  confusionDuration: 4

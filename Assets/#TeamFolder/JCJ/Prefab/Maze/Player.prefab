@@ -157,7 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.PlayerController
   _moveSpeed: 6
   _jumpForce: 6
-  _rotationSpeed: 2.5
+  _rotationSpeed: 15
   _groundCheckDist: 0.25
   _groundLayer:
     serializedVersion: 2
