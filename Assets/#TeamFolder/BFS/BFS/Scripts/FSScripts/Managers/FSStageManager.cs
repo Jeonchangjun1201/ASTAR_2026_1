@@ -21,12 +21,13 @@ namespace BFS
 
         private void Start()
         {
+            _inGame = true;
             StartGame(_currentStage);
         }
 
         private void StartGame(int index)                                            // Receives index of current stage and checks if sstage is available. Start game if it is or ends game if it isn't
         {
-            if (IsStageAvailable(index))
+            if (IsStageAvailable(index) & _inGame)
             {
                 GetGameVirables(index);
                 StartCoroutine(StartGameCoroutine());
@@ -34,8 +35,9 @@ namespace BFS
             else
                 EndGame();
         }
-        private void EndGame()                                                       // Method to run if game has ended
+        public void EndGame()                                                        // Method to run if game has ended
         {
+            _inGame = false;
             Debug.Log("FINISHED!");                                                  // TEMPORARY; for debugging
         }
         private bool IsStageAvailable(int stageIndex)                                // Method to check if stage is available using index of current stage. Returns true if stage with given index exists in stage list. return false otherwise
@@ -68,6 +70,8 @@ namespace BFS
 
             for (int i = _colorCount; i > 0; i--)
             {
+                if (!_inGame)
+                    break;
                 for (int j = _countDownTime; j > 0; j--)
                 {
                     Debug.Log(j);

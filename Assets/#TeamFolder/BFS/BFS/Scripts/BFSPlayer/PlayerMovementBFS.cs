@@ -14,7 +14,6 @@ namespace BFS
         private float _moveSpeed = 0.3f;
         private float _gravity = -9.8f;
         private bool _canJump = true;
-
         public void Initialize(PlayerBFS player, CharacterController controller)
         {
             _player = player;
