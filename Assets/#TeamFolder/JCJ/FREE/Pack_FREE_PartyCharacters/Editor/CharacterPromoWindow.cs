@@ -1,3 +1,4 @@
+#if false
 using UnityEngine;
 using UnityEditor;
 namespace CapsuleCharacter.EditorTools
@@ -94,3 +95,4 @@ namespace CapsuleCharacter.EditorTools
         }
     }
 }
+#endif

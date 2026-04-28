@@ -1,3 +1,4 @@
+#if false
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
@@ -633,3 +634,4 @@ namespace CapsuleCharacter.EditorTools
         #endregion
     }
 }
+#endif
