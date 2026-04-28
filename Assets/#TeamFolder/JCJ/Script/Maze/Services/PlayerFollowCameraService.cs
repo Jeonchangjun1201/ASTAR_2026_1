@@ -87,7 +87,8 @@ namespace _TeamFolder.JCJ.Script
             var pivotGo = new GameObject("CameraPivot");
             pivotGo.transform.SetParent(transform, false);
             _rig = pivotGo.AddComponent<MazeCameraRig>();
-            _rig.Configure(_enableMouseLook, _minPitch, _maxPitch);
+            var settings = SettingsService.EnsureInstance().Data;
+            _rig.Configure(_enableMouseLook, _minPitch, _maxPitch, settings != null && !settings.lockPitch);
 
             var rigGo = new GameObject("CM_PlayerFollow");
             rigGo.transform.SetParent(transform, false);
@@ -124,7 +125,8 @@ namespace _TeamFolder.JCJ.Script
         private void LateUpdate()
         {
             if (_follow == null || _rig == null) return;
-            _follow.FollowOffset = Quaternion.Euler(0f, _rig.Yaw, 0f) * _baseFollowOffset;
+            float pitch = _rig.IsPitchAllowed ? _rig.Pitch : 0f;
+            _follow.FollowOffset = Quaternion.Euler(pitch, _rig.Yaw, 0f) * _baseFollowOffset;
         }
 
         private void AddDeoccluder(GameObject rigGo)

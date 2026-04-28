@@ -58,7 +58,6 @@ namespace _TeamFolder.JCJ.Script
         public float MoveSpeed => _moveSpeed;
         public bool IsSpectating { get; private set; }
 
-        private float _invertYMul = 1f;
         private float _externalSpeedMul = 1f;
         private float _externalSpeedUntil;
 
@@ -319,7 +318,6 @@ namespace _TeamFolder.JCJ.Script
             var cam = MazeCameraRig.Instance;
             if (cam == null) return;
             Vector2 scaled = _lookInput * _mouseSensitivity;
-            scaled.y *= _invertYMul;
             cam.AddLook(scaled);
         }
 
@@ -334,18 +332,6 @@ namespace _TeamFolder.JCJ.Script
             // MazeMinimap은 이 값을 보고 이미 탈출한 플레이어 점을 표시하지 않는다.
             IsSpectating = spectating;
             if (spectating) ClearInputState();
-        }
-
-        public void SetInvertY(bool invert)
-        {
-            _invertYMul = invert ? -1f : 1f;
-        }
-
-        public void SetRotateMode(PlayerRotateMode mode)
-        {
-            _ = mode;
-            if (_cameraTransform == null && Camera.main != null)
-                _cameraTransform = Camera.main.transform;
         }
 
         public void ApplyExternalSlow(float speedRatio, float duration)

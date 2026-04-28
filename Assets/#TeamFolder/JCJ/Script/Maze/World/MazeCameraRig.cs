@@ -51,6 +51,7 @@ namespace _TeamFolder.JCJ.Script
 
         public bool IsPitchAllowed => _allowPitch;
         public float Yaw => _yaw;
+        public float Pitch => _pitch;
 
         public void SetTarget(Transform target)
         {

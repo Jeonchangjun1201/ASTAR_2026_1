@@ -3,17 +3,13 @@ using UnityEngine.UI;
 
 namespace _TeamFolder.JCJ.Script
 {
-    /// <summary>
-    /// 마우스 감도, Y축 반전, 피치 잠금 같은 카메라 옵션을 표시하고 변경한다.
-    /// </summary>
     public class SettingsTabCamera : ISettingsTab
     {
         public string Title => "카메라";
 
         private ISettingsService _settings;
         private Slider _sensitivity;
-        private Toggle _invertY;
-        private Toggle _lockPitch;
+        private Toggle _verticalRotation;
         private Text _sensitivityValue;
 
         public GameObject Build(RectTransform contentArea, ISettingsService settings)
@@ -24,8 +20,7 @@ namespace _TeamFolder.JCJ.Script
             var rt = (RectTransform)section.transform;
 
             BuildSensitivityRow(rt);
-            BuildToggleRow(rt, "Y축 반전", v => _settings.Mutate(d => d.invertY = v), out _invertY);
-            BuildToggleRow(rt, "위/아래 시점 고정", v => _settings.Mutate(d => d.lockPitch = v), out _lockPitch);
+            BuildToggleRow(rt, "카메라 세로 회전", v => _settings.Mutate(d => d.lockPitch = !v), out _verticalRotation);
 
             Refresh(_settings.Data);
             return section;
@@ -33,8 +28,7 @@ namespace _TeamFolder.JCJ.Script
 
         private void BuildSensitivityRow(RectTransform parent)
         {
-            // 슬라이더와 숫자 라벨을 한 줄에 배치해 변경 값을 즉시 확인하게 한다.
-            var content = SettingsUiBuilder.CreateLabeledRow(parent, "마우스 감도");
+            var content = SettingsUiBuilder.CreateLabeledRow(parent, "DPI");
             var ctRt = (RectTransform)content.transform;
 
             var sliderGo = new GameObject("Slider", typeof(RectTransform));
@@ -97,12 +91,10 @@ namespace _TeamFolder.JCJ.Script
         public void Refresh(SettingsData data)
         {
             if (data == null) return;
-            // 외부에서 설정이 바뀐 경우 UI 이벤트를 다시 발생시키지 않고 표시값만 동기화한다.
             if (_sensitivity != null && !Mathf.Approximately(_sensitivity.value, data.cameraSensitivity))
                 _sensitivity.SetValueWithoutNotify(data.cameraSensitivity);
             UpdateSensitivityLabel(data.cameraSensitivity);
-            if (_invertY != null) _invertY.SetIsOnWithoutNotify(data.invertY);
-            if (_lockPitch != null) _lockPitch.SetIsOnWithoutNotify(data.lockPitch);
+            if (_verticalRotation != null) _verticalRotation.SetIsOnWithoutNotify(!data.lockPitch);
         }
     }
 }
