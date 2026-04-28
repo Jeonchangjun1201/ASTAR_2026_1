@@ -56,11 +56,8 @@ namespace _TeamFolder.JCJ.Script
                 var pc = p.GetComponent<PlayerController>();
                 if (pc != null)
                 {
-                    // 현재 구조에서는 첫 번째 플레이어만 로컬 입력을 받는다.
                     pc.IsLocalControlled = isLocal;
                     pc.SetMouseSensitivity(settings.cameraSensitivity);
-                    pc.SetInvertY(settings.invertY);
-                    pc.SetRotateMode(settings.playerRotateMode);
                 }
 
                 result.Add(p);

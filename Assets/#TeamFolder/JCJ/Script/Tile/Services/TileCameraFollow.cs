@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _TeamFolder.JCJ.Script;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,11 +28,13 @@ namespace _TeamFolder.JCJ.TileGame
         [SerializeField] private Vector3 _positionDamping = new(0.08f, 0.12f, 0.08f);
         [SerializeField] private Vector2 _composerDamping = new(0.04f, 0.04f);
 
-        [Header("마우스 룩(요만)")]
+        [Header("마우스 룩")]
         [Tooltip("마우스 가로 픽셀당 카메라 요 회전(도).")]
         [Range(0.01f, 1f)] [SerializeField] private float _mouseSensitivity = 0.18f;
         [Tooltip("끄면 카메라 방향 고정.")]
         [SerializeField] private bool _mouseLookEnabled = true;
+        [SerializeField] private float _minPitch = -30f;
+        [SerializeField] private float _maxPitch = 55f;
 
         [Header("타일 가림")]
         [SerializeField] private bool _avoidTileOcclusion = true;
@@ -49,12 +52,15 @@ namespace _TeamFolder.JCJ.TileGame
 
         // 마우스 궤도 상태 — _baseOffset을 매 LateUpdate 월드 Y축으로 회전.
         private float    _yaw;
+        private float    _pitch;
+        private bool     _allowPitch;
         private Vector3  _baseOffset;
 
         private void Awake()
         {
             EnsureBrain();
             EnsureRig();
+            ApplySettings(SettingsService.EnsureInstance().Data);
         }
 
         // ── 공개 API ───────────────────────────────
@@ -135,6 +141,13 @@ namespace _TeamFolder.JCJ.TileGame
             _mouseLookEnabled = enabled;
         }
 
+        public void SetAllowPitch(bool allow)
+        {
+            _allowPitch = allow;
+            if (!allow) _pitch = 0f;
+            ApplyOrbitOffset();
+        }
+
         // ── 리그 생성 ───────────────────────────────
         private void EnsureBrain()
         {
@@ -167,7 +180,7 @@ namespace _TeamFolder.JCJ.TileGame
 
             _follow = rigGO.AddComponent<CinemachineFollow>();
             _baseOffset = _cameraOffset;
-            _follow.FollowOffset = _cameraOffset;
+            ApplyOrbitOffset();
             var tracker = _follow.TrackerSettings;
             tracker.BindingMode     = Unity.Cinemachine.TargetTracking.BindingMode.WorldSpace;
             tracker.PositionDamping = _positionDamping;
@@ -212,7 +225,7 @@ namespace _TeamFolder.JCJ.TileGame
             if (_vcam == null) return;
             if (!_mouseLookEnabled) return;
             if (_target == null || !_target.gameObject.activeInHierarchy) return;
-            ApplyMouseYaw();
+            ApplyMouseLook();
         }
 
         // 추적 대상이 사라지면(라운드 사이 파괴·탈락) 타깃 해제 — 원점으로 튀는 것 방지.
@@ -234,29 +247,48 @@ namespace _TeamFolder.JCJ.TileGame
             }
         }
 
-        private void ApplyMouseYaw()
+        private void ApplyMouseLook()
         {
             if (Mouse.current == null || _follow == null) return;
-            // 커서가 잠긴 경우에만 — 결과/메뉴에서 커서 보일 때 시점이 돌아가지 않게.
             if (Cursor.lockState != CursorLockMode.Locked) return;
 
             float dx = Mouse.current.delta.x.ReadValue();
-            if (Mathf.Abs(dx) < 0.001f) return;
+            float dy = Mouse.current.delta.y.ReadValue();
+            if (Mathf.Abs(dx) < 0.001f && (!_allowPitch || Mathf.Abs(dy) < 0.001f)) return;
 
             _yaw += dx * _mouseSensitivity;
+            if (_allowPitch)
+            {
+                _pitch -= dy * _mouseSensitivity;
+                _pitch = Mathf.Clamp(_pitch, _minPitch, _maxPitch);
+            }
 
-            // 각도 래핑. 요만 조작 — 피치는 인스펙터 오프셋 유지(수직 룩 없음).
             if (_yaw > 360f) _yaw -= 360f; else if (_yaw < -360f) _yaw += 360f;
 
-            _follow.FollowOffset = Quaternion.Euler(0f, _yaw, 0f) * _baseOffset;
+            ApplyOrbitOffset();
         }
 
         /// <summary>런타임에 인스펙터 오프셋이 바뀌면 궤도 기준을 다시 맞춤.</summary>
         public void ResetOrbit()
         {
             _yaw = 0f;
+            _pitch = 0f;
             _baseOffset = _cameraOffset;
-            if (_follow != null) _follow.FollowOffset = _baseOffset;
+            ApplyOrbitOffset();
+        }
+
+        private void ApplySettings(SettingsData settings)
+        {
+            if (settings == null) return;
+            SetMouseSensitivity(settings.cameraSensitivity);
+            SetAllowPitch(!settings.lockPitch);
+        }
+
+        private void ApplyOrbitOffset()
+        {
+            if (_follow == null) return;
+            float pitch = _allowPitch ? _pitch : 0f;
+            _follow.FollowOffset = Quaternion.Euler(pitch, _yaw, 0f) * _baseOffset;
         }
 
         private IEnumerator ShakeRoutine(float duration, float magnitude)

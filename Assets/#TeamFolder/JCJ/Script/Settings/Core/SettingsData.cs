@@ -4,15 +4,6 @@ using UnityEngine;
 namespace _TeamFolder.JCJ.Script
 {
     /// <summary>
-    /// 플레이어가 바라보는 방향과 이동 방향을 어떻게 연결할지 정한다.
-    /// </summary>
-    public enum PlayerRotateMode
-    {
-        WithCamera   = 0,
-        ScreenRelative = 1,
-    }
-
-    /// <summary>
     /// 미니맵을 화면 네 모서리 중 어디에 붙일지 나타낸다.
     /// </summary>
     public enum MinimapAnchorPreset
@@ -34,9 +25,7 @@ namespace _TeamFolder.JCJ.Script
         public int version = CurrentVersion;
 
         [Range(0.05f, 1f)] public float cameraSensitivity = 0.18f;
-        public bool invertY = false;
         public bool lockPitch = true;
-        public PlayerRotateMode playerRotateMode = PlayerRotateMode.WithCamera;
 
         public MinimapAnchorPreset minimapAnchor = MinimapAnchorPreset.BottomRight;
         [Range(120f, 360f)] public float minimapSize = 220f;
@@ -60,7 +49,6 @@ namespace _TeamFolder.JCJ.Script
             // 저장 파일이 손상되었거나 예전 값이 들어와도 플레이 가능한 범위로 되돌린다.
             if (version <= 0) version = CurrentVersion;
             cameraSensitivity = Mathf.Clamp(cameraSensitivity, 0.05f, 1f);
-            playerRotateMode = PlayerRotateMode.WithCamera;
             minimapSize = Mathf.Clamp(minimapSize, 120f, 360f);
             if (minimapPlayerColor.a < 0.05f) minimapPlayerColor.a = 1f;
 
