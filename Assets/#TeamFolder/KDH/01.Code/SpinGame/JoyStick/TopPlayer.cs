@@ -11,6 +11,7 @@ namespace KDH
         public float moveSpeed = 5f;
 
         private Rigidbody rb;
+            
 
         private void Awake()
         {

@@ -12,6 +12,7 @@ namespace BFS
         private TOWScoreManager _scoreManager;                                                                   // Score manager, this exists so that rope doesn't move when team's score is 0
         private char _inputShower;                                                                               // Char variable that shows which key to press
         private bool _isPenalty = false;                                                                         // Bool variable, used to detect if player should have penalty or not
+        private bool _isInGame = false;
         private float _penaltyTime = 2.5f;                                                                       // How long minigame is going to be disabled for player
         public void Initialize(IRopeTOW rope, AbstractTeamTOW[] playerList, TOWScoreManager scoreManager)        // Initialize
         {
@@ -24,11 +25,15 @@ namespace BFS
             foreach (ITeamTOW t in playerList)                                                                   // Adds each player to dictionary, for input key management
             {
                 _goalDict.Add(t, Vector2.zero);
-                DeclareGoal(t);                                                                                  // Initiate the input key minigame
             }
             _scoreManager = scoreManager;
         }
-
+        public void StartMinigame()
+        {
+            _isInGame = true;
+            foreach (ITeamTOW t in _teamList)
+                DeclareGoal(t);                                                                                  // Initiate the input key minigame
+        }
         private void OnDestroy()
         {
             foreach (AbstractTeamTOW t in _teamList)                                                             // Unsub
@@ -76,7 +81,7 @@ namespace BFS
         }
         public void GetInput(ITeamTOW team, Vector2 vt)                                                          // Method that subscribes to action, receives ITeamTOW and Vector2(each are player and input)
         {
-            if (_isPenalty)                                                                                      // Ignore if player is in penalty state
+            if (_isPenalty | !_isInGame)                                                                          // Ignore if player is in penalty state or game hasn't started yet
                 return;
             if (vt == _goalDict[team])                                                                           // If input equals to required key given to each player
             {
@@ -109,6 +114,7 @@ namespace BFS
                     return Vector2.right;
             }
         }
+        public void EndMinigame() => _isInGame = false;
     }
 
 }
