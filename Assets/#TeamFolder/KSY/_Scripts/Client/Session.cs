@@ -85,7 +85,7 @@ namespace KSY.Client
             }
             catch (Exception e)
             {
-                Console.WriteLine($"RegisterSend Failed {e}");
+                //Exception process
             }
         }
 
@@ -112,7 +112,7 @@ namespace KSY.Client
                 }
                 else
                 {
-                    Debug.Log($"SendError: {args.SocketError}");
+                    //Exception process
                     Disconnect();
                 }
             }
@@ -135,6 +135,7 @@ namespace KSY.Client
             }
             catch (Exception e)
             {
+                //Exception process
                 Console.WriteLine($"RegisterRecv Failed {e}");
             }
         }
@@ -148,7 +149,7 @@ namespace KSY.Client
                     // Write 커서 이동
                     if (_receiveBuffer.OnWrite(args.BytesTransferred) == false)
                     {
-                        Disconnect();
+                        //Exception process
                         return;
                     }
 
@@ -156,14 +157,14 @@ namespace KSY.Client
                     int processLen = OnReceive(_receiveBuffer.ReadSegment);
                     if (processLen < 0 || _receiveBuffer.DataSize < processLen)
                     {
-                        Disconnect();
+                        //Exception process
                         return;
                     }
 
                     // Read 커서 이동
                     if (_receiveBuffer.OnRead(processLen) == false)
                     {
-                        Disconnect();
+                        //Exception process
                         return;
                     }
 
@@ -171,11 +172,12 @@ namespace KSY.Client
                 }
                 catch (Exception e)
                 {
-                    Debug.Log($"RecvFailed: {e}");
+                    //Exception process
                 }
             }
             else
             {
+                //Exception process
                 Debug.Log($"RecvError: {args.SocketError}");
                 Disconnect();
             }
