@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &260567508
+--- !u!1 &310586589
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,7 +127,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 260567510}
+  - component: {fileID: 310586591}
+  - component: {fileID: 310586590}
   m_Layer: 0
   m_Name: TileBoard
   m_TagString: Untagged
@@ -135,13 +136,62 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &260567510
+--- !u!114 &310586590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310586589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 428b77e47275e004bbc4175de598f3d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.TileGame.TileBoard
+  layers:
+  - layerName: Top
+    yPosition: 8
+    gridWidth: 12
+    gridDepth: 12
+    fallDelayMultiplier: 1.2
+    maxGimmickCount: 12
+    bombRatio: 0.04
+    webRatio: 0.04
+    iceRatio: 0.08
+    balloonRatio: 0.01
+    trampolineRatio: 0.005
+    confusionRatio: 0.003
+  - layerName: Middle
+    yPosition: 4
+    gridWidth: 10
+    gridDepth: 10
+    fallDelayMultiplier: 1
+    maxGimmickCount: 20
+    bombRatio: 0.07
+    webRatio: 0.07
+    iceRatio: 0.07
+    balloonRatio: 0.07
+    trampolineRatio: 0.05
+    confusionRatio: 0.03
+  - layerName: Bottom
+    yPosition: 0
+    gridWidth: 8
+    gridDepth: 8
+    fallDelayMultiplier: 0.6
+    maxGimmickCount: 32
+    bombRatio: 0.1
+    webRatio: 0.1
+    iceRatio: 0.12
+    balloonRatio: 0.1
+    trampolineRatio: 0.08
+    confusionRatio: 0.06
+--- !u!4 &310586591
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 260567508}
+  m_GameObject: {fileID: 310586589}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -150,7 +200,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &577490238
+--- !u!1 &443030031
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,24 +208,66 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 577490240}
+  - component: {fileID: 443030035}
+  - component: {fileID: 443030034}
+  - component: {fileID: 443030033}
+  - component: {fileID: 443030032}
   m_Layer: 0
-  m_Name: MapGenerator
+  m_Name: JCJ_SettingsRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &577490240
+--- !u!114 &443030032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443030031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eed7ba87ea9f504a80e001645d2a145, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.KeyRebindBinder
+--- !u!114 &443030033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443030031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e8c051d69b716d46b15670f9b9b3b1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.TileCameraSettingsBinder
+--- !u!114 &443030034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443030031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 173cf5743b35de142857eb432523c23c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.SettingsPanel
+  _toggleWithEscape: 1
+  _autoOpenOnStart: 0
+  _includeCustomizeTab: 1
+--- !u!4 &443030035
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 577490238}
+  m_GameObject: {fileID: 443030031}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.088, y: 0.00001, z: 27.04772}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -308,7 +400,7 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &1471866016
+--- !u!1 &2019990957
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -316,7 +408,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1471866018}
+  - component: {fileID: 2019990959}
+  - component: {fileID: 2019990958}
   m_Layer: 0
   m_Name: PlayerSpawnManager
   m_TagString: Untagged
@@ -324,44 +417,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1471866018
+--- !u!114 &2019990958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019990957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7971d10f52762394da3fc04330feb137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.TileGame.PlayerSpawnManager
+  playerPrefab: {fileID: 877791323849484786, guid: 8c4638ece6f53e74fb8a2b65926a5c57, type: 3}
+  spawnHeightOffset: 1.5
+  playerPalette:
+  - {r: 1, g: 0.35, b: 0.35, a: 1}
+  - {r: 0.35, g: 0.7, b: 1, a: 1}
+  - {r: 1, g: 0.85, b: 0.35, a: 1}
+  - {r: 0.35, g: 1, b: 0.55, a: 1}
+  - {r: 0.85, g: 0.55, b: 1, a: 1}
+  - {r: 1, g: 0.6, b: 0.3, a: 1}
+--- !u!4 &2019990959
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471866016}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1799439564
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1799439566}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1799439566
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1799439564}
+  m_GameObject: {fileID: 2019990957}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -507,13 +590,65 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &2083490959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2083490961}
+  - component: {fileID: 2083490960}
+  m_Layer: 0
+  m_Name: TileGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2083490960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083490959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acef90c96f9db574cac484c12a73b038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.TileGame.TileGameManager
+  tileBoard: {fileID: 310586590}
+  spawnManager: {fileID: 2019990958}
+  gameConfig: {fileID: 11400000, guid: 98c1ac44ed2227f45823a4229d110ff4, type: 2}
+  playerCount: 4
+  buildHUD: 1
+  buildAudio: 1
+  buildCamera: 1
+  buildColorCall: 1
+--- !u!4 &2083490961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083490959}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 2053782956}
   - {fileID: 1164279578}
-  - {fileID: 1799439566}
-  - {fileID: 260567510}
-  - {fileID: 1471866018}
-  - {fileID: 577490240}
+  - {fileID: 2083490961}
+  - {fileID: 310586591}
+  - {fileID: 2019990959}
+  - {fileID: 443030035}

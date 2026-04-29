@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 namespace BFS
 {
@@ -7,9 +9,19 @@ namespace BFS
         [SerializeField] private FSPlateManager plateManager;
         [SerializeField] private FSCameraManager cameraManager;
         [SerializeField] private FSStageManager stageManager;
+        private List<FSPlayer> _playerList = new List<FSPlayer>();
         private IFSScreen monitorScreen;
+        private int _aliveCount;
+        private bool _finalCountActivated = false;
         private void Awake()
         {
+            FSPlayer[] playrListTemp = GetComponentsInChildren<FSPlayer>();
+            foreach(FSPlayer player in playrListTemp)
+            {
+                _playerList.Add(player);
+                player.OnOut += CountOuts;
+                _aliveCount++;
+            }
             cameraManager.FocusToGame();                                  
             monitorScreen = GetComponentInChildren<IFSScreen>();
             plateManager.OnPlateAdded += ManageScreenColor;                   // Subscribes, monitor screen color is changed everytime plate is added to queue
@@ -24,6 +36,35 @@ namespace BFS
         {
 
         }
+        private void Update()
+        {
+            if (_aliveCount <= 1 & !_finalCountActivated)
+            {
+                StartCoroutine(FinalGameCountdownCoroutine());
+                _finalCountActivated = true;
+            }
+        }
+
+        private IEnumerator FinalGameCountdownCoroutine()
+        {
+            yield return new WaitForSeconds(3.0f);
+            if( _aliveCount == 1 )
+            {
+                FinishGame();
+                FSPlayer Lastplayer = null;
+                foreach(FSPlayer player in _playerList)
+                {
+                    if (player.IsOut == false)
+                        Lastplayer = player;
+                }
+                Debug.Log($"{Lastplayer.GetComponentInParent<PlayerBFS>().gameObject.name} WON!!");
+            }
+            else
+            {
+                FinishGame();
+                Debug.Log("NO SURVIVORS! :(");
+            }
+        }
 
         private void OnDestroy()                                              // Unsub
         {
@@ -33,6 +74,15 @@ namespace BFS
             stageManager.OnPlateQueue += QueuePlate;   
             stageManager.OnScreenReset += ResetScreen;
             stageManager.OnPlateDequeue += DeQueuePlate;
+
+            foreach(FSPlayer player in _playerList)
+            {
+                player.OnOut -= CountOuts;
+            }
+        }
+        public void FinishGame()
+        {
+            stageManager.EndGame();
         }
         private void ChangeCameraView(FSCameraView cameraView)                // Method to change camera view, receiving FSCameraView enum that decides which camera to view    
         {
@@ -73,5 +123,6 @@ namespace BFS
         private void QueuePlate() => plateManager.EnqueuePlate();
         private void ResetScreen() => monitorScreen.ResetScreenColor();
         private void DeQueuePlate(float duration) => plateManager.DequeuePlate(duration);
+        private void CountOuts() => _aliveCount--;
     }
 }
