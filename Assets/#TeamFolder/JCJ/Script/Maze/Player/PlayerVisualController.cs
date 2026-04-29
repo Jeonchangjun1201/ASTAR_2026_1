@@ -137,6 +137,13 @@ namespace _TeamFolder.JCJ.Script
             ApplyLocomotion(MovementKind.Sprint, _sprintBobSpeed, _sprintBobAmp, _leanAngle);
         }
 
+        public void OnPickup()
+        {
+            if (_root == null) return;
+            _root.DOPunchPosition(transform.forward * 0.12f + Vector3.up * 0.08f, 0.18f, 1, 0.2f);
+            _root.DOPunchRotation(new Vector3(-12f, 0f, 0f), 0.18f, 1, 0.2f);
+        }
+
         public void OnJump()
         {
             if (_root == null) return;
@@ -166,6 +173,35 @@ namespace _TeamFolder.JCJ.Script
         {
             if (_root == null) return;
             _root.DOPunchRotation(new Vector3(0f, 0f, 20f), 0.3f, vibrato: 3, elasticity: 0.8f);
+        }
+
+        public void OnPush()
+        {
+            if (_root == null) return;
+            _root.DOPunchPosition(transform.forward * 0.22f, 0.18f, 1, 0.2f);
+            _root.DOPunchRotation(new Vector3(-16f, 0f, 0f), 0.18f, 1, 0.2f);
+        }
+
+        public void OnThrow()
+        {
+            if (_root == null) return;
+            _root.DOPunchPosition(transform.forward * 0.18f, 0.22f, 1, 0.2f);
+            _root.DOPunchRotation(new Vector3(-10f, 0f, 0f), 0.2f, 1, 0.2f);
+        }
+
+        public void SetCarryState(bool carrying, bool moving)
+        {
+            if (_root == null) return;
+            StopIdleLoop();
+            if (!carrying)
+            {
+                if (_lastKind == MovementKind.Idle) StartIdleLoop();
+                return;
+            }
+
+            _root.localScale = Vector3.one;
+            _root.localPosition = new Vector3(0f, _visualYOffset + (moving ? 0.05f : 0f), 0f);
+            _root.localRotation = Quaternion.Euler(moving ? 8f : 4f, 0f, 0f);
         }
 
         private void ApplyLocomotion(MovementKind kind, float bobSpeed, float bobAmp, float leanDeg)

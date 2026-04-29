@@ -163,3 +163,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   _cameraTransform: {fileID: 0}
+  _addTrailIfMissing: 0

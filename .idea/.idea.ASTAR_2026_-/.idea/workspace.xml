@@ -6,53 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="6b790abe-9782-466e-857a-afde7cd993d9" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Data/GoalAudioSettings.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Data/GoalAudioSettings.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Data/ScoreConfig.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Data/ScoreConfig.asset.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Maze/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Maze/Player.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Maze/Wall.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Maze/Wall.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Player_.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Prefab/Player_.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Scene/FalllingTileScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Scene/FalllingTileScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Scene/MazeScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Scene/MazeScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/DFSGenerator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/DFSGenerator.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/GameHUD.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/GameHUD.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/GameState.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/GameState.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/GameStateManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/GameStateManager.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/GoalTrigger.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/GoalTrigger.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Goalaudiohint.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Goalaudiohint.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Goalaudiosettings.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Goalaudiosettings.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/IGameServices.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/IGameServices.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/IMazeGenerator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/IMazeGenerator.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Igoalaudiohint.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Igoalaudiohint.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/MazeManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/MazeManager.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/PlayerController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/PlayerController.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/PrimGenerator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/PrimGenerator.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/RankService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/RankService.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/ScoreConfig.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/ScoreConfig.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/SidewinderGenerator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/SidewinderGenerator.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/TimerService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/TimerService.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Core/IPlayerVisual.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Core/IPlayerVisual.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Player/PartyCharacterVisual.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Player/PartyCharacterVisual.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Player/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Player/PlayerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Player/PlayerVisualController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Player/PlayerVisualController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,9 +23,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Goalaudiohint.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Igoalaudiohint.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/MazeManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.coplaydev.unity-mcp@9daf4fc33c33/Editor/Helpers/McpLog.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -170,6 +128,9 @@
       <workItem from="1776523968715" duration="4719000" />
       <workItem from="1776604508162" duration="1901000" />
       <workItem from="1777333411188" duration="1000" />
+      <workItem from="1777378081704" duration="2436000" />
+      <workItem from="1777419301695" duration="4592000" />
+      <workItem from="1777450437167" duration="1246000" />
     </task>
     <servers />
   </component>
