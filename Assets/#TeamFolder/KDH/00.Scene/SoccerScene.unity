@@ -268,7 +268,6 @@ GameObject:
   - component: {fileID: 1001611155}
   - component: {fileID: 1001611154}
   - component: {fileID: 1001611153}
-  - component: {fileID: 1001611156}
   m_Layer: 0
   m_Name: Cube (3)
   m_TagString: Untagged
@@ -369,18 +368,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1001611151}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1001611156
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1001611151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0beb7409a3cf11c41966751983415d3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Victory
 --- !u!1 &1176079816
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,8 +415,8 @@ GameObject:
   - component: {fileID: 1181222172}
   - component: {fileID: 1181222171}
   - component: {fileID: 1181222170}
-  - component: {fileID: 1181222169}
   - component: {fileID: 1181222174}
+  - component: {fileID: 1181222175}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Ball
@@ -437,19 +424,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1181222169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1181222168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0b6a4dfad10c86448a7d909fdc6496f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Ball
-  ballSpeed: 3
 --- !u!135 &1181222170
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -570,6 +544,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1181222175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1181222168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0b6a4dfad10c86448a7d909fdc6496f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KDH.Ball
+  ballSpeed: 3
 --- !u!1 &1382890096
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,7 +696,6 @@ GameObject:
   - component: {fileID: 1457459599}
   - component: {fileID: 1457459598}
   - component: {fileID: 1457459597}
-  - component: {fileID: 1457459600}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -810,18 +796,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457459595}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1457459600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1457459595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0beb7409a3cf11c41966751983415d3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Victory
 --- !u!1 &1468854473
 GameObject:
   m_ObjectHideFlags: 0
@@ -1058,7 +1032,6 @@ GameObject:
   - component: {fileID: 1644791146}
   - component: {fileID: 1644791145}
   - component: {fileID: 1644791144}
-  - component: {fileID: 1644791147}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Untagged
@@ -1159,18 +1132,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1644791142}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1644791147
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1644791142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0beb7409a3cf11c41966751983415d3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Victory
 --- !u!1 &1728471376
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,7 +1144,6 @@ GameObject:
   - component: {fileID: 1728471380}
   - component: {fileID: 1728471379}
   - component: {fileID: 1728471378}
-  - component: {fileID: 1728471381}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1284,18 +1244,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1728471376}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1728471381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1728471376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0beb7409a3cf11c41966751983415d3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Victory
 --- !u!1 &1751423494
 GameObject:
   m_ObjectHideFlags: 0
