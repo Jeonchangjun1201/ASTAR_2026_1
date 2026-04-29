@@ -3,10 +3,16 @@ using UnityEngine.InputSystem;
 
 namespace PYH.Player
 {
-    public class TestLookMousePointer : MonoBehaviour
+    public class LookMousePointer : MonoBehaviour
     {
+        private Camera _main;
         [SerializeField] private GameObject visual;
         [SerializeField] private LayerMask groundLayer;
+
+        private void Awake()
+        {
+            _main = Camera.main;
+        }
 
         private void Update()
         {
@@ -16,16 +22,16 @@ namespace PYH.Player
         {
             if (dir.magnitude < 0.01f) return;
             
-            Vector3 targetDir = dir - transform.position;
+            Vector3 targetDir = dir.normalized - transform.position;
 
             targetDir.y = 0;
             visual.transform.forward = targetDir;
         }
         private Vector3 GetPointerPos()
         {
-            Ray camRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            Ray camRay = _main.ScreenPointToRay(Mouse.current.position.ReadValue());
             
-            if (Physics.Raycast(camRay, out RaycastHit hit, Camera.main.farClipPlane, groundLayer))
+            if (Physics.Raycast(camRay, out RaycastHit hit, _main.farClipPlane, groundLayer))
             {
                 return hit.point;
             }
