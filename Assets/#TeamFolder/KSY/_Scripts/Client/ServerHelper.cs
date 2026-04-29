@@ -1,11 +1,13 @@
-using KSY.Client;
 using UnityEngine;
 
-public class ServerHelper : MonoBehaviour
+namespace KSY.Client
 {
-    private Connector _connector = new Connector();
-    public static bool ConnectAsyncGamerServer()
+    public class ServerHelper : MonoBehaviour
     {
+        private Connector _connector = new Connector();
+        //public static bool ConnectAsyncGamerServer()
+        //{
 
+        //}
     }
 }
