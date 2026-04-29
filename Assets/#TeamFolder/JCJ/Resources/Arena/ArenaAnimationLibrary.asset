@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69a28921eff44f04e86435999620b705, type: 3}
+  m_Name: ArenaAnimationLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.Arena.ArenaAnimationLibrary
+  _pickupClip: {fileID: 0}
+  _pushClip: {fileID: -203655887218126122, guid: cc57becd2539ccd4c87843ba7700d3cb, type: 3}
+  _throwClip: {fileID: -203655887218126122, guid: 22ad1c381e02fac4d928663a760db15a, type: 3}
+  _carryIdleClip: {fileID: -203655887218126122, guid: eaf5cf7890235044ca1e950512379dec, type: 3}
+  _carryMoveClip: {fileID: -203655887218126122, guid: e5274634f21588a43a2016afbf39598b, type: 3}
