@@ -1,4 +1,7 @@
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
+using _TeamFolder.JCJ.Script.Arena;
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -27,9 +30,18 @@ namespace _TeamFolder.JCJ.Script
         [Header("Animator Speed")]
         [SerializeField] private float _walkAnimSpeed   = 1f;
         [SerializeField] private float _sprintAnimSpeed = 1.5f;
+        [SerializeField] private string _arenaAnimationLibraryPath = "Arena/ArenaAnimationLibrary";
 
         private GameObject _instance;
         private Animator _animator;
+        private ArenaAnimationLibrary _arenaAnimationLibrary;
+        private PlayableGraph _playableGraph;
+        private AnimationLayerMixerPlayable _layerMixer;
+        private AnimatorControllerPlayable _controllerPlayable;
+        private AnimationClipPlayable _actionClipPlayable;
+        private AnimationClip _activeActionClip;
+        private bool _actionClipLoop;
+        private float _actionClipEndAt;
         private string _currentState = "";
         private static readonly string[] _allTriggers =
             { "idle", "run", "jump", "fall", "getup", "feel" };
@@ -42,6 +54,13 @@ namespace _TeamFolder.JCJ.Script
         {
             if (_hideBaseCapsule) TryHideBaseMesh();
             SpawnCharacter();
+        }
+
+        private void Update()
+        {
+            if (!_playableGraph.IsValid() || _actionClipLoop || _activeActionClip == null) return;
+            if (Time.time < _actionClipEndAt) return;
+            StopActionClip();
         }
 
         private void Start()
@@ -64,6 +83,7 @@ namespace _TeamFolder.JCJ.Script
 
         private void OnDestroy()
         {
+            if (_playableGraph.IsValid()) _playableGraph.Destroy();
             if (_instance != null) Destroy(_instance);
         }
 
@@ -154,7 +174,10 @@ namespace _TeamFolder.JCJ.Script
             if (_animator == null)
                 Debug.LogWarning("[PartyCharacterVisual] Spawned character has no Animator component.");
             else
+            {
+                InitializeArenaClipGraph();
                 TriggerState(_idleTrigger);
+            }
         }
 
         private GameObject ResolvePrefab()
@@ -180,8 +203,14 @@ namespace _TeamFolder.JCJ.Script
             if (_animator == null) return;
             ClearAllTriggersExcept(_jumpTrigger);
             _animator.speed = 1f;
-            _animator.SetTrigger(_jumpTrigger);
+            SetTrigger(_jumpTrigger);
             _currentState = _jumpTrigger;
+        }
+
+        public void OnPickup()
+        {
+            if (TryPlayArenaClip(_arenaAnimationLibrary != null ? (_arenaAnimationLibrary.PickupClip != null ? _arenaAnimationLibrary.PickupClip : _arenaAnimationLibrary.ThrowClip) : null, false)) return;
+            OnCollect();
         }
 
         public void OnFall()
@@ -190,7 +219,7 @@ namespace _TeamFolder.JCJ.Script
             if (_currentState == _fallTrigger) return;
             ClearAllTriggersExcept(_fallTrigger);
             _animator.speed = 1f;
-            _animator.SetTrigger(_fallTrigger);
+            SetTrigger(_fallTrigger);
             _currentState = _fallTrigger;
         }
 
@@ -199,7 +228,7 @@ namespace _TeamFolder.JCJ.Script
             if (_animator == null) return;
             ClearAllTriggersExcept(_getupTrigger);
             _animator.speed = 1f;
-            _animator.SetTrigger(_getupTrigger);
+            SetTrigger(_getupTrigger);
             _currentState = _getupTrigger;
         }
 
@@ -208,8 +237,33 @@ namespace _TeamFolder.JCJ.Script
             if (_animator == null) return;
             ClearAllTriggersExcept(_winTrigger);
             _animator.speed = 1f;
-            _animator.SetTrigger(_winTrigger);
+            SetTrigger(_winTrigger);
             _currentState = _winTrigger;
+        }
+
+        public void OnPush()
+        {
+            if (TryPlayArenaClip(_arenaAnimationLibrary != null ? _arenaAnimationLibrary.PushClip : null, false)) return;
+            OnCollect();
+        }
+
+        public void OnThrow()
+        {
+            if (TryPlayArenaClip(_arenaAnimationLibrary != null ? _arenaAnimationLibrary.ThrowClip : null, false)) return;
+            OnCollect();
+        }
+
+        public void SetCarryState(bool carrying, bool moving)
+        {
+            if (!carrying)
+            {
+                if (_actionClipLoop) StopActionClip();
+                return;
+            }
+
+            if (_arenaAnimationLibrary == null) return;
+            var targetClip = moving ? _arenaAnimationLibrary.CarryMoveClip : _arenaAnimationLibrary.CarryIdleClip;
+            TryPlayArenaClip(targetClip, true);
         }
 
         private void TriggerRun(float speedMultiplier)
@@ -219,7 +273,7 @@ namespace _TeamFolder.JCJ.Script
             if (_currentState != _runTrigger)
             {
                 ClearAllTriggersExcept(_runTrigger);
-                _animator.SetTrigger(_runTrigger);
+                SetTrigger(_runTrigger);
                 _currentState = _runTrigger;
             }
         }
@@ -230,7 +284,7 @@ namespace _TeamFolder.JCJ.Script
             if (_currentState == trigger) return;
             if (trigger != _runTrigger) _animator.speed = 1f;
             ClearAllTriggersExcept(trigger);
-            _animator.SetTrigger(trigger);
+            SetTrigger(trigger);
             _currentState = trigger;
         }
 
@@ -244,7 +298,7 @@ namespace _TeamFolder.JCJ.Script
             foreach (var t in _allTriggers)
             {
                 if (t == keep) continue;
-                _animator.ResetTrigger(t);
+                ResetTrigger(t);
             }
         }
 
@@ -252,7 +306,116 @@ namespace _TeamFolder.JCJ.Script
         public void ResetState()
         {
             _currentState = "";
+            StopActionClip();
             TriggerState(_idleTrigger);
         }
+
+        private void InitializeArenaClipGraph()
+        {
+            if (_animator == null || _animator.runtimeAnimatorController == null) return;
+            _arenaAnimationLibrary = LoadArenaAnimationLibrary();
+            if (_arenaAnimationLibrary == null) return;
+
+            _playableGraph = PlayableGraph.Create("PartyCharacterVisualGraph");
+            _playableGraph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
+            _layerMixer = AnimationLayerMixerPlayable.Create(_playableGraph, 2);
+            _controllerPlayable = AnimatorControllerPlayable.Create(_playableGraph, _animator.runtimeAnimatorController);
+            _layerMixer.ConnectInput(0, _controllerPlayable, 0);
+            _layerMixer.SetInputWeight(0, 1f);
+
+            var output = AnimationPlayableOutput.Create(_playableGraph, "Animation", _animator);
+            output.SetSourcePlayable(_layerMixer);
+            _playableGraph.Play();
+        }
+
+        private bool TryPlayArenaClip(AnimationClip clip, bool loop)
+        {
+            if (clip == null || !_playableGraph.IsValid()) return false;
+            if (_activeActionClip == clip && _actionClipLoop == loop) return true;
+
+            if (_actionClipPlayable.IsValid())
+            {
+                _playableGraph.DestroyPlayable(_actionClipPlayable);
+            }
+
+            _actionClipPlayable = AnimationClipPlayable.Create(_playableGraph, clip);
+            _actionClipPlayable.SetApplyFootIK(false);
+            _actionClipPlayable.SetDuration(loop ? double.MaxValue : clip.length);
+            _actionClipPlayable.SetTime(0d);
+            _actionClipPlayable.SetSpeed(1d);
+            _layerMixer.DisconnectInput(1);
+            _layerMixer.ConnectInput(1, _actionClipPlayable, 0);
+            _layerMixer.SetInputWeight(1, 1f);
+            _activeActionClip = clip;
+            _actionClipLoop = loop;
+            _actionClipEndAt = Time.time + clip.length;
+            return true;
+        }
+
+        private void StopActionClip()
+        {
+            if (!_playableGraph.IsValid()) return;
+            if (_actionClipPlayable.IsValid())
+            {
+                _layerMixer.DisconnectInput(1);
+                _playableGraph.DestroyPlayable(_actionClipPlayable);
+            }
+
+            _layerMixer.SetInputWeight(1, 0f);
+            _activeActionClip = null;
+            _actionClipLoop = false;
+        }
+
+        private void SetTrigger(string triggerName)
+        {
+            if (_playableGraph.IsValid()) _controllerPlayable.SetTrigger(triggerName);
+            else _animator.SetTrigger(triggerName);
+        }
+
+        private void ResetTrigger(string triggerName)
+        {
+            if (_playableGraph.IsValid()) _controllerPlayable.ResetTrigger(triggerName);
+            else _animator.ResetTrigger(triggerName);
+        }
+
+        private ArenaAnimationLibrary LoadArenaAnimationLibrary()
+        {
+            var library = Resources.Load<ArenaAnimationLibrary>(_arenaAnimationLibraryPath);
+#if UNITY_EDITOR
+            if (library == null)
+            {
+                library = UnityEditor.AssetDatabase.LoadAssetAtPath<ArenaAnimationLibrary>("Assets/#TeamFolder/JCJ/Resources/Arena/ArenaAnimationLibrary.asset");
+            }
+
+            if (library == null)
+            {
+                library = ScriptableObject.CreateInstance<ArenaAnimationLibrary>();
+                var serializedObject = new UnityEditor.SerializedObject(library);
+                SetLibraryClip(serializedObject, "_pushClip", "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Punching.fbx", "Push");
+                SetLibraryClip(serializedObject, "_throwClip", "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Throw.fbx", "Throw");
+                SetLibraryClip(serializedObject, "_carryIdleClip", "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Box Idle.fbx", "CarryIdle");
+                SetLibraryClip(serializedObject, "_carryMoveClip", "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Box Walk Arc.fbx", "CarryMove");
+                serializedObject.ApplyModifiedPropertiesWithoutUndo();
+            }
+#endif
+            return library;
+        }
+
+#if UNITY_EDITOR
+        private static void SetLibraryClip(UnityEditor.SerializedObject serializedObject, string propertyName, string assetPath, string clipName)
+        {
+            var property = serializedObject.FindProperty(propertyName);
+            if (property == null) return;
+            var assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetPath);
+            for (int i = 0; i < assets.Length; i++)
+            {
+                if (assets[i] is AnimationClip animationClip && animationClip.name == clipName)
+                {
+                    property.objectReferenceValue = animationClip;
+                    return;
+                }
+            }
+        }
+#endif
     }
 }

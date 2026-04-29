@@ -43,7 +43,7 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private Transform _cameraTransform;
 
         [Header("비주얼(선택)")]
-        [SerializeField] private bool _addTrailIfMissing = true;
+        [SerializeField] private bool _addTrailIfMissing = false;
         [Tooltip("PartyCharacters 리깅 비주얼(권장). 끄거나 프리팹 없으면 절차적 프리미티브로 폴백.")]
         [SerializeField] private bool _usePartyCharacter = true;
 
