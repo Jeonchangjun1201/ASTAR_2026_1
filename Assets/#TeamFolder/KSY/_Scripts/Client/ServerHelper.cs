@@ -1,4 +1,3 @@
-using KSY.Client;
 using UnityEngine;
 
 namespace KSY.Client
