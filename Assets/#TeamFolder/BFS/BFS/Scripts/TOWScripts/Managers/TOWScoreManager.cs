@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace BFS
 {
-    public class TOWScoreManager                                                                                         // Score Manager script for Tug of war
+    public class TOWScoreManager                                                                                         // Score Manager script for Tug of war // 줄다리기 스코어 매니저
     {
         public Dictionary<PlayerTeamTOW, int> scoreBoard { get; private set; } = new Dictionary<PlayerTeamTOW, int>();   // Dictionary, for easier score managing for each team(Key: PlayerTeamTOW enum(Team), Value: int(score))
         private List<ITeamTOW> _playerList;                                                                              // List, to sub/unsub AddScore method to OnScoreGain action for each player
