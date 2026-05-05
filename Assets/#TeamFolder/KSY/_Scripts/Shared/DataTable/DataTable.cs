@@ -1,9 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace KSY.Shared.DataTable
 {
+    public abstract class DataTableRow
+    {
+        [NonSerialized]
+        public int id = 0;
+    }
     public abstract class DataTable<TRow> : IEnumerable<TRow> where TRow : DataTableRow
     {
         [SerializeField]
