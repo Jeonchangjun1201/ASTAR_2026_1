@@ -23,9 +23,13 @@ namespace BFS
             _elapsedTime += Time.deltaTime;
             if (_elapsedTime > _endTime)
             {
-                OnTimerEnd?.Invoke();
-                _isRunning = false;
+                EndTimer();
             }
+        }
+        public void EndTimer()
+        {
+            OnTimerEnd?.Invoke();
+            _isRunning = false;
         }
     }
 

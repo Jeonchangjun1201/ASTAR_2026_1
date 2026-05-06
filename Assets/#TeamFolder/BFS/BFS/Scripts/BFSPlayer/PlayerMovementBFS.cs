@@ -18,8 +18,8 @@ namespace BFS
         {
             _player = player;
             _targetTrm = player.transform;
-            _player.PlayerInput.OnMovementKeyPressed += SetMovementDirection;               // Movement subs
-            _player.PlayerInput.OnJumpKeyPressed += Jump;                                   // Jump subs
+            _player.PlayerInput.OnMovementKeyPressed += SetMovementDirection;               // Movement subs //구독
+            _player.PlayerInput.OnJumpKeyPressed += Jump;                                   // Jump subs //구독
             _controller = controller;
         }
         private void OnDestroy()
@@ -27,17 +27,17 @@ namespace BFS
             _player.PlayerInput.OnMovementKeyPressed -= SetMovementDirection;
             _player.PlayerInput.OnJumpKeyPressed -= Jump;
         }
-        private void SetMovementDirection(Vector2 movementInput)                            // Movement Direction Sets
+        private void SetMovementDirection(Vector2 movementInput)                            // Movement Direction Sets // 이동 방향
         {
             _movementDirection = new Vector3(movementInput.x, 0f, movementInput.y);
         }
         private void FixedUpdate()
         {
-            CalculateMovement();                                                            // Calculating Movement
+            CalculateMovement();                                                            // Calculating Movement // 이동 계산
             ApplyGravity();
-            MoveCharacter();                                                                // Movement Method
+            MoveCharacter();                                                                // Movement Method // 무브먼트 메서드
         }
-        private void Jump()                                                                 // Jump Method(Activates along with movement)
+        private void Jump()                                                                 // Jump Method(Activates along with movement) // 점프 메서드
         {
             if (!_canJump) return;
             _verticalVelocity += 1.5f;
