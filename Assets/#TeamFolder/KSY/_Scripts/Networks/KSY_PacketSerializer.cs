@@ -32,6 +32,8 @@ namespace KSY.Networks
                         packetSerializer.factories[customAttribute.PacketID] = (ArraySegment<byte> packetData) => CreatePacket(packetType, packetData);
                     }
                 }
+
+                return packetSerializer;
             }
 
             private static KSY_IPacket CreatePacket(Type packetType, ArraySegment<byte> packetData)
