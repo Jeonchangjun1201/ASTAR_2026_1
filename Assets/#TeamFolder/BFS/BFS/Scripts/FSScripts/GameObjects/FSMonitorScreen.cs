@@ -5,6 +5,7 @@ namespace BFS
     public class FSMonitorScreen : MonoBehaviour, IFSScreen
     {
         private MeshRenderer _meshRenderer;
+        [field: SerializeField] public PlateColor GivenColor { get; protected set; }
 
         private void Awake()
         {

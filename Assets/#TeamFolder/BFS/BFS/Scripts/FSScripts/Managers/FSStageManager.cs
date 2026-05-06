@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 namespace BFS
 {
@@ -8,9 +9,10 @@ namespace BFS
         [SerializeField] private FSStageListSO stageList;                            // StageList // 스테이지 리스트
         public event Action<FSCameraView> OnCameraViewChange;                        // Action to change camera view // 카메라 시점 변경하는 액션
         public event Action OnPlateQueue;                                            // Action to add plates to queue(and change color screen with game manager) // 발판을 큐에 넣는(그리고 게임 매니저로 모니터 화면을 변경하는) 액션
-        public event Action OnScreenReset;                                           // Action to reset monitor screen // 모니터 화면을 초기화하는 액션
+        public event Action OnScreenReset;                               // Action to reset monitor screen // 모니터 화면을 초기화하는 액션
         public event Action<float> OnPlateDequeue;                                   // Action to remove/deactivate plates // 발판을 활성화/비활성화 하는 액션
 
+        private List<FSPlayer> _playerList;
         private float _colorDelay;
         private int _colorCount;
         private int _currentStage = 0;
@@ -18,6 +20,7 @@ namespace BFS
         private int _countDownTime;
         private bool _inGame;
 
+        public void SetPlayerList(List<FSPlayer> players) => _playerList = players;
 
         private void Start()
         {
@@ -39,6 +42,11 @@ namespace BFS
         {
             _inGame = false;
             Debug.Log("FINISHED!");                                                  // TEMPORARY; for debugging // 임시; 디버그용
+            foreach(FSPlayer p in  _playerList)
+            {
+                if (p.IsOut) continue;
+                Debug.Log($"{p.GetComponentInParent<PlayerBFS>().gameObject.name} SURVIVED!");
+            }
         }
         private bool IsStageAvailable(int stageIndex)                                // Method to check if stage is available using index of current stage. Returns true if stage with given index exists in stage list. return false otherwise
         {                                                                            // 길어서 여기에 씀: 현재 스테이지의 인덱스를 통해 스테이지 플레이가 가능한지 확인하는 메서드. 스테이지 리스트에 주어진 인덱스의 스테이지가 존재할 경우 true, 아니면 false를 반환한다!
