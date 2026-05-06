@@ -44,6 +44,7 @@ namespace KSY.Networks
 
         private Dictionary<Type, ushort> packetIDMap;
         private Dictionary<ushort, Func<ArraySegment<byte>, KSY_IPacket>> factories;
+
         private KSY_PacketSerializer()
         {
 

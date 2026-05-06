@@ -31,9 +31,9 @@ public class KSY_Session : MonoBehaviour
         }
     }
 
-    public event Action<Session> OnOpenedEvent;
-    public event Action<Session> OnClosedEvent;
-    public event Action<Session, Exception> OnErrorEvent;
+    public event Action<KSY_Session> OnOpenedEvent;
+    public event Action<KSY_Session> OnClosedEvent;
+    public event Action<KSY_Session, Exception> OnErrorEvent;
     
     public KSY_Session()
     {
