@@ -41,6 +41,8 @@ namespace BFS
                 StartGame();
             }
             _timeManager.UpdateTimer();
+            if (qteManager.IsInGame)
+                CheckForceEnd();
         }
         private void OnDestroy()
         {
@@ -54,13 +56,19 @@ namespace BFS
             qteManager.StartMinigame();
             _timeManager.StartTimer(gameTime);
         }
-
+        public void CheckForceEnd()
+        {
+            if (Mathf.Abs(_scoreManager.scoreBoard[(PlayerTeamTOW)1] - _scoreManager.scoreBoard[(PlayerTeamTOW)2]) >= 25)
+                EndGame();
+        }
         public void EndGame()
         {
             qteManager.EndMinigame();
             Debug.Log("FINISH!");                                                                                                       // TEMPORARY; for debugging // юс╫ц
             Debug.Log(_scoreManager.scoreBoard[(PlayerTeamTOW)1].CompareTo(_scoreManager.scoreBoard[(PlayerTeamTOW)2]) == 1 
-                ? "TEAM ONE IS NUMBER ONE!" : "TEAM TWO TAKES THE FIRST PLACE!");
+                ? "TEAM ONE IS NUMBER ONE!" :
+                _scoreManager.scoreBoard[(PlayerTeamTOW)1].CompareTo(_scoreManager.scoreBoard[(PlayerTeamTOW)2]) == 0
+                ? "DRAW!!!!" : "TEAM TWO TAKES THE FIRST PLACE!");
         }
     }
 

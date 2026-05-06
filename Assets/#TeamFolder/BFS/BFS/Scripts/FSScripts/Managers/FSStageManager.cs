@@ -3,13 +3,13 @@ using System.Collections;
 using UnityEngine;
 namespace BFS
 {
-    public class FSStageManager : MonoBehaviour                                      // Stage manager for Four Sides game
+    public class FSStageManager : MonoBehaviour                                      // Stage manager for Four Sides game 스테이지를 관리하는 관리자
     {
-        [SerializeField] private FSStageListSO stageList;                            // StageList
-        public event Action<FSCameraView> OnCameraViewChange;                        // Action to change camera view
-        public event Action OnPlateQueue;                                            // Action to add plates to queue(and change color screen with game manager)
-        public event Action OnScreenReset;                                           // Action to reset monitor screen
-        public event Action<float> OnPlateDequeue;                                   // Action to remove/deactivate plates
+        [SerializeField] private FSStageListSO stageList;                            // StageList // 스테이지 리스트
+        public event Action<FSCameraView> OnCameraViewChange;                        // Action to change camera view // 카메라 시점 변경하는 액션
+        public event Action OnPlateQueue;                                            // Action to add plates to queue(and change color screen with game manager) // 발판을 큐에 넣는(그리고 게임 매니저로 모니터 화면을 변경하는) 액션
+        public event Action OnScreenReset;                                           // Action to reset monitor screen // 모니터 화면을 초기화하는 액션
+        public event Action<float> OnPlateDequeue;                                   // Action to remove/deactivate plates // 발판을 활성화/비활성화 하는 액션
 
         private float _colorDelay;
         private int _colorCount;
@@ -25,7 +25,7 @@ namespace BFS
             StartGame(_currentStage);
         }
 
-        private void StartGame(int index)                                            // Receives index of current stage and checks if sstage is available. Start game if it is or ends game if it isn't
+        private void StartGame(int index)                                            // Receives index of current stage and checks if stage is available. Start game if it is or ends game if it isn't // 현재 스테이지의 인덱스를 받고 값에 따라 게임을 시작 혹은 끝낸다
         {
             if (IsStageAvailable(index) & _inGame)
             {
@@ -35,16 +35,16 @@ namespace BFS
             else
                 EndGame();
         }
-        public void EndGame()                                                        // Method to run if game has ended
+        public void EndGame()                                                        // Method to run if game has ended // 게임이 끝날 때 실행되는 메서드
         {
             _inGame = false;
-            Debug.Log("FINISHED!");                                                  // TEMPORARY; for debugging
+            Debug.Log("FINISHED!");                                                  // TEMPORARY; for debugging // 임시; 디버그용
         }
         private bool IsStageAvailable(int stageIndex)                                // Method to check if stage is available using index of current stage. Returns true if stage with given index exists in stage list. return false otherwise
-        {
+        {                                                                            // 길어서 여기에 씀: 현재 스테이지의 인덱스를 통해 스테이지 플레이가 가능한지 확인하는 메서드. 스테이지 리스트에 주어진 인덱스의 스테이지가 존재할 경우 true, 아니면 false를 반환한다!
             return stageIndex < stageList.FSStageList.Length;
         }
-        private void GetGameVirables(int stageIndex)                                 // Method to reset variable from stage data with stage index
+        private void GetGameVirables(int stageIndex)                                 // Method to reset variable from stage data with stage index // 스테이지 인덱스를 통해 스테이지 데이터릐 변수들을 초기화하는 메서드
         {
             FSStageSO currentStage = stageList.FSStageList[stageIndex];
             _colorDelay = currentStage.ColorDelayTime;
@@ -53,7 +53,7 @@ namespace BFS
             _plateDisableDuration = currentStage.PlateDisappearDuration;
             _countDownTime = currentStage.CountDownTime;
         }
-        private IEnumerator StartGameCoroutine()                                     // Coroutine to manage game stages
+        private IEnumerator StartGameCoroutine()                                     // Coroutine to manage game stages 게임 스테이지들을 관리하는 코루틴
         {
             yield return new WaitForSeconds(3f);
             OnCameraViewChange?.Invoke(FSCameraView.SCREEN);

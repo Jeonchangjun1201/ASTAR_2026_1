@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace BFS
 {
-    public class FSGameManager : MonoBehaviour                                // Game manager script for Four Side game
+    public class FSGameManager : MonoBehaviour                                // Game manager script for Four Side game // 게임 매니저!!
     {
         [SerializeField] private FSPlateManager plateManager;
         [SerializeField] private FSCameraManager cameraManager;
@@ -24,12 +24,12 @@ namespace BFS
             }
             cameraManager.FocusToGame();                                  
             monitorScreen = GetComponentInChildren<IFSScreen>();
-            plateManager.OnPlateAdded += ManageScreenColor;                   // Subscribes, monitor screen color is changed everytime plate is added to queue
+            plateManager.OnPlateAdded += ManageScreenColor;                   // Subscribes, monitor screen color is changed everytime plate is added to queue // 구독함, 발판이 큐에 추가될 때마다 모니터 화면 변경됨
 
-            stageManager.OnCameraViewChange += ChangeCameraView;              // Subscribes, now camera view will change depending on parameter sent from stage manager
-            stageManager.OnPlateQueue += QueuePlate;                          // Subscribes, stage manager can alert plate manager to que plates now
-            stageManager.OnScreenReset += ResetScreen;                        // Subscribes, stage manager can reset monitor screen to default
-            stageManager.OnPlateDequeue += DeQueuePlate;                      // Subscribes, now stage manager can remove plates
+            stageManager.OnCameraViewChange += ChangeCameraView;              // Subscribes, now camera view will change depending on parameter sent from stage manager // 구독함, 스테이지 매니저가 보내는 매개변수에 따라 카메라 시점 변경
+            stageManager.OnPlateQueue += QueuePlate;                          // Subscribes, stage manager can alert plate manager to que plates now // 구독함, 이제 스테이지 매니저가 발판을 큐에 넣으라고 알려줄 수 있음
+            stageManager.OnScreenReset += ResetScreen;                        // Subscribes, stage manager can reset monitor screen to default // 구독함, 스테이지 매니저가 모니터 화면을 기본상태로 변경 가능
+            stageManager.OnPlateDequeue += DeQueuePlate;                      // Subscribes, now stage manager can remove plates // 구독, 스테이지 매니저가 발판들을 삭제할 수 있음
         }
 
         private void Start()
@@ -66,7 +66,7 @@ namespace BFS
             }
         }
 
-        private void OnDestroy()                                              // Unsub
+        private void OnDestroy()                                              // Unsub // 구독 해제
         {
             plateManager.OnPlateAdded -= ManageScreenColor;
 
@@ -84,7 +84,7 @@ namespace BFS
         {
             stageManager.EndGame();
         }
-        private void ChangeCameraView(FSCameraView cameraView)                // Method to change camera view, receiving FSCameraView enum that decides which camera to view    
+        private void ChangeCameraView(FSCameraView cameraView)                // Method to change camera view, receiving FSCameraView enum that decides which camera to view // 카메라 시점을 변경하는 메서드, 매개변수로 카메라 시점 지정
         {
             switch (cameraView)
             {
@@ -95,10 +95,10 @@ namespace BFS
                     cameraManager.FocusToScreen();
                     break;
                 default:
-                    throw new System.ArgumentException("INVALID TYPE");       // Exception
+                    throw new System.ArgumentException("INVALID TYPE");       // Exception // 예외 처리
             }
         }
-        private void ManageScreenColor(PlateColor plate)                      // Method to change monitor screen color
+        private void ManageScreenColor(PlateColor plate)                      // Method to change monitor screen color // 모니터 화면 색을 변경하는 메서드
         {
             Color color = new Color();
             switch (plate)
