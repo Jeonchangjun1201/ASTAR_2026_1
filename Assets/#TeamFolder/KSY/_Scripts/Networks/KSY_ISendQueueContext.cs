@@ -1,6 +1,6 @@
 using System;
 
-namespace KSY.Network
+namespace KSY.Networks
 {
     public interface KSY_ISendQueueContext : IDisposable
     {

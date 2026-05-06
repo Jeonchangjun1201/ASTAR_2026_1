@@ -2,7 +2,7 @@ using KSY.Client;
 using KSY.Shared;
 using UnityEngine;
 
-namespace KSY.Server
+namespace KSY.Servers
 {
     public class ServerBootstrap : MonoBehaviour
     {

@@ -1,5 +1,7 @@
 ﻿using System;
 using TMPro.EditorUtilities;
+using Unity.VisualScripting;
+using UnityEngine.LightTransport;
 
 namespace KSY.Client
 {
@@ -12,6 +14,8 @@ namespace KSY.Client
         public ReceiveBuffer(int bufferSize)
         {
             _buffer = new ArraySegment<byte>(new byte[bufferSize], 0, bufferSize);
+            _readPos = 0;
+            _writePos = 0;
         }
 
         public int DataSize { get { return _writePos - _readPos; } }
@@ -28,17 +32,26 @@ namespace KSY.Client
 
         public void Clean()
         {
-            int dataSize = DataSize;
-            if(dataSize == 0)
+            //int dataSize = DataSize;
+            //if(dataSize == 0)
+            //{
+            //    _readPos = _writePos = 0;
+            //}
+            //else
+            //{
+            //    Array.Copy(_buffer.Array, _buffer.Offset + _readPos, _buffer.Array, _buffer.Offset, DataSize);
+            //    _readPos = 0;
+            //    _writePos = DataSize;
+            //}
+
+            int num = _writePos - _readPos;
+            if (num != 0)
             {
-                _readPos = _writePos = 0;
+                Array.Copy(_buffer.Array, _readPos, _buffer.Array, 0, num);
             }
-            else
-            {
-                Array.Copy(_buffer.Array, _buffer.Offset + _readPos, _buffer.Array, _buffer.Offset, DataSize);
-                _readPos = 0;
-                _writePos = DataSize;
-            }
+
+            _readPos = 0;
+            _writePos = num;
         }
 
         public bool OnRead(int numOfBytes)

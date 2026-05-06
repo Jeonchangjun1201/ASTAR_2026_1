@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace KSY.Network
+namespace KSY.Networks
 {
     public class KSY_SendQueue : IDisposable
     {
