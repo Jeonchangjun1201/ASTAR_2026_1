@@ -7,5 +7,12 @@ namespace BFS
     public class FSStageListSO : ScriptableObject
     {
         [field: SerializeField] public FSStageSO[] FSStageList { get; private set; }
+        private void OnValidate()
+        {
+            for (int i = 0; i < FSStageList.Length; i++)
+            {
+                FSStageList[i].StageIndex = i + 1;
+            }
+        }
     }
 }
