@@ -8,9 +8,13 @@ namespace _TeamFolder.JCJ.Script
         void OnIdle();
         void OnWalk(float speedNormalized);
         void OnSprint(float speedNormalized);
+        void OnPickup();
         void OnJump();
         void OnFall();
         void OnLand();
         void OnCollect();
+        void OnPush();
+        void OnThrow();
+        void SetCarryState(bool carrying, bool moving);
     }
 }
