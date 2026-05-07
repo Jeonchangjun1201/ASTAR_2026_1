@@ -11,7 +11,7 @@ namespace KSY.Networks
 
         public KSY_PacketSendQueueContext(KSY_PacketSerializer packetSerializer, KSY_IPacket packet)
         {
-            bufferWriter = packetSerializer.Seralize(packet);
+            bufferWriter = packetSerializer.Serialize(packet);
             data = bufferWriter.WrittenSegment;
         }
 

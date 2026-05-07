@@ -146,7 +146,7 @@ namespace KSY.Networks
             ArraySegment<byte> packetData = new ArraySegment<byte>(buffer.Array, buffer.Offset + 2, packetSize - 2);
             try
             {
-                KSY_IPacket packet = packetSerializer.
+                KSY_IPacket packet = packetSerializer.Deseri
             }
         }
     }

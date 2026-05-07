@@ -48,10 +48,9 @@ namespace KSY.Networks
 
         private KSY_PacketSerializer()
         {
-
         }
 
-        public KSY_ArrayPoolBufferWriter Seralize(KSY_IPacket packet)
+        public KSY_ArrayPoolBufferWriter Serialize(KSY_IPacket packet)
         {
             if (packet == null)
             {
@@ -78,8 +77,30 @@ namespace KSY.Networks
                     throw new InvalidProgramException($"Packet is too large. Size: {writtenCount}, Max: {65535}");
                 }
 
-                BinaryPrimitives.WriteUInt16BigEndian(bufferWriter.WrittenSegment.AsSp)
+                BinaryPrimitives.WriteUInt16BigEndian(bufferWriter.WrittenSegment.AsSpan(0, 2), (ushort)writtenCount);
+                return bufferWriter;
             }
+            catch
+            {
+                bufferWriter.Dispose();
+                throw;
+            }
+        }
+
+        public KSY_IPacket Deserialize(ArraySegment<byte> packetData)
+        {
+            if (packetData.Count < 2)
+            {
+                return null;
+            }
+
+            ushort key = BitConverter.ToUInt16(packetData.Array, packetData.Offset);
+            if (!factories.TryGetValue(key, out var value))
+            {
+                return null;
+            }
+
+            return value(new ArraySegment<byte>(packetData.Array, packetData.Offset + 2, packetData.Count - 2));
         }
     }
 }
