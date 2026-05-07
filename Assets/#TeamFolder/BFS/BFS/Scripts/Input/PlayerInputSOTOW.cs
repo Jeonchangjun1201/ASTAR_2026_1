@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 namespace BFS
 {
     [CreateAssetMenu(fileName = "PlayerInputSOTOW", menuName = "BFS_SO/PlayerInputSOTOW")]
-    public class PlayerInputSOTOW : ScriptableObject, TOWControls.IPlayerActions                 // Input SO specifically made for Tug of war minigame... I will skip descriptions
+    public class PlayerInputSOTOW : ScriptableObject, TOWControls.IPlayerActions                 // Input SO specifically made for Tug of war minigame... I will skip descriptions // 줄다리기용 인풋SO, 나중에 바꿔도 됨. 설명은 굳이 필요없겠죠..?
     {
         public event Action<Vector2> OnMovementInputPressed;                              
 

@@ -60,23 +60,7 @@ namespace PYH.Player
             if (isPush) return;
             
             Debug.Log("Push!");
-            StartCoroutine(PushCoroutine(dir, force));
-        }
-
-        private IEnumerator PushCoroutine(Vector3 dir, float force)
-        {
-            float lastTime = Time.time;
-
-            isPush = true;
-            
-            while (lastTime < Time.time + 5)
-            {
-                Rigid.AddForce(dir * force, ForceMode.Impulse);
-
-                yield return null;
-            }
-            
-            isPush = false;
+            Rigid.AddForce(dir * force, ForceMode.Impulse);
         }
     }
 }
