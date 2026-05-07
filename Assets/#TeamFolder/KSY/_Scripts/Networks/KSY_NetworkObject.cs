@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace KSY.Networks
 {
-    public class NetworkObject : KSY_IDIContainer, IAsyncDisposable
+    public class KSY_NetworkObject : KSY_IDIContainer, IAsyncDisposable
     {
         private readonly KSY_DIContainer diContainer;
         public ValueTask DisposeAsync()

@@ -1,6 +1,7 @@
 using KSY.Client;
 using System;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -72,12 +73,40 @@ namespace KSY.Networks
 
         public void Close()
         {
+            try
+            {
+                if (Volatile.Read(ref isClosed) != 1)
+                {
+                    Volatile.Write(ref isClosed, 1);
+                    connectedSocket?.Close();
+                }
+            }
+            catch
+            {
+            }
+            finally
+            {
+                receiveArgs?.Dispose();
+                sendArgs?.Dispose();
+                receiveArgs = null;
+                sendArgs = null;
+                connectedSocket = null;
+                lock (sendLocker)
+                {
+                    sendQueue?.Dispose();
+                    sendQueue = null;
+                }
 
+                this.OnClosedEvent?.Invoke(this);
+            }
         }
 
         public void SendAsync(KSY_IPacket packet)
         {
-
+            if (packet == null)
+            {
+                SendAsync(new KSY_PacketSendQueueContext());
+            }
         }
 
         internal void SendAsync(KSY_ISendQueueContext sendQueueContext)
