@@ -69,7 +69,7 @@ namespace BFS
         {
             _screenManager.ChangeScreenColor(color);
             string s = GetTextColor(color);
-            _uiManager.ChangeText(_uiManager.ColorText, s + $"{color}</color>", stageManager.ColorDelay);
+            _uiManager.ChangeText(_uiManager.ColorText, s + $"- {color} -</color>", stageManager.ColorDelay);
         }
         private void QueuePlate() => plateManager.EnqueuePlate();
         private void ResetScreen() => _screenManager.ResetScreenColor();
@@ -77,7 +77,7 @@ namespace BFS
         {
             PlateColor targetColor = plateManager.plateQue.plateQueue.First<PlateColor>();
             string s = GetTextColor(targetColor);
-            _uiManager.ChangeText(_uiManager.ColorText, s + $"{targetColor}</color>", stageManager.PlateDisableDuration);
+            _uiManager.ChangeText(_uiManager.ColorText, s + $"! {targetColor} !</color>", stageManager.PlateDisableDuration);
             plateManager.DequeuePlate(duration);
         }
         private void TimeCountDown(int time)
