@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace PYH.MiniGame
 {
@@ -15,8 +16,8 @@ namespace PYH.MiniGame
 
         public int MaxPlayer { get; private set; }
         public int CurrentPlayer { get; private set; }
-
-        public event Action OnMiniGameEndEvent;
+        
+        public UnityEvent onMiniGameEndEvent;
 
         public void Initialize()
         {
@@ -38,7 +39,7 @@ namespace PYH.MiniGame
 
         public void OutPlayer(Player player, int index)
         {
-            Debug.Log($"{player.gameObject.name} ÇÃ·¹ÀÌ¾î, ÀÌº¥Æ® ÇØÁ¦");
+            Debug.Log($"{player.gameObject.name} ï¿½Ã·ï¿½ï¿½Ì¾ï¿½, ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½");
 
             CurrentPlayer--;
             player.OnOutPlayerEvent -= OutPlayer;
@@ -47,6 +48,7 @@ namespace PYH.MiniGame
             if (CurrentPlayer == 1)
             {
                 Debug.Log($"GAME SET!");
+                GameEnd();
             }
         }
 
@@ -68,11 +70,8 @@ namespace PYH.MiniGame
                     Debug.Log($"Player {PlayerList[i].index}, Win.");
                 }
             }
-
-            //foreach (int playerIndex in winPlayerIndex)
-            //{
-            //    Debug.Log($"Player {playerIndex}, Win.");
-            //}
+            
+            onMiniGameEndEvent?.Invoke();
         }
 
         private void PlayerAllDelEvent()

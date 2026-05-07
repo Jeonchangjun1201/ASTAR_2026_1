@@ -18,17 +18,17 @@ namespace PYH.Manager
             CurrentMiniGameType = MiniGameType.HumanGolf;
 
             _timeManager.OnTickEndEvent.AddListener(_humanGolf.GameEnd);
-            _humanGolf.OnMiniGameEndEvent += OnMiniGameEndHandler;
+            _humanGolf.onMiniGameEndEvent.AddListener(OnMiniGameEndHandler);
 
             _humanGolf.Initialize();
             _timeManager.Initialize();
         }
 
-        private void OnMiniGameEndHandler() // For Test, Not Yet.
+        private void OnMiniGameEndHandler()
         {
             Time.timeScale = 0;
 
-            _humanGolf.OnMiniGameEndEvent -= OnMiniGameEndHandler;
+            _humanGolf.onMiniGameEndEvent.RemoveListener(OnMiniGameEndHandler);
             _timeManager.OnTickEndEvent.RemoveListener(_humanGolf.GameEnd);
 
             Debug.Log("Game End.");

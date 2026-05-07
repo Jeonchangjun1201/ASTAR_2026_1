@@ -12,10 +12,9 @@
   <component name="ChangeListManager">
     <list default="true" id="6b790abe-9782-466e-857a-afde7cd993d9" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/01.Scenes/Test Scene/SC_Test_HumanGolf.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/01.Scenes/Test Scene/SC_Test_HumanGolf.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/HumanGolf/HumanGolf.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/HumanGolf/HumanGolf.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/MiniGameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/MiniGameManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/TimeManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/TimeManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Movement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Player.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,11 +25,8 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Goalaudiohint.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Igoalaudiohint.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/MazeManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/PlayerInput/PlayerInput.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
     <commands />
@@ -44,27 +40,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "cidr.known.project.marker": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "PYH",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.inline.completion",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;PYH&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.inline.completion&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Unity 에디터에 연결.Unity 에디터에 연결">
     <configuration name="유닛 테스트(배치 모드)" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.3.11f1-x86_64\Editor\Unity.exe" />
