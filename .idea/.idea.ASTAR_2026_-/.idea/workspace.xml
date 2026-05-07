@@ -10,14 +10,7 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b790abe-9782-466e-857a-afde7cd993d9" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Resources/Arena/ArenaAnimationLibrary.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Resources/Arena/ArenaAnimationLibrary.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/01.Scenes/Test Scene/SC_Test_HumanGolf.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/01.Scenes/Test Scene/SC_Test_HumanGolf.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/LookMousePointer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/LookMousePointer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Movement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Player.cs" afterDir="false" />
-    </list>
+    <list default="true" id="6b790abe-9782-466e-857a-afde7cd993d9" name="변경" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,7 +49,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "PYH",
+    "git-widget-placeholder": "Devlop",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
