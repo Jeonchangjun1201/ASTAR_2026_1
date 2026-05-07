@@ -1,26 +1,28 @@
 using System.Linq;
+using PYH.MiniGame;
+using PYH.Player;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace PYH.MiniGame
+namespace MiniGame.PassTheBomb
 {
-    using Player;
-
-    public class HumanGolf : AbstractMiniGame, IMiniGame
+    public class PassTheBomb : AbstractMiniGame, IMiniGame
     {
         private bool _init;
-
-        [field:SerializeField] public Player[] PlayerList { get; private set; }
-
+        
+        public Player[] PlayerList { get; private set; }
         public int MaxPlayer { get; private set; }
         public int CurrentPlayer { get; private set; }
-        public UnityEvent OnMiniGameEndEvent { get; }
-
+        [field: SerializeField] public UnityEvent OnMiniGameEndEvent { get; private set; }
+        [SerializeField] private Bomb currentBomb;
+        
         public void Initialize()
         {
             if (_init) return;
             _init = true;
 
+            Debug.Assert(currentBomb != null, "currentBomb is null");
+            
             PlayerList = FindObjectsOfType<Player>().ToArray<Player>(); // Temporary, Load Player
 
             for (int i = 0; i < PlayerList.Length; i++)
@@ -28,18 +30,18 @@ namespace PYH.MiniGame
                 Player player = PlayerList[i];
 
                 player.index = i;
-                player.OnOutPlayerEvent += OutPlayer;
+                player.OnExplosionEvent += OutPlayer;
             }
 
             CurrentPlayer = PlayerList.Length;
+            
+            currentBomb.SetPlayer(RandomPlayer());
         }
-
+        
         public void OutPlayer(Player player, int index)
         {
-            Debug.Log($"{player.gameObject.name} �÷��̾�, �̺�Ʈ ����");
-
             CurrentPlayer--;
-            player.OnOutPlayerEvent -= OutPlayer;
+            player.OnExplosionEvent -= OutPlayer;
             player.DelPlayer();
 
             if (CurrentPlayer == 1)
@@ -47,6 +49,8 @@ namespace PYH.MiniGame
                 Debug.Log($"GAME SET!");
                 GameEnd();
             }
+            else
+                currentBomb.SetPlayer(RandomPlayer());
         }
 
         public void GameEnd()
@@ -68,13 +72,25 @@ namespace PYH.MiniGame
             
             OnMiniGameEndEvent?.Invoke();
         }
-
+        
         private void PlayerAllDelEvent()
         {
             foreach (var player in PlayerList)
             {
-                player.OnOutPlayerEvent -= OutPlayer;
+                player.OnExplosionEvent -= OutPlayer;
             }
+        }
+
+        private Player RandomPlayer()
+        {
+            Player player = PlayerList[Random.Range(0, PlayerList.Length)];
+            
+            while (player.gameObject.activeSelf)
+            {
+                player = PlayerList[Random.Range(0, PlayerList.Length)];
+            }
+
+            return player;
         }
     }
 }

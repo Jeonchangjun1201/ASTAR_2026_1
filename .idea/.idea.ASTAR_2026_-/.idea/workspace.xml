@@ -12,9 +12,18 @@
   <component name="ChangeListManager">
     <list default="true" id="6b790abe-9782-466e-857a-afde7cd993d9" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/01.Scenes/Test Scene/SC_Test_MusicalChairs.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/01.Scenes/Test Scene/SC_Test_MusicalChairs.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/GameManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/GameManager.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/HumanGolf/HumanGolf.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/HumanGolf/HumanGolf.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/IMiniGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/IMiniGame.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/MiniGameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/MiniGameManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/TimeManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/TimeManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/MiniGameType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/MiniGameType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/GolfClub.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/GolfClub.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Player/Player.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Util/MonoSingleton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/Util/MonoSingleton.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +34,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/AbstractMiniGame.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/PlayerInput/PlayerInput.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -140,6 +150,7 @@
       <workItem from="1777333411188" duration="1000" />
       <workItem from="1777450407520" duration="462000" />
       <workItem from="1778111606178" duration="2871000" />
+      <workItem from="1778141570600" duration="4613000" />
     </task>
     <servers />
   </component>
