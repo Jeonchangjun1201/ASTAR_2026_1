@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FSStage1
   m_EditorClassIdentifier: Assembly-CSharp::GDH.FSStageSO
   <ColorDelayTime>k__BackingField: 0.9
-  <ColorCount>k__BackingField: 5
+  <ColorCount>k__BackingField: 3
   <StageIndex>k__BackingField: 1
   <PlateDisappearDuration>k__BackingField: 3
   <CountDownTime>k__BackingField: 3
