@@ -5,7 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6b790abe-9782-466e-857a-afde7cd993d9" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Resources/Arena/ArenaAnimationLibrary.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Resources/Arena/ArenaAnimationLibrary.asset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SoccerGame/PlayerGoal.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SoccerGame/PlayerGoal.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SpinGame/FallZone.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SpinGame/FallZone.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SpinGame/Manager/TopManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SpinGame/Manager/TopManager.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/00.Scene/SoccerScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/00.Scene/SoccerScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/00.Scene/TankGame.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/00.Scene/TankGame.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SoccerGame/Ball.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SoccerGame/Ball.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SoccerGame/GoalZone.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SoccerGame/GoalZone.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SoccerGame/ScoreManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/KDH/01.Code/SoccerGame/ScoreManager.cs.meta" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,6 +137,9 @@
       <workItem from="1776604508162" duration="1901000" />
       <workItem from="1777333411188" duration="1000" />
       <workItem from="1777450407520" duration="462000" />
+      <workItem from="1777987055906" duration="3330000" />
+      <workItem from="1778055486061" duration="891000" />
+      <workItem from="1778141919047" duration="1403000" />
     </task>
     <servers />
   </component>
