@@ -1,5 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
+
+// 플레이어 이동을 느리게 만드는 거미줄 기믹 처리.
 
 namespace _TeamFolder.JCJ.TileGame
 {

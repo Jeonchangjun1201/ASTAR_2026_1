@@ -1,3 +1,7 @@
+﻿
+
+// \플레이어 비주얼 상태 갱신 계약 인터페이스.
+
 namespace _TeamFolder.JCJ.Script
 {
     /// <summary>
@@ -13,7 +17,6 @@ namespace _TeamFolder.JCJ.Script
         void OnFall();
         void OnLand();
         void OnCollect();
-        void OnPush();
         void OnThrow();
         void SetCarryState(bool carrying, bool moving);
     }

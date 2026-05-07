@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
+// 키 바인딩을 표시하고 수정하는 탭 UI.
 
 namespace _TeamFolder.JCJ.Script
 {

@@ -1,5 +1,7 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using UnityEngine;
+
+// 플레이어가 획득할 수 있는 월드 아이템 기본 처리.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -44,6 +46,8 @@ namespace _TeamFolder.JCJ.Script
             transform.DOKill();
         }
 
+        // 아이템 획득 판정과 보상 지급이 동시에 일어나는 지점이다.
+        // 서버 연동 시에는 충돌 감지는 로컬이어도 점수/시간 보너스 확정은 서버 이벤트를 기준으로 반영하는 편이 안전하다.
         private void OnTriggerEnter(Collider other)
         {
             if (_collected) return;
@@ -54,8 +58,8 @@ namespace _TeamFolder.JCJ.Script
             if (gsm.CurrentState != GameState.Playing) return;
 
             _collected = true;
-
-            gsm.Score?.Add(other.name, _scoreReward);
+            RuntimePlayerIdentity.TryResolve(other, out var playerId, out var displayName);
+            gsm.Score?.Add(playerId, displayName, _scoreReward);
 
             if (_timeBonusSeconds > 0 && gsm.Timer != null)
                 gsm.Timer.AddTime(_timeBonusSeconds);

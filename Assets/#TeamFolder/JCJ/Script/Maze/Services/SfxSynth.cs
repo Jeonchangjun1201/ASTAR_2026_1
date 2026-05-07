@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+//  간단한 효과음을 코드로 합성해 만드는 유틸.
 
 namespace _TeamFolder.JCJ.Script
 {

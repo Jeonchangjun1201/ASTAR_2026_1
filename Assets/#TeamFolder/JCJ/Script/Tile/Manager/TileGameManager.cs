@@ -1,6 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using _TeamFolder.JCJ.Script;
+
+// 타일 미니게임 라운드 흐름과 상태를 총괄하는 매니저.
 
 namespace _TeamFolder.JCJ.TileGame
 {
@@ -48,6 +51,11 @@ namespace _TeamFolder.JCJ.TileGame
 
         public GameState  State  => _state;
         public GameConfig Config => gameConfig;
+        public event System.Action RoundStartRequested;
+        public event System.Action RoundRestartRequested;
+        public event System.Action<string> RoundEndRequested;
+        public event System.Action<string> RespawnRequested;
+        public event System.Action<string> FallResolutionRequested;
 
         // ── Unity ───────────────────────────────────
         private void Awake()
@@ -64,14 +72,20 @@ namespace _TeamFolder.JCJ.TileGame
                 if (p == null) continue;
                 p.OnFell       -= HandleFell;
                 p.OnEliminated -= HandleEliminated;
+                p.FallResolutionRequested -= HandleFallResolutionRequested;
             }
             if (Instance == this) Instance = null;
         }
 
-        private void Start() => BeginRound();
+        private void Start()
+        {
+            if (JcjRuntimeAuthority.UseLocalSimulation) BeginRound();
+            else RoundStartRequested?.Invoke();
+        }
 
         private void Update()
         {
+            if (!JcjRuntimeAuthority.UseLocalSimulation) return;
             if (_state != GameState.Playing) return;
             _timerRemaining -= Time.deltaTime;
             TickScores();
@@ -81,6 +95,21 @@ namespace _TeamFolder.JCJ.TileGame
 
         // ── 라운드 흐름 ─────────────────────────────
         public void BeginRound()
+        {
+            if (!JcjRuntimeAuthority.UseLocalSimulation)
+            {
+                RoundStartRequested?.Invoke();
+                return;
+            }
+            BeginRoundInternal();
+        }
+
+        public void ApplyAuthoritativeRoundStart()
+        {
+            BeginRoundInternal();
+        }
+
+        private void BeginRoundInternal()
         {
             // Tile 라운드의 시작점이다.
             // 서버를 붙이면 이 함수는 서버/호스트에서 실행하고, 생성 결과만 클라이언트에 동기화하는 구조가 가장 단순하다.
@@ -120,6 +149,7 @@ namespace _TeamFolder.JCJ.TileGame
             {
                 p.OnFell        += HandleFell;
                 p.OnEliminated  += HandleEliminated;
+                p.FallResolutionRequested += HandleFallResolutionRequested;
                 _alivePlayers.Add(p);
                 _allPlayers.Add(p);
                 _scores[p] = 0;
@@ -182,6 +212,8 @@ namespace _TeamFolder.JCJ.TileGame
         private float _scoreTickAccum;
         private void TickScores()
         {
+            // 생존 시간 점수를 초 단위로 누적하는 로직이다.
+            // 서버 게임에서는 클라이언트 프레임 시간이 아니라 서버 틱/라운드 시간 기준 점수로 바꾸는 편이 안전하다.
             _scoreTickAccum += Time.deltaTime;
             while (_scoreTickAccum >= 1f)
             {
@@ -193,6 +225,8 @@ namespace _TeamFolder.JCJ.TileGame
 
         private void AwardColorCallSurvivors()
         {
+            // 컬러콜 생존 보너스 지급 지점이다.
+            // 서버가 안전색 판정까지 맡는다면 보너스 부여도 같은 이벤트 흐름에서 확정하는 것이 자연스럽다.
             foreach (var p in _alivePlayers)
             {
                 if (p == null) continue;
@@ -211,10 +245,18 @@ namespace _TeamFolder.JCJ.TileGame
             RefreshHudDynamic();
         }
 
+        private void HandleFallResolutionRequested(PlayerController player)
+        {
+            if (player == null) return;
+            var identity = RuntimePlayerIdentity.Find(player);
+            FallResolutionRequested?.Invoke(identity != null ? identity.PlayerId : player.gameObject.name);
+        }
+
         private void HandleEliminated(PlayerController p)
         {
             // 플레이어가 목숨을 모두 잃었을 때 호출된다.
             // 서버 연동 시 _alivePlayers, FinalRank, 점수 보너스는 서버 권위 상태로 관리하는 것을 권장한다.
+            if (!JcjRuntimeAuthority.UseLocalSimulation) return;
             if (_state != GameState.Playing && _state != GameState.Countdown) return;
             if (!_alivePlayers.Remove(p)) return;
 
@@ -262,6 +304,21 @@ namespace _TeamFolder.JCJ.TileGame
 
         // ── 종료 ─────────────────────────────────────
         private void EndRound(string cause)
+        {
+            if (!JcjRuntimeAuthority.UseLocalSimulation)
+            {
+                RoundEndRequested?.Invoke(cause);
+                return;
+            }
+            EndRoundInternal(cause);
+        }
+
+        public void ApplyAuthoritativeRoundEnd(string cause)
+        {
+            EndRoundInternal(cause);
+        }
+
+        private void EndRoundInternal(string cause)
         {
             // 라운드 종료 지점이다. 결과 UI 표시 전에 순위와 점수를 확정한다.
             // 네트워크에서는 cause와 최종 ranking을 서버가 확정해서 모든 클라이언트에 보내야 한다.
@@ -335,13 +392,31 @@ namespace _TeamFolder.JCJ.TileGame
                 int rank = p.FinalRank > 0 ? p.FinalRank : (i + 1);
                 int score = _scores.TryGetValue(p, out var v) ? v : 0;
                 string medal = (rank - 1) < medals.Length ? medals[rank - 1] : $"#{rank}";
-                string name = string.IsNullOrEmpty(p.name) ? $"Player {p.PlayerIndex + 1}" : p.name;
+                var identity = RuntimePlayerIdentity.Find(p);
+                string name = identity != null
+                    ? identity.DisplayName
+                    : (string.IsNullOrEmpty(p.name) ? $"Player {p.PlayerIndex + 1}" : p.name);
                 lines.Add($"{medal}   {name}   —   {score} pts");
             }
             return lines;
         }
 
         public void RestartRound()
+        {
+            if (!JcjRuntimeAuthority.UseLocalSimulation)
+            {
+                RoundRestartRequested?.Invoke();
+                return;
+            }
+            RestartRoundInternal();
+        }
+
+        public void ApplyAuthoritativeRestart()
+        {
+            RestartRoundInternal();
+        }
+
+        private void RestartRoundInternal()
         {
             // 로컬 테스트용 재시작이다.
             // 서버 연동 시에는 모든 클라이언트가 같은 타이밍에 기존 오브젝트를 정리하고 새 라운드를 받아야 한다.
@@ -359,7 +434,7 @@ namespace _TeamFolder.JCJ.TileGame
             _hud?.HideResults();
             _hud?.HideCountdown();
 
-            BeginRound();
+            BeginRoundInternal();
         }
 
         // ── 리스폰(플레이어 SetActive(false) 후에도 코루틴 유지하려고 매니저 소유) ──
@@ -369,7 +444,21 @@ namespace _TeamFolder.JCJ.TileGame
             // 플레이어 오브젝트가 비활성화되어도 코루틴이 끊기지 않도록 매니저 소유로 둔다.
             if (player == null) return;
             if (_state != GameState.Playing && _state != GameState.Countdown) return;
+            if (!JcjRuntimeAuthority.UseLocalSimulation)
+            {
+                var identity = RuntimePlayerIdentity.Find(player);
+                RespawnRequested?.Invoke(identity != null ? identity.PlayerId : player.gameObject.name);
+                return;
+            }
             StartCoroutine(RespawnCoroutine(player));
+        }
+
+        public void ApplyAuthoritativeRespawn(string playerId, Vector3 target, float invuln)
+        {
+            var player = FindPlayerById(playerId);
+            if (player == null) return;
+            if (_state == GameState.Finished) return;
+            player.CompleteRespawn(target, invuln);
         }
 
         private IEnumerator RespawnCoroutine(PlayerController player)
@@ -416,16 +505,46 @@ namespace _TeamFolder.JCJ.TileGame
             if (_hud == null) return;
             _hud.SetTimer(_timerRemaining);
             _hud.SetAlive(_alivePlayers.Count, _allPlayers.Count);
-            if (_allPlayers.Count > 0)
-                _hud.SetLives(_allPlayers[0].LivesRemaining, _maxLives);
+            var local = ResolveLocalPlayer();
+            if (local != null)
+                _hud.SetLives(local.LivesRemaining, _maxLives);
         }
 
         private void RefreshHudDynamic()
         {
             if (_hud == null) return;
             _hud.SetAlive(_alivePlayers.Count, _allPlayers.Count);
-            PlayerController local = _allPlayers.Count > 0 ? _allPlayers[0] : null;
+            PlayerController local = ResolveLocalPlayer();
             if (local != null) _hud.SetLives(local.LivesRemaining, _maxLives);
+        }
+
+        private PlayerController ResolveLocalPlayer()
+        {
+            for (int i = 0; i < _allPlayers.Count; i++)
+            {
+                var player = _allPlayers[i];
+                if (player == null) continue;
+                var identity = RuntimePlayerIdentity.Find(player);
+                if (identity != null && identity.IsLocalOwned) return player;
+                if (player.IsLocalControlled) return player;
+            }
+
+            return _allPlayers.Count > 0 ? _allPlayers[0] : null;
+        }
+
+        private PlayerController FindPlayerById(string playerId)
+        {
+            if (string.IsNullOrWhiteSpace(playerId)) return null;
+            for (int i = 0; i < _allPlayers.Count; i++)
+            {
+                var player = _allPlayers[i];
+                if (player == null) continue;
+                var identity = RuntimePlayerIdentity.Find(player);
+                if (identity != null && string.Equals(identity.PlayerId, playerId, System.StringComparison.OrdinalIgnoreCase))
+                    return player;
+            }
+
+            return null;
         }
 
         // ── 서비스 해석 ─────────────────────────────
@@ -433,13 +552,7 @@ namespace _TeamFolder.JCJ.TileGame
         {
             if (buildHUD)
             {
-                _hud = Object.FindFirstObjectByType<TileHUD>();
-                if (_hud == null)
-                {
-                    var go = new GameObject("TileHUD");
-                    go.transform.SetParent(transform, false);
-                    _hud = go.AddComponent<TileHUD>();
-                }
+                _hud = SceneComponentResolver.FindOrCreate<TileHUD>(transform, "TileHUD");
             }
 
             if (buildAudio && TileAudio.Instance == null)
@@ -447,31 +560,12 @@ namespace _TeamFolder.JCJ.TileGame
 
             if (buildCamera)
             {
-                _camera = Object.FindFirstObjectByType<TileCameraFollow>();
-                if (_camera == null)
-                {
-                    var cam = Camera.main;
-                    if (cam == null)
-                    {
-                        var camGO = new GameObject("TileMainCamera");
-                        cam = camGO.AddComponent<Camera>();
-                        camGO.tag = "MainCamera";
-                        camGO.AddComponent<AudioListener>();
-                    }
-                    _camera = cam.gameObject.GetComponent<TileCameraFollow>() ??
-                              cam.gameObject.AddComponent<TileCameraFollow>();
-                }
+                _camera = SceneComponentResolver.GetOrAddOnMainCamera<TileCameraFollow>("TileMainCamera");
             }
 
             if (buildColorCall)
             {
-                _colorCall = Object.FindFirstObjectByType<ColorCallDirector>();
-                if (_colorCall == null)
-                {
-                    var go = new GameObject("ColorCallDirector");
-                    go.transform.SetParent(transform, false);
-                    _colorCall = go.AddComponent<ColorCallDirector>();
-                }
+                _colorCall = SceneComponentResolver.FindOrCreate<ColorCallDirector>(transform, "ColorCallDirector");
                 _colorCall.Inject(gameConfig, tileBoard);
                 _colorCall.OnAnnounced   -= HandleColorCallAnnounced;
                 _colorCall.OnAnnounced   += HandleColorCallAnnounced;

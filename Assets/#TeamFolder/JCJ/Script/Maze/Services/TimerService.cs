@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using UnityEngine;
+
+// 라운드 제한 시간과 남은 시간을 관리하는 서비스.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -15,6 +17,8 @@ namespace _TeamFolder.JCJ.Script
 
         private bool _running;
 
+        // 라운드 타이머를 시작하고 초기 남은 시간을 브로드캐스트한다.
+        // 서버 기준 남은 시간을 쓰게 되면 시작 시각 동기화나 스냅샷 반영이 이 메서드 책임과 맞닿는다.
         public void StartTimer(float duration)
         {
             Remaining = Mathf.Max(0f, duration);
@@ -42,6 +46,8 @@ namespace _TeamFolder.JCJ.Script
             OnTimerUpdated?.Invoke(Remaining);
         }
 
+        // 남은 시간을 줄이고 HUD용 이벤트를 계속 발행한다.
+        // 멀티에서 서버 시간이 따로 있다면 이 로컬 감소 루프 대신 서버값 보간으로 대체될 수 있다.
         private void Update()
         {
             if (!_running) return;

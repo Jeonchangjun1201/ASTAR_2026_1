@@ -1,9 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using _TeamFolder.JCJ.Script;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+// 타일 모드에서 플레이어를 따라가는 카메라 처리.
 
 namespace _TeamFolder.JCJ.TileGame
 {
@@ -35,6 +37,8 @@ namespace _TeamFolder.JCJ.TileGame
         [SerializeField] private bool _mouseLookEnabled = true;
         [SerializeField] private float _minPitch = -30f;
         [SerializeField] private float _maxPitch = 55f;
+        [SerializeField] private float _minElevation = -20f;
+        [SerializeField] private float _maxElevation = 75f;
 
         [Header("타일 가림")]
         [SerializeField] private bool _avoidTileOcclusion = true;
@@ -79,6 +83,8 @@ namespace _TeamFolder.JCJ.TileGame
             RegisterTarget(first);
         }
 
+        // 현재 로컬 플레이어를 카메라 추적 대상으로 지정한다.
+        // 멀티에서는 소유권이 바뀌거나 관전 대상을 전환할 때 이 메서드가 직접 쓰일 가능성이 크다.
         public void RegisterTarget(Transform target)
         {
             _target = target;
@@ -107,6 +113,8 @@ namespace _TeamFolder.JCJ.TileGame
         /// 팔로우 해제 후 월드 지점을 내려다보는 고정 뷰 — 로컬 탈락 후 관전할 생존자 없을 때.
         /// 마우스 룩 끔(결과 오버레이에서 화면 안정).
         /// </summary>
+        // 더 이상 추적 대상이 없을 때 판 전체를 보여주는 오버뷰 모드로 바꾼다.
+        // 전멸, 관전, 결과 화면에서 공통으로 재사용하기 좋은 전환 지점이다.
         public void GoToOverview(Vector3 worldPoint)
         {
             _target = null;
@@ -288,7 +296,10 @@ namespace _TeamFolder.JCJ.TileGame
         {
             if (_follow == null) return;
             float pitch = _allowPitch ? _pitch : 0f;
-            _follow.FollowOffset = Quaternion.Euler(pitch, _yaw, 0f) * _baseOffset;
+            float baseElevation = Mathf.Atan2(_baseOffset.y, new Vector2(_baseOffset.x, _baseOffset.z).magnitude) * Mathf.Rad2Deg;
+            float targetElevation = Mathf.Clamp(baseElevation + pitch, _minElevation, _maxElevation);
+            float orbitPitch = targetElevation - baseElevation;
+            _follow.FollowOffset = Quaternion.Euler(orbitPitch, _yaw, 0f) * _baseOffset;
         }
 
         private IEnumerator ShakeRoutine(float duration, float magnitude)

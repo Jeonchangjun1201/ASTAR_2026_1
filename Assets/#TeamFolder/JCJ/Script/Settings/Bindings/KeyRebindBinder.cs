@@ -1,6 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+// 키 리바인딩 UI와 설정 서비스를 연결하는 바인더.
 
 namespace _TeamFolder.JCJ.Script
 {

@@ -1,4 +1,6 @@
-using System;
+﻿using System;
+
+// 설정 저장/조회와 변경 알림 서비스 계약 인터페이스.
 
 namespace _TeamFolder.JCJ.Script
 {

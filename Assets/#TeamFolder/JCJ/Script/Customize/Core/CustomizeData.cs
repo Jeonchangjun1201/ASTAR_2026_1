@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using UnityEngine;
+
+// 플레이어 외형 설정 값을 담는 데이터 모델.
 
 namespace _TeamFolder.JCJ.Script
 {

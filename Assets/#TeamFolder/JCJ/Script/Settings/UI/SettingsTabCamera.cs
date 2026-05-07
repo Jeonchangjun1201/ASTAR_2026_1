@@ -1,5 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+
+// 카메라 옵션을 표시하고 수정하는 탭 UI.
 
 namespace _TeamFolder.JCJ.Script
 {

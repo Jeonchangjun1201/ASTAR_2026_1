@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+// 매니저가 참조하는 핵심 서비스 묶음 계약.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -36,6 +38,7 @@ namespace _TeamFolder.JCJ.Script
         event Action<string, int> OnPlayerFinished;
         event Action<List<PlayerRankData>> OnAllFinished;
         void RegisterFinish(string playerName);
+        void RegisterFinish(string playerId, string playerName);
         IReadOnlyList<PlayerRankData> GetRankings();
         void SetTotalPlayers(int total);
         void ResetRankings();
@@ -65,6 +68,7 @@ namespace _TeamFolder.JCJ.Script
         event Action<string, int, int> OnScoreChanged; // (플레이어 이름, 변화량, 합계)
         int GetScore(string playerName);
         void Add(string playerName, int delta);
+        void Add(string playerId, string displayName, int delta);
         void Reset();
     }
 
@@ -73,6 +77,7 @@ namespace _TeamFolder.JCJ.Script
     /// </summary>
     public struct PlayerRankData
     {
+        public string PlayerId;
         public string PlayerName;
         public int    Rank;
         public int    Score;

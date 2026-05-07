@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+
+// 타일 보드 생성, 저장, 조회를 담당하는 보드 관리자.
 
 namespace _TeamFolder.JCJ.TileGame
 {
@@ -164,6 +166,8 @@ namespace _TeamFolder.JCJ.TileGame
 
         // ── ColorCall 쿼리 / 액션 ────────────────────
         /// <summary>살아 있는 최상층 = 아직 안 떨어진 타일이 남은 가장 낮은 레이어 인덱스.</summary>
+        // 현재 플레이 규칙이 적용되는 최상 생존 레이어를 찾는다.
+        // 서버와 클라이언트가 같은 레이어를 보고 있는지 검증할 때도 기준이 되는 함수다.
         public int GetTopAliveLayerIndex()
         {
             if (_layerTiles == null) return -1;
@@ -176,6 +180,8 @@ namespace _TeamFolder.JCJ.TileGame
         }
 
         /// <summary>최상 생존 층에서 색별 살아 있는 타일 개수.</summary>
+        // 최상 레이어의 색 분포를 집계한다.
+        // ColorCallDirector가 안전색을 정할 때 읽는 입력 데이터라 서버에서도 같은 계산 기준을 써야 한다.
         public Dictionary<TileColor, int> CountTopLayerColors()
         {
             var counts = new Dictionary<TileColor, int>();
@@ -214,6 +220,8 @@ namespace _TeamFolder.JCJ.TileGame
         }
 
         /// <summary>최상층에서 <paramref name="safeColor"/>와 일치하는 살아 있는 타일을 잠깐 강조.</summary>
+        // 안전색 타일만 잠깐 강조해 경고 연출을 준다.
+        // 판정은 서버가 하더라도 이런 시각 피드백은 클라이언트가 이 메서드로 재생하면 된다.
         public void HighlightTopLayerColor(TileColor safeColor, Color flashTint)
         {
             int top = GetTopAliveLayerIndex();

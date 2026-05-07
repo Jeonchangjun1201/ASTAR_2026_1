@@ -1,7 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+
+// 설정 패널 전체 열기/닫기와 탭 구성을 관리하는 UI.
 
 namespace _TeamFolder.JCJ.Script
 {

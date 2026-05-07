@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
+// 설정값을 기준으로 타일 오브젝트를 생성하는 팩토리.
 
 namespace _TeamFolder.JCJ.TileGame
 {
@@ -138,6 +140,8 @@ namespace _TeamFolder.JCJ.TileGame
         }
 
         /// <summary>색상에 맞는 기믹 컴포넌트를 go에 추가하고 반환.</summary>
+        // 타일 색상과 실제 기믹 구현체를 연결하는 매핑 지점이다.
+        // 서버 로그에서 기믹 타입을 숫자/문자열로 주더라도 최종 Unity 컴포넌트 연결은 여기서 정리하면 된다.
         private static IGimmick CreateGimmick(TileColor color, GameObject go) =>
             color switch
             {

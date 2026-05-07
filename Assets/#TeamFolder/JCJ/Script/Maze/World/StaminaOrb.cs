@@ -1,5 +1,7 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using UnityEngine;
+
+// 획득 시 스태미나를 회복시키는 오브 아이템 처리.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -62,7 +64,11 @@ namespace _TeamFolder.JCJ.Script
 
             _collected = true;
             pc.RefillStamina(_staminaRefill);
-            if (_scoreReward > 0) gsm.Score?.Add(other.name, _scoreReward);
+            if (_scoreReward > 0)
+            {
+                RuntimePlayerIdentity.TryResolve(other, out var playerId, out var displayName);
+                gsm.Score?.Add(playerId, displayName, _scoreReward);
+            }
             pc.NotifyCollected();
 
             transform.DOKill();

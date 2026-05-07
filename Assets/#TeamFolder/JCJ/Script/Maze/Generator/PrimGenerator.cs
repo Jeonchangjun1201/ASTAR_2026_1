@@ -1,6 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+// Prim 알고리즘 방식으로 미로를 생성하는 생성기.
 
 namespace _TeamFolder.JCJ.Script
 {

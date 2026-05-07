@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
+// Sidewinder 방식으로 미로를 생성하는 생성기.
 
 namespace _TeamFolder.JCJ.Script
 {

@@ -1,6 +1,8 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using Unity.Cinemachine;
 using UnityEngine;
+
+// 플레이어를 따라가는 카메라 연결을 관리하는 서비스.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -49,6 +51,8 @@ namespace _TeamFolder.JCJ.Script
         private MazeCameraRig _rig;
         private Vector3 _baseFollowOffset;
 
+        // 현재 로컬 플레이어를 팔로우 카메라에 연결하는 진입점이다.
+        // 서버 연동 후에도 카메라 자체는 로컬 전용이라 소유 플레이어만 여기로 넘기면 된다.
         public void Follow(Transform target)
         {
             if (target == null) return;
@@ -67,6 +71,8 @@ namespace _TeamFolder.JCJ.Script
              .SetEase(Ease.OutQuad);
         }
 
+        // 특정 영역 전체를 한 번에 잡는 연출용 프레이밍이다.
+        // 결과 화면, 스폰 연출, 관전 전환에서 서버 상태와 무관하게 로컬 카메라만 움직일 때 쓰기 좋다.
         public void FrameAll(Vector3 center, Vector3 size)
         {
             if (_vcam == null) return;
@@ -122,6 +128,8 @@ namespace _TeamFolder.JCJ.Script
             if (_avoidWallClip) AddDeoccluder(rigGo);
         }
 
+        // 마우스 룩 리그 각도를 실제 팔로우 오프셋에 반영하는 단계다.
+        // 카메라 입력이 로컬 전용이라는 점을 확인하기 좋은 경계다.
         private void LateUpdate()
         {
             if (_follow == null || _rig == null) return;
