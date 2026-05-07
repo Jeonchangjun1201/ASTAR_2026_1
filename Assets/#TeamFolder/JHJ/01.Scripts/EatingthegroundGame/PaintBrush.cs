@@ -13,6 +13,14 @@ namespace JHJ.Scripts.EatingthegroundGame
 
         [SerializeField] private PaintManager _paintManager;
 
+        private void Start()
+        {
+            if (_paintManager != null)
+            {
+                _paintManager.EnsureCanvasInitialized();
+            }
+        }
+
         private void Update()
         {
             PaintOnGround();

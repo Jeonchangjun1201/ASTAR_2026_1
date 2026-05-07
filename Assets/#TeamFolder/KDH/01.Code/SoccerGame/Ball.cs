@@ -28,10 +28,15 @@ namespace KDH
             if (_rb.linearVelocity.magnitude > 0.1f)
                 _lastVelocity = _rb.linearVelocity;
         }
-
+        
+        
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.CompareTag("Player"))
+            // Player1~4 태그 전부 감지
+            if (collision.gameObject.CompareTag("Player1") ||
+                collision.gameObject.CompareTag("Player2") ||
+                collision.gameObject.CompareTag("Player3") ||
+                collision.gameObject.CompareTag("Player4"))
             {
                 LastTouchPlayer = collision.gameObject;
                 Debug.Log($"마지막 터치: {LastTouchPlayer.name}");
