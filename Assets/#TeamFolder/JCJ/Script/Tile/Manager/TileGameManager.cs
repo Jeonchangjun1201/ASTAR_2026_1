@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using _TeamFolder.JCJ.Script;
 
 namespace _TeamFolder.JCJ.TileGame
 {
@@ -434,7 +433,13 @@ namespace _TeamFolder.JCJ.TileGame
         {
             if (buildHUD)
             {
-                _hud = SceneComponentResolver.FindOrCreate<TileHUD>(transform, "TileHUD");
+                _hud = Object.FindFirstObjectByType<TileHUD>();
+                if (_hud == null)
+                {
+                    var go = new GameObject("TileHUD");
+                    go.transform.SetParent(transform, false);
+                    _hud = go.AddComponent<TileHUD>();
+                }
             }
 
             if (buildAudio && TileAudio.Instance == null)
@@ -442,12 +447,31 @@ namespace _TeamFolder.JCJ.TileGame
 
             if (buildCamera)
             {
-                _camera = SceneComponentResolver.GetOrAddOnMainCamera<TileCameraFollow>("TileMainCamera");
+                _camera = Object.FindFirstObjectByType<TileCameraFollow>();
+                if (_camera == null)
+                {
+                    var cam = Camera.main;
+                    if (cam == null)
+                    {
+                        var camGO = new GameObject("TileMainCamera");
+                        cam = camGO.AddComponent<Camera>();
+                        camGO.tag = "MainCamera";
+                        camGO.AddComponent<AudioListener>();
+                    }
+                    _camera = cam.gameObject.GetComponent<TileCameraFollow>() ??
+                              cam.gameObject.AddComponent<TileCameraFollow>();
+                }
             }
 
             if (buildColorCall)
             {
-                _colorCall = SceneComponentResolver.FindOrCreate<ColorCallDirector>(transform, "ColorCallDirector");
+                _colorCall = Object.FindFirstObjectByType<ColorCallDirector>();
+                if (_colorCall == null)
+                {
+                    var go = new GameObject("ColorCallDirector");
+                    go.transform.SetParent(transform, false);
+                    _colorCall = go.AddComponent<ColorCallDirector>();
+                }
                 _colorCall.Inject(gameConfig, tileBoard);
                 _colorCall.OnAnnounced   -= HandleColorCallAnnounced;
                 _colorCall.OnAnnounced   += HandleColorCallAnnounced;

@@ -15,10 +15,9 @@ namespace JHJ.Scripts.EatingthegroundGame
 
         private void Start()
         {
-            if (_paintManager != null)
-            {
-                _paintManager.EnsureCanvasInitialized();
-            }
+            RenderTexture.active = _paintCanvas;
+            GL.Clear(true, true, Color.white);
+            RenderTexture.active = null;
         }
 
         private void Update()

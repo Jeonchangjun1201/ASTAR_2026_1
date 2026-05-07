@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
+using _TeamFolder.JCJ.Script.Arena;
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -33,7 +34,7 @@ namespace _TeamFolder.JCJ.Script
 
         private GameObject _instance;
         private Animator _animator;
-        private ArenaAnimationLibrary _animationLibrary;
+        private ArenaAnimationLibrary _arenaAnimationLibrary;
         private PlayableGraph _playableGraph;
         private AnimationLayerMixerPlayable _layerMixer;
         private AnimatorControllerPlayable _controllerPlayable;
@@ -174,7 +175,7 @@ namespace _TeamFolder.JCJ.Script
                 Debug.LogWarning("[PartyCharacterVisual] Spawned character has no Animator component.");
             else
             {
-                InitializeActionClipGraph();
+                InitializeArenaClipGraph();
                 TriggerState(_idleTrigger);
             }
         }
@@ -208,7 +209,7 @@ namespace _TeamFolder.JCJ.Script
 
         public void OnPickup()
         {
-            if (TryPlayLibraryClip(_animationLibrary != null ? (_animationLibrary.PickupClip != null ? _animationLibrary.PickupClip : _animationLibrary.ThrowClip) : null, false)) return;
+            if (TryPlayArenaClip(_arenaAnimationLibrary != null ? (_arenaAnimationLibrary.PickupClip != null ? _arenaAnimationLibrary.PickupClip : _arenaAnimationLibrary.ThrowClip) : null, false)) return;
             OnCollect();
         }
 
@@ -242,13 +243,13 @@ namespace _TeamFolder.JCJ.Script
 
         public void OnPush()
         {
-            if (TryPlayLibraryClip(_animationLibrary != null ? _animationLibrary.PushClip : null, false)) return;
+            if (TryPlayArenaClip(_arenaAnimationLibrary != null ? _arenaAnimationLibrary.PushClip : null, false)) return;
             OnCollect();
         }
 
         public void OnThrow()
         {
-            if (TryPlayLibraryClip(_animationLibrary != null ? _animationLibrary.ThrowClip : null, false)) return;
+            if (TryPlayArenaClip(_arenaAnimationLibrary != null ? _arenaAnimationLibrary.ThrowClip : null, false)) return;
             OnCollect();
         }
 
@@ -260,9 +261,9 @@ namespace _TeamFolder.JCJ.Script
                 return;
             }
 
-            if (_animationLibrary == null) return;
-            var targetClip = moving ? _animationLibrary.CarryMoveClip : _animationLibrary.CarryIdleClip;
-            TryPlayLibraryClip(targetClip, true);
+            if (_arenaAnimationLibrary == null) return;
+            var targetClip = moving ? _arenaAnimationLibrary.CarryMoveClip : _arenaAnimationLibrary.CarryIdleClip;
+            TryPlayArenaClip(targetClip, true);
         }
 
         private void TriggerRun(float speedMultiplier)
@@ -309,11 +310,11 @@ namespace _TeamFolder.JCJ.Script
             TriggerState(_idleTrigger);
         }
 
-        private void InitializeActionClipGraph()
+        private void InitializeArenaClipGraph()
         {
             if (_animator == null || _animator.runtimeAnimatorController == null) return;
-            _animationLibrary = LoadAnimationLibrary();
-            if (_animationLibrary == null) return;
+            _arenaAnimationLibrary = LoadArenaAnimationLibrary();
+            if (_arenaAnimationLibrary == null) return;
 
             _playableGraph = PlayableGraph.Create("PartyCharacterVisualGraph");
             _playableGraph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
@@ -327,7 +328,7 @@ namespace _TeamFolder.JCJ.Script
             _playableGraph.Play();
         }
 
-        private bool TryPlayLibraryClip(AnimationClip clip, bool loop)
+        private bool TryPlayArenaClip(AnimationClip clip, bool loop)
         {
             if (clip == null || !_playableGraph.IsValid()) return false;
             if (_activeActionClip == clip && _actionClipLoop == loop) return true;
@@ -377,7 +378,7 @@ namespace _TeamFolder.JCJ.Script
             else _animator.ResetTrigger(triggerName);
         }
 
-        private ArenaAnimationLibrary LoadAnimationLibrary()
+        private ArenaAnimationLibrary LoadArenaAnimationLibrary()
         {
             var library = Resources.Load<ArenaAnimationLibrary>(_arenaAnimationLibraryPath);
 #if UNITY_EDITOR

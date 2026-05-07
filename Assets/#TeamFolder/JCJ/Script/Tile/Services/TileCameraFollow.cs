@@ -35,8 +35,6 @@ namespace _TeamFolder.JCJ.TileGame
         [SerializeField] private bool _mouseLookEnabled = true;
         [SerializeField] private float _minPitch = -30f;
         [SerializeField] private float _maxPitch = 55f;
-        [SerializeField] private float _minElevation = -20f;
-        [SerializeField] private float _maxElevation = 75f;
 
         [Header("타일 가림")]
         [SerializeField] private bool _avoidTileOcclusion = true;
@@ -290,10 +288,7 @@ namespace _TeamFolder.JCJ.TileGame
         {
             if (_follow == null) return;
             float pitch = _allowPitch ? _pitch : 0f;
-            float baseElevation = Mathf.Atan2(_baseOffset.y, new Vector2(_baseOffset.x, _baseOffset.z).magnitude) * Mathf.Rad2Deg;
-            float targetElevation = Mathf.Clamp(baseElevation + pitch, _minElevation, _maxElevation);
-            float orbitPitch = targetElevation - baseElevation;
-            _follow.FollowOffset = Quaternion.Euler(orbitPitch, _yaw, 0f) * _baseOffset;
+            _follow.FollowOffset = Quaternion.Euler(pitch, _yaw, 0f) * _baseOffset;
         }
 
         private IEnumerator ShakeRoutine(float duration, float magnitude)

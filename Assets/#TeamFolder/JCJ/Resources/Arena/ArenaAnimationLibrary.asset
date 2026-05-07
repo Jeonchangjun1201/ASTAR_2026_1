@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 69a28921eff44f04e86435999620b705, type: 3}
   m_Name: ArenaAnimationLibrary
-  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.ArenaAnimationLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.Arena.ArenaAnimationLibrary
   _pickupClip: {fileID: 0}
   _pushClip: {fileID: -203655887218126122, guid: cc57becd2539ccd4c87843ba7700d3cb, type: 3}
   _throwClip: {fileID: -203655887218126122, guid: 22ad1c381e02fac4d928663a760db15a, type: 3}

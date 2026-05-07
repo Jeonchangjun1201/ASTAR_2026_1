@@ -50,10 +50,20 @@ namespace _TeamFolder.JCJ.Script
 
         private void AutoBuildServices()
         {
-            if (_timerService == null)     _timerService     = SceneComponentResolver.GetOrAdd<TimerService>(this);
-            if (_rankService == null)      _rankService      = SceneComponentResolver.GetOrAdd<RankService>(this);
-            if (_countdownService == null) _countdownService = SceneComponentResolver.GetOrAdd<CountdownService>(this);
-            if (_scoreService == null)     _scoreService     = SceneComponentResolver.FindOrCreate<ScoreService>(null, "ScoreService");
+            // 씬에 연결되지 않은 서비스는 같은 오브젝트나 자식에서 찾고, 없으면 직접 추가한다.
+            if (_timerService == null)     _timerService     = GetOrAdd<TimerService>();
+            if (_rankService == null)      _rankService      = GetOrAdd<RankService>();
+            if (_countdownService == null) _countdownService = GetOrAdd<CountdownService>();
+            if (_scoreService == null)     _scoreService     = GetOrAdd<ScoreService>();
+        }
+
+        private T GetOrAdd<T>() where T : Component
+        {
+            var existing = GetComponent<T>();
+            if (existing != null) return existing;
+            var inChildren = GetComponentInChildren<T>(true);
+            if (inChildren != null) return inChildren;
+            return gameObject.AddComponent<T>();
         }
 
         private void SubscribeServiceEvents()

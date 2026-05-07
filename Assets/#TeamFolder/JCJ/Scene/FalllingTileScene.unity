@@ -257,6 +257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.SettingsPanel
   _toggleWithEscape: 1
   _autoOpenOnStart: 0
+  _includeCustomizeTab: 1
 --- !u!4 &443030035
 Transform:
   m_ObjectHideFlags: 0
@@ -399,17 +400,59 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!114 &2019990958 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2500296878471591882, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-  m_PrefabInstance: {fileID: 7212184575037302769}
+--- !u!1 &2019990957
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2019990959}
+  - component: {fileID: 2019990958}
+  m_Layer: 0
+  m_Name: PlayerSpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2019990958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019990957}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7971d10f52762394da3fc04330feb137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.TileGame.PlayerSpawnManager
+  playerPrefab: {fileID: 877791323849484786, guid: 8c4638ece6f53e74fb8a2b65926a5c57, type: 3}
+  spawnHeightOffset: 1.5
+  playerPalette:
+  - {r: 1, g: 0.35, b: 0.35, a: 1}
+  - {r: 0.35, g: 0.7, b: 1, a: 1}
+  - {r: 1, g: 0.85, b: 0.35, a: 1}
+  - {r: 0.35, g: 1, b: 0.55, a: 1}
+  - {r: 0.85, g: 0.55, b: 1, a: 1}
+  - {r: 1, g: 0.6, b: 0.3, a: 1}
+--- !u!4 &2019990959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019990957}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2053782953
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,135 +590,65 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!1001 &2295641833220718252
-PrefabInstance:
+--- !u!1 &2083490959
+GameObject:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6351069434546625910, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7253096925294574154, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: m_Name
-      value: TileGameManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 8077825049625701430, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: tileBoard
-      value: 
-      objectReference: {fileID: 310586590}
-    - target: {fileID: 8077825049625701430, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
-      propertyPath: spawnManager
-      value: 
-      objectReference: {fileID: 2019990958}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: eb96a81031f32e047b1549c4a3e69fb8, type: 3}
---- !u!1001 &7212184575037302769
-PrefabInstance:
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2083490961}
+  - component: {fileID: 2083490960}
+  m_Layer: 0
+  m_Name: TileGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2083490960
+MonoBehaviour:
   m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083490959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acef90c96f9db574cac484c12a73b038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.TileGame.TileGameManager
+  tileBoard: {fileID: 310586590}
+  spawnManager: {fileID: 2019990958}
+  gameConfig: {fileID: 11400000, guid: 98c1ac44ed2227f45823a4229d110ff4, type: 2}
+  playerCount: 4
+  buildHUD: 1
+  buildAudio: 1
+  buildCamera: 1
+  buildColorCall: 1
+--- !u!4 &2083490961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083490959}
   serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1956031071616127647, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6955077673085052657, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
-      propertyPath: m_Name
-      value: PlayerSpawnManager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9237b0b0050fa5c4ca79f487bb5c8d91, type: 3}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 2053782956}
   - {fileID: 1164279578}
-  - {fileID: 2295641833220718252}
+  - {fileID: 2083490961}
   - {fileID: 310586591}
-  - {fileID: 7212184575037302769}
+  - {fileID: 2019990959}
   - {fileID: 443030035}

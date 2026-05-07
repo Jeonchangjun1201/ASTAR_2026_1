@@ -8,64 +8,18 @@ namespace JHJ.Scripts.EatingthegroundGame
         public Texture2D brushTexture;
         public float brushSize = 50f;
 
+        
         private Material _paintMat;
-        private bool _isCanvasInitialized;
 
         private void Awake()
         {
+            
             _paintMat = new Material(Shader.Find("Sprites/Default"));
-            EnsureCanvasInitialized();
         }
 
-        private void OnEnable()
-        {
-            EnsureCanvasInitialized();
-        }
-
-        private void OnDestroy()
-        {
-            if (_paintMat != null)
-            {
-                Destroy(_paintMat);
-            }
-        }
-
-        public void EnsureCanvasInitialized()
-        {
-            if (paintCanvas == null)
-            {
-                return;
-            }
-
-            bool wasCreated = paintCanvas.IsCreated();
-
-            if (!wasCreated)
-            {
-                paintCanvas.Create();
-            }
-
-            if (_isCanvasInitialized && wasCreated)
-            {
-                return;
-            }
-
-            RenderTexture previous = RenderTexture.active;
-            RenderTexture.active = paintCanvas;
-            GL.Clear(true, true, Color.white);
-            RenderTexture.active = previous;
-            _isCanvasInitialized = true;
-        }
-
+        
         public void DrawBrush(Vector2 uv, Color brushColor)
         {
-            if (paintCanvas == null || brushTexture == null || _paintMat == null)
-            {
-                return;
-            }
-
-            EnsureCanvasInitialized();
-
-            RenderTexture previous = RenderTexture.active;
             RenderTexture.active = paintCanvas;
 
             GL.PushMatrix();
@@ -76,12 +30,14 @@ namespace JHJ.Scripts.EatingthegroundGame
 
             Rect drawRect = new Rect(xPos, yPos, brushSize, brushSize);
 
+            
             _paintMat.color = brushColor;
 
+            
             Graphics.DrawTexture(drawRect, brushTexture, _paintMat);
 
             GL.PopMatrix();
-            RenderTexture.active = previous;
+            RenderTexture.active = null;
         }
     }
 }
