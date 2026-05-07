@@ -5,40 +5,39 @@ namespace PYH.Player
 {
     public class Movement : PlayerModuleBase
     {
-        private Vector3 _calcDir;
+        private Rigidbody rb;
 
-        [SerializeField] private float _speed;
-        [SerializeField] private float _gravity;
-        [SerializeField] private CharacterController _characterController;
-        private Rigidbody _rigid;
-        private bool _canMove = true;
+        private Vector3 _calcDir;
+        [SerializeField] private float speed;
+        private readonly bool canMove = true;
         private bool _init;
+        
+        private Vector2 _moveInput;
+        
         public override void Initialize(Player player)
         {
             if (_init) return;
 
             _init = true;
-            _rigid = player.Rigid;
+            rb = player.Rigid;
         }
 
         private void FixedUpdate()
         {
-            _rigid.linearVelocity = (_calcDir);
-            if (!_characterController.isGrounded)
-            {
-                _rigid.AddForce(Vector3.down * _gravity);
-            }
+            if (!_init || !canMove) return;
+
+            Vector2 input = Vector2.ClampMagnitude(_moveInput, 1f);
+
+            Vector3 velocity = rb.linearVelocity;
+
+            velocity.x = input.x * speed;
+            velocity.z = input.y * speed;
+
+            rb.linearVelocity = velocity;
         }
-
-        public void OnMove(InputValue value) // For Test Movement
+        public void OnMove(InputValue value)
         {
-            if (!_init || !_canMove) return;
-
-            Vector2 calcDir = value.Get<Vector2>() * _speed;
-
-            _calcDir = new Vector3(calcDir.x,
-                _rigid.linearVelocity.y,
-                calcDir.y);
+            _moveInput = value.Get<Vector2>();
         }
     }
 }

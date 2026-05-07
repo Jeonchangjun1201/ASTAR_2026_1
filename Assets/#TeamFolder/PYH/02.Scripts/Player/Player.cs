@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,6 +12,8 @@ namespace PYH.Player
         private Movement _movement;
         private Dictionary<Type, PlayerModuleBase> moduleDict;
         public event Action<Player, int> OnOutPlayerEvent;
+        public event Action<Player> OnTouchPlayerEvent;
+        public Action<Player, int> OnExplosionEvent;
         public int index;
         private bool _isOver;
 
@@ -54,29 +55,20 @@ namespace PYH.Player
             Debug.LogError("Module of invalid type!");
             return null;
         }
-
+        
         public void Push(Vector3 dir, float force)
         {
             if (isPush) return;
             
             Debug.Log("Push!");
-            StartCoroutine(PushCoroutine(dir, force));
+            Rigid.AddForce(dir * force, ForceMode.Impulse);
         }
 
-        private IEnumerator PushCoroutine(Vector3 dir, float force)
+
+        private void OnCollisionEnter(Collision collision)
         {
-            float lastTime = Time.time;
-
-            isPush = true;
-            
-            while (lastTime < Time.time + 5)
-            {
-                Rigid.AddForce(dir * force, ForceMode.Impulse);
-
-                yield return null;
-            }
-            
-            isPush = false;
+            if (collision.gameObject.TryGetComponent(out Player player))
+                OnTouchPlayerEvent?.Invoke(player);
         }
     }
 }

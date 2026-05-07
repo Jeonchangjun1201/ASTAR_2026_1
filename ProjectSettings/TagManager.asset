@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Wall
+  - Spin1
+  - Spin2
+  - Spin3
+  - spin4
   layers:
   - Default
   - TransparentFX
