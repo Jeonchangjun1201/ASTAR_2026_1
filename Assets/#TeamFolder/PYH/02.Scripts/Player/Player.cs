@@ -10,6 +10,7 @@ namespace PYH.Player
     public class Player : MonoBehaviour
     {
         public Rigidbody Rigid { get; private set; }
+        public CharacterController CharacterController { get; private set; }
         private Movement _movement;
         private Dictionary<Type, PlayerModuleBase> moduleDict;
         public event Action<Player, int> OnOutPlayerEvent;
@@ -21,6 +22,7 @@ namespace PYH.Player
         private void Awake()
         {
             Rigid = GetComponent<Rigidbody>();
+            CharacterController = GetComponent<CharacterController>();
 
             PlayerModuleBase[] array = GetComponentsInChildren<PlayerModuleBase>();
             moduleDict = array
