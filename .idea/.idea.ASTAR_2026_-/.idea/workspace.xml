@@ -3,9 +3,19 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="6b790abe-9782-466e-857a-afde7cd993d9" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Resources/Arena/ArenaAnimationLibrary.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Resources/Arena/ArenaAnimationLibrary.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ASTAR_2026_-/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/JHJ/09.Texture/PointCanvas.renderTexture" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/JHJ/09.Texture/PointCanvas.renderTexture" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/01.Scenes/Test Scene/SC_Test_PassTheBomb.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/01.Scenes/Test Scene/SC_Test_PassTheBomb.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/MiniGameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/Manager/MiniGameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/PassTheBomb/PassTheBomb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/PassTheBomb/PassTheBomb.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,11 +26,15 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Goalaudiohint.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/Igoalaudiohint.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/JCJ/Script/Maze/MazeManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/#TeamFolder/PYH/02.Scripts/MiniGame/AbstractMiniGame.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Actions/InputAction.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@21a28c3a6c83/InputSystem/Plugins/PlayerInput/PlayerInput.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.render-pipelines.core@84bf82d10e47/Tests/Editor/ShaderStripping/DummyPipelineShader.shader" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.shadergraph@4eb612570652/Editor/Data/Nodes/UI/RenderTypeBranchNode.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
@@ -33,9 +47,15 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;KDH&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;PYH&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -47,28 +67,26 @@
 }</component>
   <component name="RunManager" selected="Unity 에디터에 연결.Unity 에디터에 연결">
     <configuration name="유닛 테스트(배치 모드)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.3.11f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.3.11f1-x86_64\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath C:\ASTAR_2026_- -testResults Logs/results.xml -logFile Logs/Editor.log -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\ASTAR_2026_-" />
       <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <method v="2" />
     </configuration>
     <configuration name="Unity 시작" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.3.11f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.3.11f1-x86_64\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath C:\ASTAR_2026_- -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\ASTAR_2026_-" />
       <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <method v="2" />
     </configuration>
-    <configuration name="Unity 에디터에 연결" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Unity 에디터에 연결" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" useMixedMode="false">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
@@ -79,10 +97,9 @@
       <option name="selectedOptions">
         <list />
       </option>
-      <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="Unreal 에디터에 연결 후 재생" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Unreal 에디터에 연결 후 재생" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" useMixedMode="false">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
@@ -93,7 +110,9 @@
       <option name="selectedOptions">
         <list />
       </option>
-      <option name="useMixedMode" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="연결 대상" type="UnityDevicePlayer" factoryName="UnityAttachToDevicePlayer">
       <method v="2" />
     </configuration>
   </component>
@@ -124,6 +143,8 @@
       <workItem from="1776604508162" duration="1901000" />
       <workItem from="1777333411188" duration="1000" />
       <workItem from="1777450407520" duration="462000" />
+      <workItem from="1778111606178" duration="2871000" />
+      <workItem from="1778141570600" duration="4613000" />
     </task>
     <servers />
   </component>

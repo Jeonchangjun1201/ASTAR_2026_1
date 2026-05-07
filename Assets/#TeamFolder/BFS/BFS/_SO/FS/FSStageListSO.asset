@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: FSStageListSO
   m_EditorClassIdentifier: Assembly-CSharp::GDH.FSStageListSO
   <FSStageList>k__BackingField:
-  - {fileID: 11400000, guid: 84ff14b2d1fcade4391150636e51b238, type: 2}
+  - {fileID: 11400000, guid: e24b2cd2457fc1b449bd8a95d1bbddd1, type: 2}
   - {fileID: 11400000, guid: dfd5ecfc855d5ae48b3d295f02b38b66, type: 2}
+  - {fileID: 11400000, guid: 84ff14b2d1fcade4391150636e51b238, type: 2}
+  - {fileID: 11400000, guid: d4a1311cf82ba40459c9c72317330feb, type: 2}
+  - {fileID: 11400000, guid: 083757e64956b2a4285412196decc1c9, type: 2}

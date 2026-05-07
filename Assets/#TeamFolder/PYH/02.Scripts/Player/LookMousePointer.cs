@@ -14,7 +14,7 @@ namespace PYH.Player
             _main = Camera.main;
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             Rotation(GetPointerPos());
         }
@@ -22,7 +22,7 @@ namespace PYH.Player
         {
             if (dir.magnitude < 0.01f) return;
             
-            Vector3 targetDir = dir.normalized - transform.position;
+            Vector3 targetDir = dir - transform.position;
 
             targetDir.y = 0;
             visual.transform.forward = targetDir;
