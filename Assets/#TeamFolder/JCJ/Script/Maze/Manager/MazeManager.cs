@@ -131,26 +131,17 @@ namespace _TeamFolder.JCJ.Script
 
         private void ResolveServices()
         {
-            _wallRenderer   ??= GetOrAdd<MazeWallRenderer>();
-            _goalSpawner    ??= GetOrAdd<MazeGoalSpawner>();
-            _playerSpawner  ??= GetOrAdd<MazePlayerSpawner>();
-            _coinSpawner    ??= GetOrAdd<MazeCoinSpawner>();
-            if (_spawnDecor) _decorSpawner ??= GetOrAdd<MazeDecorSpawner>();
-            _floorBuilder   ??= GetOrAdd<MazeFloorBuilder>();
-            if (_buildFollowCamera)  _cameraService     ??= GetOrAdd<PlayerFollowCameraService>();
-            if (_buildAmbience)      _ambience          ??= GetOrAdd<MazeAmbience>();
-            if (_spawnStaminaOrbs)   _staminaOrbSpawner ??= GetOrAdd<MazeStaminaOrbSpawner>();
-            if (_buildAudio)         _audio             ??= GetOrAdd<MazeAudio>();
-            if (_buildFinishFX)      _finishFX          ??= GetOrAdd<GoalFinishFX>();
-        }
-
-        private T GetOrAdd<T>() where T : Component
-        {
-            var existing = GetComponent<T>();
-            if (existing != null) return existing;
-            var childExisting = GetComponentInChildren<T>(true);
-            if (childExisting != null) return childExisting;
-            return gameObject.AddComponent<T>();
+            _wallRenderer   ??= SceneComponentResolver.GetOrAdd<MazeWallRenderer>(this);
+            _goalSpawner    ??= SceneComponentResolver.GetOrAdd<MazeGoalSpawner>(this);
+            _playerSpawner  ??= SceneComponentResolver.GetOrAdd<MazePlayerSpawner>(this);
+            _coinSpawner    ??= SceneComponentResolver.GetOrAdd<MazeCoinSpawner>(this);
+            if (_spawnDecor) _decorSpawner ??= SceneComponentResolver.GetOrAdd<MazeDecorSpawner>(this);
+            _floorBuilder   ??= SceneComponentResolver.GetOrAdd<MazeFloorBuilder>(this);
+            if (_buildFollowCamera)  _cameraService     ??= SceneComponentResolver.GetOrAdd<PlayerFollowCameraService>(this);
+            if (_buildAmbience)      _ambience          ??= SceneComponentResolver.GetOrAdd<MazeAmbience>(this);
+            if (_spawnStaminaOrbs)   _staminaOrbSpawner ??= SceneComponentResolver.GetOrAdd<MazeStaminaOrbSpawner>(this);
+            if (_buildAudio)         _audio             ??= SceneComponentResolver.GetOrAdd<MazeAudio>(this);
+            if (_buildFinishFX)      _finishFX          ??= SceneComponentResolver.GetOrAdd<GoalFinishFX>(this);
         }
 
         private static void EnsureSceneHud()

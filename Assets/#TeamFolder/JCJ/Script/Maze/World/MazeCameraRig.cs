@@ -68,10 +68,13 @@ namespace _TeamFolder.JCJ.Script
         public void AddLook(Vector2 delta)
         {
             if (!_enabled) return;
-            _yaw += delta.x;
+            float sens = 1f;
+            var battleCam = _TeamFolder.JCJ.Battle.BattleFirstPersonCamera.Instance;
+            if (battleCam != null) sens = battleCam.AimSensitivityMultiplier;
+            _yaw += delta.x * sens;
             if (_allowPitch)
             {
-                _pitch -= delta.y;
+                _pitch -= delta.y * sens;
                 _pitch = Mathf.Clamp(_pitch, _minPitch, _maxPitch);
             }
         }

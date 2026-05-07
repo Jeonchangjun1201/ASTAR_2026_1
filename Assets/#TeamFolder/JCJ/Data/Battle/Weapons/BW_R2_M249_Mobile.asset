@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa3aeda3603b64b8ecf6a9fdafc3ec, type: 3}
+  m_Name: BW_R2_M249_Mobile
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Battle.BattleWeaponDefinition
+  _weaponId: bw_r2_m249_mobile
+  _displayName: Support Carbine
+  _grade: 2
+  _automatic: 0
+  _viewPrefab: {fileID: 8445401694592989334, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93, type: 3}
+  _projectilePrefab: {fileID: 100100000, guid: a984edf822daa0a48b97ca832ed223bf, type: 3}
+  _viewLocalPosition: {x: 0.19, y: -0.2, z: 0.36}
+  _viewLocalEuler: {x: 0, y: 0, z: 0}
+  _viewLocalScale: {x: 1.08, y: 1.08, z: 1.08}
+  _damage: 40
+  _fireInterval: 0.32
+  _muzzleVelocity: 94
+  _gravity: -19
+  _projectileLifetime: 4.3
+  _projectileRadius: 0.04
+  _spreadAngle: 0.22
+  _muzzleFlashPrefab: {fileID: 0}
+  _impactEffectPrefab: {fileID: 0}
+  _fireSfx: {fileID: 8300000, guid: 0addcc409a57b4a43b86a3d2310ac5b4, type: 3}
+  _impactSfx: {fileID: 8300000, guid: 172f576bc4226094180d5993f9325d57, type: 3}
+  _projectileColor: {r: 1, g: 0.68, b: 0.24, a: 1}
+  _projectileVisualScale: 0.074
+  _projectileTrailTime: 0.17

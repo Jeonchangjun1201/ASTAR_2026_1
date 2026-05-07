@@ -23,7 +23,8 @@ namespace _TeamFolder.JCJ.Script
 
         public List<GameObject> Spawn(int[,] data, float cellSize, int count, GameObject playerPrefab, Transform parent)
         {
-            // 시작점 주변의 빈 칸을 먼저 모아 플레이어끼리 같은 위치에 겹치지 않게 배치한다.
+            // 서버 연결 후에는 이 함수가 "실제 생성"이 아니라 서버 스폰 결과를 씬에 반영하는 단계가 될 수 있다.
+            // 중요한 것은 i번째 스폰 슬롯과 네트워크 플레이어 식별자를 일관되게 매핑하는 것이다.
             var result = new List<GameObject>(count);
             if (playerPrefab == null || count <= 0) return result;
 
@@ -56,6 +57,8 @@ namespace _TeamFolder.JCJ.Script
                 var pc = p.GetComponent<PlayerController>();
                 if (pc != null)
                 {
+                    // 현재는 첫 번째 플레이어를 로컬로 가정한다.
+                    // 서버를 붙이면 여기서 "내 connectionId/ownerId와 일치하는가"로 교체하면 된다.
                     pc.IsLocalControlled = isLocal;
                     pc.SetMouseSensitivity(settings.cameraSensitivity);
                 }
