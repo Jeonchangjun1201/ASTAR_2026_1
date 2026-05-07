@@ -6,20 +6,18 @@ namespace PYH.Manager
     public class MiniGameManager : MonoBehaviour
     {
         [SerializeField] private AbstractMiniGame miniGame;
-        private IMiniGame iMiniGame;
+        private IMiniGame mini;
         [SerializeField] private TimeManager timeManager;
         [field: SerializeField] public MiniGameType CurrentMiniGameType { get; private set; }
 
         public void Awake()
         {
-            iMiniGame = miniGame as IMiniGame;
-            
-            Debug.Assert(iMiniGame != null, "IMiniGame is NULL!");
+            mini = miniGame as IMiniGame;
             Debug.Assert(timeManager != null, "TimeManager is NULL!");
 
-            timeManager.OnTickEndEvent.AddListener(iMiniGame!.GameEnd);
+            timeManager.OnTickEndEvent.AddListener(mini!.GameEnd);
 
-            iMiniGame.Initialize();
+            mini.Initialize(); //BUG
             timeManager.Initialize();
         }
 
@@ -27,8 +25,8 @@ namespace PYH.Manager
         {
             Time.timeScale = 0;
 
-            iMiniGame.OnMiniGameEndEvent.RemoveListener(OnMiniGameEndHandler);
-            timeManager.OnTickEndEvent.RemoveListener(iMiniGame.GameEnd);
+            mini.OnMiniGameEndEvent.RemoveListener(OnMiniGameEndHandler);
+            timeManager.OnTickEndEvent.RemoveListener(mini.GameEnd);
 
             Debug.Log("Game End.");
         }

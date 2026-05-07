@@ -84,12 +84,12 @@ namespace MiniGame.PassTheBomb
         private Player RandomPlayer()
         {
             Player player = PlayerList[Random.Range(0, PlayerList.Length)];
-            
-            while (player.gameObject.activeSelf)
-            {
-                player = PlayerList[Random.Range(0, PlayerList.Length)];
-            }
 
+            player = PlayerList[Random.Range(0, PlayerList.Length)];
+
+            if (!player.gameObject.activeSelf)
+                return RandomPlayer();
+            
             return player;
         }
     }
