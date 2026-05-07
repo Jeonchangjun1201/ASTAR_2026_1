@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 미로 카메라 설정을 실제 카메라 컴포넌트에 반영하는 바인더.
 
 namespace _TeamFolder.JCJ.Script
 {

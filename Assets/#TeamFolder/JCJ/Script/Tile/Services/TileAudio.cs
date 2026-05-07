@@ -1,6 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using SfxSynth = _TeamFolder.JCJ.Script.SfxSynth;
+
+// 타일 미니게임 효과음을 재생하는 오디오 유틸.
 
 namespace _TeamFolder.JCJ.TileGame
 {

@@ -1,7 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using _TeamFolder.JCJ.Script; // IPlayerVisual / PartyCharacterVisual (미로와 공유)
+
+// 타일 모드 플레이어 이동과 입력을 처리하는 컨트롤러.
 
 namespace _TeamFolder.JCJ.TileGame
 {
@@ -38,6 +40,7 @@ namespace _TeamFolder.JCJ.TileGame
         // 플레이 상태.
         public event System.Action<PlayerController> OnFell;          // 떨어짐, 목숨 남음
         public event System.Action<PlayerController> OnEliminated;    // 목숨 없음, 이 플레이어 게임오버
+        public event System.Action<PlayerController> FallResolutionRequested;
 
         public bool IsEliminated  { get; private set; }
         public bool IsGrounded    { get; private set; }
@@ -144,8 +147,12 @@ namespace _TeamFolder.JCJ.TileGame
 
         public InputActionMap GetInputMap() => _inputMap;
 
+        // 플레이어별 목숨 수를 라운드 설정으로 맞춘다.
+        // 서버에서 슬롯별 시작 목숨이 다를 수 있다면 이 메서드로 반영하면 된다.
         public void ConfigureLives(int lives) => LivesRemaining = Mathf.Max(1, lives);
 
+        // 플레이어 색상을 슬롯/팀 기준으로 적용한다.
+        // 네트워크에서는 서버가 정한 팀색이나 플레이어색을 여기로 내려주면 된다.
         public void ApplyTint(Color color)
         {
             PlayerColor = color;
@@ -162,6 +169,8 @@ namespace _TeamFolder.JCJ.TileGame
             }
         }
 
+        // 탈락 체크, 점프 입력, 비주얼 갱신을 처리하는 프레임 루프다.
+        // 로컬 소유 플레이어만 입력을 읽고 원격 플레이어는 상태 표시만 하게 만들 때 경계로 보기 좋다.
         private void Update()
         {
             if (IsEliminated) return;
@@ -416,6 +425,16 @@ namespace _TeamFolder.JCJ.TileGame
             if (IsEliminated) return;
             if (Time.time < _invulnUntil) return; // 리스폰 무적 대기 중
 
+            if (!JcjRuntimeAuthority.UseLocalSimulation)
+            {
+                InputLocked = true;
+                _rb.isKinematic = true;
+                _rb.linearVelocity = Vector3.zero;
+                gameObject.SetActive(false);
+                FallResolutionRequested?.Invoke(this);
+                return;
+            }
+
             LivesRemaining = Mathf.Max(0, LivesRemaining - 1);
             TileAudio.PlayStatic(TileSfx.FallScream, 0.9f, 1f);
 
@@ -436,7 +455,27 @@ namespace _TeamFolder.JCJ.TileGame
                 TileGameManager.Instance.RequestRespawn(this);
         }
 
+        public void ApplyAuthoritativeLifeState(int livesRemaining, bool eliminated)
+        {
+            LivesRemaining = Mathf.Max(0, livesRemaining);
+            if (eliminated)
+            {
+                Eliminate();
+                return;
+            }
+
+            OnFell?.Invoke(this);
+            if (_rb != null)
+            {
+                _rb.isKinematic = true;
+                _rb.linearVelocity = Vector3.zero;
+            }
+            gameObject.SetActive(false);
+        }
+
         /// <summary>리스폰 지연 후 TileGameManager가 호출.</summary>
+        // 매니저가 정한 안전 위치로 플레이어를 다시 활성화하는 단계다.
+        // 서버가 리스폰 좌표와 무적 시간을 확정하면 그 결과를 여기서 로컬 오브젝트에 반영하면 된다.
         public void CompleteRespawn(Vector3 worldPos, float invulnDuration)
         {
             if (IsEliminated) return;
@@ -470,6 +509,8 @@ namespace _TeamFolder.JCJ.TileGame
             if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", original);
         }
 
+        // 플레이어를 최종 탈락 상태로 전환하는 지점이다.
+        // 서버 매치에서는 이 메서드 호출 여부 자체가 서버 확정 이벤트와 1:1로 맞는 편이 가장 안전하다.
         private void Eliminate()
         {
             // 최종 탈락 처리다.

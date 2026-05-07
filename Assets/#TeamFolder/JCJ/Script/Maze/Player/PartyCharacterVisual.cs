@@ -1,7 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
-using _TeamFolder.JCJ.Script.Arena;
+
+// 플레이어에 파티 캐릭터 비주얼과 애니메이션을 붙이는 처리.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -17,6 +18,10 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private string _resourceFallback = "Prefabs/character_default";
         [SerializeField] private float _scale = 1f;
         [SerializeField] private Vector3 _localOffset = new(0f, -1f, 0f);
+        [SerializeField] private string _battleCharacterPrefabPath = "Assets/#TeamFolder/JCJ/Shooter Pack/party_character.fbx";
+        [SerializeField] private float _battleScale = 1f;
+        [SerializeField] private Vector3 _battleLocalOffset = new(0f, -1f, 0f);
+        [SerializeField] private Vector3 _battleLocalEuler = Vector3.zero;
         [SerializeField] private bool _hideBaseCapsule = true;
 
         [Header("애니메이터 트리거")]
@@ -31,10 +36,14 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private float _walkAnimSpeed   = 1f;
         [SerializeField] private float _sprintAnimSpeed = 1.5f;
         [SerializeField] private string _arenaAnimationLibraryPath = "Arena/ArenaAnimationLibrary";
+        [SerializeField] private string _battleIdleClipPath = "Assets/#TeamFolder/JCJ/Shooter Pack/rifle aiming idle.fbx";
+        [SerializeField] private string _battleWalkClipPath = "Assets/#TeamFolder/JCJ/Shooter Pack/walking.fbx";
+        [SerializeField] private string _battleSprintClipPath = "Assets/#TeamFolder/JCJ/Shooter Pack/rifle run.fbx";
+        [SerializeField] private string _battleStopClipPath = "Assets/#TeamFolder/JCJ/Shooter Pack/stop walking.fbx";
 
         private GameObject _instance;
         private Animator _animator;
-        private ArenaAnimationLibrary _arenaAnimationLibrary;
+        private ArenaAnimationLibrary _animationLibrary;
         private PlayableGraph _playableGraph;
         private AnimationLayerMixerPlayable _layerMixer;
         private AnimatorControllerPlayable _controllerPlayable;
@@ -42,7 +51,13 @@ namespace _TeamFolder.JCJ.Script
         private AnimationClip _activeActionClip;
         private bool _actionClipLoop;
         private float _actionClipEndAt;
+        private AnimationClip _battleIdleClip;
+        private AnimationClip _battleWalkClip;
+        private AnimationClip _battleSprintClip;
+        private AnimationClip _battleStopClip;
+        private AnimationClip _queuedLoopClip;
         private string _currentState = "";
+        private Quaternion _targetLocalRotation = Quaternion.identity;
         private static readonly string[] _allTriggers =
             { "idle", "run", "jump", "fall", "getup", "feel" };
 
@@ -60,7 +75,20 @@ namespace _TeamFolder.JCJ.Script
         {
             if (!_playableGraph.IsValid() || _actionClipLoop || _activeActionClip == null) return;
             if (Time.time < _actionClipEndAt) return;
+            if (_queuedLoopClip != null)
+            {
+                var queuedClip = _queuedLoopClip;
+                _queuedLoopClip = null;
+                TryPlayLibraryClip(queuedClip, true);
+                return;
+            }
             StopActionClip();
+        }
+
+        private void LateUpdate()
+        {
+            if (_instance == null) return;
+            _instance.transform.localRotation = _targetLocalRotation;
         }
 
         private void Start()
@@ -116,6 +144,19 @@ namespace _TeamFolder.JCJ.Script
             if (_instance != null) _instance.SetActive(!hidden);
         }
 
+        public void RefreshVisualModel()
+        {
+            if (_playableGraph.IsValid()) _playableGraph.Destroy();
+            if (_instance != null) Destroy(_instance);
+            _instance = null;
+            _animator = null;
+            _activeActionClip = null;
+            _queuedLoopClip = null;
+            _currentState = "";
+            SpawnCharacter();
+            RefreshCustomization();
+        }
+
         private void ApplyBodyColor(Color color)
         {
             // sharedMaterial을 직접 바꾸지 않고 PropertyBlock만 써서 같은 프리팹을 쓰는 다른 플레이어 색에는 영향 주지 않는다.
@@ -166,22 +207,37 @@ namespace _TeamFolder.JCJ.Script
             }
 
             _instance = Instantiate(prefab, transform);
-            _instance.transform.localPosition = _localOffset;
-            _instance.transform.localRotation = Quaternion.identity;
-            _instance.transform.localScale = Vector3.one * _scale;
+            _instance.transform.localPosition = HasBattleWeapon() ? _battleLocalOffset : _localOffset;
+            _targetLocalRotation = HasBattleWeapon() ? Quaternion.Euler(_battleLocalEuler) : Quaternion.identity;
+            _instance.transform.localRotation = _targetLocalRotation;
+            _instance.transform.localScale = Vector3.one * (HasBattleWeapon() ? _battleScale : _scale);
 
             _animator = _instance.GetComponentInChildren<Animator>();
+            if (_animator == null && HasBattleWeapon())
+            {
+                _animator = _instance.GetComponent<Animator>();
+                if (_animator == null) _animator = _instance.AddComponent<Animator>();
+                TryAssignBattleAvatar();
+            }
             if (_animator == null)
                 Debug.LogWarning("[PartyCharacterVisual] Spawned character has no Animator component.");
             else
             {
-                InitializeArenaClipGraph();
+                InitializeActionClipGraph();
+                LoadBattleLocomotionClips();
                 TriggerState(_idleTrigger);
             }
         }
 
         private GameObject ResolvePrefab()
         {
+#if UNITY_EDITOR
+            if (HasBattleWeapon() && !string.IsNullOrEmpty(_battleCharacterPrefabPath))
+            {
+                var battlePrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(_battleCharacterPrefabPath);
+                if (battlePrefab != null) return battlePrefab;
+            }
+#endif
             if (_characterPrefab != null) return _characterPrefab;
             if (string.IsNullOrEmpty(_resourceFallback)) return null;
             return Resources.Load<GameObject>(_resourceFallback);
@@ -195,8 +251,25 @@ namespace _TeamFolder.JCJ.Script
 
         // ───────── IPlayerVisual ─────────
         public void OnIdle()                        => TriggerState(_idleTrigger);
-        public void OnWalk(float speedNormalized)   => TriggerRun(_walkAnimSpeed);
-        public void OnSprint(float speedNormalized) => TriggerRun(_sprintAnimSpeed);
+        public void OnWalk(float speedNormalized)
+        {
+            if (TryPlayBattleLocomotion(_battleWalkClip, true))
+            {
+                _currentState = "battle_walk";
+                return;
+            }
+            TriggerRun(_walkAnimSpeed);
+        }
+
+        public void OnSprint(float speedNormalized)
+        {
+            if (TryPlayBattleLocomotion(_battleSprintClip, true))
+            {
+                _currentState = "battle_sprint";
+                return;
+            }
+            TriggerRun(_sprintAnimSpeed);
+        }
 
         public void OnJump()
         {
@@ -209,7 +282,7 @@ namespace _TeamFolder.JCJ.Script
 
         public void OnPickup()
         {
-            if (TryPlayArenaClip(_arenaAnimationLibrary != null ? (_arenaAnimationLibrary.PickupClip != null ? _arenaAnimationLibrary.PickupClip : _arenaAnimationLibrary.ThrowClip) : null, false)) return;
+            if (TryPlayLibraryClip(_animationLibrary != null ? _animationLibrary.PickupClip : null, false)) return;
             OnCollect();
         }
 
@@ -241,15 +314,9 @@ namespace _TeamFolder.JCJ.Script
             _currentState = _winTrigger;
         }
 
-        public void OnPush()
-        {
-            if (TryPlayArenaClip(_arenaAnimationLibrary != null ? _arenaAnimationLibrary.PushClip : null, false)) return;
-            OnCollect();
-        }
-
         public void OnThrow()
         {
-            if (TryPlayArenaClip(_arenaAnimationLibrary != null ? _arenaAnimationLibrary.ThrowClip : null, false)) return;
+            if (TryPlayLibraryClip(_animationLibrary != null ? _animationLibrary.ThrowClip : null, false)) return;
             OnCollect();
         }
 
@@ -261,9 +328,9 @@ namespace _TeamFolder.JCJ.Script
                 return;
             }
 
-            if (_arenaAnimationLibrary == null) return;
-            var targetClip = moving ? _arenaAnimationLibrary.CarryMoveClip : _arenaAnimationLibrary.CarryIdleClip;
-            TryPlayArenaClip(targetClip, true);
+            if (_animationLibrary == null) return;
+            var targetClip = moving ? _animationLibrary.CarryMoveClip : _animationLibrary.CarryIdleClip;
+            TryPlayLibraryClip(targetClip, true);
         }
 
         private void TriggerRun(float speedMultiplier)
@@ -280,12 +347,43 @@ namespace _TeamFolder.JCJ.Script
 
         private void TriggerState(string trigger)
         {
+            if (trigger == _idleTrigger && TryPlayBattleIdle()) return;
             if (_animator == null || string.IsNullOrEmpty(trigger)) return;
             if (_currentState == trigger) return;
             if (trigger != _runTrigger) _animator.speed = 1f;
             ClearAllTriggersExcept(trigger);
             SetTrigger(trigger);
             _currentState = trigger;
+        }
+
+        private bool TryPlayBattleIdle()
+        {
+            if (!HasBattleWeapon() || _battleIdleClip == null) return false;
+            if (_currentState == "battle_idle" && _activeActionClip == _battleIdleClip && _actionClipLoop) return true;
+            if ((_currentState == "battle_walk" || _currentState == "battle_sprint") && _battleStopClip != null)
+            {
+                _queuedLoopClip = _battleIdleClip;
+                TryPlayLibraryClip(_battleStopClip, false);
+                _currentState = "battle_stop";
+                return true;
+            }
+
+            _queuedLoopClip = null;
+            TryPlayLibraryClip(_battleIdleClip, true);
+            _currentState = "battle_idle";
+            return true;
+        }
+
+        private bool TryPlayBattleLocomotion(AnimationClip clip, bool loop)
+        {
+            if (!HasBattleWeapon() || clip == null) return false;
+            _queuedLoopClip = null;
+            return TryPlayLibraryClip(clip, loop);
+        }
+
+        private bool HasBattleWeapon()
+        {
+            return GetComponentInParent<_TeamFolder.JCJ.Battle.BattleWeaponManager>() != null;
         }
 
         /// <summary>
@@ -310,25 +408,33 @@ namespace _TeamFolder.JCJ.Script
             TriggerState(_idleTrigger);
         }
 
-        private void InitializeArenaClipGraph()
+        private void InitializeActionClipGraph()
         {
-            if (_animator == null || _animator.runtimeAnimatorController == null) return;
-            _arenaAnimationLibrary = LoadArenaAnimationLibrary();
-            if (_arenaAnimationLibrary == null) return;
+            if (_animator == null) return;
+            _animationLibrary = LoadAnimationLibrary();
+            bool hasController = _animator.runtimeAnimatorController != null;
+            if (_animationLibrary == null && !hasController) return;
 
             _playableGraph = PlayableGraph.Create("PartyCharacterVisualGraph");
             _playableGraph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
             _layerMixer = AnimationLayerMixerPlayable.Create(_playableGraph, 2);
-            _controllerPlayable = AnimatorControllerPlayable.Create(_playableGraph, _animator.runtimeAnimatorController);
-            _layerMixer.ConnectInput(0, _controllerPlayable, 0);
-            _layerMixer.SetInputWeight(0, 1f);
+            if (hasController)
+            {
+                _controllerPlayable = AnimatorControllerPlayable.Create(_playableGraph, _animator.runtimeAnimatorController);
+                _layerMixer.ConnectInput(0, _controllerPlayable, 0);
+                _layerMixer.SetInputWeight(0, 1f);
+            }
+            else
+            {
+                _layerMixer.SetInputWeight(0, 0f);
+            }
 
             var output = AnimationPlayableOutput.Create(_playableGraph, "Animation", _animator);
             output.SetSourcePlayable(_layerMixer);
             _playableGraph.Play();
         }
 
-        private bool TryPlayArenaClip(AnimationClip clip, bool loop)
+        private bool TryPlayLibraryClip(AnimationClip clip, bool loop)
         {
             if (clip == null || !_playableGraph.IsValid()) return false;
             if (_activeActionClip == clip && _actionClipLoop == loop) return true;
@@ -368,17 +474,19 @@ namespace _TeamFolder.JCJ.Script
 
         private void SetTrigger(string triggerName)
         {
+            if (_animator == null || _animator.runtimeAnimatorController == null) return;
             if (_playableGraph.IsValid()) _controllerPlayable.SetTrigger(triggerName);
             else _animator.SetTrigger(triggerName);
         }
 
         private void ResetTrigger(string triggerName)
         {
+            if (_animator == null || _animator.runtimeAnimatorController == null) return;
             if (_playableGraph.IsValid()) _controllerPlayable.ResetTrigger(triggerName);
             else _animator.ResetTrigger(triggerName);
         }
 
-        private ArenaAnimationLibrary LoadArenaAnimationLibrary()
+        private ArenaAnimationLibrary LoadAnimationLibrary()
         {
             var library = Resources.Load<ArenaAnimationLibrary>(_arenaAnimationLibraryPath);
 #if UNITY_EDITOR
@@ -391,7 +499,6 @@ namespace _TeamFolder.JCJ.Script
             {
                 library = ScriptableObject.CreateInstance<ArenaAnimationLibrary>();
                 var serializedObject = new UnityEditor.SerializedObject(library);
-                SetLibraryClip(serializedObject, "_pushClip", "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Punching.fbx", "Push");
                 SetLibraryClip(serializedObject, "_throwClip", "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Throw.fbx", "Throw");
                 SetLibraryClip(serializedObject, "_carryIdleClip", "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Box Idle.fbx", "CarryIdle");
                 SetLibraryClip(serializedObject, "_carryMoveClip", "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Box Walk Arc.fbx", "CarryMove");
@@ -401,7 +508,45 @@ namespace _TeamFolder.JCJ.Script
             return library;
         }
 
+        private void LoadBattleLocomotionClips()
+        {
 #if UNITY_EDITOR
+            _battleIdleClip = LoadAnimationClip(_battleIdleClipPath);
+            _battleWalkClip = LoadAnimationClip(_battleWalkClipPath);
+            _battleSprintClip = LoadAnimationClip(_battleSprintClipPath);
+            _battleStopClip = LoadAnimationClip(_battleStopClipPath);
+#endif
+        }
+
+        private void TryAssignBattleAvatar()
+        {
+#if UNITY_EDITOR
+            if (_animator == null || string.IsNullOrEmpty(_battleCharacterPrefabPath)) return;
+            var assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(_battleCharacterPrefabPath);
+            for (int i = 0; i < assets.Length; i++)
+            {
+                if (assets[i] is Avatar avatar)
+                {
+                    _animator.avatar = avatar;
+                    return;
+                }
+            }
+#endif
+        }
+
+#if UNITY_EDITOR
+        private static AnimationClip LoadAnimationClip(string assetPath)
+        {
+            if (string.IsNullOrEmpty(assetPath)) return null;
+            var assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(assetPath);
+            for (int i = 0; i < assets.Length; i++)
+            {
+                if (assets[i] is AnimationClip clip && !clip.name.StartsWith("__preview__"))
+                    return clip;
+            }
+            return null;
+        }
+
         private static void SetLibraryClip(UnityEditor.SerializedObject serializedObject, string propertyName, string assetPath, string clipName)
         {
             var property = serializedObject.FindProperty(propertyName);

@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 보드 크기, 색상, 라운드 규칙을 담는 설정 데이터.
 
 namespace _TeamFolder.JCJ.TileGame
 {

@@ -1,5 +1,7 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using UnityEngine;
+
+// 단순 비주얼 모델의 상태 전환과 움직임 연출을 담당하는 컨트롤러.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -173,13 +175,6 @@ namespace _TeamFolder.JCJ.Script
         {
             if (_root == null) return;
             _root.DOPunchRotation(new Vector3(0f, 0f, 20f), 0.3f, vibrato: 3, elasticity: 0.8f);
-        }
-
-        public void OnPush()
-        {
-            if (_root == null) return;
-            _root.DOPunchPosition(transform.forward * 0.22f, 0.18f, 1, 0.2f);
-            _root.DOPunchRotation(new Vector3(-16f, 0f, 0f), 0.18f, 1, 0.2f);
         }
 
         public void OnThrow()

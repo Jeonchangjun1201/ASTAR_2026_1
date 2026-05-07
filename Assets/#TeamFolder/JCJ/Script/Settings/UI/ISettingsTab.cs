@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 설정 탭 UI가 따라야 하는 공통 계약 인터페이스.
 
 namespace _TeamFolder.JCJ.Script
 {

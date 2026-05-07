@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+//  미로 모드 효과음을 재생하는 오디오 유틸.
 
 namespace _TeamFolder.JCJ.Script
 {

@@ -1,6 +1,8 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+// 단순 이동과 점프를 담당하는 범용 플레이어 컨트롤러.
 
 namespace _TeamFolder.JCJ.Script
 {

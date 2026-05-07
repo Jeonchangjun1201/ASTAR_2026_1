@@ -1,4 +1,6 @@
-using UnityEngine.InputSystem;
+﻿using UnityEngine.InputSystem;
+
+// Input System 액션과 기본 바인딩 구성을 담는 유틸.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -12,6 +14,9 @@ namespace _TeamFolder.JCJ.Script
         public const string ActionJump    = "Jump";
         public const string ActionSprint  = "Sprint";
         public const string ActionLook    = "Look";
+        public const string ActionFire    = "Fire";
+        public const string ActionAim     = "Aim";
+        public const string ActionReload  = "Reload";
         public const string ActionMenu    = "ToggleMenu";
 
         public const string CompositeMoveUp    = "Up";
@@ -63,6 +68,18 @@ namespace _TeamFolder.JCJ.Script
             var look = map.AddAction(ActionLook, InputActionType.Value);
             look.AddBinding("<Mouse>/delta");
             look.AddBinding("<Gamepad>/rightStick");
+
+            var fire = map.AddAction(ActionFire, InputActionType.Button);
+            fire.AddBinding("<Mouse>/leftButton");
+            fire.AddBinding("<Gamepad>/rightTrigger");
+
+            var aim = map.AddAction(ActionAim, InputActionType.Button);
+            aim.AddBinding("<Mouse>/rightButton");
+            aim.AddBinding("<Gamepad>/leftTrigger");
+
+            var reload = map.AddAction(ActionReload, InputActionType.Button);
+            reload.AddBinding("<Keyboard>/r");
+            reload.AddBinding("<Gamepad>/buttonWest");
 
             var menu = map.AddAction(ActionMenu, InputActionType.Button);
             menu.AddBinding(DefaultMenu);

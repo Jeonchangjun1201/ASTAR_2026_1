@@ -1,5 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using _TeamFolder.JCJ.TileGame;
+
+// 타일 카메라 설정을 실제 카메라 컴포넌트에 반영하는 바인더.
 
 namespace _TeamFolder.JCJ.Script
 {

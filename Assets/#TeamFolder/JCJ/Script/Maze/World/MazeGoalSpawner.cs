@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 목표 지점 오브젝트를 생성하고 배치하는 스포너.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -8,18 +10,16 @@ namespace _TeamFolder.JCJ.Script
     public interface IMazeGoalSpawner
     {
         GameObject Spawn(Vector2Int cell, float cellSize, GameObject goalPrefab,
-                        GoalAudioSettings audioSettings, IRankService rankService,
-                        Color beaconColor, Transform parent);
+                        IRankService rankService, Color beaconColor, Transform parent);
     }
 
     /// <summary>
-    /// 골 프리팹을 생성하고 GoalTrigger, 힌트 사운드, 비콘 같은 필수 컴포넌트가 한 번씩만 붙도록 보장한다.
+    /// 골 프리팹을 생성하고 GoalTrigger, 비콘 같은 필수 컴포넌트가 한 번씩만 붙도록 보장한다.
     /// </summary>
     public class MazeGoalSpawner : MonoBehaviour, IMazeGoalSpawner
     {
         public GameObject Spawn(Vector2Int cell, float cellSize, GameObject goalPrefab,
-                               GoalAudioSettings audioSettings, IRankService rankService,
-                               Color beaconColor, Transform parent)
+                               IRankService rankService, Color beaconColor, Transform parent)
         {
             if (goalPrefab == null)
             {
@@ -32,14 +32,6 @@ namespace _TeamFolder.JCJ.Script
 
             var trigger = goal.GetComponent<GoalTrigger>() ?? goal.AddComponent<GoalTrigger>();
             trigger.Inject(rankService);
-
-            if (goal.GetComponent<AudioSource>() == null) goal.AddComponent<AudioSource>();
-            var hint = goal.GetComponent<GoalAudioHint>() ?? goal.AddComponent<GoalAudioHint>();
-            if (audioSettings != null)
-            {
-                hint.Inject(audioSettings);
-                hint.StartHint();
-            }
 
             var beacon = goal.GetComponent<GoalBeacon>() ?? goal.AddComponent<GoalBeacon>();
             beacon.Build(beaconColor);

@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 미로 벽 메시와 외형을 그리는 렌더러.
 
 namespace _TeamFolder.JCJ.Script
 {

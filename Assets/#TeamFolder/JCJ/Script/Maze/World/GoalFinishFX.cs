@@ -1,9 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+//  골인 시 재생되는 시각 효과 처리.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -31,13 +33,14 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private Color _flashColor = new(1f, 1f, 1f, 0.85f);
         [Tooltip("로컬 플레이어 이름. 이 이름일 때만 큰 배너(봇/상대가 골 넣어도 로컬 화면이 안 뺏김).")]
         [SerializeField] private string _localPlayerName = "Player";
+        [SerializeField] private string _localPlayerId = "maze.player.1";
 
         private Canvas _canvas;
         private CanvasGroup _flashGroup;
         private Image _flashImage;
         private TextMeshProUGUI _bannerText;
         private CanvasGroup _bannerGroup;
-        private IRankService _rank;
+        private RankService _rank;
         private Transform _goalOverride;
         private bool _hooked;
 
@@ -53,6 +56,12 @@ namespace _TeamFolder.JCJ.Script
         public void SetLocalPlayerName(string name)
         {
             if (!string.IsNullOrEmpty(name)) _localPlayerName = name;
+        }
+
+        public void SetLocalPlayerIdentity(string playerId, string displayName)
+        {
+            if (!string.IsNullOrWhiteSpace(playerId)) _localPlayerId = playerId;
+            if (!string.IsNullOrWhiteSpace(displayName)) _localPlayerName = displayName;
         }
 
         public void SetGoalTransform(Transform goal) => _goalOverride = goal;
@@ -88,10 +97,10 @@ namespace _TeamFolder.JCJ.Script
                     Invoke(nameof(HookRankService), 0.2f);
                 return;
             }
-            _rank = gsm.Rank;
+            _rank = gsm.Rank as RankService;
             if (_rank != null)
             {
-                _rank.OnPlayerFinished += HandlePlayerFinished;
+                _rank.OnPlayerFinishedData += HandlePlayerFinished;
                 _hooked = true;
             }
         }
@@ -99,31 +108,33 @@ namespace _TeamFolder.JCJ.Script
         private void UnhookRankService()
         {
             if (!_hooked || _rank == null) return;
-            _rank.OnPlayerFinished -= HandlePlayerFinished;
+            _rank.OnPlayerFinishedData -= HandlePlayerFinished;
             _hooked = false;
         }
 
-        private void HandlePlayerFinished(string playerName, int rank)
+        private void HandlePlayerFinished(PlayerRankData entry)
         {
             // 컨페티·사운드는 전원. 큰 배너·슬로모는 로컬 도착자만.
             SpawnConfetti();
-            if (IsLocal(playerName))
+            if (IsLocal(entry))
             {
                 if (_flashCo != null) StopCoroutine(_flashCo);
                 _flashCo = StartCoroutine(FlashOverlayRoutine());
                 if (_slowmoCo != null) StopCoroutine(_slowmoCo);
                 _slowmoCo = StartCoroutine(SlowmoRoutine());
-                ShowBanner(playerName, rank);
+                ShowBanner(entry.PlayerName, entry.Rank);
                 ShakeCamera();
             }
         }
 
-        private bool IsLocal(string playerName)
+        private bool IsLocal(PlayerRankData entry)
         {
-            if (string.IsNullOrEmpty(playerName)) return false;
-            if (_localPlayerName.Equals(playerName, System.StringComparison.OrdinalIgnoreCase)) return true;
-            // 폴백: Instantiate 이름 접두어(Player(Clone) 등) 매칭.
-            return playerName.StartsWith(_localPlayerName, System.StringComparison.OrdinalIgnoreCase);
+            if (!string.IsNullOrWhiteSpace(entry.PlayerId) &&
+                _localPlayerId.Equals(entry.PlayerId, System.StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (string.IsNullOrEmpty(entry.PlayerName)) return false;
+            if (_localPlayerName.Equals(entry.PlayerName, System.StringComparison.OrdinalIgnoreCase)) return true;
+            return entry.PlayerName.StartsWith(_localPlayerName, System.StringComparison.OrdinalIgnoreCase);
         }
 
         // ── 오버레이·배너 ─────────────────────────────

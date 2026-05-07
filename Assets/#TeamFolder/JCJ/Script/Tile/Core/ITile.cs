@@ -1,3 +1,7 @@
+﻿
+
+//타일 오브젝트가 따라야 하는 기본 계약 인터페이스.
+
 namespace _TeamFolder.JCJ.TileGame
 {
     /// <summary>
