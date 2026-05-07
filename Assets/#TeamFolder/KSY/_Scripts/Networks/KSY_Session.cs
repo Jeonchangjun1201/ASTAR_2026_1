@@ -1,7 +1,6 @@
 using KSY.Client;
 using System;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -105,8 +104,10 @@ namespace KSY.Networks
         {
             if (packet == null)
             {
-                SendAsync(new KSY_PacketSendQueueContext());
+                throw new ArgumentNullException("packet");
             }
+
+            SendAsync(new KSY_PacketSendQueueContext());
         }
 
         internal void SendAsync(KSY_ISendQueueContext sendQueueContext)
@@ -131,7 +132,22 @@ namespace KSY.Networks
 
         private async ValueTask<int> HandlePacket(ArraySegment<byte> buffer)
         {
+            if (buffer.Count < 2)
+            {
+                return 0;
+            }
 
+            ushort packetSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
+            if (packetSize > ushort.MaxValue || packetSize > buffer.Count)
+            {
+                return 0;
+            }
+
+            ArraySegment<byte> packetData = new ArraySegment<byte>(buffer.Array, buffer.Offset + 2, packetSize - 2);
+            try
+            {
+                KSY_IPacket packet = packetSerializer.
+            }
         }
     }
 }
