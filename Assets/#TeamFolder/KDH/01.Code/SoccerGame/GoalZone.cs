@@ -3,7 +3,6 @@ using UnityEngine;
 namespace KDH
 {
     // 골대 오브젝트에 붙이는 스크립트
-    // Tag: "Goal" 설정 필요
     public class GoalZone : MonoBehaviour
     {
         // 인스펙터에서 어느 팀/플레이어의 골대인지 지정
