@@ -13,13 +13,6 @@ namespace JHJ.Scripts.EatingthegroundGame
 
         [SerializeField] private PaintManager _paintManager;
 
-        private void Start()
-        {
-            RenderTexture.active = _paintCanvas;
-            GL.Clear(true, true, Color.white);
-            RenderTexture.active = null;
-        }
-
         private void Update()
         {
             PaintOnGround();

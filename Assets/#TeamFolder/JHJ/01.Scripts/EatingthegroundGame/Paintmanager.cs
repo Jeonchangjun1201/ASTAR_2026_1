@@ -8,18 +8,40 @@ namespace JHJ.Scripts.EatingthegroundGame
         public Texture2D brushTexture;
         public float brushSize = 50f;
 
-        
         private Material _paintMat;
 
         private void Awake()
         {
-            
             _paintMat = new Material(Shader.Find("Sprites/Default"));
+
+            if (paintCanvas != null)
+            {
+                Debug.Log("여기 실행됨");
+                RenderTexture.active = paintCanvas;
+                GL.Clear(true, true, Color.white);
+                RenderTexture.active = null;
+                Debug.Log("Awake 완료");
+            }
+            
+        }
+        private void Start()
+        {
+            /*  if (paintCanvas != null)
+              {
+                  Debug.Log("여기 실행됨");
+                  RenderTexture.active = paintCanvas;
+                  GL.Clear(true, true, Color.white);
+                  RenderTexture.active = null;
+              }*/
+
+
         }
 
-        
+  
         public void DrawBrush(Vector2 uv, Color brushColor)
         {
+            if (paintCanvas == null || brushTexture == null) return;
+
             RenderTexture.active = paintCanvas;
 
             GL.PushMatrix();
@@ -30,10 +52,8 @@ namespace JHJ.Scripts.EatingthegroundGame
 
             Rect drawRect = new Rect(xPos, yPos, brushSize, brushSize);
 
-            
             _paintMat.color = brushColor;
 
-            
             Graphics.DrawTexture(drawRect, brushTexture, _paintMat);
 
             GL.PopMatrix();
