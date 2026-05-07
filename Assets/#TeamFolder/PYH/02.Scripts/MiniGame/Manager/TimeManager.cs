@@ -10,6 +10,7 @@ namespace PYH.Manager
         private bool _init;
         public UnityEvent OnTickInitEvent;
         public UnityEvent OnTickStartEvent;
+        public UnityEvent<int> OnTickEvent;
         public UnityEvent OnTickEndEvent;
         
         [SerializeField] private int _maxTime = 50;
@@ -33,6 +34,7 @@ namespace PYH.Manager
             while (_currentTime > 0)
             {
                 _currentTime -= 1;
+                OnTickEvent?.Invoke(_currentTime);
                 yield return new WaitForSeconds(1);
             }
 

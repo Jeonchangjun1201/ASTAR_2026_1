@@ -5,11 +5,10 @@ namespace PYH.Player
 {
     public class Movement : PlayerModuleBase
     {
-        private Vector3 _calcDir;
+        private Rigidbody rb;
 
+        private Vector3 _calcDir;
         [SerializeField] private float speed;
-        [SerializeField] private float gravity;
-        [SerializeField] private CharacterController characterController;
         private readonly bool canMove = true;
         private bool _init;
         
@@ -20,7 +19,7 @@ namespace PYH.Player
             if (_init) return;
 
             _init = true;
-            characterController = player.CharacterController;
+            rb = player.Rigid;
         }
 
         private void FixedUpdate()
@@ -29,10 +28,13 @@ namespace PYH.Player
 
             Vector2 input = Vector2.ClampMagnitude(_moveInput, 1f);
 
-            Vector3 moveDir = new Vector3(input.x, 0f, input.y);
-            characterController.Move(moveDir * (speed * Time.deltaTime));
-        }
+            Vector3 velocity = rb.linearVelocity;
 
+            velocity.x = input.x * speed;
+            velocity.z = input.y * speed;
+
+            rb.linearVelocity = velocity;
+        }
         public void OnMove(InputValue value)
         {
             _moveInput = value.Get<Vector2>();
