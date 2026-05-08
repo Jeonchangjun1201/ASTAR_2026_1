@@ -1,5 +1,7 @@
 using KSY.Client;
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +15,7 @@ namespace KSY.Networks
         private KSY_SendQueue sendQueue;
         private SocketAsyncEventArgs sendArgs;
 
-        private ReceiveBuffer receiveBuffer;
+        private KSY_ReceiveBuffer receiveBuffer;
         private SocketAsyncEventArgs receiveArgs;
 
         private Socket connectedSocket;
@@ -107,22 +109,81 @@ namespace KSY.Networks
                 throw new ArgumentNullException("packet");
             }
 
-            SendAsync(new KSY_PacketSendQueueContext());
+            SendAsync(new KSY_PacketSendQueueContext(packetSerializer, packet));
         }
 
         internal void SendAsync(KSY_ISendQueueContext sendQueueContext)
         {
+            if (sendQueueContext == null)
+            {
+                throw new ArgumentNullException("sendQueueContext");
+            }
 
+            if (!IsOpened)
+            {
+                sendQueueContext.Dispose();
+                Close();
+                throw new InvalidOperationException("Session is not opened");
+            }
+
+            List<ArraySegment<byte>> bufferList = null;
+            lock (sendLocker)
+            {
+                sendQueue.Enqueue(sendQueueContext);
+                if (!sendQueue.TryFlush(out bufferList))
+                {
+                    return;
+                }
+            }
+
+            sendArgs.BufferList = bufferList;
+            if (!connectedSocket.SendAsync(sendArgs))
+            {
+                HandleSent(null, sendArgs);
+            }
         }
 
         private void HandleSent(object sender, SocketAsyncEventArgs sendArgs)
         {
+            if (!IsOpened)
+            {
+                Close();
+                return;
+            }
 
+            if (sendArgs.SocketError != 0 || sendArgs.BytesTransferred <= 0)
+            {
+                Close();
+                return;
+            }
+
+            List<ArraySegment<byte>> bufferList = null;
+            lock (sendLocker)
+            {
+                sendQueue.Clear();
+                if (!sendQueue.TryFlush(out bufferList))
+                {
+                    return;
+                }
+            }
+
+            sendArgs.BufferList = bufferList;
+            if (!connectedSocket.SendAsync(sendArgs))
+            {
+                HandleSent(null, sendArgs);
+            }
         }
 
         private void ReceiveAsync()
         {
+            if (!IsOpened)
+            {
+                Close();
+                return;
+            }
 
+            receiveBuffer.Clean();
+            receiveArgs.SetBuffer(receiveBuffer.FreeBuffer)
         }
 
         private async void HandleReceived(object sender, SocketAsyncEventArgs receiveArgs)
