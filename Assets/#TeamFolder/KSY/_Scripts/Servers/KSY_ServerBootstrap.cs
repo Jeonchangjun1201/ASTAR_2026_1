@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace KSY.Servers
 {
-    public class ServerBootstrap : MonoBehaviour
+    public class KSY_ServerBootstrap : MonoBehaviour
     {
         [SerializeField]
         private KSY_GameManager gameManager = null;

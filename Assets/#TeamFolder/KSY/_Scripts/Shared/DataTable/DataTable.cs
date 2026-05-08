@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace KSY.Shared.DataTable
 {
-    public abstract class DataTableRow
+    public abstract class KSY_DataTableRow
     {
         [NonSerialized]
         public int id = 0;
     }
-    public abstract class DataTable<TRow> : IEnumerable<TRow> where TRow : DataTableRow
+    public abstract class DataTable<TRow> : IEnumerable<TRow> where TRow : KSY_DataTableRow
     {
         [SerializeField]
         private List<TRow> tableRowList = null;
