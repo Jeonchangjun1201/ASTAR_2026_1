@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
+// 스태미나 회복 오브를 생성하고 배치하는 스포너.
 
 namespace _TeamFolder.JCJ.Script
 {

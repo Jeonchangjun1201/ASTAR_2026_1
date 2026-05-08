@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 첫 완주자 보너스를 계산하고 적용하는 처리.
 
 namespace _TeamFolder.JCJ.Script
 {

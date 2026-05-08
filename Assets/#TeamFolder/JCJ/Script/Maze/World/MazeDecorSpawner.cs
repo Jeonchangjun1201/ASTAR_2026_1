@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
+// 미로 장식 오브젝트를 배치하는 스포너.
 
 namespace _TeamFolder.JCJ.Script
 {

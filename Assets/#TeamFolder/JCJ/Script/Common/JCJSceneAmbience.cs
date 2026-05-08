@@ -1,5 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
+
+// 씬 공통 배경 연출과 분위기 설정을 담당하는 컴포넌트.
 
 namespace _TeamFolder.JCJ.Presentation
 {

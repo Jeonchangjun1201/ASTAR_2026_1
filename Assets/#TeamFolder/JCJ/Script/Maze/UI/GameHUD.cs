@@ -1,8 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+// 게임 진행 중 표시되는 HUD를 제어하는 UI 컴포넌트.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -51,6 +53,8 @@ namespace _TeamFolder.JCJ.Script
             _restartButtonVisual ??= _builder.RestartButtonVisual;
         }
 
+        // GameStateManager와 각 서비스 이벤트를 HUD에 연결하는 시작 단계다.
+        // 서버를 붙여도 HUD는 결국 상태 이벤트를 소비하는 쪽이라 이 연결 구조를 유지하기 좋다.
         private void Start()
         {
             var gsm = GameStateManager.Instance;
@@ -137,6 +141,8 @@ namespace _TeamFolder.JCJ.Script
                 _staminaFill.color = Color.Lerp(JCJUiColors.HudDanger, JCJUiColors.HudPrimaryText, Mathf.Clamp01(target * 1.3f));
         }
 
+        // 게임 상태 변화에 맞춰 HUD 표시를 정리하는 진입점이다.
+        // 서버 상태 전환을 UI에 반영할 때 가장 먼저 보게 되는 메서드다.
         private void HandleStateChanged(GameState state)
         {
             if (state == GameState.Playing) ClearCountdownImmediate();
@@ -224,6 +230,8 @@ namespace _TeamFolder.JCJ.Script
             _countdownText.transform.localScale = Vector3.zero;
         }
 
+        // 로컬 재시작 버튼 동작이다.
+        // 서버 매치에서는 이 버튼이 직접 재생성하지 않고 재시작 요청을 보내는 쪽으로 바뀌기 쉽다.
         private void RequestRestart()
         {
             var mm = MazeManager.Instance;

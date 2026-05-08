@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 육각형 타일 메시를 생성하는 빌더.
 
 namespace _TeamFolder.JCJ.TileGame
 {

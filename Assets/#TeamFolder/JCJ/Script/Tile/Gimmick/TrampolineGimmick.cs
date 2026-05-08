@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 플레이어를 튕겨 올리는 트램펄린 기믹 처리.
 
 namespace _TeamFolder.JCJ.TileGame
 {

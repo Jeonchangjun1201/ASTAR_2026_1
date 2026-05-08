@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa3aeda3603b64b8ecf6a9fdafc3ec, type: 3}
+  m_Name: BW_R3_AK74_CQB
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Battle.BattleWeaponDefinition
+  _weaponId: bw_r3_ak74_cqb
+  _displayName: AR-01 CQB
+  _grade: 3
+  _automatic: 1
+  _viewPrefab: {fileID: 100100000, guid: ee329c3cd08e58645834d20702d7f6c6, type: 3}
+  _projectilePrefab: {fileID: 100100000, guid: a984edf822daa0a48b97ca832ed223bf, type: 3}
+  _viewLocalPosition: {x: 0.16, y: -0.19, z: 0.28}
+  _viewLocalEuler: {x: 0, y: 0, z: 0}
+  _viewLocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  _damage: 23
+  _fireInterval: 0.15
+  _muzzleVelocity: 88
+  _gravity: -19
+  _projectileLifetime: 4
+  _projectileRadius: 0.036
+  _spreadAngle: 0.58
+  _muzzleFlashPrefab: {fileID: 0}
+  _impactEffectPrefab: {fileID: 0}
+  _fireSfx: {fileID: 8300000, guid: 0addcc409a57b4a43b86a3d2310ac5b4, type: 3}
+  _impactSfx: {fileID: 8300000, guid: 172f576bc4226094180d5993f9325d57, type: 3}
+  _projectileColor: {r: 1, g: 0.76, b: 0.3, a: 1}
+  _projectileVisualScale: 0.06
+  _projectileTrailTime: 0.14

@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+
+// 특정 액션의 키 재설정을 담당하는 UI 버튼.
 
 namespace _TeamFolder.JCJ.Script
 {

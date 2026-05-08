@@ -1,4 +1,6 @@
-using UnityEngine.InputSystem;
+﻿using UnityEngine.InputSystem;
+
+// 기본 플레이어용 Input Action 생성과 접근 유틸.
 
 namespace _TeamFolder.JCJ.Script
 {

@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// JCJ: 미로 — 미로 바닥 메시와 바닥 오브젝트를 구성하는 빌더.
 
 namespace _TeamFolder.JCJ.Script
 {

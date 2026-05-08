@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 미니맵 설정을 미니맵 UI에 반영하는 바인더.
 
 namespace _TeamFolder.JCJ.Script
 {

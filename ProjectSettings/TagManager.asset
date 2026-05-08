@@ -9,6 +9,7 @@ TagManager:
   - Spin2
   - Spin3
   - spin4
+  - BattleHead
   layers:
   - Default
   - TransparentFX

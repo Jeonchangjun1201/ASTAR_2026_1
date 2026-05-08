@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5996596659897987627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 397775750490869061}
+  - component: {fileID: 1614648465570089205}
+  m_Layer: 0
+  m_Name: MazeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &397775750490869061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5996596659897987627}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1614648465570089205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5996596659897987627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306334a55aaf4bac8fa75cbbe4e0f4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.MazeManager
+  _difficulty: 0
+  _width: 13
+  _height: 13
+  _cellSize: 8
+  _playerCount: 4
+  _spectatorTestMode: 1
+  _seed: 0
+  _algorithmType: 1
+  _wallPrefab: {fileID: 5205680776005661826, guid: 3fdfe42711c695b459c73da7e15b470d, type: 3}
+  _goalPrefab: {fileID: 2886360355532394757, guid: 622d0e80069e5c041ac397e6cc3a8ee9, type: 3}
+  _playerPrefab: {fileID: 171135741889248583, guid: 8f304dd320116f1429b72e045d4d84f9, type: 3}
+  _coinPrefab: {fileID: 0}
+  _goalAudioSettings: {fileID: 11400000, guid: 76d24fb8adbbfb14989741a5eeb33155, type: 2}
+  _rankService: {fileID: 0}
+  _beaconColor: {r: 1, g: 0.92, b: 0.72, a: 1}
+  _buildMinimap: 1
+  _buildFollowCamera: 1
+  _buildAmbience: 1
+  _spawnDecor: 0
+  _wallRenderer: {fileID: 0}
+  _goalSpawner: {fileID: 0}
+  _playerSpawner: {fileID: 0}
+  _coinSpawner: {fileID: 0}
+  _decorSpawner: {fileID: 0}
+  _floorBuilder: {fileID: 0}
+  _cameraService: {fileID: 0}
+  _ambience: {fileID: 0}
+  _spawnStaminaOrbs: 1
+  _staminaOrbSpawner: {fileID: 0}
+  _buildAudio: 1
+  _audio: {fileID: 0}
+  _buildFinishFX: 1
+  _finishFX: {fileID: 0}

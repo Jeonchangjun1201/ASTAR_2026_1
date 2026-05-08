@@ -1,3 +1,7 @@
+﻿
+
+// 타일 미니게임 진행 상태를 표현하는 enum.
+
 namespace _TeamFolder.JCJ.TileGame
 {
     /// <summary>

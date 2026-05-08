@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace _TeamFolder.JCJ.Script.Editor
@@ -10,10 +10,6 @@ namespace _TeamFolder.JCJ.Script.Editor
 
         private static readonly AnimationImportConfig[] Configs =
         {
-            new(
-                "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Punching.fbx",
-                "Push",
-                false),
             new(
                 "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Throw.fbx",
                 "Throw",

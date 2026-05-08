@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
+// 장식 오브젝트 배치 서비스 계약 인터페이스.
 
 namespace _TeamFolder.JCJ.Script
 {

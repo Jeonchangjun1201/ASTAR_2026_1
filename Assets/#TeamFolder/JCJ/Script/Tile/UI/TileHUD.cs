@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 using _TeamFolder.JCJ.Script;
+
+// 타일 미니게임 중 표시되는 HUD를 제어하는 UI 컴포넌트.
 
 namespace _TeamFolder.JCJ.TileGame
 {
@@ -102,6 +104,8 @@ namespace _TeamFolder.JCJ.TileGame
             }
         }
 
+        // 안전색 공지를 HUD에 띄우는 진입점이다.
+        // 서버가 안전색을 결정하더라도 클라이언트 UI 반영은 이 메서드로 충분하다.
         public void ShowColorCallAnnounce(TileColor color, float duration)
         {
             if (_colorCallGroup == null) return;
@@ -150,6 +154,8 @@ namespace _TeamFolder.JCJ.TileGame
         }
 
         // ── 결과 오버레이 ───────────────────────────
+        // 라운드 종료 결과와 재시작 버튼을 띄우는 UI 진입점이다.
+        // 서버 매치에서는 버튼이 직접 다시 시작하지 않도록 onRestart 연결 방식만 바꾸면 된다.
         public void ShowResults(IReadOnlyList<string> rankingLines, System.Action onRestart)
         {
             if (_resultGroup == null) BuildResultOverlay(onRestart);
