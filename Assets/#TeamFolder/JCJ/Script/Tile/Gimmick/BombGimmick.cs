@@ -1,5 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
+
+// 폭발로 주변 타일과 플레이어에 영향을 주는 폭탄 기믹 처리.
 
 namespace _TeamFolder.JCJ.TileGame
 {

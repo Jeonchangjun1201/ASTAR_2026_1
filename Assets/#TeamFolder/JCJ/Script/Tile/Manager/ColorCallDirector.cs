@@ -1,6 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+// 안전 색상 호출과 라운드 이벤트 타이밍을 지휘하는 디렉터.
 
 namespace _TeamFolder.JCJ.TileGame
 {
@@ -24,6 +26,8 @@ namespace _TeamFolder.JCJ.TileGame
         private Coroutine _loop;
         private bool      _running;
 
+        // 컬러콜이 참조할 보드와 설정을 외부에서 주입받는다.
+        // 서버가 안전색을 결정하는 구조에서도 보드 읽기와 설정 참조는 이 연결 지점에서 정리하면 된다.
         public void Inject(GameConfig config, TileBoard board)
         {
             _config = config;
@@ -39,6 +43,8 @@ namespace _TeamFolder.JCJ.TileGame
             _loop = StartCoroutine(Loop());
         }
 
+        // 진행 중인 컬러콜 루프를 종료한다.
+        // 매치 종료나 일시정지처럼 더 이상 안전색 이벤트를 만들면 안 되는 순간에 끊는 지점이다.
         public void EndLoop()
         {
             _running = false;

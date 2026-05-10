@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 타일 생성 팩토리 계약 인터페이스.
 
 namespace _TeamFolder.JCJ.TileGame
 {

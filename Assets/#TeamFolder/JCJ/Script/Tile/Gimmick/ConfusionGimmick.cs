@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 플레이어 조작 방향을 헷갈리게 만드는 혼란 기믹 처리.
 
 namespace _TeamFolder.JCJ.TileGame
 {

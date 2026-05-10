@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using UnityEngine;
+
+// 외형 설정 저장과 변경 이벤트를 관리하는 서비스.
 
 namespace _TeamFolder.JCJ.Script
 {

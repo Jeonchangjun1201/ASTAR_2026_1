@@ -8,7 +8,8 @@ namespace BFS
 {
     public class PlateQue                                                     // Main Class that you need to manage plate order // 발판 순서를 관리하는 데에 필요한 주 클래스
     {
-        Queue<PlateColor> plateQueue = new Queue<PlateColor>();               // Queue that helps game to destroy plates in order // 게임이 발판들을 순서에 맞게 삭제하는 걸 도와주는 큐
+        public Queue<PlateColor> plateQueue { get; private set; } 
+            = new Queue<PlateColor>();                                        // Queue that helps game to destroy plates in order // 게임이 발판들을 순서에 맞게 삭제하는 걸 도와주는 큐
 
         public void AddPlateToQueue(PlateColor plateColor)                    // Method that adds plate to order(queue) // 발판을 순서(큐)에 추가하는 메서드
         {
@@ -24,7 +25,7 @@ namespace BFS
     }
     public class FSPlateManager : MonoBehaviour
     {
-        PlateQue plateQue = new PlateQue();                                   // PlateQue Instance // PlateQue 인스턴스
+        public PlateQue plateQue { get; private set; } = new PlateQue();      // PlateQue Instance // PlateQue 인스턴스
         public event Action<PlateColor> OnPlateAdded;                         // Action that invokes whenever new plate is added to a queue // 발판이 큐에 추가될 때마다 인보크되는 액션
         private Dictionary<PlateColor, IFSPlate> _plateDict = new Dictionary<PlateColor, IFSPlate>();
                                                                               // Dictionary, can access to plate by color of plate (Key: PlateColor(enum), Value: IFSPlate(interface for plate objects)) // 색을 통해 발판에 접근할 수 있는 딕셔너리(PlateColor는 키, IFSPlate는 값)
@@ -40,13 +41,11 @@ namespace BFS
             PlateColor plate;
             plate = (PlateColor)UnityEngine.Random.Range(0, 4);
             plateQue.AddPlateToQueue(plate);
-            Debug.Log($"<color=green>{plate}</color>");
             OnPlateAdded?.Invoke(plate);
         }
         public PlateColor DequeuePlate(float duration)                        // Method that deletes plate from queue using PlateQue instance // 위에꺼 반대, 마찬가지로 PlateQue 인스턴스 사용
         {
             PlateColor plate = plateQue.DeletePlateFromQueue();
-            Debug.Log($"<color=red>{plate}</color>");
             StartCoroutine(PlateDisappearCoroutine(plate, duration));
             return plate;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -44,18 +45,63 @@ namespace KSY.Networks
 
         private Dictionary<Type, ushort> packetIDMap;
         private Dictionary<ushort, Func<ArraySegment<byte>, KSY_IPacket>> factories;
+
         private KSY_PacketSerializer()
         {
-
         }
 
-        //public ArrayPoolBufferWriter Seralize(KSY_IPacket packet)
-        //{
-        //    if (packet == null)
-        //    {
-        //        throw new ArgumentNullException("packet");
-        //    }
-        //}
+        public KSY_ArrayPoolBufferWriter Serialize(KSY_IPacket packet)
+        {
+            if (packet == null)
+            {
+                throw new ArgumentNullException("packet");
+            }
+
+            Type type = packet.GetType();
+            if (!packetIDMap.TryGetValue(type, out var value))
+            {
+                throw new InvalidOperationException(type.FullName + " PacketID not found");
+            }
+
+            KSY_ArrayPoolBufferWriter bufferWriter = new KSY_ArrayPoolBufferWriter();
+            try
+            {
+                BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(2), 0);
+                bufferWriter.Advance(2);
+                BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(2), value);
+                bufferWriter.Advance(2);
+                MemoryPackSerializer.Serialize(type, in bufferWriter, packet);
+                int writtenCount = bufferWriter.WrittenCount;
+                if (writtenCount > 65535)
+                {
+                    throw new InvalidProgramException($"Packet is too large. Size: {writtenCount}, Max: {65535}");
+                }
+
+                BinaryPrimitives.WriteUInt16BigEndian(bufferWriter.WrittenSegment.AsSpan(0, 2), (ushort)writtenCount);
+                return bufferWriter;
+            }
+            catch
+            {
+                bufferWriter.Dispose();
+                throw;
+            }
+        }
+
+        public KSY_IPacket Deserialize(ArraySegment<byte> packetData)
+        {
+            if (packetData.Count < 2)
+            {
+                return null;
+            }
+
+            ushort key = BitConverter.ToUInt16(packetData.Array, packetData.Offset);
+            if (!factories.TryGetValue(key, out var value))
+            {
+                return null;
+            }
+
+            return value(new ArraySegment<byte>(packetData.Array, packetData.Offset + 2, packetData.Count - 2));
+        }
     }
 }
 

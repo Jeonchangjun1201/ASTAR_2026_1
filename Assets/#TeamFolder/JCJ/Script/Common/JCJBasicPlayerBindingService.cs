@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using UnityEngine;
+
+// 기본 플레이어 입력 바인딩 조회와 적용을 돕는 서비스.
 
 namespace _TeamFolder.JCJ.Script
 {

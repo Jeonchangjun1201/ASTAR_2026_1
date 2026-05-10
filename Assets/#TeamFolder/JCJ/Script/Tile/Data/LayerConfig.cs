@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using UnityEngine;
+
+// 타일 보드 레이어와 높이 구성을 담는 설정 데이터.
 
 namespace _TeamFolder.JCJ.TileGame
 {

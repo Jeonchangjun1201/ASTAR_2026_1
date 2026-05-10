@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using UnityEngine;
+
+// 탭 열림/닫힘 시점 공통 동작을 관리하는 보조 컴포넌트.
 
 namespace _TeamFolder.JCJ.Script
 {

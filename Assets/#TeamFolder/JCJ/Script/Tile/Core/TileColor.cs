@@ -1,3 +1,7 @@
+﻿
+
+// 타일 색상 종류를 표현하는 enum.
+
 namespace _TeamFolder.JCJ.TileGame
 {
     /// <summary>

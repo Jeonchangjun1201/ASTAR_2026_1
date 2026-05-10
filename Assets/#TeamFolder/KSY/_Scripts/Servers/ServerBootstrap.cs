@@ -16,6 +16,7 @@ namespace KSY.Servers
             gameManager.Initialize();
 
             GameServer gameServer = new GameServer();
+            //gameServer.Initalize(gameManager, dataTableManager);
         }
     }
 }

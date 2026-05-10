@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using UnityEngine;
+
+// 상태 전환, 타이머, 점수, 랭킹 흐름을 총괄하는 매니저.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -27,6 +29,9 @@ namespace _TeamFolder.JCJ.Script
 
         public GameState CurrentState { get; private set; } = GameState.Waiting;
         public event Action<GameState> OnStateChanged;
+        public event Action StartGameRequested;
+        public event Action ResetRequested;
+        public event Action<GameState> StateChangeRequested;
 
         private bool _subscribed;
 
@@ -50,20 +55,10 @@ namespace _TeamFolder.JCJ.Script
 
         private void AutoBuildServices()
         {
-            // 씬에 연결되지 않은 서비스는 같은 오브젝트나 자식에서 찾고, 없으면 직접 추가한다.
-            if (_timerService == null)     _timerService     = GetOrAdd<TimerService>();
-            if (_rankService == null)      _rankService      = GetOrAdd<RankService>();
-            if (_countdownService == null) _countdownService = GetOrAdd<CountdownService>();
-            if (_scoreService == null)     _scoreService     = GetOrAdd<ScoreService>();
-        }
-
-        private T GetOrAdd<T>() where T : Component
-        {
-            var existing = GetComponent<T>();
-            if (existing != null) return existing;
-            var inChildren = GetComponentInChildren<T>(true);
-            if (inChildren != null) return inChildren;
-            return gameObject.AddComponent<T>();
+            if (_timerService == null)     _timerService     = SceneComponentResolver.GetOrAdd<TimerService>(this);
+            if (_rankService == null)      _rankService      = SceneComponentResolver.GetOrAdd<RankService>(this);
+            if (_countdownService == null) _countdownService = SceneComponentResolver.GetOrAdd<CountdownService>(this);
+            if (_scoreService == null)     _scoreService     = SceneComponentResolver.FindOrCreate<ScoreService>(null, "ScoreService");
         }
 
         private void SubscribeServiceEvents()
@@ -94,8 +89,16 @@ namespace _TeamFolder.JCJ.Script
             _subscribed = false;
         }
 
+        // 미로 라운드 시작 요청 진입점이다.
+        // 서버를 붙이면 호스트/서버가 시작을 확정하고 각 클라이언트는 그 상태 전환만 반영하면 된다.
         public void StartGame()
         {
+            if (!JcjRuntimeAuthority.UseLocalSimulation)
+            {
+                StartGameRequested?.Invoke();
+                return;
+            }
+
             // 카운트다운이 설정되어 있으면 GO 이벤트 후 Playing으로 넘어가고, 아니면 즉시 시작한다.
             if (_countdownService != null && _countdownSeconds > 0)
             {
@@ -108,16 +111,41 @@ namespace _TeamFolder.JCJ.Script
             }
         }
 
+        // 라운드 상태와 관련 서비스 데이터를 처음 대기 상태로 되돌린다.
+        // 세션 재시작이나 방 재입장 처리 때 초기화 순서를 찾기 좋은 지점이다.
         public void ResetToWaiting()
         {
+            if (!JcjRuntimeAuthority.UseLocalSimulation)
+            {
+                ResetRequested?.Invoke();
+                return;
+            }
+
             if (_countdownService != null) _countdownService.Cancel();
             if (_timerService != null) _timerService.ResetTimer();
             if (_rankService != null) _rankService.ResetRankings();
             if (_scoreService != null) _scoreService.Reset();
-            ChangeState(GameState.Waiting);
+            ChangeStateInternal(GameState.Waiting);
         }
 
+        // 모든 서브시스템이 공통으로 보는 상태 값을 바꾸는 중심 메서드다.
+        // 서버 연동 시에는 이 메서드가 로컬에서 상태를 만들기보다 서버 상태 스냅샷을 반영하는 창구가 된다.
         public void ChangeState(GameState newState)
+        {
+            if (!JcjRuntimeAuthority.UseLocalSimulation)
+            {
+                StateChangeRequested?.Invoke(newState);
+                return;
+            }
+            ChangeStateInternal(newState);
+        }
+
+        public void ApplyAuthoritativeState(GameState newState)
+        {
+            ChangeStateInternal(newState);
+        }
+
+        private void ChangeStateInternal(GameState newState)
         {
             if (CurrentState == newState) return;
             CurrentState = newState;

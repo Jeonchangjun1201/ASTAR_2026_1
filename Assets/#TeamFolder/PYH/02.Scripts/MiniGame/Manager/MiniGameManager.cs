@@ -5,31 +5,28 @@ namespace PYH.Manager
 {
     public class MiniGameManager : MonoBehaviour
     {
-        // ALL SCRIPTS IS JUST FOR TEST, OK?
-        [SerializeField] private HumanGolf _humanGolf;
-        [SerializeField] private TimeManager _timeManager;
-        public MiniGameType CurrentMiniGameType { get; private set; }
+        [SerializeField] private AbstractMiniGame miniGame;
+        private IMiniGame mini;
+        [SerializeField] private TimeManager timeManager;
+        [field: SerializeField] public MiniGameType CurrentMiniGameType { get; private set; }
 
         public void Awake()
         {
-            Debug.Assert(_humanGolf != null, "HumanGolf is NULL!");
-            Debug.Assert(_timeManager != null, "TimeManager is NULL!");
+            mini = miniGame as IMiniGame;
+            Debug.Assert(timeManager != null, "TimeManager is NULL!");
 
-            CurrentMiniGameType = MiniGameType.HumanGolf;
+            timeManager.OnTickEndEvent.AddListener(mini!.GameEnd);
 
-            _timeManager.OnTickEndEvent.AddListener(_humanGolf.GameEnd);
-            _humanGolf.OnMiniGameEndEvent += OnMiniGameEndHandler;
-
-            _humanGolf.Initialize();
-            _timeManager.Initialize();
+            mini.Initialize(); //BUG
+            timeManager.Initialize();
         }
 
-        private void OnMiniGameEndHandler() // For Test, Not Yet.
+        public void OnMiniGameEndHandler()
         {
             Time.timeScale = 0;
 
-            _humanGolf.OnMiniGameEndEvent -= OnMiniGameEndHandler;
-            _timeManager.OnTickEndEvent.RemoveListener(_humanGolf.GameEnd);
+            mini.OnMiniGameEndEvent.RemoveListener(OnMiniGameEndHandler);
+            timeManager.OnTickEndEvent.RemoveListener(mini.GameEnd);
 
             Debug.Log("Game End.");
         }

@@ -1,8 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+// 완주 결과를 포디움 형태로 보여주는 프리젠터.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -66,6 +68,8 @@ namespace _TeamFolder.JCJ.Script
         }
 
         // ── 표시·채우기 ───────────────────────────────
+        // 최종 랭킹을 받아 포디움 UI를 채우고 연출을 시작하는 진입점이다.
+        // 서버에서 결과 패킷을 받는 구조가 되면 이 메서드가 그대로 최종 UI 반영 창구가 된다.
         private void HandleFinished(List<PlayerRankData> rankings)
         {
             PopulatePodium(rankings);
@@ -92,6 +96,8 @@ namespace _TeamFolder.JCJ.Script
             }
         }
 
+        // 이번 판 점수를 누적 총점 UI로 반영하는 로컬 연출 단계다.
+        // 서버 저장 총점과 연결하면 PlayerPrefs 대신 서버 응답값을 여기로 넣는 식으로 바꾸기 쉽다.
         private void AnimateScoreCountUp(List<PlayerRankData> rankings)
         {
             int earned = 0;
@@ -126,13 +132,18 @@ namespace _TeamFolder.JCJ.Script
         private void PlayWinnerAnimation(List<PlayerRankData> rankings)
         {
             if (rankings.Count == 0) return;
+            string winnerId = rankings[0].PlayerId;
             string winnerName = rankings[0].PlayerName;
             var mm = MazeManager.Instance;
             if (mm == null) return;
             foreach (var go in mm.Players)
             {
                 if (go == null) continue;
-                if (go.name != winnerName) continue;
+                var identity = RuntimePlayerIdentity.Find(go.transform);
+                bool isWinner = identity != null
+                    ? string.Equals(identity.PlayerId, winnerId, System.StringComparison.OrdinalIgnoreCase)
+                    : go.name == winnerName;
+                if (!isWinner) continue;
                 var pc = go.GetComponent<PlayerController>();
                 pc?.SetMovementEnabled(false);
                 pc?.NotifyCollected();

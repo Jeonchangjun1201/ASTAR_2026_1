@@ -1,6 +1,8 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+
+// 설정 패널 UI를 코드로 생성하는 빌더.
 
 namespace _TeamFolder.JCJ.Script
 {

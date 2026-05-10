@@ -1,5 +1,7 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using UnityEngine;
+
+//  목표 지점을 시각적으로 보여주는 비콘 연출.
 
 namespace _TeamFolder.JCJ.Script
 {

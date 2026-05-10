@@ -1,6 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+
+//  미로 공간의 배경 연출과 환경 효과를 담당하는 컴포넌트.
 
 namespace _TeamFolder.JCJ.Script
 {
