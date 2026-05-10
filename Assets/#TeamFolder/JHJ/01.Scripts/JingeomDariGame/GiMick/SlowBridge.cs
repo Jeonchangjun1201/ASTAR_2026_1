@@ -12,14 +12,14 @@ namespace JHJ.JHJ.Scripts.GiMick
         {
             if (collision.gameObject.CompareTag("Player") && collision.gameObject.TryGetComponent(out TestPlayerController player))
             {
-                player.SetMoveSpeed(slowSpeed);
+               // player.SetMoveSpeed(slowSpeed);
             }
         }
         private void OnCollisionExit(Collision collision)
         {
             if (collision.gameObject.CompareTag("Player") && collision.gameObject.TryGetComponent(out TestPlayerController player))
             {
-                player.ResetMoveSpeed();
+               // player.ResetMoveSpeed();
             }
         }
     }

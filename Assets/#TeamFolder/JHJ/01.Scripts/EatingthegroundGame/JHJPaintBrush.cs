@@ -2,7 +2,7 @@
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
-    public class PaintBrush : MonoBehaviour
+    public class JHJPaintBrush : MonoBehaviour
     {
         [Header("페인트 설정")]
         [SerializeField] private RenderTexture _paintCanvas;

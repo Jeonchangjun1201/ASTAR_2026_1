@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
@@ -46,12 +47,15 @@ namespace JHJ.Scripts.EatingthegroundGame
 
             if (_isCanvasInitialized && wasCreated)
             {
+                Debug.Log($"return : Time -> {Time.time}");
                 return;
             }
 
             RenderTexture previous = RenderTexture.active;
             RenderTexture.active = paintCanvas;
+            Debug.Log("Clear before");
             GL.Clear(true, true, Color.white);
+            Debug.Log($"Clear after : Time -> {Time.time}");
             RenderTexture.active = previous;
             _isCanvasInitialized = true;
         }
