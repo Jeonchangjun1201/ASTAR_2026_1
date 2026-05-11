@@ -1,6 +1,5 @@
-using KSY.Networks;
+using System.Net.Sockets;
 using KSY.Servers;
-using UnityEngine;
 
 namespace KSY.Networks
 {
@@ -9,7 +8,8 @@ namespace KSY.Networks
         private readonly KSY_ISessionFactory sessionFactory;
         private readonly KSY_PacketSerializer packetSerializer;
         private readonly KSY_IPacketDispatcher packetDispatcher;
-        private readonly IRoomManager
+        private readonly KSY_IRoomManager roomManager;
+        private Socket listenSocket;
     }
 }
 

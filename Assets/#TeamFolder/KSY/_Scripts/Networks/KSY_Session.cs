@@ -189,25 +189,25 @@ namespace KSY.Networks
 
         }
 
-        private async ValueTask<int> HandlePacket(ArraySegment<byte> buffer)
-        {
-            if (buffer.Count < 2)
-            {
-                return 0;
-            }
+        // private async ValueTask<int> HandlePacket(ArraySegment<byte> buffer)
+        // {
+        //     if (buffer.Count < 2)
+        //     {
+        //         return 0;
+        //     }
 
-            ushort packetSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
-            if (packetSize > ushort.MaxValue || packetSize > buffer.Count)
-            {
-                return 0;
-            }
+        //     ushort packetSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
+        //     if (packetSize > ushort.MaxValue || packetSize > buffer.Count)
+        //     {
+        //         return 0;
+        //     }
 
-            ArraySegment<byte> packetData = new ArraySegment<byte>(buffer.Array, buffer.Offset + 2, packetSize - 2);
-            try
-            {
-                KSY_IPacket packet = packetSerializer.Deserialize();
-            }
-        }
+        //     ArraySegment<byte> packetData = new ArraySegment<byte>(buffer.Array, buffer.Offset + 2, packetSize - 2);
+        //     try
+        //     {
+        //         KSY_IPacket packet = packetSerializer.Deserialize();
+        //     }
+        // }
     }
 }
 

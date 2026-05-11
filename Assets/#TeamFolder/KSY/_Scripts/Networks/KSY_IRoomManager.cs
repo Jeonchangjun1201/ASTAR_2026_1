@@ -4,6 +4,6 @@ namespace KSY.Networks
 {
     public interface KSY_IRoomManager
     {
-        Room
+        KSY_Room Room(string roomID);
     }
 }
