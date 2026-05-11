@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace KSY.Networks
 {
     public class KSY_Room : MonoBehaviour
     {
-
         //인터페이스에서는 내부에서 암묵적으로 public 접근 제한자를 띄고 있다.
         public interface ICallback
         {
@@ -68,7 +68,49 @@ namespace KSY.Networks
                 throw new ArgumentNullException("packet");
             }
 
-            RoomPacketSendQueueContext 
+            KSY_RoomPacketSendQueueContext roomPacketSendQueueContext = null;
+            bool flag = false;
+            foreach(KeyValuePair<string, KSY_Session> session in sessions)
+            {
+                string key = session.Key;
+                KSY_Session value = session.Value;
+                if (value != null && value.IsOpened && (filter == null || filter(key, value)))
+                {
+                    if(roomPacketSendQueueContext == null)
+                    {
+                        roomPacketSendQueueContext = new KSY_RoomPacketSendQueueContext(packetSerializer, packet, 1);
+                    }
+                    else
+                    {
+                        roomPacketSendQueueContext.AddReference();
+                    }
+
+                    try
+                    {
+                        value.SendAsync(roomPacketSendQueueContext);
+                        flag = true;
+                    }
+                    catch
+                    {
+                        roomPacketSendQueueContext?.Dispose();
+                        throw;
+                    }
+                }
+            }
+
+            if(!flag)
+                roomPacketSendQueueContext?.Dispose();
+        }
+
+        public KSY_Session Session(string sessionID)
+        {
+            if(string.IsNullOrEmpty(sessionID))
+            {
+                return null;
+            }
+
+            sessions.TryGetValue(sessionID, out var value);
+            return value;
         }
     }
 }
