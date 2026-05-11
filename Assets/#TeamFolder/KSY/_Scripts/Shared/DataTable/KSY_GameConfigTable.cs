@@ -5,7 +5,7 @@ using UnityEngine;
 namespace KSY.Shared
 {
     [System.Serializable]
-    public class GameConfigTableRow : DataTableRow
+    public class GameConfigTableRow : KSY_DataTableRow
     {
         public string key = string.Empty;
         public float numberValue = 0f;

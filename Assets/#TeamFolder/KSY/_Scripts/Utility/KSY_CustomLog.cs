@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace KSY.Utility
 {
-    public static class CustomLog
+    public static class KSY_CustomLog
     {
         // UNITY_EDITOR 또는 DEVELOPMENT_BUILD일 때만 코드가 컴파일에 포함됩니다.
         // 일반 릴리스 빌드(최종 배포)에서는 이 메서드를 호출하는 모든 코드가 사라집니다.
