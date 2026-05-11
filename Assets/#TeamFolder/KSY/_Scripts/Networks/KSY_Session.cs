@@ -1,5 +1,3 @@
-using KSY.Client;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -47,8 +45,8 @@ namespace KSY.Networks
 
         public void Open(Socket connectedSocket, KSY_PacketSerializer packetSerializer, KSY_IPacketDispatcher packetDispatcher)
         {
-            //Argument, ÀÎÀÚ¸¦ ¸»ÇÑ´Ù. ÀÎÀÚ´Â Parameter¿Í´Â ´Ù¸¥ °³³äÀ¸·Î ¸Å°³º¯¼ö´Â ¸Þ¼­µå¿¡ Àü´ÞµÇ´Â °ª Çü½Ä ÀÚÃ¼¸¦ ¸»ÇÏ°í
-            //Argument´Â ½ÇÁ¦·Î Àü´ÞµÇ´Â °ªÀ» ¸»ÇÑ´Ù. º¯¼ö¿Í ¸®ÅÍ·²°ú °°Àº °ü°è.
+            //Argument, ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½. ï¿½ï¿½ï¿½Ú´ï¿½ Parameterï¿½Í´ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½å¿¡ ï¿½ï¿½ï¿½ÞµÇ´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½
+            //Argumentï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÞµÇ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
             if (connectedSocket == null)
                 throw new ArgumentNullException("connectedSocket");
 
@@ -65,7 +63,7 @@ namespace KSY.Networks
             sendQueue = new KSY_SendQueue();
             sendArgs = new SocketAsyncEventArgs();
             sendArgs.Completed += HandleSent;
-            receiveBuffer = new ReceiveBuffer(65535);
+            receiveBuffer = new KSY_ReceiveBuffer(65535);
             receiveArgs = new SocketAsyncEventArgs();
             receiveArgs.Completed += HandleReceived;
             ReceiveAsync();
@@ -182,8 +180,8 @@ namespace KSY.Networks
                 return;
             }
 
-            receiveBuffer.Clean();
-            receiveArgs.SetBuffer(receiveBuffer.FreeBuffer)
+            receiveBuffer.CleanUp();
+            receiveArgs.SetBuffer(receiveBuffer.FreeBuffer);
         }
 
         private async void HandleReceived(object sender, SocketAsyncEventArgs receiveArgs)
@@ -207,7 +205,7 @@ namespace KSY.Networks
             ArraySegment<byte> packetData = new ArraySegment<byte>(buffer.Array, buffer.Offset + 2, packetSize - 2);
             try
             {
-                KSY_IPacket packet = packetSerializer.Deseri
+                KSY_IPacket packet = packetSerializer.Deserialize();
             }
         }
     }
