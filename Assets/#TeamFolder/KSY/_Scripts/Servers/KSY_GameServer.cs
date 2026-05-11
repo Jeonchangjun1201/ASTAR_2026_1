@@ -8,7 +8,7 @@ namespace KSY.Servers
     public class KSY_GameServer : KSY_ISessionFactory
     {
         private Dictionary<KSY_Session, string> playerIDMap = null;
-        private KS_Server server = null;
+        private KSY_Server server = null;
 
         public void Initialize(KSY_GameManager gameManager, KSY_DataTableManager dataTableManager)
         {
