@@ -14,13 +14,14 @@ namespace KSY.Networks
         private Socket listenSocket;
         private SocketAsyncEventArgs acceptArgs;
         private int isClosed;
+
         public KSY_IRoomManager Rooms => roomManager;
         public bool IsOpened => Volatile.Read(ref isClosed) == 0;
 
-        // internal KSY_Server(INetworkObjectBuilder builder) : base(ProBuilderMenuActionAttribute)
-        // {
+        internal KSY_Server(KSY_INetworkObjectBuilder builder) : base(ProBuilderMenuActionAttribute)
+        {
             
-        // }
+        }
     }
 }
 
