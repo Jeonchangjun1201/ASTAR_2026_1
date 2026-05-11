@@ -6,19 +6,25 @@ namespace KSY.Networks
     public class KSY_NetworkObject : KSY_IDIContainer, IAsyncDisposable
     {
         private readonly KSY_DIContainer diContainer;
-        public ValueTask DisposeAsync()
+
+        public KSY_NetworkObject(KSY_INetworkObjectBuilder builder)
         {
-            throw new NotImplementedException();
+            diContainer = builder.GetDIContainer();
         }
 
         public TInstance GetInstance<TInstance>() where TInstance : class
         {
-            throw new NotImplementedException();
+            return diContainer.GetInstance<TInstance>();
         }
 
         public object GetInstance(Type type)
         {
-            throw new NotImplementedException();
+            return diContainer.GetInstance(type);
+        }
+        
+        ValueTask IAsyncDisposable.DisposeAsync()
+        {
+            return diContainer.DisposeAsync(); 
         }
     }
 }

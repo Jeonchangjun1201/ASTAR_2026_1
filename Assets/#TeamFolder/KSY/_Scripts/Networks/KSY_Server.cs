@@ -1,7 +1,6 @@
 using System.Net.Sockets;
 using System.Threading;
 using KSY.Servers;
-using UnityEditor.ProBuilder;
 
 namespace KSY.Networks
 {
@@ -18,7 +17,7 @@ namespace KSY.Networks
         public KSY_IRoomManager Rooms => roomManager;
         public bool IsOpened => Volatile.Read(ref isClosed) == 0;
 
-        internal KSY_Server(KSY_INetworkObjectBuilder builder) : base(ProBuilderMenuActionAttribute)
+        internal KSY_Server(KSY_INetworkObjectBuilder builder) : base(builder)
         {
             
         }
