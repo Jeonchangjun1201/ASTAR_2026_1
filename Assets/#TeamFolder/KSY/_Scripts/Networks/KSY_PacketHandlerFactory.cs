@@ -19,6 +19,7 @@ namespace KSY.Networks
                     diContainer = diContainer
                 };
                 //IsAssignableFrom : 형변환이 가능한지 확인하는 메서드 (상속 관계, 인터페이스 구현 여부 등 확인)
+                //IsDefined L 특정 커스텀 특성(Attribute)이 적용되어 있는지 여부를 확인할 때 사용하는 메서드
                 Type[] array = (from t in assemblies.SelectMany((Assembly a)=>a.GetTypes())
                                 where typeof(KSY_IPacketHandlerBase).IsAssignableFrom(t)
                                 where t.IsDefined(typeof(KSY_PacketAttribute), inherit: false)
@@ -48,16 +49,19 @@ namespace KSY.Networks
                     //InvalidOperationException : 객체의 현재 상태가 호출된 메서드를 수행하기에 적절하지 않을 때 발생하는 예외.
                     throw new InvalidOperationException("No constructor matching the criteria exists for " + packetHandlerType.FullName + ".");
 
+                //ParameterExpression : 식 트리 안에서의 매개변수
+                //Expression.Parameter : 식 트리내에서 사용할 매개변수 노드를 생성하는 메서드
                 ParameterExpression diContainerParam = Expression.Parameter(typeof(KSY_DIContainer), "diContainer");
+                //MethodCallExpression : 식 트리내에서 메서드의 호출을 나타내는 노드
                 MethodCallExpression[] array = constructorInfo.GetParameters().Select(delegate (ParameterInfo parameterInfo)
                 {
+                    //KSY_DIContainer에서 GetInstance라는 인스턴스 public void 메서드를 찾아서 MethodInfo 클래스에 넣어주고 있다.
                     MethodInfo method = typeof(KSY_DIContainer).GetMethod("GetInstance", BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null);
                     return Expression.Call(diContainerParam, method.MakeGenericMethod(parameterInfo.ParameterType));
                 }).ToArray();
                 Expression[] arguments = array;
                 return Expression.Lambda<Func<KSY_DIContainer, KSY_IPacketHandlerBase>>(Expression.Convert(Expression.New(constructorInfo, arguments), typeof(KSY_IPacketHandlerBase)), new ParameterExpression[1] {diContainerParam}).Compile();
             }
-
             private static ConstructorInfo SelectConstructor(Type type, KSY_DIContainer diContainer)
             {
                 //Type.GetConstructors : 현재 Type의 모든 public 생성자를 나타내는 ConstructorInfo 객체의 배열을 반환하는 메서드

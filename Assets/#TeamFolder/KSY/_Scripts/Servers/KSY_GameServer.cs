@@ -18,7 +18,7 @@ namespace KSY.Servers
 
             playerIDMap = new Dictionary<KSY_Session, string>();
 
-            UnityPacketDispatcher
+            KSY_UnityPacketDispatcher
         }
         public KSY_Session Create(KSY_NetworkObject networkObject, Socket connectedSocket)
         {
