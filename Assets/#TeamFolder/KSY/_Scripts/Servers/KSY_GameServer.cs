@@ -12,7 +12,8 @@ namespace KSY.Servers
 
         public void Initialize(KSY_GameManager gameManager, KSY_DataTableManager dataTableManager)
         {
-
+            KSY_GameInstance.PlayMode = KSY_EPlayMode.Server;
+            KSY_GameInstance.DataTableManager = dataTableManager;
         }
         public KSY_Session Create(KSY_NetworkObject networkObject, Socket connectedSocket)
         {
