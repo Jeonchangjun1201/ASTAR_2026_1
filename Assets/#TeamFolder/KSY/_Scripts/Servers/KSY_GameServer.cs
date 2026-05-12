@@ -14,6 +14,11 @@ namespace KSY.Servers
         {
             KSY_GameInstance.PlayMode = KSY_EPlayMode.Server;
             KSY_GameInstance.DataTableManager = dataTableManager;
+            KSY_ServerInstance.GameServer = this;
+
+            playerIDMap = new Dictionary<KSY_Session, string>();
+
+            UnityPacketDispatcher
         }
         public KSY_Session Create(KSY_NetworkObject networkObject, Socket connectedSocket)
         {
