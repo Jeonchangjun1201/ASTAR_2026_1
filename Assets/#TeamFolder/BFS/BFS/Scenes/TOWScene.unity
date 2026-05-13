@@ -2295,7 +2295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <InputSO>k__BackingField: {fileID: 11400000, guid: d7769ea091bba1145822a50772e9398a, type: 2}
-  <IsTarget>k__BackingField: 0
+  <IsTarget>k__BackingField: 1
 --- !u!1 &1477634786
 GameObject:
   m_ObjectHideFlags: 0
