@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace KSY.Networks
 {
-    public class KSY_PacketHandlerFactory : MonoBehaviour
+    public class PacketHandlerFactory : MonoBehaviour
     {
-        private KSY_PacketHandlerFactory()
+        private PacketHandlerFactory()
         {
         }
 
@@ -18,9 +18,9 @@ namespace KSY.Networks
         
         public static class Builder
         {
-            public static KSY_PacketHandlerFactory Build(Assembly[] assemblies, KSY_DIContainer diContainer)
+            public static PacketHandlerFactory Build(Assembly[] assemblies, KSY_DIContainer diContainer)
             {
-                KSY_PacketHandlerFactory packetHandlerFactory = new KSY_PacketHandlerFactory
+                PacketHandlerFactory packetHandlerFactory = new PacketHandlerFactory
                 {
                     factories = new Dictionary<Type, Func<KSY_DIContainer, KSY_IPacketHandlerBase>>(),
                     diContainer = diContainer

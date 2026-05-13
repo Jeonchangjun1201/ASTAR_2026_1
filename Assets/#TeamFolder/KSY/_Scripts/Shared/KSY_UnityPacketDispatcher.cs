@@ -8,17 +8,17 @@ using UnityEngine;
 namespace KSY.Shared
 {
     //Packet이 올바른 Handler로 가도록 도와주는 class
-    public class KSY_UnityPacketDispatcher : MonoBehaviour, IPacketDispatcher
+    public class UnityPacketDispatcher : MonoBehaviour, IPacketDispatcher
     {
         private readonly ConcurrentQueue<(Session, IPacket)> packetQueue = new ConcurrentQueue<(Session, IPacket)>();
 
         private bool isProcessing = false;
-        private Lazy<KSY_PacketHandlerFactory> packetHandlerFactory = null;
+        private Lazy<PacketHandlerFactory> packetHandlerFactory = null;
         
         public void Initialize(KSY_IDIContainer diContainer)
         {
             isProcessing = false;
-            packetHandlerFactory = new Lazy<KSY_PacketHandlerFactory>(() => diContainer.GetInstance<KSY_PacketHandlerFactory>());
+            packetHandlerFactory = new Lazy<PacketHandlerFactory>(() => diContainer.GetInstance<PacketHandlerFactory>());
         }
 
         private void Update()
