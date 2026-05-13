@@ -4,20 +4,20 @@ using KSY.Servers;
 
 namespace KSY.Networks
 {
-    public class KSY_Server : KSY_NetworkObject
+    public class Server : NetworkObject
     {
-        private readonly KSY_ISessionFactory sessionFactory;
-        private readonly KSY_PacketSerializer packetSerializer;
+        private readonly ISessionFactory sessionFactory;
+        private readonly PacketSerializer packetSerializer;
         private readonly IPacketDispatcher packetDispatcher;
-        private readonly KSY_IRoomManager roomManager;
+        private readonly IRoomManager roomManager;
         private Socket listenSocket;
         private SocketAsyncEventArgs acceptArgs;
         private int isClosed;
 
-        public KSY_IRoomManager Rooms => roomManager;
+        public IRoomManager Rooms => roomManager;
         public bool IsOpened => Volatile.Read(ref isClosed) == 0;
 
-        internal KSY_Server(KSY_INetworkObjectBuilder builder) : base(builder)
+        internal Server(INetworkObjectBuilder builder) : base(builder)
         {
             
         }

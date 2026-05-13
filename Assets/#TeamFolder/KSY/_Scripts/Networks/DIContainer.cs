@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 
 namespace KSY.Networks
 {
-    public class KSY_DIContainer : KSY_IDIContainer, IAsyncDisposable
+    public class 
+        DIContainer : IDIContainer, IAsyncDisposable
     {
         private readonly Dictionary<Type, object> instances;
 
-        public KSY_DIContainer()
+        public DIContainer()
         {
             instances = new Dictionary<Type, object>();
         }

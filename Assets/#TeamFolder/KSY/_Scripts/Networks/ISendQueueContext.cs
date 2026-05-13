@@ -2,7 +2,7 @@ using System;
 
 namespace KSY.Networks
 {
-    public interface KSY_ISendQueueContext : IDisposable
+    public interface ISendQueueContext : IDisposable
     {
         ArraySegment<byte> GetData();
     }

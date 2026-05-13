@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace KSY.Networks
 {
-    public interface KSY_IPacketHandlerBase
+    public interface IPacketHandlerBase
     {
         ValueTask HandlePacket(Session session, IPacket packet);
     }

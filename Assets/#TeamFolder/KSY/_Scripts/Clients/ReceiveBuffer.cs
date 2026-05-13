@@ -2,7 +2,7 @@
 
 namespace KSY.Networks
 {
-    public class KSY_ReceiveBuffer
+    public class ReceiveBuffer
     {
         private byte[] buffer;
         private int readIndex;
@@ -13,7 +13,7 @@ namespace KSY.Networks
         //쓰고 아직 읽지 않은 공간
         public ArraySegment<byte> UsedBuffer => new ArraySegment<byte>(buffer, readIndex, writeIndex - readIndex);
 
-        public KSY_ReceiveBuffer(int size)
+        public ReceiveBuffer(int size)
         {
             buffer = new byte[size];
             readIndex = 0;

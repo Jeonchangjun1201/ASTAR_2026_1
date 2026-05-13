@@ -3,7 +3,7 @@ using System.Buffers;
 
 namespace KSY.Networks
 {
-    public class KSY_ArrayPoolBufferWriter : IBufferWriter<byte>, IDisposable
+    public class ArrayPoolBufferWriter : IBufferWriter<byte>, IDisposable
     {
         private const int DEFAULT_INITIAL_CAPACITY = 256;
         private readonly ArrayPool<byte> pool;
@@ -13,7 +13,7 @@ namespace KSY.Networks
         public int WrittenCount => writtenCount;
         public ArraySegment<byte> WrittenSegment => new ArraySegment<byte>(buffer, 0, writtenCount);
 
-        public KSY_ArrayPoolBufferWriter(int initialCapacity = 256, ArrayPool<byte> pool = null)
+        public ArrayPoolBufferWriter(int initialCapacity = 256, ArrayPool<byte> pool = null)
         {
             if (initialCapacity <= 0)
             {

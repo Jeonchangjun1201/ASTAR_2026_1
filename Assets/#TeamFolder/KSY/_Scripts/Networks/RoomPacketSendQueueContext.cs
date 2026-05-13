@@ -3,15 +3,15 @@ using System.Threading;
 
 namespace KSY.Networks
 {
-    public class KSY_RoomPacketSendQueueContext : KSY_ISendQueueContext, IDisposable
+    public class RoomPacketSendQueueContext : ISendQueueContext, IDisposable
     {
-        private readonly KSY_ArrayPoolBufferWriter bufferWriter;
+        private readonly ArrayPoolBufferWriter bufferWriter;
         private readonly ArraySegment<byte> data;
         private int remainingReferenceCount;
         //true : 1, false : 0
         private int isDisposed;
 
-        public KSY_RoomPacketSendQueueContext(KSY_PacketSerializer packetSerializer, IPacket packet, int referenceCount)
+        public RoomPacketSendQueueContext(PacketSerializer packetSerializer, IPacket packet, int referenceCount)
         {
             if (referenceCount <= 0)
             {

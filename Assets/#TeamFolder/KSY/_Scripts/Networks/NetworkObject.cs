@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace KSY.Networks
 {
-    public class KSY_NetworkObject : KSY_IDIContainer, IAsyncDisposable
+    public class NetworkObject : IDIContainer, IAsyncDisposable
     {
-        private readonly KSY_DIContainer diContainer;
+        private readonly DIContainer diContainer;
 
-        public KSY_NetworkObject(KSY_INetworkObjectBuilder builder)
+        public NetworkObject(INetworkObjectBuilder builder)
         {
             diContainer = builder.GetDIContainer();
         }

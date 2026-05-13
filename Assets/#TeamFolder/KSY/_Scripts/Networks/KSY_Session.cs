@@ -9,14 +9,14 @@ namespace KSY.Networks
     public class Session : MonoBehaviour
     {
         private readonly object sendLocker;
-        private KSY_SendQueue sendQueue;
+        private SendQueue sendQueue;
         private SocketAsyncEventArgs sendArgs;
 
-        private KSY_ReceiveBuffer receiveBuffer;
+        private ReceiveBuffer receiveBuffer;
         private SocketAsyncEventArgs receiveArgs;
 
         private Socket connectedSocket;
-        private KSY_PacketSerializer packetSerializer;
+        private PacketSerializer packetSerializer;
         private IPacketDispatcher packetDispatcher;
 
         private int isClosed = 1;
@@ -42,7 +42,7 @@ namespace KSY.Networks
             sendLocker = new object();
         }
 
-        public void Open(Socket connectedSocket, KSY_PacketSerializer packetSerializer, IPacketDispatcher packetDispatcher)
+        public void Open(Socket connectedSocket, PacketSerializer packetSerializer, IPacketDispatcher packetDispatcher)
         {
             //Argument, ���ڸ� ���Ѵ�. ���ڴ� Parameter�ʹ� �ٸ� �������� �Ű������� �޼��忡 ���޵Ǵ� �� ���� ��ü�� ���ϰ�
             //Argument�� ������ ���޵Ǵ� ���� ���Ѵ�. ������ ���ͷ��� ���� ����.
@@ -59,10 +59,10 @@ namespace KSY.Networks
             this.packetSerializer = packetSerializer;
             this.packetDispatcher = packetDispatcher;
             Volatile.Write(ref isClosed, 0);
-            sendQueue = new KSY_SendQueue();
+            sendQueue = new SendQueue();
             sendArgs = new SocketAsyncEventArgs();
             sendArgs.Completed += HandleSent;
-            receiveBuffer = new KSY_ReceiveBuffer(65535);
+            receiveBuffer = new ReceiveBuffer(65535);
             receiveArgs = new SocketAsyncEventArgs();
             receiveArgs.Completed += HandleReceived;
             ReceiveAsync();
@@ -106,10 +106,10 @@ namespace KSY.Networks
                 throw new ArgumentNullException("packet");
             }
 
-            SendAsync(new KSY_PacketSendQueueContext(packetSerializer, packet));
+            SendAsync(new PacketSendQueueContext(packetSerializer, packet));
         }
 
-        internal void SendAsync(KSY_ISendQueueContext sendQueueContext)
+        internal void SendAsync(ISendQueueContext sendQueueContext)
         {
             if (sendQueueContext == null)
             {

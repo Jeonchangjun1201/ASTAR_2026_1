@@ -7,26 +7,26 @@ using MemoryPack;
 
 namespace KSY.Networks
 {
-    public class KSY_PacketSerializer
+    public class PacketSerializer
     {
         public static class Builder
         {
-            public static KSY_PacketSerializer Build(Assembly[] assemblies)
+            public static PacketSerializer Build(Assembly[] assemblies)
             {
-                KSY_PacketSerializer packetSerializer = new KSY_PacketSerializer
+                PacketSerializer packetSerializer = new PacketSerializer
                 {
                     packetIDMap = new Dictionary<Type, ushort>(),
                     factories = new Dictionary<ushort, Func<ArraySegment<byte>, IPacket>>()
                 };
                 Type[] array = (from t in assemblies.SelectMany((Assembly a) => a.GetTypes())
                                 where typeof(IPacket).IsAssignableFrom(t)
-                                where t.IsDefined(typeof(KSY_PacketAttribute), inherit: false)
+                                where t.IsDefined(typeof(PacketAttribute), inherit: false)
                                 where t.IsDefined(typeof(MemoryPackableAttribute), inherit: false)
                                 where !t.IsAbstract && !t.IsInterface
                                 select t).ToArray();
                 foreach (Type packetType in array)
                 {
-                    KSY_PacketAttribute customAttribute = packetType.GetCustomAttribute<KSY_PacketAttribute>(inherit: false);
+                    PacketAttribute customAttribute = packetType.GetCustomAttribute<PacketAttribute>(inherit: false);
                     if(customAttribute != null)
                     {
                         packetSerializer.packetIDMap[packetType] = customAttribute.PacketID;
@@ -46,11 +46,11 @@ namespace KSY.Networks
         private Dictionary<Type, ushort> packetIDMap;
         private Dictionary<ushort, Func<ArraySegment<byte>, IPacket>> factories;
 
-        private KSY_PacketSerializer()
+        private PacketSerializer()
         {
         }
 
-        public KSY_ArrayPoolBufferWriter Serialize(IPacket packet)
+        public ArrayPoolBufferWriter Serialize(IPacket packet)
         {
             if (packet == null)
             {
@@ -63,7 +63,7 @@ namespace KSY.Networks
                 throw new InvalidOperationException(type.FullName + " PacketID not found");
             }
 
-            KSY_ArrayPoolBufferWriter bufferWriter = new KSY_ArrayPoolBufferWriter();
+            ArrayPoolBufferWriter bufferWriter = new ArrayPoolBufferWriter();
             try
             {
                 BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(2), 0);

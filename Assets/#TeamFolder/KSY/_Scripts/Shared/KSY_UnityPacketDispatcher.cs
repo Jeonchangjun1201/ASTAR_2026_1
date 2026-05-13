@@ -15,7 +15,7 @@ namespace KSY.Shared
         private bool isProcessing = false;
         private Lazy<PacketHandlerFactory> packetHandlerFactory = null;
         
-        public void Initialize(KSY_IDIContainer diContainer)
+        public void Initialize(IDIContainer diContainer)
         {
             isProcessing = false;
             packetHandlerFactory = new Lazy<PacketHandlerFactory>(() => diContainer.GetInstance<PacketHandlerFactory>());
@@ -49,7 +49,7 @@ namespace KSY.Shared
                         Type packetType = packetContext.packet.GetType();
                         Debug.Log($"[UnityPacketDispatcher] Packet Dispatched. PacketType: {packetType.Name}");
 
-                        KSY_IPacketHandlerBase packetHandler = packetHandlerFactory?.Value.Create(packetType);
+                        IPacketHandlerBase packetHandler = packetHandlerFactory?.Value.Create(packetType);
                         if(packetHandler != null)
                             await packetHandler.HandlePacket(packetContext.session, packetContext.packet);
                     }

@@ -5,22 +5,23 @@ using System.Net.Sockets;
 
 namespace KSY.Servers
 {
-    public class KSY_GameServer : KSY_ISessionFactory
+    public class GameServer : ISessionFactory
     {
         private Dictionary<Session, string> playerIDMap = null;
-        private KSY_Server server = null;
+        private Server server = null;
 
         public void Initialize(KSY_GameManager gameManager, KSY_DataTableManager dataTableManager)
         {
             KSY_GameInstance.PlayMode = KSY_EPlayMode.Server;
             KSY_GameInstance.DataTableManager = dataTableManager;
-            KSY_ServerInstance.GameServer = this;
+            ServerInstance.GameServer = this;
 
             playerIDMap = new Dictionary<Session, string>();
 
-            KSY_UnityPacketDispatcher
+            UnityPacketDispatcher unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();
+            server = new ServerBuilder
         }
-        public Session Create(KSY_NetworkObject networkObject, Socket connectedSocket)
+        public Session Create(NetworkObject networkObject, Socket connectedSocket)
         {
             throw new System.NotImplementedException();
         }

@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace KSY.Networks
 {
-    public class KSY_Room : MonoBehaviour
+    public class Room : MonoBehaviour
     {
         //인터페이스에서는 내부에서 암묵적으로 public 접근 제한자를 띄고 있다.
         public interface ICallback
         {
-            void OnAdded(KSY_Room room, Session session);
-            void OnRemoved(KSY_Room room, Session session);
+            void OnAdded(Room room, Session session);
+            void OnRemoved(Room room, Session session);
         }
 
         //여러 스레드가 동시에 접근하더라도 데이터의 무결성을 보장하는 스레드 세이프한 딕셔너리.
@@ -19,12 +19,12 @@ namespace KSY.Networks
         private readonly ConcurrentDictionary<string, Session> sessions;
         private readonly ConcurrentDictionary<Session, Action<Session>> sessionClosedHandlers;
         private readonly int roomIDHash;
-        private readonly KSY_PacketSerializer packetSerializer;
+        private readonly PacketSerializer packetSerializer;
         private readonly ICallback callback;
 
         public int RoomIDHash => roomIDHash;
 
-        public KSY_Room(string roomID, KSY_PacketSerializer packetSerializer, ICallback callback)
+        public Room(string roomID, PacketSerializer packetSerializer, ICallback callback)
         {
             roomIDHash = roomID.GetHashCode();
             this.packetSerializer = packetSerializer;
@@ -68,7 +68,7 @@ namespace KSY.Networks
                 throw new ArgumentNullException("packet");
             }
 
-            KSY_RoomPacketSendQueueContext roomPacketSendQueueContext = null;
+            RoomPacketSendQueueContext roomPacketSendQueueContext = null;
             bool flag = false;
             foreach(KeyValuePair<string, Session> session in sessions)
             {
@@ -78,7 +78,7 @@ namespace KSY.Networks
                 {
                     if(roomPacketSendQueueContext == null)
                     {
-                        roomPacketSendQueueContext = new KSY_RoomPacketSendQueueContext(packetSerializer, packet, 1);
+                        roomPacketSendQueueContext = new RoomPacketSendQueueContext(packetSerializer, packet, 1);
                     }
                     else
                     {

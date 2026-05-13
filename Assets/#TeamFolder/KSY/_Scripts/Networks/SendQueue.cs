@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace KSY.Networks
 {
-    public class KSY_SendQueue : IDisposable
+    public class SendQueue : IDisposable
     {
-        private readonly Queue<KSY_ISendQueueContext> contextQueue;
-        private readonly List<KSY_ISendQueueContext> contextFlushBuffer;
+        private readonly Queue<ISendQueueContext> contextQueue;
+        private readonly List<ISendQueueContext> contextFlushBuffer;
 
-        public KSY_SendQueue()
+        public SendQueue()
         {
-            contextQueue = new Queue<KSY_ISendQueueContext>();
-            contextFlushBuffer = new List<KSY_ISendQueueContext>();
+            contextQueue = new Queue<ISendQueueContext>();
+            contextFlushBuffer = new List<ISendQueueContext>();
         }
 
-        public void Enqueue(KSY_ISendQueueContext context)
+        public void Enqueue(ISendQueueContext context)
         {
             contextQueue.Enqueue(context);
         }
@@ -35,7 +35,7 @@ namespace KSY.Networks
             bufferList = new List<ArraySegment<byte>>();
             while(contextQueue.Count > 0)
             {
-                KSY_ISendQueueContext sendQueueContext = contextQueue.Dequeue();
+                ISendQueueContext sendQueueContext = contextQueue.Dequeue();
                 bufferList.Add(sendQueueContext.GetData());
                 contextFlushBuffer.Add(sendQueueContext);
             }
@@ -45,7 +45,7 @@ namespace KSY.Networks
 
         public void Clear()
         {
-            foreach(KSY_ISendQueueContext item in contextFlushBuffer)
+            foreach(ISendQueueContext item in contextFlushBuffer)
             {
                 item?.Dispose();
             }
@@ -55,7 +55,7 @@ namespace KSY.Networks
         public void Dispose()
         {
             Clear();
-            KSY_ISendQueueContext result;
+            ISendQueueContext result;
             while(contextQueue.TryDequeue(out result))
             {
                 result.Dispose();
