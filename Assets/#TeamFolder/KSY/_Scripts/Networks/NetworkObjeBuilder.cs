@@ -11,6 +11,8 @@ namespace KSY.Networks
 
         DIContainer INetworkObjectBuilder.GetDIContainer() => diContainer;
 
+        protected abstract TNetworkObject OnBuild();
+
         public NetworkObjectBuilder<TNetworkObject> AddSingleton<TInstnace>(TInstnace instance) where TInstnace : class
         {
             diContainer.AddInstance(instance);
@@ -22,8 +24,6 @@ namespace KSY.Networks
             diContainer.AddInstance(type, instance);
             return this;
         }
-
-        protected abstract TNetworkObject OnBuild();
 
         public TNetworkObject Build(params Assembly[] assemblies)
         {
