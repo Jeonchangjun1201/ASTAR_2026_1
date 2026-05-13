@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
-    public class PaintManager : MonoBehaviour
+    public class JHJPaintManager : MonoBehaviour
     {
         public RenderTexture paintCanvas;
         public Texture2D brushTexture;
@@ -47,7 +47,7 @@ namespace JHJ.Scripts.EatingthegroundGame
 
             if (_isCanvasInitialized && wasCreated)
             {
-                Debug.Log($"return : Time -> {Time.time}");
+          
                 return;
             }
 

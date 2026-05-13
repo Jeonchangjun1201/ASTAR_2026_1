@@ -1,32 +1,26 @@
-﻿using UnityEngine;
-
-namespace JHJ.Scripts.Test.TestPlayer.FSM
+﻿namespace JHJ.Scripts.Test.TestPlayer.FSM
 {
-    // 부모
     public abstract class PlayerBaseState
     {
         protected PlayerStateMachine _ctx;
-
         public PlayerBaseState(PlayerStateMachine currentContext)
         {
             _ctx = currentContext;
         }
-
         public abstract void EnterState();
         public abstract void UpdateState();
         public abstract void FixedUpdateState();
         public abstract void ExitState();
     }
 
-    //  idle
     public class PlayerIdleState : PlayerBaseState
     {
         public PlayerIdleState(PlayerStateMachine ctx) : base(ctx) { }
 
         public override void EnterState()
         {
-            _ctx.Animator.SetBool(_ctx.AnimParamIsRunning, false);
-            _ctx.Animator.SetBool(_ctx.AnimParamIsFalling, false);
+            _ctx.Animator.SetBool(_ctx.isRunning, false);
+            _ctx.Animator.SetBool(_ctx.isFalling, false);
         }
 
         public override void UpdateState()
@@ -41,14 +35,13 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
         public override void ExitState() { }
     }
 
-    // run 
     public class PlayerRunState : PlayerBaseState
     {
         public PlayerRunState(PlayerStateMachine ctx) : base(ctx) { }
 
         public override void EnterState()
         {
-            _ctx.Animator.SetBool(_ctx.AnimParamIsRunning, true);
+            _ctx.Animator.SetBool(_ctx.isRunning, true);
         }
 
         public override void UpdateState()
@@ -59,26 +52,22 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
                 _ctx.ChangeState(_ctx.FallState);
         }
 
-        public override void FixedUpdateState()
-        {
-            _ctx.ApplyMovement();
-        }
+        public override void FixedUpdateState() { }  
 
         public override void ExitState()
         {
-            _ctx.Animator.SetBool(_ctx.AnimParamIsRunning, false);
+            _ctx.Animator.SetBool(_ctx.isRunning, false);
         }
     }
 
-    // jump
     public class PlayerJumpState : PlayerBaseState
     {
         public PlayerJumpState(PlayerStateMachine ctx) : base(ctx) { }
 
         public override void EnterState()
         {
-            _ctx.Animator.SetTrigger(_ctx.AnimParamJump);
-            _ctx.Rigidbody.linearVelocity = new Vector3(_ctx.Rigidbody.linearVelocity.x, _ctx.JumpForce, _ctx.Rigidbody.linearVelocity.z);
+            _ctx.Animator.SetTrigger(_ctx.isJump);
+            
         }
 
         public override void UpdateState()
@@ -87,22 +76,17 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
                 _ctx.ChangeState(_ctx.FallState);
         }
 
-        public override void FixedUpdateState()
-        {
-            _ctx.ApplyMovement(); // 공중 이동 제어
-        }
-
+        public override void FixedUpdateState() { }  
         public override void ExitState() { }
     }
 
-    //  fall 
     public class PlayerFallState : PlayerBaseState
     {
         public PlayerFallState(PlayerStateMachine ctx) : base(ctx) { }
 
         public override void EnterState()
         {
-            _ctx.Animator.SetBool(_ctx.AnimParamIsFalling, true);
+            _ctx.Animator.SetBool(_ctx.isFalling, true);
         }
 
         public override void UpdateState()
@@ -116,14 +100,11 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
             }
         }
 
-        public override void FixedUpdateState()
-        {
-            _ctx.ApplyMovement();
-        }
+        public override void FixedUpdateState() { }  
 
         public override void ExitState()
         {
-            _ctx.Animator.SetBool(_ctx.AnimParamIsFalling, false);
+            _ctx.Animator.SetBool(_ctx.isFalling, false);
         }
     }
 }

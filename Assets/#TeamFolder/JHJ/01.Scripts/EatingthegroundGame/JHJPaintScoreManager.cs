@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
-    public class PaintScoreManager : MonoSingleton<PaintScoreManager>
+    public class JHJPaintScoreManager : MonoSingleton<JHJPaintScoreManager>
     {
         [Header("계산 설정")]
         [SerializeField] private RenderTexture _paintCanvas; // 우리가 색칠할 메인 캔바스
@@ -24,7 +24,7 @@ namespace JHJ.Scripts.EatingthegroundGame
             InvokeRepeating(nameof(CalculatePaintPercentage), 1f, _checkInterval);
         }
 
-        [SerializeField] private PaintingGameTimer _gameTimer; // 타이머 스크립트 연결
+        [SerializeField] private JHJPaintingGameTimer _gameTimer; // 타이머 스크립트 연결
 
         private void OnEnable()
         {
@@ -35,7 +35,6 @@ namespace JHJ.Scripts.EatingthegroundGame
 
         private void OnDisable()
         {
-            // 오브젝트가 꺼질 때는 꼭 구독을 해제해야 메모리 누수가 없습니다.
             if (_gameTimer != null)
                 _gameTimer.OnGameEnded -= HandleGameEnd;
         }

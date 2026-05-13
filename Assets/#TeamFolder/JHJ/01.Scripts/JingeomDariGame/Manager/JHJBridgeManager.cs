@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JHJ.Scripts.JingeomDariGame.Manager
 {
-    public class BridgeManager : MonoBehaviour
+    public class JHJBridgeManager : MonoBehaviour
     {
 
         [Header("Prefabs")]

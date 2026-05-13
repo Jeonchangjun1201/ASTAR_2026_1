@@ -5,8 +5,8 @@ namespace JHJ.Scripts.EatingthegroundGame
 {
     public interface JHJIItemEffect
     {
-        void Apply(TestPlayerController player); //발동
-        void Remove(TestPlayerController player);//끝
+        void Apply(JHJPlayerController player); //발동
+        void Remove(JHJPlayerController player);//끝
     }
 }
 
