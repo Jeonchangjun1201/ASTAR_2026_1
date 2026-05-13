@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace KSY.Networks
 {
-    public class 
-        DIContainer : IDIContainer, IAsyncDisposable
+    public class DIContainer : IDIContainer, IAsyncDisposable
     {
         private readonly Dictionary<Type, object> instances;
 
@@ -15,26 +14,11 @@ namespace KSY.Networks
             instances = new Dictionary<Type, object>();
         }
 
-        public void AddInstance<TInstance>(TInstance instance) where TInstance : class
-        {
-            AddInstance(typeof(TInstance), instance);
-        }
-
-        public void AddInstance(Type type, object instance)
-        {
-            if(type.IsValueType)
-            {
-                throw new InvalidOperationException("Cannot register an instance of " + type.FullName + " in the DIContainer because it is not a reference type. Only reference-type instance can be registered.");
-            }
-
-            instances[type] = instance;
-        }
-
+        #region IDIContainer
         public TInstance GetInstance<TInstance>() where TInstance : class
         {
             return GetInstance(typeof(TInstance)) as TInstance;
         }
-
         public object GetInstance(Type type)
         {
             if (instances.TryGetValue(type, out object value))
@@ -48,6 +32,21 @@ namespace KSY.Networks
                 return null;
 
             return array[0];
+        }
+        #endregion
+
+        public void AddInstance<TInstance>(TInstance instance) where TInstance : class
+        {
+            AddInstance(typeof(TInstance), instance);
+        }
+        public void AddInstance(Type type, object instance)
+        {
+            if(type.IsValueType)
+            {
+                throw new InvalidOperationException("Cannot register an instance of " + type.FullName + " in the DIContainer because it is not a reference type. Only reference-type instance can be registered.");
+            }
+
+            instances[type] = instance;
         }
         public async ValueTask DisposeAsync()
         {

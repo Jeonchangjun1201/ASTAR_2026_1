@@ -19,7 +19,7 @@ namespace KSY.Servers
             playerIDMap = new Dictionary<Session, string>();
 
             UnityPacketDispatcher unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();
-            server = new ServerBuilder
+            server = new ServerBuilder(this, unityPacketDispatcher).Add
         }
         public Session Create(NetworkObject networkObject, Socket connectedSocket)
         {

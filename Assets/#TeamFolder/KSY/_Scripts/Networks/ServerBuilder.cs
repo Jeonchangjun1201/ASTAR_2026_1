@@ -1,6 +1,5 @@
 using System;
 using KSY.Servers;
-using UnityEngine;
 
 namespace KSY.Networks
 {
@@ -34,7 +33,7 @@ namespace KSY.Networks
             if (workerIsEmpty)
                 _workerCount = Environment.ProcessorCount;
 
-            RoomManager instance = new RoomMananger()
+            RoomManager instance = new RoomManager()
         }
     }
 }

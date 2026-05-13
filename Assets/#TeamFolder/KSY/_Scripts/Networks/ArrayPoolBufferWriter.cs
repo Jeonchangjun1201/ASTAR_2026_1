@@ -5,13 +5,16 @@ namespace KSY.Networks
 {
     public class ArrayPoolBufferWriter : IBufferWriter<byte>, IDisposable
     {
-        private const int DEFAULT_INITIAL_CAPACITY = 256;
-        private readonly ArrayPool<byte> pool;
+        public ArraySegment<byte> WrittenSegment => new ArraySegment<byte>(buffer, 0, writtenCount);
+        public int WrittenCount => writtenCount;
+
         private byte[] buffer;
+
+        private const int DEFAULT_INITIAL_CAPACITY = 256;
+        
+        private readonly ArrayPool<byte> pool;
         private int writtenCount;
         private bool isDisposed;
-        public int WrittenCount => writtenCount;
-        public ArraySegment<byte> WrittenSegment => new ArraySegment<byte>(buffer, 0, writtenCount);
 
         public ArrayPoolBufferWriter(int initialCapacity = 256, ArrayPool<byte> pool = null)
         {
@@ -24,6 +27,7 @@ namespace KSY.Networks
             buffer = this.pool.Rent(initialCapacity);
         }
 
+        #region IBufferWriter
         public void Advance(int count)
         {
             ThrowIfDisposed();
@@ -51,6 +55,9 @@ namespace KSY.Networks
             EnsureCapacity(sizeHint);
             return buffer.AsSpan(writtenCount);
         }
+        #endregion
+
+        #region IDisposable
         public void Dispose()
         {
             if (!isDisposed)
@@ -65,6 +72,8 @@ namespace KSY.Networks
                 writtenCount = 0;
             }
         }
+        #endregion
+        
         private void EnsureCapacity(int sizeHint)
         {
             if (sizeHint < 0)
