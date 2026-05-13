@@ -22,7 +22,10 @@ namespace KSY.Networks
             {
                 SingleReader = true,
                 SingleWriter = false,
+                //큐에 빈 공간이 생길 때까지 WriteAsync가 완료되지 않고 비동기적으로 대기함.    
                 FullMode = BoundedChannelFullMode.Wait,
+                //기다리고 있던 작업(ReadAsync, WriteAsync)이 끝났을 때 후속 작업을 누가 실행하느냐.
+                // (true시 작업을 하던 스레드가 후속 작업을 실행함.) 
                 AllowSynchronousContinuations = false
             });
             loopTask = Task.Run(()=> ProcessLoopAsync(cancellationTokenSource.Token), cancellationTokenSource.Token);
