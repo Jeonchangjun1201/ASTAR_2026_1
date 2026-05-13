@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -10,6 +9,11 @@ namespace BFS
         [field: SerializeField] public TextMeshProUGUI ColorText { get; private set; }
         [field: SerializeField] public TextMeshProUGUI GameOverText { get; private set; }
 
+
+        public void ChangeText(TextMeshProUGUI text, string content)
+        {
+            text.text = content;
+        }
         public void ChangeText(TextMeshProUGUI text, string content, float duration)
         {
             text.text = content;
@@ -22,6 +26,11 @@ namespace BFS
                 duration = int.MaxValue;
             yield return new WaitForSeconds(duration);
             text.text = null;
+        }
+
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 namespace BFS
@@ -7,11 +6,12 @@ namespace BFS
     {
         [SerializeField] private TOWKeyQTEManager qteManager;
         [SerializeField] private float gameTime;
+        [SerializeField] private TOWUIManager uiManager;
         private AbstractTeamTOW[] playerList;                                                                                           // Array that contains players(absctract class) // 플레이어 관리하는 배열
         private RopeTOW _rope;
         private TOWScoreManager _scoreManager;
         private TOWTimeManager _timeManager;
-
+        private TOWGameOverManager _gameOverManager;
         private void Awake()
         {
             playerList = GetComponentsInChildren<AbstractTeamTOW>();                                                                    // Collect players attached to game manager // 게임 매니저에서 플레이어들을 모으고
@@ -20,55 +20,40 @@ namespace BFS
             {
                 rp.Initialize(cnt++ % 2 == 0 ? PlayerTeamTOW.TEAMONE : PlayerTeamTOW.TEAMTWO, rp.GetComponentInParent<PlayerTOW>());
             }
-            _scoreManager = new TOWScoreManager(playerList);                                                                            // Constructor; sends playerList to ScoreManager then instantiates // 생성자로 스코어 매니저를 만들고 매개변수로 플레이어 리스트 보냄
+            _scoreManager = new TOWScoreManager(playerList, uiManager);                                                                            // Constructor; sends playerList to ScoreManager then instantiates // 생성자로 스코어 매니저를 만들고 매개변수로 플레이어 리스트 보냄
+            _gameOverManager = new TOWGameOverManager(qteManager, _scoreManager, uiManager);                                            // Constructpr // 생성자
             _rope = GetComponentInChildren<RopeTOW>();
-            qteManager.Initialize(_rope, playerList, _scoreManager);                                                                    // Initialize Key minigame manager // 미니게임 매니저
-            _timeManager = new TOWTimeManager();
+            qteManager.Initialize(_rope, playerList, _scoreManager, uiManager);                                                         // Initialize Key minigame manager // 미니게임 매니저
+            _timeManager = new TOWTimeManager(uiManager);
             _timeManager.OnTimerEnd += EndGame;
         }
         private void Update()                                                                                                           // TEMPORARY; FOR DEBUGGING // 임시
         {
-            if(Keyboard.current.digit1Key.wasPressedThisFrame)
-            {
-                Debug.Log($"{_scoreManager.CheckTeamScore(1)} - TeamOne");
-            }
-            if(Keyboard.current.digit2Key.wasPressedThisFrame)
-            {
-                Debug.Log($"{_scoreManager.CheckTeamScore(2)} - TeamTwo");
-            }
-            if(Keyboard.current.spaceKey.wasPressedThisFrame)
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 StartGame();
             }
-            _timeManager.UpdateTimer();
             if (qteManager.IsInGame)
-                CheckForceEnd();
+            {
+                _timeManager.UpdateTimer();
+                if (_gameOverManager.CheckForceEnd())
+                    EndGame();
+            }
         }
         private void OnDestroy()
         {
             _scoreManager.OnDestroyThen();                                                                                              // On destroy then calls it so score manager can unsub // 구독 해제
             _timeManager.OnTimerEnd -= EndGame;
         }
-
         public void StartGame()
         {
-            Debug.Log("START!");
+            uiManager.ChangeText(uiManager.GameOverText, "START!");
             qteManager.StartMinigame();
             _timeManager.StartTimer(gameTime);
         }
-        public void CheckForceEnd()
-        {
-            if (Mathf.Abs(_scoreManager.scoreBoard[(PlayerTeamTOW)1] - _scoreManager.scoreBoard[(PlayerTeamTOW)2]) >= 25)
-                EndGame();
-        }
         public void EndGame()
         {
-            qteManager.EndMinigame();
-            Debug.Log("FINISH!");                                                                                                       // TEMPORARY; for debugging // 임시
-            Debug.Log(_scoreManager.scoreBoard[(PlayerTeamTOW)1].CompareTo(_scoreManager.scoreBoard[(PlayerTeamTOW)2]) == 1 
-                ? "TEAM ONE IS NUMBER ONE!" :
-                _scoreManager.scoreBoard[(PlayerTeamTOW)1].CompareTo(_scoreManager.scoreBoard[(PlayerTeamTOW)2]) == 0
-                ? "DRAW!!!!" : "TEAM TWO TAKES THE FIRST PLACE!");
+            _gameOverManager.EndGame();
         }
     }
 
