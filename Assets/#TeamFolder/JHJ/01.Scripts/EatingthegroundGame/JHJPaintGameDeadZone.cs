@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
-    public class PaintGameDeadZone : MonoBehaviour
+    public class JHJPaintGameDeadZone : MonoBehaviour
     {
         [SerializeField] private float _reSpwanTime = 3f;
 

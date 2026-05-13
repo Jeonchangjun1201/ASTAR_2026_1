@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
-    public class PaintManager : MonoBehaviour
+    public class JHJPaintManager : MonoBehaviour
     {
         public RenderTexture paintCanvas;
         public Texture2D brushTexture;
@@ -46,12 +47,15 @@ namespace JHJ.Scripts.EatingthegroundGame
 
             if (_isCanvasInitialized && wasCreated)
             {
+          
                 return;
             }
 
             RenderTexture previous = RenderTexture.active;
             RenderTexture.active = paintCanvas;
+            Debug.Log("Clear before");
             GL.Clear(true, true, Color.white);
+            Debug.Log($"Clear after : Time -> {Time.time}");
             RenderTexture.active = previous;
             _isCanvasInitialized = true;
         }
