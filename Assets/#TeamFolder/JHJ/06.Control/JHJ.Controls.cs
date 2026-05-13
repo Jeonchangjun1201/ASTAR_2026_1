@@ -127,6 +127,15 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump1"",
+                    ""type"": ""Button"",
+                    ""id"": ""9e439ed9-519b-437f-9e91-d08263dd45ef"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -349,6 +358,17 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                     ""action"": ""Movement4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e98c7f3-40c1-4f8a-8f88-9ae6d9e1d5eb"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -361,6 +381,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
         m_Player_Movement2 = m_Player.FindAction("Movement2", throwIfNotFound: true);
         m_Player_Movement3 = m_Player.FindAction("Movement3", throwIfNotFound: true);
         m_Player_Movement4 = m_Player.FindAction("Movement4", throwIfNotFound: true);
+        m_Player_Jump1 = m_Player.FindAction("Jump1", throwIfNotFound: true);
     }
 
     ~@JHJControls()
@@ -445,6 +466,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Movement2;
     private readonly InputAction m_Player_Movement3;
     private readonly InputAction m_Player_Movement4;
+    private readonly InputAction m_Player_Jump1;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -472,6 +494,10 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Movement4".
         /// </summary>
         public InputAction @Movement4 => m_Wrapper.m_Player_Movement4;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Jump1".
+        /// </summary>
+        public InputAction @Jump1 => m_Wrapper.m_Player_Jump1;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -510,6 +536,9 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
             @Movement4.started += instance.OnMovement4;
             @Movement4.performed += instance.OnMovement4;
             @Movement4.canceled += instance.OnMovement4;
+            @Jump1.started += instance.OnJump1;
+            @Jump1.performed += instance.OnJump1;
+            @Jump1.canceled += instance.OnJump1;
         }
 
         /// <summary>
@@ -533,6 +562,9 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
             @Movement4.started -= instance.OnMovement4;
             @Movement4.performed -= instance.OnMovement4;
             @Movement4.canceled -= instance.OnMovement4;
+            @Jump1.started -= instance.OnJump1;
+            @Jump1.performed -= instance.OnJump1;
+            @Jump1.canceled -= instance.OnJump1;
         }
 
         /// <summary>
@@ -601,5 +633,12 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMovement4(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Jump1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJump1(InputAction.CallbackContext context);
     }
 }

@@ -2,16 +2,16 @@
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
-    public class PaintBrush : MonoBehaviour
+    public class JHJPaintBrush : MonoBehaviour
     {
         [Header("페인트 설정")]
         [SerializeField] private RenderTexture _paintCanvas;
         [SerializeField] private float _brushSize = 50f;
 
-        [SerializeField] private PaintScoreManager _scoreManager;
-        [SerializeField] private int _playerIndex = 0; 
+        [SerializeField] private JHJPaintScoreManager _scoreManager;
+        [SerializeField] private int _playerIndex = 0;
 
-        [SerializeField] private PaintManager _paintManager;
+        [SerializeField] private JHJPaintManager _paintManager;
 
         private void Start()
         {
@@ -31,10 +31,7 @@ namespace JHJ.Scripts.EatingthegroundGame
             if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 2f))
             {
                 if (hit.collider is not MeshCollider)
-                {
                     return;
-                }
-
                 Color myColor = _scoreManager.GetPlayerColor(_playerIndex);
                 _paintManager.DrawBrush(hit.textureCoord, myColor);
             }
