@@ -27,6 +27,7 @@ namespace MiniGame.PassTheBomb
         public void SetPlayer(Player targetPlayer)
         {
             _currentPlayer = targetPlayer;
+            transform.position = _currentPlayer.transform.position;
             transform.SetParent(targetPlayer.transform);
         
             _timerCoroutine ??= StartCoroutine(BombTimer());
