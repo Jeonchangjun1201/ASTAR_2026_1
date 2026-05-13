@@ -1,4 +1,3 @@
-using UnityEngine;
 namespace BFS
 {
     public enum PlateColor          // Enum to manage colored plates // 색발판을 관리하기 위한 이넘

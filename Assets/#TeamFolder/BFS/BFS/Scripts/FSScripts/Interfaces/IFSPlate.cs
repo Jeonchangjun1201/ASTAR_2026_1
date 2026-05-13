@@ -1,4 +1,3 @@
-using UnityEngine;
 namespace BFS
 {
     public interface IFSPlate                         // Interface for plates // 발판들을 위한 인터페이스
