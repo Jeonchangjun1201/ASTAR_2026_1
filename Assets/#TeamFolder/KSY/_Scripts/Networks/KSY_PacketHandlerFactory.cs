@@ -9,6 +9,13 @@ namespace KSY.Networks
 {
     public class KSY_PacketHandlerFactory : MonoBehaviour
     {
+        private KSY_PacketHandlerFactory()
+        {
+        }
+
+        private KSY_DIContainer diContainer;
+        private Dictionary<Type, Func<KSY_DIContainer, KSY_IPacketHandlerBase>> factories;
+        
         public static class Builder
         {
             public static KSY_PacketHandlerFactory Build(Assembly[] assemblies, KSY_DIContainer diContainer)
@@ -19,7 +26,7 @@ namespace KSY.Networks
                     diContainer = diContainer
                 };
                 //IsAssignableFrom : 형변환이 가능한지 확인하는 메서드 (상속 관계, 인터페이스 구현 여부 등 확인)
-                //IsDefined L 특정 커스텀 특성(Attribute)이 적용되어 있는지 여부를 확인할 때 사용하는 메서드
+                //IsDefined : 특정 Attribute가 적용되어 있는지 여부를 확인할 때 사용하는 메서드
                 Type[] array = (from t in assemblies.SelectMany((Assembly a)=>a.GetTypes())
                                 where typeof(KSY_IPacketHandlerBase).IsAssignableFrom(t)
                                 where t.IsDefined(typeof(KSY_PacketAttribute), inherit: false)
@@ -31,7 +38,7 @@ namespace KSY.Networks
                     if (customAttribute != null)
                     {
                         Type packetType = customAttribute.PacketType;
-                        if(!(packetType == null) && packetType.IsDefined(typeof(KSY_PacketAttribute), inherit: false) && typeof(KSY_IPacket).IsAssignableFrom(packetType))
+                        if(!(packetType == null) && packetType.IsDefined(typeof(KSY_PacketAttribute), inherit: false) && typeof(IPacket).IsAssignableFrom(packetType))
                         {
                             packetHandlerFactory.factories[packetType] = CreatePacketHandlerFactory(type, diContainer);
                         }
@@ -43,44 +50,35 @@ namespace KSY.Networks
 
             private static Func<KSY_DIContainer, KSY_IPacketHandlerBase> CreatePacketHandlerFactory(Type packetHandlerType, KSY_DIContainer diContainer)
             {
-                //ConstructorInfo : 생성자에 대한 특성을 검색하고 생성자의 메타데이터에 액세스 할 수 있게 해주는 도구.
-                ConstructorInfo constructorInfo = SelectConstructor(packetHandlerType, diContainer);
-                if(constructorInfo == null)
+                ConstructorInfo pktHandlerConstructor = SelectConstructor(packetHandlerType, diContainer);
+                if(pktHandlerConstructor == null)
                     //InvalidOperationException : 객체의 현재 상태가 호출된 메서드를 수행하기에 적절하지 않을 때 발생하는 예외.
                     throw new InvalidOperationException("No constructor matching the criteria exists for " + packetHandlerType.FullName + ".");
 
-                //ParameterExpression : 식 트리 안에서의 매개변수
-                //Expression.Parameter : 식 트리내에서 사용할 매개변수 노드를 생성하는 메서드
                 ParameterExpression diContainerParam = Expression.Parameter(typeof(KSY_DIContainer), "diContainer");
-                //MethodCallExpression : 식 트리내에서 메서드의 호출을 나타내는 노드
-                MethodCallExpression[] array = constructorInfo.GetParameters().Select(delegate (ParameterInfo parameterInfo)
+                //ConstructorInfo로 구한 생성자 정보에서 각 매개변수에 대한 정보를 구한 다음에,
+                //매개변수의 Instance를 구하기 위해서 DIContainer.GetInstnace 제네릭 메서드들로 변환시킨다.
+                MethodCallExpression[] array = pktHandlerConstructor.GetParameters().Select(delegate (ParameterInfo parameterInfo)
                 {
-                    //KSY_DIContainer에서 GetInstance라는 인스턴스 public void 메서드를 찾아서 MethodInfo 클래스에 넣어주고 있다.
                     MethodInfo method = typeof(KSY_DIContainer).GetMethod("GetInstance", BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null);
+                    //Expresion.Call : 첫 번째 인자는 메서드를 호출할 객체를 넣고 두 번째 인자는 호출할 메서드에 대한 정보를 넘긴다.
                     return Expression.Call(diContainerParam, method.MakeGenericMethod(parameterInfo.ParameterType));
                 }).ToArray();
+                //각 매개변수를 생성하는 GetInstance<T> 호출 노드들이 담긴다.
                 Expression[] arguments = array;
+                
+                //Expression.New 메서드에 생성자 정보와 매개변수 인스턴스를 반환하는 메서드들을 인수로 넣고 PacketHandler를 만든 다음에
+                //IPacketHandlerBase로 형변환 시키는 로직을 담고 있다.
+                UnaryExpression makePacketHandler_Expression = Expression.Convert(
+                    Expression.New(pktHandlerConstructor, arguments), 
+                    typeof(KSY_IPacketHandlerBase));
+                ParameterExpression[] diContainer_Param = new ParameterExpression[1] {diContainerParam};
+                Func<KSY_DIContainer, KSY_IPacketHandlerBase> packetHandlerFactory = Expression.Lambda<Func<KSY_DIContainer, KSY_IPacketHandlerBase>>
+                (makePacketHandler_Expression, 
+                diContainer_Param).
+                Compile();
 
-                //Expression.Lambda<> : 반환 값이 제네릭 형태의
-                //public static Expression<TDelegate> Lambda<TDelegate>(
-                //     Expression body,                        // 함수 본문
-                //     params ParameterExpression[] parameters // 매개변수 목록
-                // );
-                //Expression.Convert : 첫 번째 인자로 받은 식의 결과물을 두 번째 인자로 지정한 타입으로 변환하는 노드를 생성
-                //public static UnaryExpression Convert(
-                //     Expression expression, // 변환할 대상 식
-                //     Type type,             // 대상 타입 (Target Type)
-                //     MethodInfo method      // 변환을 수행할 사용자 정의 메서드 (Optional)
-                // );
-                //Expression.New : 식 트리 에서 새로운 객체를 생성하고 생성자를 호출하는 연산(new 키워드)을 나타내는 NewExpression 객체를 생성하는 메서드입니다.
-                //Compile : 식 트리로 정의된 데이터 구조를 실제 실행 가능한 코드(대리자, Delegate)로 변환하는 메서드
-                return Expression.Lambda<Func<KSY_DIContainer, KSY_IPacketHandlerBase>>(
-                    Expression.Convert(
-                    Expression.New(constructorInfo, arguments), 
-                    typeof(KSY_IPacketHandlerBase)
-                    ), 
-                    new ParameterExpression[1] {diContainerParam}
-                    ).Compile();
+                return packetHandlerFactory;
             }
             private static ConstructorInfo SelectConstructor(Type type, KSY_DIContainer diContainer)
             {
@@ -93,13 +91,6 @@ namespace KSY.Networks
                 //가능한 한 많은 정보를 주입할 수 있도록 매개변수가 가장 많은 생성자를 반환한다고 함.
                 return constructors.OrderByDescending((ConstructorInfo c)=>c.GetParameters().Length).ToArray()[0];
             }
-        }
-
-        private KSY_DIContainer diContainer;
-        private Dictionary<Type, Func<KSY_DIContainer, KSY_IPacketHandlerBase>> factories;
-
-        private KSY_PacketHandlerFactory()
-        {
         }
 
         public KSY_IPacketHandlerBase Create(Type packetType)

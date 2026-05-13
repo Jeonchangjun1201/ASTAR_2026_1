@@ -16,10 +16,10 @@ namespace KSY.Networks
                 KSY_PacketSerializer packetSerializer = new KSY_PacketSerializer
                 {
                     packetIDMap = new Dictionary<Type, ushort>(),
-                    factories = new Dictionary<ushort, Func<ArraySegment<byte>, KSY_IPacket>>()
+                    factories = new Dictionary<ushort, Func<ArraySegment<byte>, IPacket>>()
                 };
                 Type[] array = (from t in assemblies.SelectMany((Assembly a) => a.GetTypes())
-                                where typeof(KSY_IPacket).IsAssignableFrom(t)
+                                where typeof(IPacket).IsAssignableFrom(t)
                                 where t.IsDefined(typeof(KSY_PacketAttribute), inherit: false)
                                 where t.IsDefined(typeof(MemoryPackableAttribute), inherit: false)
                                 where !t.IsAbstract && !t.IsInterface
@@ -37,20 +37,20 @@ namespace KSY.Networks
                 return packetSerializer;
             }
 
-            private static KSY_IPacket CreatePacket(Type packetType, ArraySegment<byte> packetData)
+            private static IPacket CreatePacket(Type packetType, ArraySegment<byte> packetData)
             {
-                return MemoryPackSerializer.Deserialize(packetType, packetData) as KSY_IPacket;
+                return MemoryPackSerializer.Deserialize(packetType, packetData) as IPacket;
             }
         }
 
         private Dictionary<Type, ushort> packetIDMap;
-        private Dictionary<ushort, Func<ArraySegment<byte>, KSY_IPacket>> factories;
+        private Dictionary<ushort, Func<ArraySegment<byte>, IPacket>> factories;
 
         private KSY_PacketSerializer()
         {
         }
 
-        public KSY_ArrayPoolBufferWriter Serialize(KSY_IPacket packet)
+        public KSY_ArrayPoolBufferWriter Serialize(IPacket packet)
         {
             if (packet == null)
             {
@@ -87,7 +87,7 @@ namespace KSY.Networks
             }
         }
 
-        public KSY_IPacket Deserialize(ArraySegment<byte> packetData)
+        public IPacket Deserialize(ArraySegment<byte> packetData)
         {
             if (packetData.Count < 2)
             {

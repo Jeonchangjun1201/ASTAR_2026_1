@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace KSY.Shared
 {
-    public class KSY_UnityPacketDispatcher : MonoBehaviour, KSY_IPacketDispatcher
+    public class KSY_UnityPacketDispatcher : MonoBehaviour, IPacketDispatcher
     {
     }
 }

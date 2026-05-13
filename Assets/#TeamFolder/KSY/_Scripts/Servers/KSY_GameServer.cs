@@ -7,7 +7,7 @@ namespace KSY.Servers
 {
     public class KSY_GameServer : KSY_ISessionFactory
     {
-        private Dictionary<KSY_Session, string> playerIDMap = null;
+        private Dictionary<Session, string> playerIDMap = null;
         private KSY_Server server = null;
 
         public void Initialize(KSY_GameManager gameManager, KSY_DataTableManager dataTableManager)
@@ -16,11 +16,11 @@ namespace KSY.Servers
             KSY_GameInstance.DataTableManager = dataTableManager;
             KSY_ServerInstance.GameServer = this;
 
-            playerIDMap = new Dictionary<KSY_Session, string>();
+            playerIDMap = new Dictionary<Session, string>();
 
             KSY_UnityPacketDispatcher
         }
-        public KSY_Session Create(KSY_NetworkObject networkObject, Socket connectedSocket)
+        public Session Create(KSY_NetworkObject networkObject, Socket connectedSocket)
         {
             throw new System.NotImplementedException();
         }

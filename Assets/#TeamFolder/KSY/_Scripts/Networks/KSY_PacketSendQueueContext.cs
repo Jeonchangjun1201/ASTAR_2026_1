@@ -9,7 +9,7 @@ namespace KSY.Networks
         private readonly ArraySegment<byte> data;
         private int isDisposed;
 
-        public KSY_PacketSendQueueContext(KSY_PacketSerializer packetSerializer, KSY_IPacket packet)
+        public KSY_PacketSendQueueContext(KSY_PacketSerializer packetSerializer, IPacket packet)
         {
             bufferWriter = packetSerializer.Serialize(packet);
             data = bufferWriter.WrittenSegment;

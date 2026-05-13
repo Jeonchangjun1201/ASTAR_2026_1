@@ -10,14 +10,14 @@ namespace KSY.Networks
         //인터페이스에서는 내부에서 암묵적으로 public 접근 제한자를 띄고 있다.
         public interface ICallback
         {
-            void OnAdded(KSY_Room room, KSY_Session session);
-            void OnRemoved(KSY_Room room, KSY_Session session);
+            void OnAdded(KSY_Room room, Session session);
+            void OnRemoved(KSY_Room room, Session session);
         }
 
         //여러 스레드가 동시에 접근하더라도 데이터의 무결성을 보장하는 스레드 세이프한 딕셔너리.
         //Concurrent : 동시 발생의, 공동으로 작용하는
-        private readonly ConcurrentDictionary<string, KSY_Session> sessions;
-        private readonly ConcurrentDictionary<KSY_Session, Action<KSY_Session>> sessionClosedHandlers;
+        private readonly ConcurrentDictionary<string, Session> sessions;
+        private readonly ConcurrentDictionary<Session, Action<Session>> sessionClosedHandlers;
         private readonly int roomIDHash;
         private readonly KSY_PacketSerializer packetSerializer;
         private readonly ICallback callback;
@@ -29,11 +29,11 @@ namespace KSY.Networks
             roomIDHash = roomID.GetHashCode();
             this.packetSerializer = packetSerializer;
             this.callback = callback;
-            sessions = new ConcurrentDictionary<string, KSY_Session>();
-            sessionClosedHandlers = new ConcurrentDictionary<KSY_Session, Action<KSY_Session>>();
+            sessions = new ConcurrentDictionary<string, Session>();
+            sessionClosedHandlers = new ConcurrentDictionary<Session, Action<Session>>();
         }
 
-        public void Add(string sessionID, KSY_Session session)
+        public void Add(string sessionID, Session session)
         {
             if(!string.IsNullOrEmpty(sessionID) && session != null && sessions.TryAdd(sessionID, session))
             {
@@ -42,7 +42,7 @@ namespace KSY.Networks
             }
 
             //함수 내에서 매개변수를 사용하지 않음을 명시적으로 드러냄 '_'
-            void HandleSessionClosed(KSY_Session _)
+            void HandleSessionClosed(Session _)
             {
                 Remove(sessionID);
             }
@@ -61,7 +61,7 @@ namespace KSY.Networks
             }
         }
 
-        public void Send(KSY_IPacket packet, Func<string, KSY_Session, bool> filter = null)
+        public void Send(IPacket packet, Func<string, Session, bool> filter = null)
         {
             if (packet == null)
             {
@@ -70,10 +70,10 @@ namespace KSY.Networks
 
             KSY_RoomPacketSendQueueContext roomPacketSendQueueContext = null;
             bool flag = false;
-            foreach(KeyValuePair<string, KSY_Session> session in sessions)
+            foreach(KeyValuePair<string, Session> session in sessions)
             {
                 string key = session.Key;
-                KSY_Session value = session.Value;
+                Session value = session.Value;
                 if (value != null && value.IsOpened && (filter == null || filter(key, value)))
                 {
                     if(roomPacketSendQueueContext == null)
@@ -102,7 +102,7 @@ namespace KSY.Networks
                 roomPacketSendQueueContext?.Dispose();
         }
 
-        public KSY_Session Session(string sessionID)
+        public Session Session(string sessionID)
         {
             if(string.IsNullOrEmpty(sessionID))
             {

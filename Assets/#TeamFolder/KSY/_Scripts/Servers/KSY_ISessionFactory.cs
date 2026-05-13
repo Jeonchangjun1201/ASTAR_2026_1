@@ -6,7 +6,7 @@ namespace KSY.Servers
 {
     public interface KSY_ISessionFactory 
     {
-        KSY_Session Create(KSY_NetworkObject networkObject, Socket connectedSocket);
+        Session Create(KSY_NetworkObject networkObject, Socket connectedSocket);
     }
 }
 

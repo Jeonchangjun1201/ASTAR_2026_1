@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace KSY.Networks
 {
-    public class KSY_Session : MonoBehaviour
+    public class Session : MonoBehaviour
     {
         private readonly object sendLocker;
         private KSY_SendQueue sendQueue;
@@ -17,7 +17,7 @@ namespace KSY.Networks
 
         private Socket connectedSocket;
         private KSY_PacketSerializer packetSerializer;
-        private KSY_IPacketDispatcher packetDispatcher;
+        private IPacketDispatcher packetDispatcher;
 
         private int isClosed = 1;
         public bool IsOpened
@@ -33,16 +33,16 @@ namespace KSY.Networks
             }
         }
 
-        public event Action<KSY_Session> OnOpenedEvent;
-        public event Action<KSY_Session> OnClosedEvent;
-        public event Action<KSY_Session, Exception> OnErrorEvent;
+        public event Action<Session> OnOpenedEvent;
+        public event Action<Session> OnClosedEvent;
+        public event Action<Session, Exception> OnErrorEvent;
 
-        public KSY_Session()
+        public Session()
         {
             sendLocker = new object();
         }
 
-        public void Open(Socket connectedSocket, KSY_PacketSerializer packetSerializer, KSY_IPacketDispatcher packetDispatcher)
+        public void Open(Socket connectedSocket, KSY_PacketSerializer packetSerializer, IPacketDispatcher packetDispatcher)
         {
             //Argument, ���ڸ� ���Ѵ�. ���ڴ� Parameter�ʹ� �ٸ� �������� �Ű������� �޼��忡 ���޵Ǵ� �� ���� ��ü�� ���ϰ�
             //Argument�� ������ ���޵Ǵ� ���� ���Ѵ�. ������ ���ͷ��� ���� ����.
@@ -99,7 +99,7 @@ namespace KSY.Networks
             }
         }
 
-        public void SendAsync(KSY_IPacket packet)
+        public void SendAsync(IPacket packet)
         {
             if (packet == null)
             {

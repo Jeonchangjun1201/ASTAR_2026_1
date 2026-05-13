@@ -1,6 +1,6 @@
 ﻿namespace KSY.Networks
 {
-    public interface KSY_IPacket
+    public interface IPacket
     {
     }
 }

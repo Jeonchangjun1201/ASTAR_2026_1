@@ -8,7 +8,7 @@ namespace KSY.Networks
     {
         private readonly KSY_ISessionFactory sessionFactory;
         private readonly KSY_PacketSerializer packetSerializer;
-        private readonly KSY_IPacketDispatcher packetDispatcher;
+        private readonly IPacketDispatcher packetDispatcher;
         private readonly KSY_IRoomManager roomManager;
         private Socket listenSocket;
         private SocketAsyncEventArgs acceptArgs;

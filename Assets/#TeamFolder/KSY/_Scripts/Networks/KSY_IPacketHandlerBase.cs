@@ -5,7 +5,7 @@ namespace KSY.Networks
 {
     public interface KSY_IPacketHandlerBase
     {
-        ValueTask HandlePacket(KSY_Session session, KSY_IPacket packet);
+        ValueTask HandlePacket(Session session, IPacket packet);
     }
 }
 

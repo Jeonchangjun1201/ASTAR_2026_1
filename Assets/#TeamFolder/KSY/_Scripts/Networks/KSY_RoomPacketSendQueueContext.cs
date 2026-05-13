@@ -11,7 +11,7 @@ namespace KSY.Networks
         //true : 1, false : 0
         private int isDisposed;
 
-        public KSY_RoomPacketSendQueueContext(KSY_PacketSerializer packetSerializer, KSY_IPacket packet, int referenceCount)
+        public KSY_RoomPacketSendQueueContext(KSY_PacketSerializer packetSerializer, IPacket packet, int referenceCount)
         {
             if (referenceCount <= 0)
             {
