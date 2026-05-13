@@ -60,7 +60,27 @@ namespace KSY.Networks
                     return Expression.Call(diContainerParam, method.MakeGenericMethod(parameterInfo.ParameterType));
                 }).ToArray();
                 Expression[] arguments = array;
-                return Expression.Lambda<Func<KSY_DIContainer, KSY_IPacketHandlerBase>>(Expression.Convert(Expression.New(constructorInfo, arguments), typeof(KSY_IPacketHandlerBase)), new ParameterExpression[1] {diContainerParam}).Compile();
+
+                //Expression.Lambda<> : 반환 값이 제네릭 형태의
+                //public static Expression<TDelegate> Lambda<TDelegate>(
+                //     Expression body,                        // 함수 본문
+                //     params ParameterExpression[] parameters // 매개변수 목록
+                // );
+                //Expression.Convert : 첫 번째 인자로 받은 식의 결과물을 두 번째 인자로 지정한 타입으로 변환하는 노드를 생성
+                //public static UnaryExpression Convert(
+                //     Expression expression, // 변환할 대상 식
+                //     Type type,             // 대상 타입 (Target Type)
+                //     MethodInfo method      // 변환을 수행할 사용자 정의 메서드 (Optional)
+                // );
+                //Expression.New : 식 트리 에서 새로운 객체를 생성하고 생성자를 호출하는 연산(new 키워드)을 나타내는 NewExpression 객체를 생성하는 메서드입니다.
+                //Compile : 식 트리로 정의된 데이터 구조를 실제 실행 가능한 코드(대리자, Delegate)로 변환하는 메서드
+                return Expression.Lambda<Func<KSY_DIContainer, KSY_IPacketHandlerBase>>(
+                    Expression.Convert(
+                    Expression.New(constructorInfo, arguments), 
+                    typeof(KSY_IPacketHandlerBase)
+                    ), 
+                    new ParameterExpression[1] {diContainerParam}
+                    ).Compile();
             }
             private static ConstructorInfo SelectConstructor(Type type, KSY_DIContainer diContainer)
             {
