@@ -30,18 +30,17 @@ namespace MiniGame.PassTheBomb
                 Player player = PlayerList[i];
 
                 player.index = i;
-                player.OnExplosionEvent += OutPlayer;
+                player.onExplosionEvent += OutPlayer;
             }
 
             CurrentPlayer = PlayerList.Length;
-            
             currentBomb.SetPlayer(RandomPlayer());
         }
         
         public void OutPlayer(Player player, int index)
         {
             CurrentPlayer--;
-            player.OnExplosionEvent -= OutPlayer;
+            player.onExplosionEvent -= OutPlayer;
             player.DelPlayer();
 
             if (CurrentPlayer == 1)
@@ -50,7 +49,10 @@ namespace MiniGame.PassTheBomb
                 GameEnd();
             }
             else
+            {
                 currentBomb.SetPlayer(RandomPlayer());
+                currentBomb.StartBomb();
+            }
         }
 
         public void GameEnd()
@@ -77,7 +79,7 @@ namespace MiniGame.PassTheBomb
         {
             foreach (var player in PlayerList)
             {
-                player.OnExplosionEvent -= OutPlayer;
+                player.onExplosionEvent -= OutPlayer;
             }
         }
 

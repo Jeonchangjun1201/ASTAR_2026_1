@@ -5,9 +5,8 @@ using UnityEngine.Events;
 
 namespace MiniGame.PassTheBomb
 {
-    public class Bomb : PlayerModuleBase
+    public class Bomb : MonoBehaviour
     {
-        private Player _owner;
         public UnityEvent<int> onTickEvent;
     
         [SerializeField] private int maxTime;
@@ -15,28 +14,38 @@ namespace MiniGame.PassTheBomb
     
         private Player _currentPlayer;
         private Coroutine _timerCoroutine;
-    
-        public override void Initialize(Player player)
-        {
-            _owner = player;
-        
-            _owner.OnTouchPlayerEvent += SetPlayer;
-        }
 
-        public void StartBomb() => _timerCoroutine ??= StartCoroutine(BombTimer());
+        [SerializeField] private float cooldown;
+        private float _lastTime;
+
+        public void StartBomb()
+        {
+            _timerCoroutine ??= StartCoroutine(BombTimer());
+        }
         public void SetPlayer(Player targetPlayer)
         {
+            Debug.Log("SetPlayer " + targetPlayer.gameObject.name);
+            
+            if (Time.time - _lastTime < cooldown)
+            {
+                Debug.Log("returned");
+                return;
+            }
+            
             _currentPlayer = targetPlayer;
+            _currentPlayer.OnTouchPlayerEvent += SetPlayer;
             transform.position = _currentPlayer.transform.position;
             transform.SetParent(targetPlayer.transform);
         
+            _lastTime = Time.time;
             _timerCoroutine ??= StartCoroutine(BombTimer());
         }
         private void ExplosionBomb()
         {
             StopCoroutine(_timerCoroutine);
         
-            _currentPlayer.OnExplosionEvent?.Invoke(_currentPlayer, _currentPlayer.index);
+            _currentPlayer.OnTouchPlayerEvent -= SetPlayer;
+            _currentPlayer.onExplosionEvent?.Invoke(_currentPlayer, _currentPlayer.index);
             _currentPlayer = null;
         }
         public void OnGameEnded() => StopAllCoroutines();
@@ -55,6 +64,6 @@ namespace MiniGame.PassTheBomb
             ExplosionBomb();
         }
     
-        private void OnDestroy() => _owner.OnTouchPlayerEvent -= SetPlayer;
+        private void OnDestroy() => _currentPlayer.OnTouchPlayerEvent -= SetPlayer;
     }
 }

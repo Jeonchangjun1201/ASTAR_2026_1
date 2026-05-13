@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PYH.MiniGame
 {
-    using PYH.Player;
+    using Player;
 
     [RequireComponent(typeof(Collider))]
     public class OverZone : MonoBehaviour
