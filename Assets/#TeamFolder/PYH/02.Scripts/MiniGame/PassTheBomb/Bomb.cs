@@ -5,55 +5,77 @@ using UnityEngine.Events;
 
 namespace MiniGame.PassTheBomb
 {
-    public class Bomb : PlayerModuleBase
+    public class Bomb : MonoBehaviour
     {
-        private Player _owner;
         public UnityEvent<int> onTickEvent;
     
         [SerializeField] private int maxTime;
-        private int _leftTime;
     
         private Player _currentPlayer;
         private Coroutine _timerCoroutine;
-    
-        public override void Initialize(Player player)
-        {
-            _owner = player;
-        
-            _owner.OnTouchPlayerEvent += SetPlayer;
-        }
 
-        public void StartBomb() => _timerCoroutine ??= StartCoroutine(BombTimer());
-        public void SetPlayer(Player targetPlayer)
+        [SerializeField] private float cooldown;
+        private float _lastTime;
+
+        public void StartBomb(Player startPlayer)
         {
+            Debug.Log(startPlayer.gameObject.name + "에게 부착되어 시작.");
+            _currentPlayer = startPlayer;
+            _currentPlayer.OnTouchPlayerEvent += SetPlayer;
+            transform.position = _currentPlayer.transform.position;
+            transform.SetParent(startPlayer.transform);
+        
+            _lastTime = Time.time;
+            
+            _timerCoroutine ??= StartCoroutine(BombTimer());
+        }
+        public void StartTimer()
+        {
+            _timerCoroutine = StartCoroutine(BombTimer());
+        }
+        
+        private void SetPlayer(Player targetPlayer)
+        {
+            if (targetPlayer == null) return;
+            if (targetPlayer == _currentPlayer) return;
+            if (Time.time - _lastTime < cooldown) return;
+            
+            Debug.Log(targetPlayer.gameObject.name + "부착됨.");
+            _currentPlayer.OnTouchPlayerEvent -= SetPlayer;
             _currentPlayer = targetPlayer;
+            _currentPlayer.OnTouchPlayerEvent += SetPlayer;
+            transform.position = _currentPlayer.transform.position;
             transform.SetParent(targetPlayer.transform);
         
-            _timerCoroutine ??= StartCoroutine(BombTimer());
+            _lastTime = Time.time;
         }
         private void ExplosionBomb()
         {
-            StopCoroutine(_timerCoroutine);
+            Debug.Log("펑");
+            if (_timerCoroutine != null)
+                StopCoroutine(_timerCoroutine);
         
-            _currentPlayer.OnExplosionEvent?.Invoke(_currentPlayer, _currentPlayer.index);
-            _currentPlayer = null;
+            _currentPlayer.OnTouchPlayerEvent -= SetPlayer;
+            _currentPlayer.onExplosionEvent?.Invoke(_currentPlayer, _currentPlayer.index);
+            _timerCoroutine = null;
+            Debug.Log("초기화 완료.");
         }
         public void OnGameEnded() => StopAllCoroutines();
 
         private IEnumerator BombTimer()
         {
-            _leftTime = maxTime;
+            int leftTime = maxTime;
         
-            while (_leftTime != 0)
+            while (leftTime > 0)
             {
-                _leftTime -= 1;
-                onTickEvent?.Invoke(_leftTime);
+                leftTime -= 1;
+                onTickEvent?.Invoke(leftTime);
                 yield return new WaitForSeconds(1);
             }
 
             ExplosionBomb();
         }
     
-        private void OnDestroy() => _owner.OnTouchPlayerEvent -= SetPlayer;
+        private void OnDestroy() => _currentPlayer.OnTouchPlayerEvent -= SetPlayer;
     }
 }
