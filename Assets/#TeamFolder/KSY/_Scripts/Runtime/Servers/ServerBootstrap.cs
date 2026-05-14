@@ -10,6 +10,7 @@ namespace KSY.Servers
         private GameManager gameManager = null;
         [SerializeField]
         private DataTableManager dataTableManager = null;
+        [SerializeField] private ListeningDataSO listeningData;
         
         public async void StartServer()
         {

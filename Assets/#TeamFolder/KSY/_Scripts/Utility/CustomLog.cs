@@ -5,8 +5,8 @@ namespace KSY.Utility
 {
     public static class CustomLog
     {
-        // UNITY_EDITOR ¶Ç´Â DEVELOPMENT_BUILDÀÏ ¶§¸¸ ÄÚµå°¡ ÄÄÆÄÀÏ¿¡ Æ÷ÇÔµË´Ï´Ù.
-        // ÀÏ¹Ý ¸±¸®½º ºôµå(ÃÖÁ¾ ¹èÆ÷)¿¡¼­´Â ÀÌ ¸Þ¼­µå¸¦ È£ÃâÇÏ´Â ¸ðµç ÄÚµå°¡ »ç¶óÁý´Ï´Ù.
+        // UNITY_EDITOR ï¿½Ç´ï¿½ DEVELOPMENT_BUILDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Úµå°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ÔµË´Ï´ï¿½.
+        // ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½å¸¦ È£ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ ï¿½Úµå°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         public static void Log(object message)
         {
@@ -15,7 +15,7 @@ namespace KSY.Utility
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         public static void Log(object message, Color color)
         {
-            // Color¸¦ hex ¹®ÀÚ¿­·Î º¯È¯ (¿¹: #FF0000)
+            // Colorï¿½ï¿½ hex ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ (ï¿½ï¿½: #FF0000)
             string hexColor = ColorUtility.ToHtmlStringRGB(color);
             UnityEngine.Debug.Log($"[DEBUG] <color=#{hexColor}>{message}</color>");
         }
@@ -27,8 +27,13 @@ namespace KSY.Utility
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         public static void LogError(object message)
         {
-            // ¿¡·¯ ·Î±×´Â ¸±¸®½º¿¡¼­µµ º¸°í ½Í´Ù¸é [Conditional]À» »©¸é µË´Ï´Ù.
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Î±×´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Í´Ù¸ï¿½ [Conditional]ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë´Ï´ï¿½.
             UnityEngine.Debug.LogError($"[ERROR] {message}");
+        }
+        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        public static void Assert(bool condition,object message)
+        {
+            UnityEngine.Debug.Assert(condition, message);
         }
     }
 }
