@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using _TeamFolder.JCJ.Script;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,13 +10,14 @@ using UnityEditor;
 
 namespace _TeamFolder.JCJ.Battle
 {
+    [DefaultExecutionOrder(100)]
     public class BattleWeaponManager : MonoBehaviour
     {
+        private static readonly int AimingAnimatorId = Animator.StringToHash("aiming");
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
         private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
         private static readonly int MainTexId = Shader.PropertyToID("_MainTex");
-        private static readonly Vector3 DefaultWeaponMountLocalPosition = new(0.06f, -0.08f, 0.12f);
         private const string RuntimeProjectilePoolKey = "battle.runtime_projectile";
         private const string TracerPoolKey = "battle.tracer";
 
@@ -27,6 +29,12 @@ namespace _TeamFolder.JCJ.Battle
         [SerializeField] private bool _autoCreateMount = true;
         [SerializeField] private BattleWeaponDefinition _startingWeapon;
         [SerializeField] private int _startingRank = 4;
+        [SerializeField] private Vector3 _weaponMountLocalPosition = new(0.07f, -0.02f, 0.16f);
+        [SerializeField] private Vector3 _weaponMountLocalEulerAngles;
+        [SerializeField] private Vector3 _weaponMountFineOffset;
+        [SerializeField] [FormerlySerializedAs("_liveWeaponMountPoseInInspector")] private bool _suspendWeaponMountAutoSync;
+        [SerializeField] private BattleWeaponDefinition _equippedWeaponAssetForInspector;
+        [SerializeField] private bool _stripWeaponViewLocalPitchForFirstPerson = true;
 
         private InputActionMap _inputMap;
         private InputAction _fireAction;
@@ -43,8 +51,11 @@ namespace _TeamFolder.JCJ.Battle
         private float _reloadFinishTime;
         private bool _autoEquipOnStart = true;
         private bool _inputEnabled = true;
+        private Animator _locomotionAnimator;
+        private readonly int[] _gradeCycleTestSlot = new int[4];
 
         public BattleWeaponDefinition CurrentWeapon => _currentWeapon;
+        public bool IsLocallyControlled => _isLocalControlled;
         public int CurrentMagazine => _currentMagazine;
         public int ReserveAmmo => _reserveAmmo;
         public bool IsReloading => _isReloading;
@@ -56,6 +67,8 @@ namespace _TeamFolder.JCJ.Battle
 
         private void Awake()
         {
+            int lb = LayerMask.NameToLayer("BattleLocalBody");
+            if (lb >= 0) _hitMask &= ~(1 << lb);
             ResolveRig();
             BuildInput();
         }
@@ -96,9 +109,22 @@ namespace _TeamFolder.JCJ.Battle
         {
             if (!_isLocalControlled) return;
 
+            if (Keyboard.current != null)
+            {
+                if (Keyboard.current.eKey.wasPressedThisFrame && _currentWeapon != null)
+                    Debug.Log($"[BattleWeapon] current SO name: {_currentWeapon.name}", _currentWeapon);
+#if UNITY_EDITOR
+                if (Keyboard.current.fKey.wasPressedThisFrame)
+                    TryEditorWriteCurrentPresentationPositionsToSo();
+#endif
+            }
+
+            TryApplyGradeCycleTestKeys();
+
             bool aiming = _inputEnabled && _aimAction != null && _aimAction.IsPressed();
             var cam = BattleFirstPersonCamera.Instance;
             if (cam != null) cam.SetAiming(aiming);
+            SyncLocomotionAnimatorAiming(aiming);
 
             if (!_inputEnabled)
             {
@@ -124,27 +150,38 @@ namespace _TeamFolder.JCJ.Battle
             TryFire();
         }
 
-        private void HandleWeaponSwitch()
+        private void SyncLocomotionAnimatorAiming(bool value)
         {
-            if (_weaponCatalog == null) return;
-            int rank = -1;
-            bool preferCompactWeapon = false;
-            if (Keyboard.current != null)
+            if (_locomotionAnimator == null)
+                _locomotionAnimator = GetComponentInChildren<Animator>(true);
+            if (_locomotionAnimator == null) return;
+            if (_locomotionAnimator.runtimeAnimatorController == null) return;
+            _locomotionAnimator.SetBool(AimingAnimatorId, value);
+        }
+
+        private void TryApplyGradeCycleTestKeys()
+        {
+            if (_weaponCatalog == null || Keyboard.current == null) return;
+            BattleWeaponGrade? grade = null;
+            if (Keyboard.current.digit1Key.wasPressedThisFrame) grade = BattleWeaponGrade.Rank1;
+            else if (Keyboard.current.digit2Key.wasPressedThisFrame) grade = BattleWeaponGrade.Rank2;
+            else if (Keyboard.current.digit3Key.wasPressedThisFrame) grade = BattleWeaponGrade.Rank3;
+            else if (Keyboard.current.digit4Key.wasPressedThisFrame) grade = BattleWeaponGrade.Rank4;
+            else if (Keyboard.current.qKey.wasPressedThisFrame)
             {
-                if (Keyboard.current.digit1Key.wasPressedThisFrame) rank = 1;
-                else if (Keyboard.current.digit2Key.wasPressedThisFrame) rank = 2;
-                else if (Keyboard.current.digit3Key.wasPressedThisFrame) rank = 3;
-                else if (Keyboard.current.digit4Key.wasPressedThisFrame)
-                {
-                    rank = 4;
-                    preferCompactWeapon = true;
-                }
-                else if (Keyboard.current.qKey.wasPressedThisFrame) rank = _startingRank;
+                EquipRandomWeaponForRank(_startingRank);
+                return;
             }
-            if (rank < 0) return;
-            _startingRank = rank;
-            if (preferCompactWeapon) EquipCompactWeaponForRank(rank);
-            else EquipRandomWeaponForRank(rank);
+
+            if (!grade.HasValue) return;
+            int g = (int)grade.Value - 1;
+            if (g < 0 || g > 3) return;
+            var list = _weaponCatalog.GetWeapons(grade.Value);
+            if (list == null || list.Length == 0) return;
+            int slot = _gradeCycleTestSlot[g] % list.Length;
+            _gradeCycleTestSlot[g]++;
+            var def = list[slot];
+            if (def != null) EquipWeapon(def);
         }
 
         public void SetLocalControlled(bool isLocalControlled)
@@ -178,6 +215,7 @@ namespace _TeamFolder.JCJ.Battle
             {
                 var cam = BattleFirstPersonCamera.Instance;
                 if (cam != null) cam.SetAiming(false);
+                SyncLocomotionAnimatorAiming(false);
             }
         }
 
@@ -230,6 +268,7 @@ namespace _TeamFolder.JCJ.Battle
         public void EquipWeapon(BattleWeaponDefinition definition)
         {
             _currentWeapon = definition;
+            _equippedWeaponAssetForInspector = definition;
             _nextFireTime = 0f;
             _isReloading = false;
 
@@ -243,6 +282,12 @@ namespace _TeamFolder.JCJ.Battle
             if (_weaponInstance != null) Destroy(_weaponInstance);
             _weaponInstance = null;
             _muzzle = null;
+
+            if (_isLocalControlled)
+            {
+                ResolveRig();
+                ApplyWeaponMountPose(definition);
+            }
 
             // 서버 게임 기준으로 1인칭 무기 실물은 현재 오너 클라이언트만 생성한다.
             // 원격 플레이어는 서버 동기화 결과(발사, 피격, 위치)만 재생하고 로컬 입력용 뷰는 만들지 않는다.
@@ -262,13 +307,151 @@ namespace _TeamFolder.JCJ.Battle
             _muzzle = view.ResolveMuzzle();
         }
 
+        public void RefreshEquippedWeaponPresentationFromSource()
+        {
+            if (!_isLocalControlled || _currentWeapon == null) return;
+            ResolveRig();
+            ApplyWeaponMountPose(_currentWeapon);
+            if (_weaponInstance != null) ApplyWeaponViewTransform(_currentWeapon);
+        }
+
+#if UNITY_EDITOR
+        [ContextMenu("Refresh FP pose from current weapon SO")]
+        private void EditorContextRefreshPoseFromSo()
+        {
+            RefreshEquippedWeaponPresentationFromSource();
+        }
+
+        private void TryEditorWriteCurrentPresentationPositionsToSo()
+        {
+            if (!Application.isPlaying) return;
+            if (_currentWeapon == null)
+            {
+                Debug.LogWarning("[BattleWeapon] F: no current weapon SO.", this);
+                return;
+            }
+
+            if (_weaponMount == null || _weaponInstance == null)
+            {
+                Debug.LogWarning("[BattleWeapon] F: need WeaponMount and spawned weapon view.", this);
+                return;
+            }
+
+            ResolveRig();
+
+            EnsurePlayModeWeaponPoseWriteFlushSubscribed();
+            Vector3 mount = _weaponMount.localPosition - _weaponMountFineOffset;
+            Vector3 mountEuler = _weaponMount.localEulerAngles;
+            Vector3 view = _weaponInstance.transform.localPosition;
+            string path = AssetDatabase.GetAssetPath(_currentWeapon);
+            if (string.IsNullOrEmpty(path))
+                Debug.LogWarning("[BattleWeapon] F: SO has no asset path; will not persist after exiting Play Mode.", _currentWeapon);
+            else
+            {
+                if (s_pendingWeaponPoseWritesByAssetPath == null)
+                    s_pendingWeaponPoseWritesByAssetPath = new System.Collections.Generic.Dictionary<string, (Vector3, Vector3, Vector3)>();
+                s_pendingWeaponPoseWritesByAssetPath[path] = (mount, mountEuler, view);
+            }
+
+            _currentWeapon.EditorWritePresentationLocalPositions(mount, mountEuler, view);
+            RefreshEquippedWeaponPresentationFromSource();
+            Debug.Log(string.IsNullOrEmpty(path)
+                ? $"[BattleWeapon] F: applied in Play Mode only (no asset path) '{_currentWeapon.name}'."
+                : $"[BattleWeapon] F: '{_currentWeapon.name}' updated in play; disk save runs when Play Mode ends.", _currentWeapon);
+        }
+
+        private void OnValidate()
+        {
+            if (!Application.isPlaying || !isActiveAndEnabled) return;
+            if (!_isLocalControlled || _suspendWeaponMountAutoSync) return;
+            ResolveRig();
+            if (_weaponMount == null) return;
+            SyncWeaponMountToPlayerLocal();
+        }
+
+        private static System.Collections.Generic.Dictionary<string, (Vector3 mount, Vector3 mountEuler, Vector3 view)> s_pendingWeaponPoseWritesByAssetPath;
+        private static bool s_playModeWeaponPoseWriteFlushSubscribed;
+
+        private static void EnsurePlayModeWeaponPoseWriteFlushSubscribed()
+        {
+            if (s_playModeWeaponPoseWriteFlushSubscribed) return;
+            s_playModeWeaponPoseWriteFlushSubscribed = true;
+            EditorApplication.playModeStateChanged += OnEditorPlayModeStateChangedFlushWeaponPoseWritesToDisk;
+        }
+
+        private static void OnEditorPlayModeStateChangedFlushWeaponPoseWritesToDisk(PlayModeStateChange state)
+        {
+            if (state != PlayModeStateChange.EnteredEditMode) return;
+            if (s_pendingWeaponPoseWritesByAssetPath == null || s_pendingWeaponPoseWritesByAssetPath.Count == 0) return;
+            foreach (var kv in s_pendingWeaponPoseWritesByAssetPath)
+            {
+                var def = AssetDatabase.LoadAssetAtPath<BattleWeaponDefinition>(kv.Key);
+                if (def == null) continue;
+                def.EditorWritePresentationLocalPositions(kv.Value.mount, kv.Value.mountEuler, kv.Value.view);
+            }
+
+            s_pendingWeaponPoseWritesByAssetPath.Clear();
+            AssetDatabase.SaveAssets();
+        }
+
+        private static readonly System.Collections.Generic.HashSet<int> s_queuedLiveVisualDefIds = new System.Collections.Generic.HashSet<int>();
+        private static bool s_liveVisualFlushScheduled;
+
+        public static void QueueLiveVisualApplyForDefinition(BattleWeaponDefinition definition)
+        {
+            if (!Application.isPlaying || definition == null) return;
+            s_queuedLiveVisualDefIds.Add(definition.GetInstanceID());
+            if (s_liveVisualFlushScheduled) return;
+            s_liveVisualFlushScheduled = true;
+            EditorApplication.delayCall += FlushQueuedLiveVisualDefinitionApplies;
+        }
+
+        private static void FlushQueuedLiveVisualDefinitionApplies()
+        {
+            EditorApplication.delayCall -= FlushQueuedLiveVisualDefinitionApplies;
+            s_liveVisualFlushScheduled = false;
+            if (!Application.isPlaying)
+            {
+                s_queuedLiveVisualDefIds.Clear();
+                return;
+            }
+
+            int[] ids = new int[s_queuedLiveVisualDefIds.Count];
+            s_queuedLiveVisualDefIds.CopyTo(ids);
+            s_queuedLiveVisualDefIds.Clear();
+            var managers = Object.FindObjectsByType<BattleWeaponManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var def = EditorUtility.InstanceIDToObject(ids[i]) as BattleWeaponDefinition;
+                if (def == null) continue;
+                for (int m = 0; m < managers.Length; m++)
+                {
+                    var mgr = managers[m];
+                    if (mgr == null || !mgr._isLocalControlled) continue;
+                    if (mgr._currentWeapon != def) continue;
+                    mgr.RefreshEquippedWeaponPresentationFromSource();
+                }
+            }
+        }
+#endif
+
         private void ApplyWeaponViewTransform(BattleWeaponDefinition definition)
         {
             if (_weaponInstance == null || definition == null) return;
 
-            _weaponInstance.transform.localPosition = GetTargetWeaponViewPosition(definition);
-            _weaponInstance.transform.localRotation = Quaternion.Euler(GetTargetWeaponViewEuler(definition));
-            _weaponInstance.transform.localScale = GetTargetWeaponViewScale(definition);
+            _weaponInstance.transform.localPosition = definition.ViewLocalPosition;
+            Vector3 ve = definition.ViewLocalEuler;
+            if (_isLocalControlled && _stripWeaponViewLocalPitchForFirstPerson)
+                _weaponInstance.transform.localRotation = Quaternion.Euler(0f, ve.y, ve.z);
+            else
+                _weaponInstance.transform.localRotation = Quaternion.Euler(ve);
+            _weaponInstance.transform.localScale = definition.ViewLocalScale;
+        }
+
+        private void ApplyWeaponMountPose(BattleWeaponDefinition definition)
+        {
+            if (_weaponMount == null) return;
+            SyncWeaponMountToPlayerLocal();
         }
 
         private static void RepairWeaponViewMaterials(GameObject weaponInstance)
@@ -355,8 +538,24 @@ namespace _TeamFolder.JCJ.Battle
 
             _nextFireTime = Time.time + _currentWeapon.FireInterval;
             Vector3 targetPoint = ResolveTargetPoint();
-            Vector3 direction = (targetPoint - _muzzle.position).normalized;
-            direction = ApplySpread(direction, _currentWeapon.SpreadAngle);
+            Vector3 muzzlePos = _muzzle.position;
+            Vector3 toTarget = targetPoint - muzzlePos;
+            Vector3 aimDir;
+            if (toTarget.sqrMagnitude < 1e-8f)
+            {
+                aimDir = _cameraRoot.forward;
+                if (aimDir.sqrMagnitude < 1e-10f) aimDir = transform.forward;
+            }
+            else
+            {
+                aimDir = toTarget.normalized;
+                Vector3 camFwd = _cameraRoot.forward;
+                if (camFwd.sqrMagnitude > 1e-10f && Vector3.Dot(aimDir, camFwd.normalized) < 0.02f)
+                    aimDir = camFwd.normalized;
+            }
+
+            aimDir.Normalize();
+            Vector3 direction = ApplySpread(aimDir, _currentWeapon.SpreadAngle);
             var shotRequest = BuildShotRequest(direction, targetPoint);
 
             if (!JcjRuntimeAuthority.UseLocalSimulation)
@@ -420,28 +619,74 @@ namespace _TeamFolder.JCJ.Battle
 
         private void ResolveRig()
         {
+            if (_isLocalControlled)
+            {
+                var mainCam = Camera.main;
+                if (mainCam != null && (_cameraRoot == null || ReferenceEquals(_cameraRoot, transform)))
+                    _cameraRoot = mainCam.transform;
+            }
             if (_cameraRoot == null)
             {
                 if (_isLocalControlled && Camera.main != null) _cameraRoot = Camera.main.transform;
                 else _cameraRoot = transform;
             }
-            if (_weaponMount == null && _autoCreateMount && _cameraRoot != null)
+            if (_weaponMount == null && _autoCreateMount)
             {
-                var mount = _cameraRoot.Find("WeaponMount");
+                Transform mount = transform.Find("WeaponMount");
+                if (mount == null && _cameraRoot != null)
+                    mount = _cameraRoot.Find("WeaponMount");
                 if (mount == null)
                 {
                     var mountGo = new GameObject("WeaponMount");
                     mount = mountGo.transform;
-                    mount.SetParent(_cameraRoot, false);
-                    mount.localPosition = DefaultWeaponMountLocalPosition;
-                    mount.localRotation = Quaternion.identity;
+                    mount.SetParent(transform, false);
                 }
-                else if (mount.parent == _cameraRoot && mount.localPosition == Vector3.zero)
-                {
-                    mount.localPosition = DefaultWeaponMountLocalPosition;
-                }
+                else if (mount.parent != transform)
+                    mount.SetParent(transform, true);
+
                 _weaponMount = mount;
             }
+
+            if (_weaponMount != null && _weaponMount.parent != transform)
+                _weaponMount.SetParent(transform, true);
+        }
+
+        private void ApplyWeaponMountSerializedLocalPose(Transform mount)
+        {
+            if (mount == null) return;
+            mount.localPosition = _weaponMountLocalPosition;
+            mount.localRotation = Quaternion.Euler(_weaponMountLocalEulerAngles);
+        }
+
+        private void SyncWeaponMountToPlayerLocal()
+        {
+            if (!_isLocalControlled || _weaponMount == null) return;
+            if (_suspendWeaponMountAutoSync) return;
+
+            ResolveRig();
+            if (_weaponMount.parent != transform)
+                _weaponMount.SetParent(transform, true);
+
+            Vector3 localPos;
+            Quaternion localRot;
+            if (_currentWeapon != null && _currentWeapon.UseCustomMountPose)
+            {
+                localPos = _currentWeapon.MountLocalPosition + _weaponMountFineOffset;
+                localRot = Quaternion.Euler(_currentWeapon.MountLocalEulerAngles);
+            }
+            else
+            {
+                localPos = _weaponMountLocalPosition + _weaponMountFineOffset;
+                localRot = Quaternion.Euler(_weaponMountLocalEulerAngles);
+            }
+
+            _weaponMount.localPosition = localPos;
+            _weaponMount.localRotation = localRot;
+        }
+
+        private void LateUpdate()
+        {
+            SyncWeaponMountToPlayerLocal();
         }
 
         private void RebuildOwnerPresentation()
@@ -500,13 +745,14 @@ namespace _TeamFolder.JCJ.Battle
             return _cameraRoot.position + _cameraRoot.forward * 500f;
         }
 
-        private static Vector3 ApplySpread(Vector3 direction, float spreadAngle)
+        private static Vector3 ApplySpread(Vector3 forward, float spreadAngle)
         {
-            if (spreadAngle <= 0f) return direction.normalized;
-
-            Quaternion yaw = Quaternion.AngleAxis(Random.Range(-spreadAngle, spreadAngle), Vector3.up);
-            Quaternion pitch = Quaternion.AngleAxis(Random.Range(-spreadAngle, spreadAngle), Vector3.right);
-            return (yaw * pitch * direction).normalized;
+            if (spreadAngle <= 0f || forward.sqrMagnitude < 1e-10f) return forward.normalized;
+            forward.Normalize();
+            Quaternion basis = Quaternion.LookRotation(forward);
+            float ry = Random.Range(-spreadAngle, spreadAngle);
+            float rx = Random.Range(-spreadAngle, spreadAngle);
+            return (basis * Quaternion.Euler(rx, ry, 0f) * Vector3.forward).normalized;
         }
 
         private void PlayFireFeedback(Vector3 direction)
@@ -686,43 +932,6 @@ namespace _TeamFolder.JCJ.Battle
             if (mat.HasProperty(ColorId)) mat.SetColor(ColorId, color);
             mat.renderQueue = 3100;
             return mat;
-        }
-
-        private static Vector3 GetTargetWeaponViewPosition(BattleWeaponDefinition definition)
-        {
-            string id = definition.WeaponId != null ? definition.WeaponId.ToLowerInvariant() : string.Empty;
-            if (id.Contains("rpg")) return new Vector3(0.28f, -0.28f, 0.58f);
-            if (id.Contains("m107")) return new Vector3(0.22f, -0.24f, 0.58f);
-            if (id.Contains("m249") || id.Contains("50cal")) return new Vector3(0.22f, -0.27f, 0.48f);
-            if (id.Contains("bennelli")) return new Vector3(0.19f, -0.24f, 0.42f);
-            if (id.Contains("uzi")) return new Vector3(0.15f, -0.18f, 0.3f);
-            if (id.Contains("m1911")) return new Vector3(0.13f, -0.16f, 0.26f);
-            if (id.Contains("ak74")) return new Vector3(0.18f, -0.22f, 0.42f);
-            if (id.Contains("m4")) return new Vector3(0.18f, -0.22f, 0.42f);
-            return definition.ViewLocalPosition;
-        }
-
-        private static Vector3 GetTargetWeaponViewEuler(BattleWeaponDefinition definition)
-        {
-            string id = definition.WeaponId != null ? definition.WeaponId.ToLowerInvariant() : string.Empty;
-            if (id.Contains("rpg")) return new Vector3(0f, -8f, 0f);
-            if (id.Contains("m107")) return new Vector3(0f, -2f, 0f);
-            if (id.Contains("m249") || id.Contains("50cal")) return new Vector3(0f, -4f, 0f);
-            return definition.ViewLocalEuler;
-        }
-
-        private static Vector3 GetTargetWeaponViewScale(BattleWeaponDefinition definition)
-        {
-            string id = definition.WeaponId != null ? definition.WeaponId.ToLowerInvariant() : string.Empty;
-            if (id.Contains("rpg")) return Vector3.one * 1.05f;
-            if (id.Contains("m107")) return Vector3.one * 0.95f;
-            if (id.Contains("m249") || id.Contains("50cal")) return Vector3.one * 0.9f;
-            if (id.Contains("bennelli")) return Vector3.one * 0.92f;
-            if (id.Contains("uzi")) return Vector3.one * 0.82f;
-            if (id.Contains("m1911")) return Vector3.one * 0.78f;
-            if (id.Contains("ak74")) return Vector3.one * 0.9f;
-            if (id.Contains("m4")) return Vector3.one * 0.9f;
-            return definition.ViewLocalScale;
         }
 
         private static float GetEffectiveProjectileRadius(BattleWeaponDefinition definition)

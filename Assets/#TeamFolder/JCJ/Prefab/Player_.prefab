@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7085455651498112645}
   - component: {fileID: 4597810737978731914}
   - component: {fileID: 4855455458083270132}
+  - component: {fileID: 5544332211009988776}
+  - component: {fileID: 6372819405827364512}
   - component: {fileID: 7163248602137933625}
   m_Layer: 0
   m_Name: Player_
@@ -84,6 +86,69 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5544332211009988776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7604232584767330554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a11d26c85a1c77e45a9c5b2242b3d2a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Battle.BattleWeaponManager
+  _weaponCatalog: {fileID: 11400000, guid: c7db874023c28294fb744a74fe418bae, type: 2}
+  _cameraRoot: {fileID: 0}
+  _weaponMount: {fileID: 0}
+  _hitMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _isLocalControlled: 0
+  _autoCreateMount: 1
+  _startingWeapon: {fileID: 0}
+  _startingRank: 4
+  _weaponMountLocalPosition: {x: 0.07, y: -0.02, z: 0.16}
+  _weaponMountLocalEulerAngles: {x: 0, y: 0, z: 0}
+  _weaponMountFineOffset: {x: 0, y: 0, z: 0}
+  _suspendWeaponMountAutoSync: 0
+--- !u!114 &6372819405827364512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7604232584767330554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12eddaeec4d12ab44b1e96410d35d769, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.PartyCharacterVisual
+  _characterPrefab: {fileID: 0}
+  _resourceFallback: Prefabs/character_default
+  _scale: 1
+  _localOffset: {x: 0, y: -1, z: 0}
+  _battleCharacterPrefabPath: Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Models/battle_charactor.fbx
+  _battleScale: 1
+  _battleLocalOffset: {x: 0, y: -1, z: 0}
+  _battleLocalEuler: {x: 0, y: 0, z: 0}
+  _hideBaseCapsule: 1
+  _localCharacterActive: 1
+  _battleRuntimeAnimatorController: {fileID: 9100000, guid: f3e4d5c6b7a809112233445566778899, type: 2}
+  _sceneIdleRunOnly: 0
+  _idleTrigger: idle
+  _runTrigger: run
+  _jumpTrigger: jump
+  _fallTrigger: fall
+  _getupTrigger: getup
+  _winTrigger: feel
+  _walkAnimSpeed: 1
+  _sprintAnimSpeed: 1.5
+  _arenaAnimationLibraryPath: Arena/ArenaAnimationLibrary
+  _battleIdleClipPath: 
+  _battleWalkClipPath: 
+  _battleSprintClipPath: 
+  _battleStopClipPath: 
 --- !u!114 &7163248602137933625
 MonoBehaviour:
   m_ObjectHideFlags: 0

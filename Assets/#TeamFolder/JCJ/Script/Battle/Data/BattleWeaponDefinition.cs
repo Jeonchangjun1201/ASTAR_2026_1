@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 // 무기 스탯과 프리팹 참조를 담는 정의 에셋.
 
@@ -16,6 +19,9 @@ namespace _TeamFolder.JCJ.Battle
         [SerializeField] private Vector3 _viewLocalPosition = new(0.18f, -0.18f, 0.35f);
         [SerializeField] private Vector3 _viewLocalEuler = Vector3.zero;
         [SerializeField] private Vector3 _viewLocalScale = Vector3.one;
+        [SerializeField] private bool _useCustomMountPose;
+        [SerializeField] private Vector3 _mountLocalPosition = new(0.07f, -0.02f, 0.16f);
+        [SerializeField] private Vector3 _mountLocalEulerAngles;
         [SerializeField] private float _damage = 20f;
         [SerializeField] private float _fireInterval = 0.18f;
         [SerializeField] private float _muzzleVelocity = 85f;
@@ -45,6 +51,9 @@ namespace _TeamFolder.JCJ.Battle
         public Vector3 ViewLocalPosition => _viewLocalPosition;
         public Vector3 ViewLocalEuler => _viewLocalEuler;
         public Vector3 ViewLocalScale => _viewLocalScale;
+        public bool UseCustomMountPose => _useCustomMountPose;
+        public Vector3 MountLocalPosition => _mountLocalPosition;
+        public Vector3 MountLocalEulerAngles => _mountLocalEulerAngles;
         public float Damage => Mathf.Max(0f, _damage);
         public float FireInterval => Mathf.Max(0.01f, _fireInterval);
         public float MuzzleVelocity => Mathf.Max(0.1f, _muzzleVelocity);
@@ -80,5 +89,21 @@ namespace _TeamFolder.JCJ.Battle
             if (_damage >= 60f) return mag * 5;
             return mag * 3;
         }
+
+#if UNITY_EDITOR
+        public void EditorWritePresentationLocalPositions(Vector3 mountLocalPosition, Vector3 mountLocalEulerAngles, Vector3 viewLocalPosition)
+        {
+            _mountLocalPosition = mountLocalPosition;
+            _mountLocalEulerAngles = mountLocalEulerAngles;
+            _viewLocalPosition = viewLocalPosition;
+            _useCustomMountPose = true;
+            EditorUtility.SetDirty(this);
+        }
+
+        private void OnValidate()
+        {
+            BattleWeaponManager.QueueLiveVisualApplyForDefinition(this);
+        }
+#endif
     }
 }
