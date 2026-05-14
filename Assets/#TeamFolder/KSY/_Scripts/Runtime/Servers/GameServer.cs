@@ -31,6 +31,10 @@ namespace KSY.Servers
             unityPacketDispatcher.Initialize(server);
         }
 
+        #region  ISessionFactory
+        Session ISessionFactory.Create(NetworkObject networkObject, Socket connectedSocket) => new Session();
+        #endregion
+
         public void Listen(int port)
         {
             server.Listen(port);
@@ -51,7 +55,5 @@ namespace KSY.Servers
             playerIDMap.TryGetValue(session, out string playerID);
             return playerID;
         }        
-
-        public Session Create(NetworkObject networkObject, Socket connectedSocket) => new Session();
     }
 }
