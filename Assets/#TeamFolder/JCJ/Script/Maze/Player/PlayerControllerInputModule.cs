@@ -61,17 +61,17 @@ namespace _TeamFolder.JCJ.Script
 
         public static void SetMovementEnabled(bool enabled, InputAction moveAction, InputAction jumpAction, InputAction sprintAction)
         {
-            if (moveAction == null || jumpAction == null || sprintAction == null) return;
+            if (moveAction == null || sprintAction == null) return;
             if (enabled)
             {
                 moveAction.Enable();
-                jumpAction.Enable();
+                if (jumpAction != null) jumpAction.Enable();
                 sprintAction.Enable();
             }
             else
             {
                 moveAction.Disable();
-                jumpAction.Disable();
+                if (jumpAction != null) jumpAction.Disable();
                 sprintAction.Disable();
             }
         }
