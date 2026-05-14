@@ -13,7 +13,7 @@ namespace KSY.Shared
     }
 
     [System.Serializable]
-    public class KSY_GameConfigTable : DataTable<GameConfigTableRow>
+    public class GameConfigTable : DataTable<GameConfigTableRow>
     {
         private Dictionary<string, GameConfigTableRow> tableRowByKey = null;
 
@@ -32,9 +32,9 @@ namespace KSY.Shared
             return tableRow;
         }
 
-        public KSY_Unit GetUnitPrefab()
+        public Unit GetUnitPrefab()
         {
-            return GetRow("").objectValue as KSY_Unit;
+            return GetRow("").objectValue as Unit;
         }
     }
 }

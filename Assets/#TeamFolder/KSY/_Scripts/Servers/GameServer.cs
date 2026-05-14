@@ -10,10 +10,10 @@ namespace KSY.Servers
         private Dictionary<Session, string> playerIDMap = null;
         private Server server = null;
 
-        public void Initialize(KSY_GameManager gameManager, KSY_DataTableManager dataTableManager)
+        public void Initialize(GameManager gameManager, DataTableManager dataTableManager)
         {
-            KSY_GameInstance.PlayMode = KSY_EPlayMode.Server;
-            KSY_GameInstance.DataTableManager = dataTableManager;
+            GameInstance.PlayMode = EPlayMode.Server;
+            GameInstance.DataTableManager = dataTableManager;
             ServerInstance.GameServer = this;
 
             playerIDMap = new Dictionary<Session, string>();

@@ -7,9 +7,9 @@ namespace KSY.Servers
     public class ServerBootstrap : MonoBehaviour
     {
         [SerializeField]
-        private KSY_GameManager gameManager = null;
+        private GameManager gameManager = null;
         [SerializeField]
-        private KSY_DataTableManager dataTableManager = null;
+        private DataTableManager dataTableManager = null;
         
         public async void StartServer()
         {

@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace KSY.Shared
 {
-    public class KSY_DataTableManager : MonoBehaviour
+    public class DataTableManager : MonoBehaviour
     {
-        public KSY_GameConfigTable gameConfigTable = null;
+        public GameConfigTable gameConfigTable = null;
 
         private void OnEnable()
         {

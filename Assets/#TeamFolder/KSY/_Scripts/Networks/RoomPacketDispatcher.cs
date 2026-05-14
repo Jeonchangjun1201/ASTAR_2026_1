@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace KSY.Networks
 {
-    public class RoomPacketDispatcher : MonoBehaviour, IPacketDispatcher
+    public class RoomPacketDispatcher : IPacketDispatcher
     {
         private PacketHandlerFactory packetHandlerFactory;
 

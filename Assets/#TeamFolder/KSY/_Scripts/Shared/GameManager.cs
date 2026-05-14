@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace KSY.Shared
 {
-    public class KSY_GameManager : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
-        private static KSY_GameManager instance = null;
-        public static KSY_GameManager Instance => instance;
+        private static GameManager instance = null;
+        public static GameManager Instance => instance;
 
         private Dictionary<string, KSY_Unit> players = null;
         //private Dictionary<string, ItemBase> items = null;

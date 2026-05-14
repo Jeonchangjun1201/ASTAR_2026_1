@@ -10,7 +10,7 @@ namespace KSY.Networks
         private readonly ConcurrentDictionary<string, Lazy<Room>> rooms;
         private readonly ConcurrentDictionary<Session, Room> sessionRoomMap;
         private readonly Lazy<RoomWorker>[] workers;
-        private readonly Lazy<RoomWorker>[] dedicatedWorker;
+        private readonly Lazy<RoomWorker> dedicatedWorker;
         private readonly Lazy<PacketSerializer> packetSerializer;
         private readonly Lazy<PacketHandlerFactory> packetHandlerFactory;
 
@@ -19,15 +19,12 @@ namespace KSY.Networks
             this.roomPacketDispatcher = roomPacketDispatcher;
             rooms = new ConcurrentDictionary<string, Lazy<Room>>();
             sessionRoomMap = new ConcurrentDictionary<Session, Room>();
-            packetSerializer = new Lazy<PacketSerializer>(()=>>diContainer.GetInstance<PacketSerializer>());
+            packetSerializer = new Lazy<PacketSerializer>(()=>diContainer.GetInstance<PacketSerializer>());
             packetHandlerFactory = new Lazy<PacketHandlerFactory>(()=>diContainer.GetInstance<PacketHandlerFactory>());
             workers = new Lazy<RoomWorker>[workerCount];
-            for (int num = 0; num < workerCount; num++)
-            {
-                workers[num] = WorkerFactory(capacityPerWorker);
-            }
-
-            dedicatedWorker = WorkerFactory(capacityPerWorker)
+            for (int index = 0; index < workerCount; index++)
+                this.workers[index] = WorkerFactory(capacityPerWorker);
+            this.dedicatedWorker = this.WorkerFactory(capacityPerWorker);
         }
 
         #region IRoomManager
@@ -56,6 +53,12 @@ namespace KSY.Networks
 
                 return dedicatedWorker.Value.EnqueueAsync(session, packet);
             }
+            catch
+            {
+                session.Close();
+            }
+
+            return default(ValueTask);
         }
 
         #endregion
@@ -63,19 +66,31 @@ namespace KSY.Networks
         #region IAsyncDisposable
         async ValueTask IAsyncDisposable.DisposeAsync()
         {
-            throw new NotImplementedException();
+            Lazy<RoomWorker>[] array = workers;
+            foreach (Lazy<RoomWorker> worker in workers)
+            {
+                if (worker.IsValueCreated)
+                {
+                    await ((IAsyncDisposable)worker.Value).DisposeAsync();
+                }
+            }
+
+            if (dedicatedWorker.IsValueCreated)
+                await((IAsyncDisposable)dedicatedWorker.Value).DisposeAsync();
         }
         #endregion
 
         #region Room.ICallback
         void Room.ICallback.OnAdded(Room room, Session session)
         {
-            throw new NotImplementedException();
+            if (room != null && session != null)
+                sessionRoomMap[session] = room;
         }
 
         void Room.ICallback.OnRemoved(Room room, Session session)
         {
-            throw new NotImplementedException();
+            if (session != null)
+                sessionRoomMap.TryRemove(session, out var _);
         }
         #endregion
 
@@ -86,7 +101,8 @@ namespace KSY.Networks
 
         private Lazy<RoomWorker> WorkerFactory(int capacityPerWorker)
         {
-            return new Lazy<RoomWorker>(() => new RoomWorker(roomPacketDispatcher ?? new RoomPacketDispatcher))
+            Func<RoomWorker> workerFactory = ()=> new RoomWorker(roomPacketDispatcher ?? new RoomPacketDispatcher(packetHandlerFactory.Value), capacityPerWorker);
+            return new Lazy<RoomWorker>(workerFactory);
         }
     }
 }

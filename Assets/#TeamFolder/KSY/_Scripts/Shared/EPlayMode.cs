@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace KSY.Shared
 {
-    public enum KSY_EPlayMode 
+    public enum EPlayMode 
     {
         None,
         Client,
