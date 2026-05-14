@@ -6,7 +6,9 @@ namespace KSY.Networks
     public class ServerBuilder : NetworkObjectBuilder<Server>
     {
         private IPacketDispatcher _roomPacketDispatcher;
+        //RoomWorker의 수
         private int _workerCount =  -1;
+        //각 RoomWorker가 담을 수 있는 최대 패킷량
         private int _capacityPerWorker = 4096;
 
         public ServerBuilder(ISessionFactory sessionFactory, IPacketDispatcher roomPacketDispatcher = null)
