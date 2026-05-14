@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +19,27 @@ namespace _TeamFolder.JCJ.Battle
         [SerializeField] private GradeLoadout[] _loadouts;
 
         public IReadOnlyList<GradeLoadout> Loadouts => _loadouts;
+
+        public IReadOnlyList<BattleWeaponDefinition> GetAllWeaponDefinitionsDistinct()
+        {
+            var seen = new HashSet<BattleWeaponDefinition>();
+            var result = new List<BattleWeaponDefinition>();
+            if (_loadouts == null) return result;
+            for (int i = 0; i < _loadouts.Length; i++)
+            {
+                var loadout = _loadouts[i];
+                if (loadout == null || loadout.weapons == null) continue;
+                for (int j = 0; j < loadout.weapons.Length; j++)
+                {
+                    var w = loadout.weapons[j];
+                    if (w == null || seen.Contains(w)) continue;
+                    seen.Add(w);
+                    result.Add(w);
+                }
+            }
+
+            return result;
+        }
 
         public BattleWeaponDefinition[] GetWeapons(BattleWeaponGrade grade)
         {

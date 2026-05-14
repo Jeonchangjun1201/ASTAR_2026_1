@@ -52,6 +52,8 @@ namespace _TeamFolder.JCJ.Battle
         [SerializeField] private float _popupScale = 0.005f;
         [SerializeField] private int _popupFontSize = 130;
         [SerializeField] private int _popupHeadshotFontSize = 180;
+        [SerializeField] private bool _battleUseThirdPersonCamera;
+        [SerializeField] private bool _battleDisableJumpInThisScene;
 
         private readonly List<GameObject> _players = new();
         private readonly List<PlayerSlot> _playerSlots = new();
@@ -82,6 +84,7 @@ namespace _TeamFolder.JCJ.Battle
             if (_playerPrefab == null || _weaponCatalog == null) return;
 
             if (_battleCamera == null) _battleCamera = Object.FindFirstObjectByType<BattleFirstPersonCamera>();
+            if (_battleCamera != null) _battleCamera.SetThirdPersonMode(_battleUseThirdPersonCamera);
             ResolveScoreService();
             ApplyRanksFromScoreService();
             RandomizeTeamAssignments();
@@ -216,7 +219,12 @@ namespace _TeamFolder.JCJ.Battle
             {
                 var slot = _playerSlots[i];
                 if (slot == null) continue;
-                if (slot.Controller != null) slot.Controller.SetGameplayInputEnabled(slot.IsLocal);
+                if (slot.Controller != null)
+                {
+                    ApplyBattleSceneJumpPolicy(slot.Controller);
+                    slot.Controller.SetGameplayInputEnabled(slot.IsLocal);
+                }
+
                 if (slot.WeaponManager != null) slot.WeaponManager.SetInputEnabled(slot.IsLocal);
                 if (slot.Health != null) slot.Health.ActivateSpawnProtection(_spawnProtectionDuration);
                 var boundary = slot.Instance != null ? slot.Instance.GetComponent<BattleArenaBoundary>() : null;
@@ -350,7 +358,12 @@ namespace _TeamFolder.JCJ.Battle
                 slot.Health.ActivateSpawnProtection(_spawnProtectionDuration);
             }
 
-            if (slot.Controller != null) slot.Controller.SetGameplayInputEnabled(slot.IsLocal);
+            if (slot.Controller != null)
+            {
+                ApplyBattleSceneJumpPolicy(slot.Controller);
+                slot.Controller.SetGameplayInputEnabled(slot.IsLocal);
+            }
+
             if (slot.WeaponManager != null) slot.WeaponManager.SetInputEnabled(slot.IsLocal);
 
             var boundary = slot.Instance.GetComponent<BattleArenaBoundary>();
@@ -541,6 +554,8 @@ namespace _TeamFolder.JCJ.Battle
                 {
                     controller.IsLocalControlled = isLocal;
                     controller.SetGameplayInputEnabled(false);
+                    ApplyBattleSceneJumpPolicy(controller);
+                    ApplyBattleSceneBodyYawPolicy(controller);
                 }
 
                 var health = instance.GetComponent<BattleHealth>();
@@ -575,7 +590,6 @@ namespace _TeamFolder.JCJ.Battle
 
                 if (isLocal)
                 {
-                    HideLocalVisuals(instance);
                     if (_battleCamera != null) _battleCamera.SetTarget(instance.transform);
                     var hud = gameObject.GetComponent<BattleAmmoHUD>();
                     if (hud == null) hud = gameObject.AddComponent<BattleAmmoHUD>();
@@ -612,7 +626,12 @@ namespace _TeamFolder.JCJ.Battle
                     slot.Health.ActivateSpawnProtection(_spawnProtectionDuration);
                 }
 
-                if (slot.Controller != null) slot.Controller.SetGameplayInputEnabled(slot.IsLocal);
+                if (slot.Controller != null)
+                {
+                    ApplyBattleSceneJumpPolicy(slot.Controller);
+                    slot.Controller.SetGameplayInputEnabled(slot.IsLocal);
+                }
+
                 if (slot.WeaponManager != null) slot.WeaponManager.SetInputEnabled(slot.IsLocal);
 
                 var boundary = slot.Instance.GetComponent<BattleArenaBoundary>();
@@ -718,11 +737,57 @@ namespace _TeamFolder.JCJ.Battle
             sphere.radius = _headRadius;
         }
 
-        private static void HideLocalVisuals(GameObject playerObject)
+        private void ApplyBattleSceneJumpPolicy(PlayerController controller)
         {
-            if (playerObject == null) return;
-            foreach (var renderer in playerObject.GetComponentsInChildren<Renderer>(true))
-                renderer.enabled = false;
+            if (controller == null) return;
+            controller.SetJumpEnabled(!_battleDisableJumpInThisScene);
+        }
+
+        private void ApplyBattleSceneBodyYawPolicy(PlayerController controller)
+        {
+            if (controller == null) return;
+            controller.SetBattlePrototypeBodyYawDrive(true);
+        }
+
+        public static void ApplyLocalThirdPersonBodyLayersToPlayer(GameObject playerRoot)
+        {
+            if (playerRoot == null) return;
+            int defaultLayer = 0;
+            var renderers = playerRoot.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                var r = renderers[i];
+                if (r == null) continue;
+                if (r is LineRenderer) continue;
+                r.gameObject.layer = defaultLayer;
+            }
+        }
+
+        public static void ApplyLocalFirstPersonBodyLayersToPlayer(GameObject playerRoot)
+        {
+            if (playerRoot == null) return;
+            int lb = LayerMask.NameToLayer("BattleLocalBody");
+            if (lb < 0) return;
+            Transform camT = null;
+            var fpc = BattleFirstPersonCamera.Instance;
+            if (fpc != null) camT = fpc.transform;
+            Transform weaponMount = playerRoot.transform.Find("WeaponMount");
+            int defaultLayer = 0;
+            var renderers = playerRoot.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                var r = renderers[i];
+                if (r == null) continue;
+                if (r is LineRenderer) continue;
+                if (camT != null && (r.transform == camT || r.transform.IsChildOf(camT))) continue;
+                if (weaponMount != null && (r.transform == weaponMount || r.transform.IsChildOf(weaponMount)))
+                {
+                    r.gameObject.layer = defaultLayer;
+                    continue;
+                }
+
+                r.gameObject.layer = lb;
+            }
         }
     }
 }

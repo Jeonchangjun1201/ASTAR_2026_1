@@ -69,14 +69,25 @@ namespace _TeamFolder.JCJ.Script
             MazeAudio.Play(MazeSfx.Footstep, volumeScale: isSprinting ? 0.9f : 0.7f, pitch: Random.Range(0.92f, 1.08f));
         }
 
-        public static void UpdateVisualState(IPlayerVisual visual, bool isGrounded, Vector2 moveInput, bool isSprinting)
+        public static void UpdateVisualState(IPlayerVisual visual, bool isGrounded, Vector2 moveInput, bool isSprinting, Rigidbody rb = null)
         {
             if (visual == null) return;
             if (!isGrounded) return;
 
+            const float inputDeadzoneSq = 0.0064f;
+            const float planarVelDeadzoneSq = 0.01f;
+            bool inputIdle = moveInput.sqrMagnitude < inputDeadzoneSq;
+            bool velIdle = true;
+            if (rb != null)
+            {
+                Vector3 v = rb.linearVelocity;
+                v.y = 0f;
+                velIdle = v.sqrMagnitude < planarVelDeadzoneSq;
+            }
+
             var gsm = GameStateManager.Instance;
             bool playing = gsm == null || gsm.CurrentState == GameState.Playing;
-            if (!playing || moveInput.sqrMagnitude < 0.01f)
+            if (!playing || (inputIdle && velIdle))
             {
                 visual.OnIdle();
                 return;

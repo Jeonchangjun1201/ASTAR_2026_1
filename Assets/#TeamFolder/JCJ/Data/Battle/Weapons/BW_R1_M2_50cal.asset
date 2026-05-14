@@ -18,9 +18,12 @@ MonoBehaviour:
   _automatic: 1
   _viewPrefab: {fileID: 100100000, guid: 432643b6e5110004083fdff3e33e490b, type: 3}
   _projectilePrefab: {fileID: 100100000, guid: a984edf822daa0a48b97ca832ed223bf, type: 3}
-  _viewLocalPosition: {x: 0.21, y: -0.23, z: 0.5}
-  _viewLocalEuler: {x: 0, y: 0, z: 0}
+  _viewLocalPosition: {x: 0.464, y: 0.163, z: 0.525}
+  _viewLocalEuler: {x: 0, y: -3, z: 0}
   _viewLocalScale: {x: 1.28, y: 1.28, z: 1.28}
+  _useCustomMountPose: 1
+  _mountLocalPosition: {x: 0.14900191, y: -0.18400012, z: -0.3}
+  _mountLocalEulerAngles: {x: -0, y: 0, z: 0}
   _damage: 28
   _fireInterval: 0.1
   _muzzleVelocity: 148
@@ -35,3 +38,6 @@ MonoBehaviour:
   _projectileColor: {r: 1, g: 0.68, b: 0.24, a: 1}
   _projectileVisualScale: 0.1
   _projectileTrailTime: 0.28
+  _magazineSize: -1
+  _totalAmmo: -1
+  _reloadTime: 2
