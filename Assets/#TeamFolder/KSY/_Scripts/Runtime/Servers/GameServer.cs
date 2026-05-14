@@ -20,6 +20,8 @@ namespace KSY.Servers
             playerIDMap = new Dictionary<Session, string>();
 
             UnityPacketDispatcher unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();
+            
+            //Builder 내부에 있는 DIContainer에 Singleton 인스턴스를 생성해서 추가하고 빌드한다.
             server = new ServerBuilder(this, unityPacketDispatcher)
                 .AddSingleton<GameServer>(this)
                 .AddSingleton<GameManager>(gameManager)
@@ -34,13 +36,22 @@ namespace KSY.Servers
             server.Listen(port);
         }
 
+        public void Send(IPacket packet, Func<string, Session, bool> filter = null)
+        {
+            server.Rooms.Room(ServerDefine.ROOM_ID).Send(packet, filter);
+        }
+
         public void AddPlayer(IPacket packet, Func<string, Session, bool> filter = null)
         {
             server.Rooms.Room(ServerDefine.ROOM_ID).Send(packet, filter);
         }
-        public Session Create(NetworkObject networkObject, Socket connectedSocket)
+
+        public string GetPlayerID(Session session)
         {
-            throw new System.NotImplementedException();
-        }
+            playerIDMap.TryGetValue(session, out string playerID);
+            return playerID;
+        }        
+
+        public Session Create(NetworkObject networkObject, Socket connectedSocket) => new Session();
     }
 }
