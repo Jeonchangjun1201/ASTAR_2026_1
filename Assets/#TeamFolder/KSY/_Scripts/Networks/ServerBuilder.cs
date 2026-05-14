@@ -33,7 +33,10 @@ namespace KSY.Networks
             if (workerIsEmpty)
                 _workerCount = Environment.ProcessorCount;
 
-            RoomManager instance = new RoomManager()
+            RoomManager instance = new RoomManager(_roomPacketDispatcher, diContainer, _workerCount, _capacityPerWorker);
+            AddSingleton((IPacketDispatcher)instance);
+            AddSingleton((IRoomManager)instance);
+            return new Server(this);
         }
     }
 }
