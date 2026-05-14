@@ -1,4 +1,3 @@
-using System;
 using KSY.Networks;
 using KSY.Shared;
 using UnityEngine;
@@ -11,8 +10,6 @@ namespace KSY.Servers
         private GameManager gameManager = null;
         [SerializeField]
         private DataTableManager dataTableManager = null;
-
-        [SerializeFi]
         
         public async void StartServer()
         {

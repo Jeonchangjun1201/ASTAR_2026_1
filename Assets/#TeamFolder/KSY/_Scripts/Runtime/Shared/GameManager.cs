@@ -9,7 +9,7 @@ namespace KSY.Shared
         private static GameManager instance = null;
         public static GameManager Instance => instance;
 
-        private Dictionary<string, KSY_Unit> players = null;
+        private Dictionary<string, Unit> players = null;
         //private Dictionary<string, ItemBase> items = null;
 
         public void Initialize()
@@ -22,11 +22,11 @@ namespace KSY.Shared
             instance = this;
             DontDestroyOnLoad(gameObject);
 
-            players = new Dictionary<string, KSY_Unit>();
+            players = new Dictionary<string, Unit>();
             //items = new Dictionary<string, ItemBase>();
         }
 
-        public void AddPlayer(string playerID, KSY_Unit unit)
+        public void AddPlayer(string playerID, Unit unit)
         {
             players[playerID] = unit;
         }
@@ -36,15 +36,15 @@ namespace KSY.Shared
             players.Remove(playerID);
         }
 
-        public KSY_Unit GetPlayer(string playerID)
+        public Unit GetPlayer(string playerID)
         {
-            players.TryGetValue(playerID, out KSY_Unit player);
+            players.TryGetValue(playerID, out Unit player);
             return player;
         }
 
-        public void ForEachPlayer(Action<string, KSY_Unit> callback)
+        public void ForEachPlayer(Action<string, Unit> callback)
         {
-            foreach (KeyValuePair<string, KSY_Unit> element in players)
+            foreach (KeyValuePair<string, Unit> element in players)
                 callback?.Invoke(element.Key, element.Value);
         }
     }
