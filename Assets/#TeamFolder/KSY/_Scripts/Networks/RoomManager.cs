@@ -39,13 +39,13 @@ namespace KSY.Networks
         #endregion
        
         #region IPacketDispatcher
-        public ValueTask Dispatch(Session session, IPacket packet)
+        ValueTask IPacketDispatcher.Dispatch(Session session, IPacket packet)
         {
             if (session == null)
                 throw new ArgumentNullException("session");
             if (packet == null)
                 throw new ArgumentNullException("packet");
-
+                
             try
             {
                 if (sessionRoomMap.TryGetValue(session, out var value))
@@ -53,31 +53,40 @@ namespace KSY.Networks
                     int num = (value.RoomIDHash & 0x7FFFFFFF) % workers.Length;
                     return workers[num].Value.EnqueueAsync(session, packet);
                 }
+
+                return dedicatedWorker.Value.EnqueueAsync(session, packet);
             }
         }
 
         #endregion
 
         #region IAsyncDisposable
-        public ValueTask DisposeAsync()
+        async ValueTask IAsyncDisposable.DisposeAsync()
         {
             throw new NotImplementedException();
         }
         #endregion
 
         #region Room.ICallback
-        public void OnAdded(Room room, Session session)
+        void Room.ICallback.OnAdded(Room room, Session session)
         {
             throw new NotImplementedException();
         }
 
-        public void OnRemoved(Room room, Session session)
+        void Room.ICallback.OnRemoved(Room room, Session session)
         {
             throw new NotImplementedException();
         }
         #endregion
 
+        private Lazy<Room> RoomFactory(string roomID)
+        {
+            return new Lazy<Room>(() => new Room(roomID, packetSerializer.Value, this));
+        }
 
-
+        private Lazy<RoomWorker> WorkerFactory(int capacityPerWorker)
+        {
+            return new Lazy<RoomWorker>(() => new RoomWorker(roomPacketDispatcher ?? new RoomPacketDispatcher))
+        }
     }
 }
