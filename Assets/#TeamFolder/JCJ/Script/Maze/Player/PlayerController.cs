@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using _TeamFolder.JCJ.Battle;
 
 // 플레이어 입력, 이동, 점프, 스태미나를 묶는 본체 컨트롤러.
 
@@ -44,6 +45,10 @@ namespace _TeamFolder.JCJ.Script
         [Tooltip("카메라 기준 이동 방향 계산용 — Main Camera Transform 연결")]
         [SerializeField] private Transform _cameraTransform;
 
+        [Header("배틀(FP)")]
+        [Tooltip("배틀 로컬일 때 플레이어 몸 Yaw를 MazeCameraRig(시선)과 맞춘다.")]
+        [SerializeField] private bool _battlePrototypeBodyYawDrive = true;
+
         [Header("비주얼(선택)")]
         [SerializeField] private bool _addTrailIfMissing;
         [Tooltip("PartyCharacters 리깅 비주얼(권장). 끄거나 프리팹 없으면 절차적 프리미티브로 폴백.")]
@@ -87,6 +92,7 @@ namespace _TeamFolder.JCJ.Script
         private bool _staminaWasAbove;
         private float _sprintAvailableTime;
         private bool _lookInputEnabled = true;
+        private bool _jumpEnabled = true;
 
         private const float SpawnGrace = 0.6f;
         private const float FallAirborneDelay = 0.25f;
@@ -229,6 +235,18 @@ namespace _TeamFolder.JCJ.Script
             UpdateVisualState();
         }
 
+        private void LateUpdate()
+        {
+            if (!_isLocalControlled || !_battlePrototypeBodyYawDrive) return;
+            if (GetComponent<BattleWeaponManager>() == null) return;
+            var battleCamera = BattleFirstPersonCamera.Instance;
+            if (battleCamera == null || battleCamera.FollowTarget != transform) return;
+            var rig = MazeCameraRig.Instance;
+            if (rig == null) return;
+            Vector3 e = transform.eulerAngles;
+            transform.rotation = Quaternion.Euler(e.x, rig.Yaw, e.z);
+        }
+
         // 실제 물리 이동과 점프 적용 단계다.
         // 네트워크를 붙일 때는 입력 예측을 둘지, 서버 위치를 그대로 받을지 결정하는 핵심 경계다.
         private void FixedUpdate()
@@ -256,7 +274,7 @@ namespace _TeamFolder.JCJ.Script
             if (_isGrounded) _lastGroundedTime = Time.time;
             bool wantsJump = Time.time <= _jumpBufferedUntil;
             bool canStillJump = (Time.time - _lastGroundedTime) <= CoyoteTime;
-            if (wantsJump && canStillJump)
+            if (_jumpEnabled && wantsJump && canStillJump)
             {
                 ApplyJump();
                 _visual?.OnJump();
@@ -314,9 +332,25 @@ namespace _TeamFolder.JCJ.Script
             _mouseSensitivity = Mathf.Clamp(value, 0.01f, 2f);
         }
 
+        public void SetJumpEnabled(bool enabled)
+        {
+            _jumpEnabled = enabled;
+            if (!enabled) _jumpBufferedUntil = 0f;
+            if (_jumpAction != null)
+            {
+                if (enabled && _moveAction != null && _moveAction.enabled) _jumpAction.Enable();
+                else if (!enabled) _jumpAction.Disable();
+            }
+        }
+
+        public void SetBattlePrototypeBodyYawDrive(bool enabled)
+        {
+            _battlePrototypeBodyYawDrive = enabled;
+        }
+
         public void SetMovementEnabled(bool enabled)
         {
-            PlayerControllerInputModule.SetMovementEnabled(enabled, _moveAction, _jumpAction, _sprintAction);
+            PlayerControllerInputModule.SetMovementEnabled(enabled, _moveAction, _jumpEnabled ? _jumpAction : null, _sprintAction);
         }
 
         public void SetLookEnabled(bool enabled)
@@ -482,7 +516,7 @@ namespace _TeamFolder.JCJ.Script
 
         private void UpdateVisualState()
         {
-            PlayerControllerPresentationModule.UpdateVisualState(_visual, _isGrounded, _moveInput, IsSprinting);
+            PlayerControllerPresentationModule.UpdateVisualState(_visual, _isGrounded, _moveInput, IsSprinting, _rb);
         }
 
         private void UpdateRemoteVisualState()

@@ -187,6 +187,7 @@ MonoBehaviour:
   _scale: 1
   _localOffset: {x: 0, y: -1, z: 0}
   _hideBaseCapsule: 1
+  _localCharacterActive: 1
   _idleTrigger: idle
   _runTrigger: run
   _jumpTrigger: jump
