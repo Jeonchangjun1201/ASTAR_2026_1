@@ -3,7 +3,7 @@
 namespace JHJ.Scripts.JingeomDariGame.GiMick
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class FallingBridge : MonoBehaviour
+    public class JHJFallingBridge : MonoBehaviour
     {
         [SerializeField] private float _fallDelay = 0.2f;   
         [SerializeField] private float _requiredStayTime = 0.5f; 
