@@ -15,7 +15,7 @@ namespace BFS
         private bool _isPenalty = false;                                                                         // Bool variable, used to detect if player should have penalty or not // bool변수, 패널티 주는 용도
         private bool _isInGame = false;
         private float _penaltyTime = 2.5f;                                                                       // How long minigame is going to be disabled for player // 얼마나 오래동안 미니게임을 멈출 지
-
+        private float _defaultRopePower = 0.12f;
         public bool IsInGame => _isInGame;
         public void Initialize(IRopeTOW rope, AbstractTeamTOW[] playerList, TOWScoreManager scoreManager, TOWUIManager uiManager)        // Initialize
         {
@@ -70,7 +70,7 @@ namespace BFS
                     moveDir = Vector3.right;
                     break;
             }
-            moveDir *= 0.3f;                                                                                     // Modifying movement distance // 움직이는 거리 조정
+            moveDir *= _defaultRopePower;                                                                        // Modifying movement distance // 움직이는 거리 조정
             team.ReceiveScore(team, IsCorrect ? 1 : -1);                                                         // Give team a score; 1 if they pressed correct key, -1 else // 팀에 점수 부여; 알맞은 키는 1, 아니면 -1
             StartCoroutine(NextInputCoroutine(team, IsCorrect));                                                 // Coroutine, gives player a penalty if they pressed wrong key. // 잘못된 키를 눌렀을 때 패널티를 주는 코루틴
             if (_scoreManager.scoreBoard[team.Team] <= 0 && !IsCorrect)
