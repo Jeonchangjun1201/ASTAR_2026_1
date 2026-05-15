@@ -1,24 +1,18 @@
-using System;
-using UnityEngine;
+using System; // Action 대리자 타입을 쓰기 위해 포함한다.
+using UnityEngine; // Vector3를 메서드 인자로 쓴다.
 
-namespace _TeamFolder.JCJ.Battle.Session
+namespace _TeamFolder.JCJ.Battle.Session // 배틀 매치 게이트웨이 계약만 분리해 두는 네임스페이스다.
 {
-    // BattlePrototypeManager가 구현한다. 네트워크 매니저는 BattleMatchRegistry.Match로 캐스팅해 구독·호출하면 BattlePrototypeScene과 결합도를 낮출 수 있다.
-    public interface IBattleMatchGateway
+    public interface IBattleMatchGateway // BattlePrototypeManager가 구현하며 서버 붙는 코드는 BattleMatchRegistry.Match로만 접근하면 된다.
     {
-        // JcjRuntimeAuthority가 ServerAuthoritative일 때 BattlePrototypeManager.Start가 씬 셸만 준비한 뒤 발생시킨다. 여기서 서버에 매치 참가·스폰 요청을 내면 된다.
-        event Action MatchSetupRequested;
+        event Action MatchSetupRequested; // 서버 권한 모드에서 씬 셸 준비가 끝난 뒤 발생한다. 여기서 서버 RPC 호출을 걸면 된다.
 
-        // 서버 권한 데스 시 플레이어Id 전달. 클라는 서버가 내려준 리스폰 패킷에 맞춰 ApplyAuthoritativeRespawn을 호출하는 식으로 연결하면 된다.
-        event Action<string> RespawnRequested;
+        event Action<string> RespawnRequested; // 피해자 PlayerId만 알려 준다. 좌표는 서버가 ApplyAuthoritativeRespawn으로 밀어 넣는 흐름과 짝이다.
 
-        // 서버가 확정한 랭크·팀 배열. 슬롯이 없으면 SpawnPlayers까지 수행한다. 팀만 바꿀 때는 배열 길이를 플레이어 수와 맞출 것.
-        void ApplyAuthoritativeMatchSetup(int[] playerRanks, int[] playerTeamIndices);
+        void ApplyAuthoritativeMatchSetup(int[] playerRanks, int[] playerTeamIndices); // 서버가 확정한 랭크와 팀을 배열로 넘긴다. 길이는 플레이어 수와 같아야 한다.
 
-        // 서버가 확정한 월드 좌표로 즉시 리스폰. 로컬 코루틴 리스폰과 중복되지 않게 모드별로 한 경로만 사용하는 것이 좋다.
-        void ApplyAuthoritativeRespawn(string playerId, Vector3 respawnPosition);
+        void ApplyAuthoritativeRespawn(string playerId, Vector3 respawnPosition); // 서버가 고른 월드 좌표로 해당 PlayerId 오브젝트를 즉시 옮긴다.
 
-        // 인트로 코루틴(BeginMatchRoutine) 시작. ApplyAuthoritativeMatchSetup으로 슬롯이 채워진 뒤 호출하는 흐름이 자연스럽다.
-        void StartMatchPresentation();
+        void StartMatchPresentation(); // 무기 연출과 카운트다운 코루틴을 시작한다. 슬롯이 채워진 뒤 호출하는 것이 안전하다.
     }
 }

@@ -1,10 +1,9 @@
-namespace _TeamFolder.JCJ.Battle.Session
+namespace _TeamFolder.JCJ.Battle.Session // 데미지 팝업 설정만 분리한 얇은 인터페이스다.
 {
-    // BattlePrototypeManager가 함께 구현한다. 데미지 팝업 스케일을 씬 밖 코드(BattleProjectile 등)에서 읽을 때 Popups로 접근한다.
-    public interface IBattlePopupPresentation
+    public interface IBattlePopupPresentation // BattlePrototypeManager가 함께 구현해 레지스트리 Popups로 노출된다.
     {
-        float DamagePopupWorldScale { get; }
-        int DamagePopupFontSize { get; }
-        int DamagePopupHeadshotFontSize { get; }
+        float DamagePopupWorldScale { get; } // 월드 공간 텍스트의 크기 배율이다.
+        int DamagePopupFontSize { get; } // 일반 히트용 TMP 폰트 크기이다.
+        int DamagePopupHeadshotFontSize { get; } // 헤드샷일 때 더 강조하기 위한 폰트 크기이다.
     }
 }

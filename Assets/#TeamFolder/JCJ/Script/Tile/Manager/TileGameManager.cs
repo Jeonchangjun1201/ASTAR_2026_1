@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using _TeamFolder.JCJ.Script;
+using _TeamFolder.JCJ.Script.Session;
 
 // 타일 미니게임 라운드 흐름과 상태를 총괄하는 매니저.
 
@@ -13,7 +14,7 @@ namespace _TeamFolder.JCJ.TileGame
     /// HUD·오디오·카메라·ColorCallDirector는 연결 안 되어 있으면 자동 추가 — 씬에는 이 컴포넌트 + TileBoard + PlayerSpawnManager만 두면 된다.
     /// </summary>
     [DefaultExecutionOrder(-10)]
-    public class TileGameManager : MonoBehaviour
+    public class TileGameManager : MonoBehaviour, ITileRoundGateway
     {
         public static TileGameManager Instance { get; private set; }
 
@@ -62,6 +63,7 @@ namespace _TeamFolder.JCJ.TileGame
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
+            JcjClientSessionHub.RegisterTileRound(this);
         }
 
         private void OnDestroy()
@@ -74,7 +76,11 @@ namespace _TeamFolder.JCJ.TileGame
                 p.OnEliminated -= HandleEliminated;
                 p.FallResolutionRequested -= HandleFallResolutionRequested;
             }
-            if (Instance == this) Instance = null;
+            if (Instance == this)
+            {
+                JcjClientSessionHub.UnregisterTileRound(this);
+                Instance = null;
+            }
         }
 
         private void Start()
