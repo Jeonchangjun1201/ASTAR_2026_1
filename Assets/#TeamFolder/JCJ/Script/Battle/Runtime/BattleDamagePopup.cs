@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
+using _TeamFolder.JCJ.Battle.Session;
 
 // 피격 시 화면에 뜨는 데미지 숫자 연출.
 
@@ -22,7 +23,10 @@ namespace _TeamFolder.JCJ.Battle
             _elapsed = 0f;
 
             _text.text = damage.ToString();
-            _text.fontSize = headshot ? BattlePrototypeManager.PopupHeadshotFontSize : BattlePrototypeManager.PopupFontSize;
+            var pop = BattleMatchRegistry.Popups;
+            _text.fontSize = headshot
+                ? (pop?.DamagePopupHeadshotFontSize ?? BattleMatchRegistry.DefaultDamagePopupHeadshotFontSize)
+                : (pop?.DamagePopupFontSize ?? BattleMatchRegistry.DefaultDamagePopupFontSize);
             _text.fontStyle = headshot ? FontStyle.Bold : FontStyle.Normal;
             _text.color = headshot ? new Color(1f, 0.15f, 0.15f) : new Color(1f, 0.9f, 0.3f);
         }
@@ -73,7 +77,7 @@ namespace _TeamFolder.JCJ.Battle
 
             var rt = canvasObj.GetComponent<RectTransform>();
             rt.sizeDelta = new Vector2(1.5f, 0.4f);
-            rt.localScale = Vector3.one * BattlePrototypeManager.PopupScale;
+            rt.localScale = Vector3.one * (BattleMatchRegistry.Popups?.DamagePopupWorldScale ?? BattleMatchRegistry.DefaultDamagePopupWorldScale);
 
             var textObj = new GameObject("Text", typeof(RectTransform), typeof(Text));
             textObj.transform.SetParent(canvasObj.transform, false);

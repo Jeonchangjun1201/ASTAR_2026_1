@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-// 팀 점수와 플레이어 기록을 보여주는 리더보드 UI.
+// BattlePrototypeScene 리더보드. BattlePrototypeManager.RefreshLeaderboard가 로컬 슬롯의 K/D·팀 점수를 넣는다.
+// 서버 게임에서는 서버가 확정한 점수·킬데스 스냅샷을 받아 UpdateBoard를 호출하도록 별도 동기화 레이어를 두면 된다.
 
 namespace _TeamFolder.JCJ.Battle
 {
