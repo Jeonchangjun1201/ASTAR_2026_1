@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using _TeamFolder.JCJ.Script;
+using _TeamFolder.JCJ.Battle.Session;
 
-// 전투 프로토타입 라운드 흐름과 스폰, 팀, 점수를 총괄하는 매니저.
+// BattlePrototypeScene 중심 오케스트레이터. 전투 프로토타입의 라운드, 스폰, 팀, 점수를 총괄한다.
+//
+// 서버 연동 관점 요약
+// - 장점: JcjRuntimeAuthority가 ServerAuthoritative면 Start에서 로컬 스폰·연출을 건너뛰고 MatchSetupRequested만 발생시킨다.
+//   이후 네트워크 레이어가 ApplyAuthoritativeMatchSetup / ApplyAuthoritativeRespawn / StartMatchPresentation으로 씬 상태를 맞추면 된다.
+// - BattleMatchRegistry에 등록되므로 다른 스크립트는 BattleMatchRegistry.Match로 IBattleMatchGateway에 접근할 수 있다.
+// - 보완 예정으로 두기 좋은 부분: SpawnPlayers의 Instantiate를 네트워크 스폰으로 치환, 무기는 WeaponId 문자열 동기화 후 EquipWeapon,
+//   킬/데스는 HandlePlayerDeath의 서버 분기처럼 서버 확정 이벤트만 반영하는 단일 경로로 통일.
 
 namespace _TeamFolder.JCJ.Battle
 {
-    public class BattlePrototypeManager : MonoBehaviour
+    public class BattlePrototypeManager : MonoBehaviour, IBattleMatchGateway, IBattlePopupPresentation
     {
+        // 슬롯당 전장에 한 명. 서버 모델에서는 Instance가 네트워크 바디이고 IsLocal은 입력·카메라를 붙일 로컬 소유자만 true.
         private sealed class PlayerSlot
         {
             public GameObject Instance;
@@ -66,18 +75,32 @@ namespace _TeamFolder.JCJ.Battle
         private int[] _teamTargetScores = new int[2];
         private int[] _teamCurrentScores = new int[2];
         private bool _matchEnded;
+        private bool _matchPresentationStarted;
+
+        // 네트워크 매니저가 씬 로드 직후 구독해, 서버에서 받은 랭크·팀·스폰 정보로 ApplyAuthoritativeMatchSetup을 호출하는 진입 신호로 쓰면 된다.
         public event System.Action MatchSetupRequested;
+
+        // 서버 권한 데스 처리: 플레이어Id만 넘기고 서버가 좌표 계산 후 ApplyAuthoritativeRespawn을 보내기 전 알림용. 로컬 시뮬에선 사용하지 않는다.
         public event System.Action<string> RespawnRequested;
 
-        public static float PopupScale => _instance != null ? _instance._popupScale : 0.005f;
-        public static int PopupFontSize => _instance != null ? _instance._popupFontSize : 130;
-        public static int PopupHeadshotFontSize => _instance != null ? _instance._popupHeadshotFontSize : 180;
+        float IBattlePopupPresentation.DamagePopupWorldScale => _popupScale;
+        int IBattlePopupPresentation.DamagePopupFontSize => _popupFontSize;
+        int IBattlePopupPresentation.DamagePopupHeadshotFontSize => _popupHeadshotFontSize;
 
-        // 배틀 라운드 초기 진입점이다.
-        // 지금은 씬 로컬 기준으로 준비를 끝내고 바로 플레이어를 생성한다.
+        public static float PopupScale =>
+            BattleMatchRegistry.Popups?.DamagePopupWorldScale ?? BattleMatchRegistry.DefaultDamagePopupWorldScale;
+        public static int PopupFontSize =>
+            BattleMatchRegistry.Popups?.DamagePopupFontSize ?? BattleMatchRegistry.DefaultDamagePopupFontSize;
+        public static int PopupHeadshotFontSize =>
+            BattleMatchRegistry.Popups?.DamagePopupHeadshotFontSize ?? BattleMatchRegistry.DefaultDamagePopupHeadshotFontSize;
+
+        // 배틀 라운드 초기 진입점.
+        // LocalSimulation: 이 매니저가 SpawnPlayers부터 인트로까지 전부 담당한다.
+        // ServerAuthoritative: 여기서는 물리·UI 셸만 준비하고 MatchSetupRequested로 네트워크 레이어에 넘긴다. 실제 스폰은 ApplyAuthoritativeMatchSetup 쪽이 담당.
         private void Start()
         {
             _instance = this;
+            BattleMatchRegistry.Register(this);
             _originalGravity = Physics.gravity;
             Physics.gravity = new Vector3(0f, -25f, 0f);
 
@@ -100,13 +123,25 @@ namespace _TeamFolder.JCJ.Battle
             SpawnPlayers();
             CalculateTeamTargets();
             RefreshLeaderboard();
+            StartMatchPresentation();
+        }
+
+        // 서버에서 playerRanks·팀이 확정된 뒤, 슬롯이 비어 있지 않다면 인트로와 동일한 연출을 돌리고 싶을 때 호출한다.
+        public void StartMatchPresentation()
+        {
+            if (_matchPresentationStarted) return;
+            _matchPresentationStarted = true;
             StartCoroutine(BeginMatchRoutine());
         }
 
         private void OnDestroy()
         {
             Physics.gravity = _originalGravity;
-            if (_instance == this) _instance = null;
+            if (_instance == this)
+            {
+                BattleMatchRegistry.Unregister(this);
+                _instance = null;
+            }
         }
 
         private void OnDrawGizmos()
@@ -145,8 +180,9 @@ namespace _TeamFolder.JCJ.Battle
             if (arenaObject != null) _arenaRoot = arenaObject.transform;
         }
 
-        // 시작 연출, 팀 표시, 무기 지급, 입력 허용 순서를 묶는 코루틴이다.
-        // 서버를 붙이면 이 순서는 서버 상태를 받아 UI와 입력 잠금을 맞추는 흐름으로 바뀌기 쉽다.
+        // 시작 연출, 팀 표시, 무기 지급, 입력 허용 순서를 묶는 코루틴.
+        // 서버 연동 시 권장: 서버가 "매치 시작 시각" 또는 단계 enum을 브로드캐스트하고, 클라는 그에 맞춰 카운트다운·입력 해제만 수행.
+        // 무기 최종값은 서버가 준 WeaponId로 EquipWeapon하는 경로로 바꾸면 PlayLocalWeaponDraw의 Random 최종무기와 충돌하지 않는다.
         private IEnumerator BeginMatchRoutine()
         {
             yield return null;
@@ -175,6 +211,7 @@ namespace _TeamFolder.JCJ.Battle
             }
         }
 
+        // 로컬 플레이어 전용 연출. 서버 게임에서는 (1) 서버 확정 WeaponId만 반영하거나 (2) 연출용 RNG는 서버 시드로 맞추는 편이 안전하다.
         private IEnumerator PlayLocalWeaponDraw(PlayerSlot slot)
         {
             var candidates = GetWeaponCandidates(slot.Rank);
@@ -201,6 +238,7 @@ namespace _TeamFolder.JCJ.Battle
             yield return new WaitForSeconds(Mathf.Max(2.25f, _weaponRevealDuration));
         }
 
+        // 비로컬 슬롯 무기 장착. 프로토타입은 PickWeapon으로 클라마다 랜덤이라 멀티에 부적합하다. 서버에서는 동일 WeaponId를 브로드캐스트한 뒤 여기서 EquipWeapon만 호출하도록 바꾸면 된다.
         private void EquipRemoteWeapons()
         {
             for (int i = 0; i < _playerSlots.Count; i++)
@@ -212,6 +250,7 @@ namespace _TeamFolder.JCJ.Battle
             }
         }
 
+        // 입력·무기 입력·스폰 보호를 켠다. 서버 권한에서는 서버가 "게임플레이 시작" 신호를 줄 때만 이 경로를 타게 하면 동기화가 맞는다.
         private void EnableGameplay()
         {
             if (_matchEnded) return;
@@ -486,6 +525,7 @@ namespace _TeamFolder.JCJ.Battle
             return playerIndex < 2 ? 0 : 1;
         }
 
+        // 에디터 기본 팀 섞기. 서버 매치메이킹 결과가 있으면 ApplyAuthoritativeMatchSetup에 넘기는 배열로 대체하는 편이 맞다.
         private void RandomizeTeamAssignments()
         {
             int playerCount = Mathf.Max(4, _playerRanks != null ? _playerRanks.Length : 4);
@@ -531,8 +571,8 @@ namespace _TeamFolder.JCJ.Battle
             point.transform.localPosition = localPosition;
         }
 
-        // 실제 플레이어 인스턴스를 만들고 슬롯 정보를 연결하는 생성 단계다.
-        // 나중에 서버 스폰을 붙이면 이 함수는 "직접 생성"보다 "서버가 준 오브젝트/소유권을 슬롯에 연결"하는 역할로 바뀔 가능성이 크다.
+        // 로컬 시뮬 전용: Instantiate로 슬롯을 채운다. 네트워크에서는 서버 스폰 결과를 슬롯에 바인딩하거나, 이 로직을 팩토리로 분리해 재사용하는 것이 일반적이다.
+        // RuntimePlayerIdentity.Configure의 playerId 문자열은 RespawnRequested·ApplyAuthoritativeRespawn과 짝을 맞추기 좋다.
         private void SpawnPlayers()
         {
             int playerCount = Mathf.Max(4, _playerRanks.Length);
@@ -570,6 +610,7 @@ namespace _TeamFolder.JCJ.Battle
                 weaponManager.Configure(_weaponCatalog, isLocal, rank);
                 weaponManager.SetInputEnabled(false);
                 var preselectedWeapon = PickWeapon(rank);
+                // 서버 모드에서는 무기를 여기서 장착하지 말고 네트워크 스냅샷의 WeaponId로 장착하는 편이 권장된다. 로컬 시뮬에선 인트로 전 미리보기용.
                 if (isLocal && preselectedWeapon != null) weaponManager.EquipWeapon(preselectedWeapon);
 
                 AttachHeadCollider(instance);
@@ -598,15 +639,19 @@ namespace _TeamFolder.JCJ.Battle
             }
         }
 
+        // IBattleMatchGateway. 서버(또는 호스트)가 확정한 랭크·팀 배열을 넣고 호출한다. 슬롯이 비어 있으면 SpawnPlayers까지 수행한다.
         public void ApplyAuthoritativeMatchSetup(int[] playerRanks, int[] playerTeamIndices)
         {
+            int slotCountBefore = _playerSlots.Count;
             if (playerRanks != null && playerRanks.Length > 0) _playerRanks = (int[])playerRanks.Clone();
             if (playerTeamIndices != null && playerTeamIndices.Length > 0) _playerTeamIndices = (int[])playerTeamIndices.Clone();
             if (_playerSlots.Count == 0) SpawnPlayers();
             CalculateTeamTargets();
             RefreshLeaderboard();
+            if (slotCountBefore == 0 && _playerSlots.Count > 0) StartMatchPresentation();
         }
 
+        // IBattleMatchGateway. 서버가 계산한 리스폰 좌표를 즉시 적용한다. 로컬 코루틴 RespawnPlayerRoutine과 역할이 겹치므로 서버 모드에서는 한쪽만 쓰는 것이 좋다.
         public void ApplyAuthoritativeRespawn(string playerId, Vector3 respawnPosition)
         {
             if (string.IsNullOrWhiteSpace(playerId)) return;
@@ -747,47 +792,6 @@ namespace _TeamFolder.JCJ.Battle
         {
             if (controller == null) return;
             controller.SetBattlePrototypeBodyYawDrive(true);
-        }
-
-        public static void ApplyLocalThirdPersonBodyLayersToPlayer(GameObject playerRoot)
-        {
-            if (playerRoot == null) return;
-            int defaultLayer = 0;
-            var renderers = playerRoot.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                var r = renderers[i];
-                if (r == null) continue;
-                if (r is LineRenderer) continue;
-                r.gameObject.layer = defaultLayer;
-            }
-        }
-
-        public static void ApplyLocalFirstPersonBodyLayersToPlayer(GameObject playerRoot)
-        {
-            if (playerRoot == null) return;
-            int lb = LayerMask.NameToLayer("BattleLocalBody");
-            if (lb < 0) return;
-            Transform camT = null;
-            var fpc = BattleFirstPersonCamera.Instance;
-            if (fpc != null) camT = fpc.transform;
-            Transform weaponMount = playerRoot.transform.Find("WeaponMount");
-            int defaultLayer = 0;
-            var renderers = playerRoot.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                var r = renderers[i];
-                if (r == null) continue;
-                if (r is LineRenderer) continue;
-                if (camT != null && (r.transform == camT || r.transform.IsChildOf(camT))) continue;
-                if (weaponMount != null && (r.transform == weaponMount || r.transform.IsChildOf(weaponMount)))
-                {
-                    r.gameObject.layer = defaultLayer;
-                    continue;
-                }
-
-                r.gameObject.layer = lb;
-            }
         }
     }
 }

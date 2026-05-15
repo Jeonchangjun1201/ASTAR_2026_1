@@ -1,12 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using _TeamFolder.JCJ.Script;
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.SceneManagement;
-#endif
+using _TeamFolder.JCJ.Battle.Session;
 
 // 조준과 반동을 반영하는 1인칭 전투 카메라.
 
@@ -132,10 +128,10 @@ namespace _TeamFolder.JCJ.Battle
             _target = target;
             if (target == null) return;
             if (_thirdPersonMode)
-                BattlePrototypeManager.ApplyLocalThirdPersonBodyLayersToPlayer(target.gameObject);
+                BattlePlayerViewLayers.ApplyLocalThirdPersonBodyLayersToPlayer(target.gameObject);
             else
             {
-                BattlePrototypeManager.ApplyLocalFirstPersonBodyLayersToPlayer(target.gameObject);
+                BattlePlayerViewLayers.ApplyLocalFirstPersonBodyLayersToPlayer(target.gameObject);
                 if (_applyLocalBodyLayersRoutine != null) StopCoroutine(_applyLocalBodyLayersRoutine);
                 _applyLocalBodyLayersRoutine = StartCoroutine(ApplyLocalBodyLayersNextFrame(target.gameObject));
             }
@@ -145,7 +141,7 @@ namespace _TeamFolder.JCJ.Battle
         {
             yield return null;
             if (playerRoot != null && !_thirdPersonMode)
-                BattlePrototypeManager.ApplyLocalFirstPersonBodyLayersToPlayer(playerRoot);
+                BattlePlayerViewLayers.ApplyLocalFirstPersonBodyLayersToPlayer(playerRoot);
             _applyLocalBodyLayersRoutine = null;
         }
 
@@ -281,30 +277,6 @@ namespace _TeamFolder.JCJ.Battle
 
             UpdateHitMarker();
         }
-
-#if UNITY_EDITOR
-        private void Update()
-        {
-            if (!Application.isPlaying || !enabled) return;
-            if (Keyboard.current == null || !Keyboard.current.hKey.wasPressedThisFrame) return;
-            TryPersistCameraOffsetFromScene();
-        }
-
-        private void TryPersistCameraOffsetFromScene()
-        {
-            if (_target == null || _thirdPersonMode) return;
-            if (_rig == null) _rig = GetComponent<MazeCameraRig>();
-            if (_rig == null) return;
-            Quaternion yawQ = Quaternion.Euler(0f, _rig.Yaw, 0f);
-            _cameraOffset = Quaternion.Inverse(yawQ) * (transform.position - _target.position);
-            _cameraOffsetExtra = Vector3.zero;
-            EditorUtility.SetDirty(this);
-            if (gameObject.scene.IsValid() && !string.IsNullOrEmpty(gameObject.scene.path))
-                EditorSceneManager.MarkSceneDirty(gameObject.scene);
-            _suspendAutomaticCameraFollow = false;
-            Debug.Log($"[BattleFP] H: _cameraOffset 저장 {_cameraOffset}", this);
-        }
-#endif
 
         public void SetAiming(bool aiming) { _isAiming = aiming; }
 

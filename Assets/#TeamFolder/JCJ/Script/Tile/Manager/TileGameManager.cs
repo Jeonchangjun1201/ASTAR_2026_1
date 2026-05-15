@@ -173,8 +173,7 @@ namespace _TeamFolder.JCJ.TileGame
             // 카운트다운 동안에는 플레이어 입력을 잠근다.
             // 서버 연동 시 카운트다운 시작/GO 타이밍은 모든 클라이언트가 같은 시각에 보도록 RPC로 맞추는 것이 좋다.
             _state = GameState.Countdown;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            GameplayCursor.SetLocked(false);
 
             int seconds = Mathf.Max(0, gameConfig.countdownSeconds);
             for (int i = seconds; i > 0; i--)
@@ -196,8 +195,7 @@ namespace _TeamFolder.JCJ.TileGame
             _timerRemaining = gameConfig.roundDuration;
 
             // 커서 잠금 — TileCameraFollow 마우스 요가 동작. 결과/카운트다운은 해제, 실제 플레이 중만 잠금.
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible   = false;
+            GameplayCursor.SetLocked(true);
 
             if (_colorCall != null)
             {
@@ -341,8 +339,7 @@ namespace _TeamFolder.JCJ.TileGame
             foreach (var p in _allPlayers)
                 if (p != null) p.InputLocked = true;
 
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            GameplayCursor.SetLocked(false);
 
             var ranking = BuildRanking();
             if (TileAudio.Instance != null) TileAudio.Instance.DuckMusic(4f);

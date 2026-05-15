@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-// 시작 카운트다운과 무기 연출을 보여주는 인트로 UI.
+// BattlePrototypeScene 인트로. ShowWeaponRoll·ShowCountdown은 BattlePrototypeManager.BeginMatchRoutine에서만 호출된다.
+// 서버 연동 시에는 네트워크 타임라인(예: MatchStartTick)에 맞춰 동일 API를 호출하거나, 서버 메시지를 받는 래퍼에서 이 컴포넌트를 호출하면 UI와 게임플레이 잠금 시점을 맞추기 쉽다.
 
 namespace _TeamFolder.JCJ.Battle
 {

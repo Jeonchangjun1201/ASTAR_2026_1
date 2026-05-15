@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using _TeamFolder.JCJ.Battle;
+using _TeamFolder.JCJ.Battle.Session;
 
 // 플레이어 입력, 이동, 점프, 스태미나를 묶는 본체 컨트롤러.
 
@@ -140,10 +141,7 @@ namespace _TeamFolder.JCJ.Script
             else _inputMap?.Disable();
 
             if (_isLocalControlled && _enableMouseLook && _lockCursor)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
+                GameplayCursor.SetLocked(true);
 
             if (GameStateManager.Instance != null)
                 GameStateManager.Instance.OnStateChanged += OnGameStateChanged;
@@ -154,10 +152,7 @@ namespace _TeamFolder.JCJ.Script
             _inputMap?.Disable();
 
             if (_lockCursor)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
+                GameplayCursor.SetLocked(false);
 
             if (GameStateManager.Instance != null)
                 GameStateManager.Instance.OnStateChanged -= OnGameStateChanged;
@@ -233,6 +228,15 @@ namespace _TeamFolder.JCJ.Script
             _wasGrounded = _isGrounded;
             DispatchMouseLook();
             UpdateVisualState();
+            MaintainGameplayCursor();
+        }
+
+        private void MaintainGameplayCursor()
+        {
+            if (!_isLocalControlled || !_lockCursor || !_enableMouseLook) return;
+            if (SettingsPanel.IsOpen) return;
+            if (BattleMatchRegistry.TryGetMatch(out _))
+                GameplayCursor.SetLocked(true);
         }
 
         private void LateUpdate()
@@ -382,9 +386,15 @@ namespace _TeamFolder.JCJ.Script
 
             if (_lockCursor)
             {
+                if (BattleMatchRegistry.TryGetMatch(out _))
+                {
+                    if (_isLocalControlled && _enableMouseLook)
+                        GameplayCursor.SetLocked(true);
+                    return;
+                }
+
                 bool shouldLock = state == GameState.Playing || state == GameState.Countdown;
-                Cursor.lockState = shouldLock ? CursorLockMode.Locked : CursorLockMode.None;
-                Cursor.visible = !shouldLock;
+                GameplayCursor.SetLocked(shouldLock);
             }
         }
 
