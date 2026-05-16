@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace KDH
@@ -16,11 +17,23 @@ namespace KDH
         // 골 이벤트: (scorer, goalOwner) - 누가 넣었고 어느 골대인지
         public static event System.Action<GameObject, string> OnGoalScored;
 
+        private bool _isReady = false;
+
+        public bool IsReady => _isReady;
+
         private void Start()
         {
             _rb = GetComponent<Rigidbody>();
             _startPosition = transform.position;
+            StartCoroutine(ReadyDelay());
             LaunchBall();
+        }
+
+        private IEnumerator ReadyDelay()
+        {
+            yield return new WaitForSeconds(0.8f);
+            _isReady = true;
+            Debug.Log("공 준비 완료");
         }
 
         private void FixedUpdate()
@@ -32,6 +45,8 @@ namespace KDH
         
         private void OnCollisionEnter(Collision collision)
         {
+            if (!_isReady) return;
+            
             // Player1~4 태그 전부 감지
             if (collision.gameObject.CompareTag("Player1") ||
                 collision.gameObject.CompareTag("Player2") ||
@@ -58,6 +73,8 @@ namespace KDH
             _rb.linearVelocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
             transform.position = _startPosition;
+            _isReady = false;
+            StartCoroutine(ReadyDelay());
             LastTouchPlayer = null;
             LaunchBall();
         }
