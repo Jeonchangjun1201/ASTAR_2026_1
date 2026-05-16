@@ -50,6 +50,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Look1",
+                    "type": "Value",
+                    "id": "7d9eeaad-4889-411f-9d35-b723b02bb7e6",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Zoom1",
+                    "type": "Value",
+                    "id": "9e990a9e-5f92-4f85-ac37-7dd4fcb4291b",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -281,6 +299,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jump1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7d4a7c4d-5265-4181-bb8f-89e4f7aae7d7",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d957d89b-b676-49a2-8ada-77b04ecc1450",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

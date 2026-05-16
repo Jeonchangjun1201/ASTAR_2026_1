@@ -28,12 +28,18 @@ namespace JHJ.Scripts.EatingthegroundGame
 
         private void PaintOnGround()
         {
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 2f))
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10f))
             {
-                if (hit.collider is not MeshCollider)
-                    return;
+                
+
+                if (hit.collider is not MeshCollider) return;
+
                 Color myColor = _scoreManager.GetPlayerColor(_playerIndex);
                 _paintManager.DrawBrush(hit.textureCoord, myColor);
+            }
+            else
+            {
+                Debug.Log("Raycast 안 맞음");
             }
         }
     }
