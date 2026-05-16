@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
+using _TeamFolder.JCJ.Battle;
 
 // 플레이어에 파티 캐릭터 비주얼과 애니메이션을 붙이는 처리.
 
@@ -18,11 +19,15 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private string _resourceFallback = "Prefabs/character_default";
         [SerializeField] private float _scale = 1f;
         [SerializeField] private Vector3 _localOffset = new(0f, -1f, 0f);
-        [SerializeField] private string _battleCharacterPrefabPath = "Assets/#TeamFolder/JCJ/Shooter Pack/party_character.fbx";
+        [SerializeField] private string _battleCharacterPrefabPath =
+            "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Models/battle_charactor.fbx";
         [SerializeField] private float _battleScale = 1f;
         [SerializeField] private Vector3 _battleLocalOffset = new(0f, -1f, 0f);
         [SerializeField] private Vector3 _battleLocalEuler = Vector3.zero;
         [SerializeField] private bool _hideBaseCapsule = true;
+        [SerializeField] private bool _localCharacterActive = true;
+        [SerializeField] private RuntimeAnimatorController _battleRuntimeAnimatorController;
+        [SerializeField] private bool _sceneIdleRunOnly;
 
         [Header("애니메이터 트리거")]
         [SerializeField] private string _idleTrigger  = "idle";
@@ -64,6 +69,7 @@ namespace _TeamFolder.JCJ.Script
         private MaterialPropertyBlock _mpb;
         private static readonly int _baseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int _colorId = Shader.PropertyToID("_Color");
+        private bool _externalVisualHidden;
 
         private void Awake()
         {
@@ -93,8 +99,17 @@ namespace _TeamFolder.JCJ.Script
 
         private void Start()
         {
-            // 스폰 매니저가 IsLocalControlled를 세팅한 뒤에 색을 적용해야 원격 플레이어까지 바뀌지 않는다.
             RefreshCustomization();
+            SyncInstanceActive();
+            TryApplyLocalBattleBodyLayersForFirstPerson();
+        }
+
+        private void TryApplyLocalBattleBodyLayersForFirstPerson()
+        {
+            if (!HasBattleWeapon()) return;
+            var pc = GetComponent<PlayerController>();
+            if (pc != null && pc.IsLocalControlled)
+                BattlePrototypeManager.ApplyLocalFirstPersonBodyLayersToPlayer(gameObject);
         }
 
         private void OnEnable()
@@ -141,7 +156,13 @@ namespace _TeamFolder.JCJ.Script
 
         public void SetVisualHidden(bool hidden)
         {
-            if (_instance != null) _instance.SetActive(!hidden);
+            _externalVisualHidden = hidden;
+            SyncInstanceActive();
+        }
+
+        public void ApplyBattleLocalBodyLayerForFirstPerson()
+        {
+            BattlePrototypeManager.ApplyLocalFirstPersonBodyLayersToPlayer(gameObject);
         }
 
         public void RefreshVisualModel()
@@ -155,6 +176,8 @@ namespace _TeamFolder.JCJ.Script
             _currentState = "";
             SpawnCharacter();
             RefreshCustomization();
+            SyncInstanceActive();
+            TryApplyLocalBattleBodyLayersForFirstPerson();
         }
 
         private void ApplyBodyColor(Color color)
@@ -196,6 +219,21 @@ namespace _TeamFolder.JCJ.Script
             return true;
         }
 
+        private void SyncInstanceActive()
+        {
+            if (_instance == null) return;
+            bool hideForLocal = IsCustomizationTarget() && !_localCharacterActive;
+            _instance.SetActive(!_externalVisualHidden && !hideForLocal);
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!Application.isPlaying) return;
+            SyncInstanceActive();
+        }
+#endif
+
         // ───────── Build ─────────
         private void SpawnCharacter()
         {
@@ -223,6 +261,16 @@ namespace _TeamFolder.JCJ.Script
                 Debug.LogWarning("[PartyCharacterVisual] Spawned character has no Animator component.");
             else
             {
+                if (HasBattleWeapon())
+                {
+                    TryAssignBattleAvatar();
+                    if (_battleRuntimeAnimatorController != null)
+                    {
+                        _animator.runtimeAnimatorController = _battleRuntimeAnimatorController;
+                        _animator.applyRootMotion = false;
+                    }
+                }
+
                 InitializeActionClipGraph();
                 LoadBattleLocomotionClips();
                 TriggerState(_idleTrigger);
@@ -273,6 +321,7 @@ namespace _TeamFolder.JCJ.Script
 
         public void OnJump()
         {
+            if (_sceneIdleRunOnly) return;
             if (_animator == null) return;
             ClearAllTriggersExcept(_jumpTrigger);
             _animator.speed = 1f;
@@ -282,12 +331,14 @@ namespace _TeamFolder.JCJ.Script
 
         public void OnPickup()
         {
+            if (_sceneIdleRunOnly) return;
             if (TryPlayLibraryClip(_animationLibrary != null ? _animationLibrary.PickupClip : null, false)) return;
             OnCollect();
         }
 
         public void OnFall()
         {
+            if (_sceneIdleRunOnly) return;
             if (_animator == null) return;
             if (_currentState == _fallTrigger) return;
             ClearAllTriggersExcept(_fallTrigger);
@@ -298,6 +349,7 @@ namespace _TeamFolder.JCJ.Script
 
         public void OnLand()
         {
+            if (_sceneIdleRunOnly) return;
             if (_animator == null) return;
             ClearAllTriggersExcept(_getupTrigger);
             _animator.speed = 1f;
@@ -307,6 +359,7 @@ namespace _TeamFolder.JCJ.Script
 
         public void OnCollect()
         {
+            if (_sceneIdleRunOnly) return;
             if (_animator == null) return;
             ClearAllTriggersExcept(_winTrigger);
             _animator.speed = 1f;
@@ -316,6 +369,7 @@ namespace _TeamFolder.JCJ.Script
 
         public void OnThrow()
         {
+            if (_sceneIdleRunOnly) return;
             if (TryPlayLibraryClip(_animationLibrary != null ? _animationLibrary.ThrowClip : null, false)) return;
             OnCollect();
         }
@@ -327,6 +381,8 @@ namespace _TeamFolder.JCJ.Script
                 if (_actionClipLoop) StopActionClip();
                 return;
             }
+
+            if (_sceneIdleRunOnly) return;
 
             if (_animationLibrary == null) return;
             var targetClip = moving ? _animationLibrary.CarryMoveClip : _animationLibrary.CarryIdleClip;
@@ -358,7 +414,12 @@ namespace _TeamFolder.JCJ.Script
 
         private bool TryPlayBattleIdle()
         {
-            if (!HasBattleWeapon() || _battleIdleClip == null) return false;
+            if (!HasBattleWeapon()) return false;
+            if (_battleIdleClip == null)
+            {
+                StopActionClip();
+                return false;
+            }
             if (_currentState == "battle_idle" && _activeActionClip == _battleIdleClip && _actionClipLoop) return true;
             if ((_currentState == "battle_walk" || _currentState == "battle_sprint") && _battleStopClip != null)
             {
@@ -470,6 +531,9 @@ namespace _TeamFolder.JCJ.Script
             _layerMixer.SetInputWeight(1, 0f);
             _activeActionClip = null;
             _actionClipLoop = false;
+            _queuedLoopClip = null;
+            if (_currentState == "battle_walk" || _currentState == "battle_sprint" || _currentState == "battle_idle" || _currentState == "battle_stop")
+                _currentState = "";
         }
 
         private void SetTrigger(string triggerName)
@@ -511,6 +575,15 @@ namespace _TeamFolder.JCJ.Script
         private void LoadBattleLocomotionClips()
         {
 #if UNITY_EDITOR
+            if (_battleRuntimeAnimatorController != null)
+            {
+                _battleIdleClip = null;
+                _battleWalkClip = null;
+                _battleSprintClip = null;
+                _battleStopClip = null;
+                return;
+            }
+
             _battleIdleClip = LoadAnimationClip(_battleIdleClipPath);
             _battleWalkClip = LoadAnimationClip(_battleWalkClipPath);
             _battleSprintClip = LoadAnimationClip(_battleSprintClipPath);
