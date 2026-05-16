@@ -265,13 +265,13 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: party_character(Clone)
+    - name: battle_charactor(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Armature
-      parentName: party_character(Clone)
+      parentName: battle_charactor(Clone)
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0.000000030908623, y: 0.7071068, z: 0.7071067, w: 0.000000030908616}
       scale: {x: 0.01, y: 0.01, z: 0.01}
@@ -371,7 +371,7 @@ ModelImporter:
       rotation: {x: 0.75493467, y: 0.006259946, z: 0.025549063, w: 0.65527225}
       scale: {x: 1.0000019, y: 0.9999998, z: 0.9999999}
     - name: Character mesh
-      parentName: party_character(Clone)
+      parentName: battle_charactor(Clone)
       position: {x: -0.00000020104747, y: -0.00000004476168, z: -0.000000018626446}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 0.9999998, y: 0.9999998, z: 1.0000008}
@@ -387,7 +387,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 6c36288d5882ad143aff1f11cf467cc3, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
