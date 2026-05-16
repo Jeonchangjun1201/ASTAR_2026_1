@@ -1,0 +1,81 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+//등급별 무기 정의 목록을 제공하는 카탈로그 에셋.
+
+namespace _TeamFolder.JCJ.Battle
+{
+    [CreateAssetMenu(menuName = "JCJ/Battle/Weapon Catalog", fileName = "BattleWeaponCatalog")]
+    public class BattleWeaponCatalog : ScriptableObject
+    {
+        [Serializable]
+        public class GradeLoadout
+        {
+            public BattleWeaponGrade grade;
+            public BattleWeaponDefinition[] weapons;
+        }
+
+        [SerializeField] private GradeLoadout[] _loadouts;
+
+        public IReadOnlyList<GradeLoadout> Loadouts => _loadouts;
+
+        public IReadOnlyList<BattleWeaponDefinition> GetAllWeaponDefinitionsDistinct()
+        {
+            var seen = new HashSet<BattleWeaponDefinition>();
+            var result = new List<BattleWeaponDefinition>();
+            if (_loadouts == null) return result;
+            for (int i = 0; i < _loadouts.Length; i++)
+            {
+                var loadout = _loadouts[i];
+                if (loadout == null || loadout.weapons == null) continue;
+                for (int j = 0; j < loadout.weapons.Length; j++)
+                {
+                    var w = loadout.weapons[j];
+                    if (w == null || seen.Contains(w)) continue;
+                    seen.Add(w);
+                    result.Add(w);
+                }
+            }
+
+            return result;
+        }
+
+        public BattleWeaponDefinition[] GetWeapons(BattleWeaponGrade grade)
+        {
+            if (_loadouts == null) return Array.Empty<BattleWeaponDefinition>();
+            for (int i = 0; i < _loadouts.Length; i++)
+            {
+                var loadout = _loadouts[i];
+                if (loadout == null || loadout.grade != grade || loadout.weapons == null) continue;
+                var candidates = new List<BattleWeaponDefinition>(loadout.weapons.Length);
+                for (int j = 0; j < loadout.weapons.Length; j++)
+                {
+                    if (loadout.weapons[j] != null) candidates.Add(loadout.weapons[j]);
+                }
+
+                return candidates.ToArray();
+            }
+
+            return Array.Empty<BattleWeaponDefinition>();
+        }
+
+        public BattleWeaponDefinition GetRandomWeapon(BattleWeaponGrade grade)
+        {
+            var candidates = GetWeapons(grade);
+            if (candidates.Length == 0) return null;
+            return candidates[UnityEngine.Random.Range(0, candidates.Length)];
+        }
+
+        public static BattleWeaponGrade RankToGrade(int rank)
+        {
+            return rank switch
+            {
+                1 => BattleWeaponGrade.Rank1,
+                2 => BattleWeaponGrade.Rank2,
+                3 => BattleWeaponGrade.Rank3,
+                _ => BattleWeaponGrade.Rank4
+            };
+        }
+    }
+}

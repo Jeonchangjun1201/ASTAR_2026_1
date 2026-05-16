@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
+// 골인한 플레이어를 관전 상태로 전환하는 처리.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -19,12 +21,12 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private bool _disableFinisherColliders = true;
 
         private bool _subscribed;
-        private readonly HashSet<string> _finishedNames = new();
+        private readonly HashSet<string> _finishedPlayerIds = new();
 
         public void ResetState()
         {
             // Play Again 후 Player_1 같은 이름이 재사용되므로 이전 라운드 완주자 목록을 비운다.
-            _finishedNames.Clear();
+            _finishedPlayerIds.Clear();
         }
 
         private void OnEnable()
@@ -63,24 +65,23 @@ namespace _TeamFolder.JCJ.Script
         private void Subscribe()
         {
             if (_subscribed || _rankService == null) return;
-            _rankService.OnPlayerFinished += HandleFinished;
+            _rankService.OnPlayerFinishedData += HandleFinished;
             _subscribed = true;
         }
 
         private void Unsubscribe()
         {
             if (!_subscribed || _rankService == null) return;
-            _rankService.OnPlayerFinished -= HandleFinished;
+            _rankService.OnPlayerFinishedData -= HandleFinished;
             _subscribed = false;
         }
 
-        private void HandleFinished(string playerName, int rank)
+        private void HandleFinished(PlayerRankData entry)
         {
-            if (string.IsNullOrEmpty(playerName)) return;
-            // 같은 플레이어가 골 트리거를 여러 번 밟아도 관전 처리는 한 번만 실행한다.
-            if (!_finishedNames.Add(playerName)) return;
+            if (string.IsNullOrWhiteSpace(entry.PlayerId)) return;
+            if (!_finishedPlayerIds.Add(entry.PlayerId)) return;
 
-            var finisher = FindPlayerByName(playerName);
+            var finisher = FindPlayerById(entry.PlayerId);
             if (finisher == null) return;
 
             // EnterSpectatorMode 안에서 IsLocalControlled가 false로 바뀐다.
@@ -92,13 +93,15 @@ namespace _TeamFolder.JCJ.Script
                 SwitchCameraToNextAlivePlayer(finisher);
         }
 
-        private static PlayerController FindPlayerByName(string playerName)
+        private static PlayerController FindPlayerById(string playerId)
         {
             var all = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
             foreach (var pc in all)
             {
                 if (pc == null) continue;
-                if (string.Equals(pc.gameObject.name, playerName, System.StringComparison.Ordinal))
+                var identity = RuntimePlayerIdentity.Find(pc);
+                if (identity != null &&
+                    string.Equals(identity.PlayerId, playerId, System.StringComparison.OrdinalIgnoreCase))
                     return pc;
             }
             return null;
@@ -190,7 +193,8 @@ namespace _TeamFolder.JCJ.Script
             {
                 if (pc == null) continue;
                 if (pc == exclude) continue;
-                if (_finishedNames.Contains(pc.gameObject.name)) continue;
+                var identity = RuntimePlayerIdentity.Find(pc);
+                if (identity != null && _finishedPlayerIds.Contains(identity.PlayerId)) continue;
                 if (!pc.gameObject.activeInHierarchy) continue;
                 if (fallback == null) fallback = pc;
                 if (pc.IsLocalControlled) return pc;

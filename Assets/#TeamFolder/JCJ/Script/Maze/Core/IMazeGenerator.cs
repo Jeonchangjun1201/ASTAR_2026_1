@@ -1,3 +1,7 @@
+﻿
+
+// 격자 기반 미로 생성기 계약 인터페이스.
+
 namespace _TeamFolder.JCJ.Script
 {
     /// <summary>

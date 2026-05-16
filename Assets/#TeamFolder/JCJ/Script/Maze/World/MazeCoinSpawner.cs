@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
+// 점수용 코인을 미로 안에 배치하는 스포너.
 
 namespace _TeamFolder.JCJ.Script
 {

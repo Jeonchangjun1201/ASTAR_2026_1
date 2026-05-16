@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,14 +7,15 @@ namespace _TeamFolder.JCJ.Script.Editor
     [InitializeOnLoad]
     public static class PartyCharacterAnimationImportConfigurator
     {
-        private const string SessionKey = "JCJ.PartyCharacterAnimationImportConfigurator.Ran";
+        private const string PartySessionKey = "JCJ.PartyCharacterAnimationImportConfigurator.PartyRan";
+        private const string BattleSessionKey = "JCJ.PartyCharacterAnimationImportConfigurator.BattleRan";
+        private const string PartyCharacterModelPath =
+            "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Models/party_character.fbx";
+        private const string BattleCharacterModelPath =
+            "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Models/battle_charactor.fbx";
 
-        private static readonly AnimationImportConfig[] Configs =
+        private static readonly AnimationImportConfig[] PartyAnimationConfigs =
         {
-            new(
-                "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Punching.fbx",
-                "Push",
-                false),
             new(
                 "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Throw.fbx",
                 "Throw",
@@ -26,6 +28,30 @@ namespace _TeamFolder.JCJ.Script.Editor
                 "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Box Walk Arc.fbx",
                 "CarryMove",
                 true),
+            new(
+                "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Animations/Punching.fbx",
+                "Push",
+                false),
+        };
+
+        private static readonly AnimationImportConfig[] BattleAnimationConfigs =
+        {
+            new(
+                "Assets/#TeamFolder/JCJ/Shooter Pack/rifle aiming idle.fbx",
+                "RifleAimingIdle",
+                true),
+            new(
+                "Assets/#TeamFolder/JCJ/Shooter Pack/walking.fbx",
+                "Walking",
+                true),
+            new(
+                "Assets/#TeamFolder/JCJ/Shooter Pack/rifle run.fbx",
+                "RifleRun",
+                true),
+            new(
+                "Assets/#TeamFolder/JCJ/Shooter Pack/stop walking.fbx",
+                "StopWalking",
+                false),
         };
 
         static PartyCharacterAnimationImportConfigurator()
@@ -34,40 +60,97 @@ namespace _TeamFolder.JCJ.Script.Editor
         }
 
         [MenuItem("JCJ/Configure Party Character Animation Imports")]
-        public static void ConfigureFromMenu()
+        public static void ConfigurePartyFromMenu()
         {
-            ConfigureAll(true);
+            ConfigurePartyAnimations(true);
+        }
+
+        [MenuItem("JCJ/Configure Battle TPS Animation Imports")]
+        public static void ConfigureBattleFromMenu()
+        {
+            ConfigureBattleAnimations(true);
         }
 
         private static void RunOnce()
         {
             EditorApplication.delayCall -= RunOnce;
-            if (SessionState.GetBool(SessionKey, false))
+            if (!SessionState.GetBool(PartySessionKey, false))
             {
-                return;
+                SessionState.SetBool(PartySessionKey, true);
+                ConfigurePartyAnimations(false);
             }
 
-            SessionState.SetBool(SessionKey, true);
-            ConfigureAll(false);
+            if (!SessionState.GetBool(BattleSessionKey, false))
+            {
+                SessionState.SetBool(BattleSessionKey, true);
+                ConfigureBattleAnimations(false);
+            }
         }
 
-        private static void ConfigureAll(bool force)
+        private static void ConfigurePartyAnimations(bool force)
         {
-            foreach (var config in Configs)
-            {
-                ConfigureAsset(config, force);
-            }
+            if (!EnsureModelHumanoid(PartyCharacterModelPath, ModelImporterAvatarSetup.CreateFromThisModel))
+                return;
+
+            var avatar = LoadHumanoidAvatarFromModel(PartyCharacterModelPath);
+            if (avatar == null)
+                return;
+
+            foreach (var config in PartyAnimationConfigs)
+                ConfigureAnimationAsset(config, avatar, force);
         }
 
-        private static void ConfigureAsset(AnimationImportConfig config, bool force)
+        private static void ConfigureBattleAnimations(bool force)
+        {
+            if (!EnsureModelHumanoid(BattleCharacterModelPath, ModelImporterAvatarSetup.CreateFromThisModel))
+                return;
+
+            var avatar = LoadHumanoidAvatarFromModel(BattleCharacterModelPath);
+            if (avatar == null)
+                return;
+
+            foreach (var config in BattleAnimationConfigs)
+                ConfigureAnimationAsset(config, avatar, force);
+        }
+
+        private static bool EnsureModelHumanoid(string modelPath, ModelImporterAvatarSetup avatarSetup)
+        {
+            var importer = AssetImporter.GetAtPath(modelPath) as ModelImporter;
+            if (importer == null)
+                return false;
+
+            var changed = false;
+            if (importer.animationType != ModelImporterAnimationType.Human)
+            {
+                importer.animationType = ModelImporterAnimationType.Human;
+                changed = true;
+            }
+
+            if (importer.avatarSetup != avatarSetup)
+            {
+                importer.avatarSetup = avatarSetup;
+                changed = true;
+            }
+
+            if (changed)
+                importer.SaveAndReimport();
+
+            return true;
+        }
+
+        private static Avatar LoadHumanoidAvatarFromModel(string modelPath)
+        {
+            return AssetDatabase.LoadAllAssetsAtPath(modelPath).OfType<Avatar>()
+                .FirstOrDefault(a => a != null && a.isValid && a.isHuman);
+        }
+
+        private static void ConfigureAnimationAsset(AnimationImportConfig config, Avatar sourceAvatar, bool force)
         {
             var importer = AssetImporter.GetAtPath(config.AssetPath) as ModelImporter;
             if (importer == null)
-            {
                 return;
-            }
 
-            bool changed = false;
+            var changed = false;
 
             if (importer.animationType != ModelImporterAnimationType.Human)
             {
@@ -75,9 +158,15 @@ namespace _TeamFolder.JCJ.Script.Editor
                 changed = true;
             }
 
-            if (importer.avatarSetup != ModelImporterAvatarSetup.CreateFromThisModel)
+            if (importer.avatarSetup != ModelImporterAvatarSetup.CopyFromOther)
             {
-                importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                importer.avatarSetup = ModelImporterAvatarSetup.CopyFromOther;
+                changed = true;
+            }
+
+            if (importer.sourceAvatar != sourceAvatar)
+            {
+                importer.sourceAvatar = sourceAvatar;
                 changed = true;
             }
 
@@ -102,11 +191,11 @@ namespace _TeamFolder.JCJ.Script.Editor
             if (!TryResolveSourceClip(importer, out var configuredClip))
             {
                 if (changed)
-                {
                     importer.SaveAndReimport();
-                }
+
                 return;
             }
+
             configuredClip.name = config.ClipName;
             configuredClip.loop = config.Loop;
             configuredClip.loopTime = config.Loop;
@@ -126,9 +215,7 @@ namespace _TeamFolder.JCJ.Script.Editor
             }
 
             if (changed)
-            {
                 importer.SaveAndReimport();
-            }
         }
 
         private static bool TryResolveSourceClip(ModelImporter importer, out ModelImporterClipAnimation clip)
@@ -152,9 +239,7 @@ namespace _TeamFolder.JCJ.Script.Editor
         private static bool HasMatchingClip(ModelImporter importer, ModelImporterClipAnimation configuredClip)
         {
             if (importer.clipAnimations == null || importer.clipAnimations.Length == 0)
-            {
                 return false;
-            }
 
             var existing = importer.clipAnimations[0];
             return existing.name == configuredClip.name

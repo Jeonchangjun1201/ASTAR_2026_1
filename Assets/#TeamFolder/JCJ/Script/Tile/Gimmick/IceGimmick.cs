@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 미끄러운 이동 상태를 만드는 얼음 기믹 처리.
 
 namespace _TeamFolder.JCJ.TileGame
 {

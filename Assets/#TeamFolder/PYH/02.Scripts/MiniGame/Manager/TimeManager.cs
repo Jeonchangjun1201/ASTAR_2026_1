@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -26,6 +25,12 @@ namespace PYH.Manager
             StartCoroutine(Timer());
         }
 
+        public void StopTimer()
+        {
+            StopAllCoroutines();
+            _init = false;
+        }
+        
         private IEnumerator Timer()
         {
             OnTickStartEvent?.Invoke();

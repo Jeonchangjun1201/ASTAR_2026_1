@@ -1,5 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+
+// 미니맵 표시와 갱신을 담당하는 UI 컴포넌트.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -53,6 +55,8 @@ namespace _TeamFolder.JCJ.Script
         private float _nextForceRefreshTime;
         private const float _forceRefreshInterval = 0.2f; // 다른 플레이어 이동 반영용
 
+        // 미니맵이 참조할 미로 데이터와 기준 플레이어를 연결한다.
+        // 서버를 붙여도 표시용 데이터 바인딩 창구는 이 메서드 하나로 유지하기 좋다.
         public void Bind(int[,] maze, float cellSize, Transform player, Vector2Int goal)
         {
             _maze = maze;
@@ -213,6 +217,8 @@ namespace _TeamFolder.JCJ.Script
             Refresh(px, py);
         }
 
+        // 현재 플레이어 위치를 기준으로 안개 해제와 텍스처 다시 그리기를 수행한다.
+        // 멀티에서 공개 범위를 제한하거나 관전자 맵을 따로 만들 때도 이 렌더 단계가 핵심이다.
         private void Refresh(int px, int py)
         {
             RevealAround(px, py);

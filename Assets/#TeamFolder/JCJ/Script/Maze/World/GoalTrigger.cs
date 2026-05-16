@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 플레이어 골인 판정을 발생시키는 트리거.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -37,7 +39,9 @@ namespace _TeamFolder.JCJ.Script
 
             // 서버 연동 시 이 RegisterFinish 호출은 서버/호스트 권한에서만 실행되도록 감싸는 것이 좋다.
             _rankService ??= gsm.Rank;
-            _rankService?.RegisterFinish(player.gameObject.name);
+            var identity = RuntimePlayerIdentity.Find(player);
+            if (identity != null) _rankService?.RegisterFinish(identity.PlayerId, identity.DisplayName);
+            else _rankService?.RegisterFinish(player.gameObject.name);
         }
     }
 }

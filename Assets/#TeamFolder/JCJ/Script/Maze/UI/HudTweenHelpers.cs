@@ -1,7 +1,9 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+// HUD 애니메이션과 트윈 동작을 돕는 유틸.
 
 namespace _TeamFolder.JCJ.Script
 {

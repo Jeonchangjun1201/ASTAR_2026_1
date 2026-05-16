@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 플레이어를 위로 띄우는 풍선 기믹 처리.
 
 namespace _TeamFolder.JCJ.TileGame
 {

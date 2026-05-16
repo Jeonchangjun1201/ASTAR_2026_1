@@ -1,3 +1,7 @@
+﻿
+
+// 기믹 실행에 필요한 주변 정보를 전달하는 컨텍스트 데이터.
+
 namespace _TeamFolder.JCJ.TileGame
 {
     /// <summary>

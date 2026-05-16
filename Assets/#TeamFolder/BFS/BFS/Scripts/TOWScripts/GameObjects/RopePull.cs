@@ -1,5 +1,3 @@
-using System;
-using UnityEngine;
 namespace BFS
 {
     public class RopePull : AbstractTeamTOW

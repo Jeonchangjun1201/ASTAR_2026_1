@@ -12,6 +12,9 @@ namespace JHJ.Test.TestPlayer
         public event Action<Vector2> P2OnMove;
         public event Action<Vector2> P3OnMove;
         public event Action<Vector2> P4OnMove;
+        
+        public event Action P1OnJump;
+        public event Action P2OnJump;
         public Vector3 moveDir1 { get; private set; }
         public Vector2 moveDir2 { get; private set; }
 
@@ -25,6 +28,10 @@ namespace JHJ.Test.TestPlayer
             inputcontrols.Player.Enable();
         }
 
+        public void OnJump1(InputAction.CallbackContext context)
+        {
+            if (context.performed) P1OnJump?.Invoke();
+        }
         private void OnDisable()
         {
             inputcontrols.Player.Disable();
@@ -54,5 +61,6 @@ namespace JHJ.Test.TestPlayer
         {
 
         }
+
     }
 }

@@ -9,8 +9,7 @@ TagManager:
   - Spin2
   - Spin3
   - spin4
-  - Ball
-  - Player1
+  - BattleHead
   layers:
   - Default
   - TransparentFX
@@ -19,7 +18,7 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - BattleLocalBody
   - 
   - 
   - 

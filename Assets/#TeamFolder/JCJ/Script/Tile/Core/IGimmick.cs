@@ -1,3 +1,7 @@
+﻿
+
+// 타일 기믹이 따라야 하는 동작 계약 인터페이스.
+
 namespace _TeamFolder.JCJ.TileGame
 {
     /// <summary>

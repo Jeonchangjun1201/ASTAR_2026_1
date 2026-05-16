@@ -1,3 +1,5 @@
+﻿// 특수 기믹이 붙은 타일 동작을 담당하는 타일 구현.
+
 namespace _TeamFolder.JCJ.TileGame
 {
     /// <summary>

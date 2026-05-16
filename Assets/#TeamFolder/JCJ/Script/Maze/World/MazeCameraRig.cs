@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 플레이어 주위를 도는 카메라 리그와 회전을 관리하는 처리.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -53,6 +55,13 @@ namespace _TeamFolder.JCJ.Script
         public float Yaw => _yaw;
         public float Pitch => _pitch;
 
+        public void SetPitch(float pitch)
+        {
+            _pitch = Mathf.Clamp(pitch, _minPitch, _maxPitch);
+        }
+
+        // 카메라 피벗이 따라갈 플레이어를 바꾼다.
+        // 관전 전환이나 로컬 소유 플레이어 변경 시점에 연결되는 메서드다.
         public void SetTarget(Transform target)
         {
             _target = target;
@@ -65,19 +74,31 @@ namespace _TeamFolder.JCJ.Script
         }
 
         /// <summary>Accumulate mouse delta (already multiplied by sensitivity).</summary>
+        // 마우스 입력 누적값을 요/피치 값으로 변환하는 지점이다.
+        // 네트워크 동기화 대상이라기보다 순수 로컬 카메라 입력이라는 점을 여기서 보면 된다.
         public void AddLook(Vector2 delta)
         {
             if (!_enabled) return;
-            _yaw += delta.x;
+            float sens = 1f;
+            var battleCam = _TeamFolder.JCJ.Battle.BattleFirstPersonCamera.Instance;
+            if (battleCam != null) sens = battleCam.AimSensitivityMultiplier;
+            _yaw += delta.x * sens;
             if (_allowPitch)
             {
-                _pitch -= delta.y;
+                _pitch -= delta.y * sens;
                 _pitch = Mathf.Clamp(_pitch, _minPitch, _maxPitch);
             }
         }
 
         private void LateUpdate()
         {
+            var battleCam = GetComponent<_TeamFolder.JCJ.Battle.BattleFirstPersonCamera>();
+            if (battleCam != null && battleCam.enabled && battleCam.FollowTarget != null)
+            {
+                if (battleCam.SuspendAutomaticCameraFollow) return;
+                return;
+            }
+
             if (_target != null) transform.position = _target.position;
             transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
         }

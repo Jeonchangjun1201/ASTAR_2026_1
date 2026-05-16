@@ -1,6 +1,8 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+//  미로 HUD를 코드로 생성하고 조립하는 빌더.
 
 namespace _TeamFolder.JCJ.Script
 {

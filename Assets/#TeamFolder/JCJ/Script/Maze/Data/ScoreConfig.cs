@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 점수 계산에 쓰는 기준값과 배율 설정.
 
 namespace _TeamFolder.JCJ.Script
 {

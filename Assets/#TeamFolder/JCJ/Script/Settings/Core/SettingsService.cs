@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using UnityEngine;
+
+// 설정 값을 저장하고 변경 이벤트를 전달하는 서비스.
 
 namespace _TeamFolder.JCJ.Script
 {
@@ -86,6 +88,8 @@ namespace _TeamFolder.JCJ.Script
             PlayerPrefs.Save();
         }
 
+        // 외부에서 완성된 설정 데이터를 한 번에 교체할 때 쓰는 진입점이다.
+        // 서버 저장소를 붙이면 내려받은 설정 스냅샷을 이 메서드로 반영하면 된다.
         public void Apply(SettingsData updated, bool persist = true)
         {
             if (updated == null) return;

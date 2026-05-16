@@ -1,3 +1,7 @@
+﻿
+
+// 라운드 진행 상태를 표현하는 enum.
+
 namespace _TeamFolder.JCJ.Script
 {
     /// <summary>

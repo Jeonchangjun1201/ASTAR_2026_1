@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// UI에서 재사용하는 색상 상수 모음.
 
 namespace _TeamFolder.JCJ.Script
 {

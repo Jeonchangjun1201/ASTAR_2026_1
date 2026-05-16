@@ -1,4 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
+
+// 카메라 제어 서비스 계약 인터페이스.
 
 namespace _TeamFolder.JCJ.Script
 {
