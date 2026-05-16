@@ -4,15 +4,18 @@ using UnityEngine;
 
 namespace _TeamFolder.JCJ.Script.Editor
 {
+    internal static class CharacterModelImportPaths
+    {
+        public const string PartyCharacter =
+            "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Models/party_character.fbx";
+        public const string BattleCharacter =
+            "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Models/battle_charactor.fbx";
+    }
+
     [InitializeOnLoad]
     public static class PartyCharacterAnimationImportConfigurator
     {
-        private const string PartySessionKey = "JCJ.PartyCharacterAnimationImportConfigurator.PartyRan";
-        private const string BattleSessionKey = "JCJ.PartyCharacterAnimationImportConfigurator.BattleRan";
-        private const string PartyCharacterModelPath =
-            "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Models/party_character.fbx";
-        private const string BattleCharacterModelPath =
-            "Assets/#TeamFolder/JCJ/FREE/Pack_FREE_PartyCharacters/Models/battle_charactor.fbx";
+        private const string InitializedSessionKey = "JCJ.PartyCharacterAnimationImportConfigurator.Initialized";
 
         private static readonly AnimationImportConfig[] PartyAnimationConfigs =
         {
@@ -62,67 +65,64 @@ namespace _TeamFolder.JCJ.Script.Editor
         [MenuItem("JCJ/Configure Party Character Animation Imports")]
         public static void ConfigurePartyFromMenu()
         {
-            ConfigurePartyAnimations(true);
+            ApplyAnimationConfigs(PartyAnimationConfigs, true);
         }
 
         [MenuItem("JCJ/Configure Battle TPS Animation Imports")]
         public static void ConfigureBattleFromMenu()
         {
-            ConfigureBattleAnimations(true);
+            ApplyAnimationConfigs(BattleAnimationConfigs, true);
         }
 
         private static void RunOnce()
         {
             EditorApplication.delayCall -= RunOnce;
-            if (!SessionState.GetBool(PartySessionKey, false))
-            {
-                SessionState.SetBool(PartySessionKey, true);
-                ConfigurePartyAnimations(false);
-            }
-
-            if (!SessionState.GetBool(BattleSessionKey, false))
-            {
-                SessionState.SetBool(BattleSessionKey, true);
-                ConfigureBattleAnimations(false);
-            }
-        }
-
-        private static void ConfigurePartyAnimations(bool force)
-        {
-            if (!EnsureModelHumanoid(PartyCharacterModelPath, ModelImporterAvatarSetup.CreateFromThisModel))
+            if (SessionState.GetBool(InitializedSessionKey, false))
                 return;
 
-            var avatar = LoadHumanoidAvatarFromModel(PartyCharacterModelPath);
+            SessionState.SetBool(InitializedSessionKey, true);
+            ApplyAnimationConfigs(PartyAnimationConfigs, false);
+            ApplyAnimationConfigs(BattleAnimationConfigs, false);
+        }
+
+        private static void ApplyAnimationConfigs(AnimationImportConfig[] configs, bool force)
+        {
+            if (!EnsureCharacterModelRigs())
+                return;
+
+            var avatar = LoadHumanoidAvatarFromModel(CharacterModelImportPaths.BattleCharacter);
             if (avatar == null)
                 return;
 
-            foreach (var config in PartyAnimationConfigs)
+            foreach (var config in configs)
                 ConfigureAnimationAsset(config, avatar, force);
         }
 
-        private static void ConfigureBattleAnimations(bool force)
+        private static bool EnsureCharacterModelRigs()
         {
-            if (!EnsureModelHumanoid(BattleCharacterModelPath, ModelImporterAvatarSetup.CreateFromThisModel))
-                return;
-
-            var avatar = LoadHumanoidAvatarFromModel(BattleCharacterModelPath);
-            if (avatar == null)
-                return;
-
-            foreach (var config in BattleAnimationConfigs)
-                ConfigureAnimationAsset(config, avatar, force);
+            return EnsureModelRig(
+                       CharacterModelImportPaths.BattleCharacter,
+                       ModelImporterAnimationType.Human,
+                       ModelImporterAvatarSetup.CreateFromThisModel)
+                   && EnsureModelRig(
+                       CharacterModelImportPaths.PartyCharacter,
+                       ModelImporterAnimationType.Generic,
+                       ModelImporterAvatarSetup.CreateFromThisModel);
         }
 
-        private static bool EnsureModelHumanoid(string modelPath, ModelImporterAvatarSetup avatarSetup)
+        private static bool EnsureModelRig(
+            string modelPath,
+            ModelImporterAnimationType animationType,
+            ModelImporterAvatarSetup avatarSetup)
         {
             var importer = AssetImporter.GetAtPath(modelPath) as ModelImporter;
             if (importer == null)
                 return false;
 
             var changed = false;
-            if (importer.animationType != ModelImporterAnimationType.Human)
+            if (importer.animationType != animationType)
             {
-                importer.animationType = ModelImporterAnimationType.Human;
+                importer.animationType = animationType;
                 changed = true;
             }
 
@@ -267,6 +267,29 @@ namespace _TeamFolder.JCJ.Script.Editor
             public string AssetPath { get; }
             public string ClipName { get; }
             public bool Loop { get; }
+        }
+    }
+
+    internal sealed class CharacterModelRigImportPostprocessor : AssetPostprocessor
+    {
+        private void OnPreprocessModel()
+        {
+            var importer = assetImporter as ModelImporter;
+            if (importer == null)
+                return;
+
+            if (assetPath == CharacterModelImportPaths.BattleCharacter)
+            {
+                importer.animationType = ModelImporterAnimationType.Human;
+                importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                return;
+            }
+
+            if (assetPath == CharacterModelImportPaths.PartyCharacter)
+            {
+                importer.animationType = ModelImporterAnimationType.Generic;
+                importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+            }
         }
     }
 }
