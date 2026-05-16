@@ -169,8 +169,7 @@ namespace _TeamFolder.JCJ.TileGame
                 sb.AppendLine(rankingLines[i]);
             _resultBody.text = sb.ToString();
 
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible   = true;
+            GameplayCursor.SetLocked(false);
 
             if (_resultFadeCo != null) StopCoroutine(_resultFadeCo);
             _resultFadeCo = StartCoroutine(FadeGroup(_resultGroup, 0f, 1f, 0.45f));

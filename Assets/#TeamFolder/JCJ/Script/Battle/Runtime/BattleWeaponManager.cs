@@ -52,7 +52,6 @@ namespace _TeamFolder.JCJ.Battle
         private bool _autoEquipOnStart = true;
         private bool _inputEnabled = true;
         private Animator _locomotionAnimator;
-        private readonly int[] _gradeCycleTestSlot = new int[4];
 
         public BattleWeaponDefinition CurrentWeapon => _currentWeapon;
         public bool IsLocallyControlled => _isLocalControlled;
@@ -109,18 +108,6 @@ namespace _TeamFolder.JCJ.Battle
         {
             if (!_isLocalControlled) return;
 
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.eKey.wasPressedThisFrame && _currentWeapon != null)
-                    Debug.Log($"[BattleWeapon] current SO name: {_currentWeapon.name}", _currentWeapon);
-#if UNITY_EDITOR
-                if (Keyboard.current.fKey.wasPressedThisFrame)
-                    TryEditorWriteCurrentPresentationPositionsToSo();
-#endif
-            }
-
-            TryApplyGradeCycleTestKeys();
-
             bool aiming = _inputEnabled && _aimAction != null && _aimAction.IsPressed();
             var cam = BattleFirstPersonCamera.Instance;
             if (cam != null) cam.SetAiming(aiming);
@@ -157,31 +144,6 @@ namespace _TeamFolder.JCJ.Battle
             if (_locomotionAnimator == null) return;
             if (_locomotionAnimator.runtimeAnimatorController == null) return;
             _locomotionAnimator.SetBool(AimingAnimatorId, value);
-        }
-
-        private void TryApplyGradeCycleTestKeys()
-        {
-            if (_weaponCatalog == null || Keyboard.current == null) return;
-            BattleWeaponGrade? grade = null;
-            if (Keyboard.current.digit1Key.wasPressedThisFrame) grade = BattleWeaponGrade.Rank1;
-            else if (Keyboard.current.digit2Key.wasPressedThisFrame) grade = BattleWeaponGrade.Rank2;
-            else if (Keyboard.current.digit3Key.wasPressedThisFrame) grade = BattleWeaponGrade.Rank3;
-            else if (Keyboard.current.digit4Key.wasPressedThisFrame) grade = BattleWeaponGrade.Rank4;
-            else if (Keyboard.current.qKey.wasPressedThisFrame)
-            {
-                EquipRandomWeaponForRank(_startingRank);
-                return;
-            }
-
-            if (!grade.HasValue) return;
-            int g = (int)grade.Value - 1;
-            if (g < 0 || g > 3) return;
-            var list = _weaponCatalog.GetWeapons(grade.Value);
-            if (list == null || list.Length == 0) return;
-            int slot = _gradeCycleTestSlot[g] % list.Length;
-            _gradeCycleTestSlot[g]++;
-            var def = list[slot];
-            if (def != null) EquipWeapon(def);
         }
 
         public void SetLocalControlled(bool isLocalControlled)
@@ -283,17 +245,15 @@ namespace _TeamFolder.JCJ.Battle
             _weaponInstance = null;
             _muzzle = null;
 
-            if (_isLocalControlled)
+            if (definition != null)
             {
                 ResolveRig();
                 ApplyWeaponMountPose(definition);
             }
 
-            // 서버 게임 기준으로 1인칭 무기 실물은 현재 오너 클라이언트만 생성한다.
-            // 원격 플레이어는 서버 동기화 결과(발사, 피격, 위치)만 재생하고 로컬 입력용 뷰는 만들지 않는다.
-            if (!_isLocalControlled) return;
+            if (definition == null || _weaponMount == null) return;
             var viewPrefab = ResolveWeaponViewPrefab(definition);
-            if (definition == null || _weaponMount == null || viewPrefab == null) return;
+            if (viewPrefab == null) return;
 
             var spawnedView = Instantiate((Object)viewPrefab, _weaponMount.position, _weaponMount.rotation, _weaponMount);
             if (spawnedView is GameObject viewGameObject) _weaponInstance = viewGameObject;
@@ -320,6 +280,12 @@ namespace _TeamFolder.JCJ.Battle
         private void EditorContextRefreshPoseFromSo()
         {
             RefreshEquippedWeaponPresentationFromSource();
+        }
+
+        [ContextMenu("Write current weapon presentation to SO (play mode)")]
+        private void EditorContextWritePresentationToSo()
+        {
+            TryEditorWriteCurrentPresentationPositionsToSo();
         }
 
         private void TryEditorWriteCurrentPresentationPositionsToSo()
@@ -450,8 +416,31 @@ namespace _TeamFolder.JCJ.Battle
 
         private void ApplyWeaponMountPose(BattleWeaponDefinition definition)
         {
+            ApplyWeaponMountWorldPose();
+        }
+
+        private void ApplyWeaponMountWorldPose()
+        {
+            ResolveRig();
             if (_weaponMount == null) return;
-            SyncWeaponMountToPlayerLocal();
+            if (_weaponMount.parent != transform)
+                _weaponMount.SetParent(transform, true);
+
+            Vector3 localPos;
+            Quaternion localRot;
+            if (_currentWeapon != null && _currentWeapon.UseCustomMountPose)
+            {
+                localPos = _currentWeapon.MountLocalPosition + _weaponMountFineOffset;
+                localRot = Quaternion.Euler(_currentWeapon.MountLocalEulerAngles);
+            }
+            else
+            {
+                localPos = _weaponMountLocalPosition + _weaponMountFineOffset;
+                localRot = Quaternion.Euler(_weaponMountLocalEulerAngles);
+            }
+
+            _weaponMount.localPosition = localPos;
+            _weaponMount.localRotation = localRot;
         }
 
         private static void RepairWeaponViewMaterials(GameObject weaponInstance)
@@ -660,28 +649,10 @@ namespace _TeamFolder.JCJ.Battle
 
         private void SyncWeaponMountToPlayerLocal()
         {
-            if (!_isLocalControlled || _weaponMount == null) return;
+            if (!_isLocalControlled) return;
             if (_suspendWeaponMountAutoSync) return;
 
-            ResolveRig();
-            if (_weaponMount.parent != transform)
-                _weaponMount.SetParent(transform, true);
-
-            Vector3 localPos;
-            Quaternion localRot;
-            if (_currentWeapon != null && _currentWeapon.UseCustomMountPose)
-            {
-                localPos = _currentWeapon.MountLocalPosition + _weaponMountFineOffset;
-                localRot = Quaternion.Euler(_currentWeapon.MountLocalEulerAngles);
-            }
-            else
-            {
-                localPos = _weaponMountLocalPosition + _weaponMountFineOffset;
-                localRot = Quaternion.Euler(_weaponMountLocalEulerAngles);
-            }
-
-            _weaponMount.localPosition = localPos;
-            _weaponMount.localRotation = localRot;
+            ApplyWeaponMountWorldPose();
         }
 
         private void LateUpdate()

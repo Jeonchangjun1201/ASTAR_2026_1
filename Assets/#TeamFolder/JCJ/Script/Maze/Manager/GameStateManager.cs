@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using _TeamFolder.JCJ.Script.Session;
 
 // 상태 전환, 타이머, 점수, 랭킹 흐름을 총괄하는 매니저.
 
@@ -8,7 +9,7 @@ namespace _TeamFolder.JCJ.Script
     /// <summary>
     /// 미로 게임의 Waiting, Countdown, Playing, Finished 상태를 전환하고 타이머·랭킹·점수 서비스를 묶어준다.
     /// </summary>
-    public class GameStateManager : MonoBehaviour, IGameStateService
+    public class GameStateManager : MonoBehaviour, IGameStateServerGateway
     {
         public static GameStateManager Instance { get; private set; }
 
@@ -39,6 +40,7 @@ namespace _TeamFolder.JCJ.Script
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
+            JcjClientSessionHub.RegisterGameState(this);
             AutoBuildServices();
         }
 
@@ -50,7 +52,11 @@ namespace _TeamFolder.JCJ.Script
         private void OnDestroy()
         {
             UnsubscribeServiceEvents();
-            if (Instance == this) Instance = null;
+            if (Instance == this)
+            {
+                JcjClientSessionHub.UnregisterGameState(this);
+                Instance = null;
+            }
         }
 
         private void AutoBuildServices()

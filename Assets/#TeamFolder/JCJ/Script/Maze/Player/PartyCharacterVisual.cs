@@ -2,6 +2,7 @@
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 using _TeamFolder.JCJ.Battle;
+using _TeamFolder.JCJ.Battle.Session;
 
 // 플레이어에 파티 캐릭터 비주얼과 애니메이션을 붙이는 처리.
 
@@ -109,7 +110,7 @@ namespace _TeamFolder.JCJ.Script
             if (!HasBattleWeapon()) return;
             var pc = GetComponent<PlayerController>();
             if (pc != null && pc.IsLocalControlled)
-                BattlePrototypeManager.ApplyLocalFirstPersonBodyLayersToPlayer(gameObject);
+                BattlePlayerViewLayers.ApplyLocalFirstPersonBodyLayersToPlayer(gameObject);
         }
 
         private void OnEnable()
@@ -162,7 +163,7 @@ namespace _TeamFolder.JCJ.Script
 
         public void ApplyBattleLocalBodyLayerForFirstPerson()
         {
-            BattlePrototypeManager.ApplyLocalFirstPersonBodyLayersToPlayer(gameObject);
+            BattlePlayerViewLayers.ApplyLocalFirstPersonBodyLayersToPlayer(gameObject);
         }
 
         public void RefreshVisualModel()
