@@ -1,0 +1,25 @@
+using UnityEngine;
+
+namespace KDH
+{
+    // 골대 오브젝트에 붙이는 스크립트
+    public class GoalZone : MonoBehaviour
+    {
+        // 인스펙터에서 어느 팀/플레이어의 골대인지 지정
+        [SerializeField] private string goalOwnerName = "Player 1";
+
+        private void OnTriggerEnter(Collider other)
+        {
+            Ball ball = other.GetComponent<Ball>();
+            if (ball == null) return;
+            if (!ball.IsReady) return;
+
+            ball.NotifyGoal(goalOwnerName);
+
+            // BallSpawner에 공 없어졌다고 알리기
+            FindObjectOfType<BallSpawner>().OnGoalScored();
+    
+            Destroy(other.gameObject); // ResetBall 대신 Destroy
+        }
+    }
+}
