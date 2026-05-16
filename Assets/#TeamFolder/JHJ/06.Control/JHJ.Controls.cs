@@ -136,6 +136,24 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Look1"",
+                    ""type"": ""Value"",
+                    ""id"": ""7d9eeaad-4889-411f-9d35-b723b02bb7e6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Zoom1"",
+                    ""type"": ""Value"",
+                    ""id"": ""9e990a9e-5f92-4f85-ac37-7dd4fcb4291b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -369,6 +387,28 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                     ""action"": ""Jump1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d4a7c4d-5265-4181-bb8f-89e4f7aae7d7"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d957d89b-b676-49a2-8ada-77b04ecc1450"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -382,6 +422,8 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
         m_Player_Movement3 = m_Player.FindAction("Movement3", throwIfNotFound: true);
         m_Player_Movement4 = m_Player.FindAction("Movement4", throwIfNotFound: true);
         m_Player_Jump1 = m_Player.FindAction("Jump1", throwIfNotFound: true);
+        m_Player_Look1 = m_Player.FindAction("Look1", throwIfNotFound: true);
+        m_Player_Zoom1 = m_Player.FindAction("Zoom1", throwIfNotFound: true);
     }
 
     ~@JHJControls()
@@ -467,6 +509,8 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Movement3;
     private readonly InputAction m_Player_Movement4;
     private readonly InputAction m_Player_Jump1;
+    private readonly InputAction m_Player_Look1;
+    private readonly InputAction m_Player_Zoom1;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -498,6 +542,14 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Jump1".
         /// </summary>
         public InputAction @Jump1 => m_Wrapper.m_Player_Jump1;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Look1".
+        /// </summary>
+        public InputAction @Look1 => m_Wrapper.m_Player_Look1;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Zoom1".
+        /// </summary>
+        public InputAction @Zoom1 => m_Wrapper.m_Player_Zoom1;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -539,6 +591,12 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
             @Jump1.started += instance.OnJump1;
             @Jump1.performed += instance.OnJump1;
             @Jump1.canceled += instance.OnJump1;
+            @Look1.started += instance.OnLook1;
+            @Look1.performed += instance.OnLook1;
+            @Look1.canceled += instance.OnLook1;
+            @Zoom1.started += instance.OnZoom1;
+            @Zoom1.performed += instance.OnZoom1;
+            @Zoom1.canceled += instance.OnZoom1;
         }
 
         /// <summary>
@@ -565,6 +623,12 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
             @Jump1.started -= instance.OnJump1;
             @Jump1.performed -= instance.OnJump1;
             @Jump1.canceled -= instance.OnJump1;
+            @Look1.started -= instance.OnLook1;
+            @Look1.performed -= instance.OnLook1;
+            @Look1.canceled -= instance.OnLook1;
+            @Zoom1.started -= instance.OnZoom1;
+            @Zoom1.performed -= instance.OnZoom1;
+            @Zoom1.canceled -= instance.OnZoom1;
         }
 
         /// <summary>
@@ -640,5 +704,19 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnJump1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Look1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLook1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Zoom1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnZoom1(InputAction.CallbackContext context);
     }
 }
