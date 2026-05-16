@@ -39,7 +39,7 @@ namespace KDH.Gimic
             // 큐브 생성
             GameObject square = GameObject.CreatePrimitive(PrimitiveType.Cube);
             square.transform.position = hidePos;
-            square.transform.localScale = new Vector3(3f, 0.5f, 3f);
+            square.transform.localScale = new Vector3(10f, 0.5f, 10f);
             square.GetComponent<Renderer>().material.color = Color.yellow;
 
             square.GetComponent<Collider>().isTrigger = false;

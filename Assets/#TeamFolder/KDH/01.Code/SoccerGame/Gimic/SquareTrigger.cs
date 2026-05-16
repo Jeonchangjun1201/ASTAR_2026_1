@@ -30,7 +30,7 @@ namespace KDH
 
         private void Launch(GameObject target)
         {
-            if (_ready) return;
+            if (!_ready) return;
 
             if (target.CompareTag("Player1") || target.CompareTag("Player2") ||
                 target.CompareTag("Player3") || target.CompareTag("Player4"))
