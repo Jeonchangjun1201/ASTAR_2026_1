@@ -740,7 +740,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &587547503
 Transform:
   m_ObjectHideFlags: 0
@@ -812,9 +812,24 @@ PrefabInstance:
       value: party_character
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
+    - target: {fileID: 5866666021909216657, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: b3d5ae3e57b42ae41a65377634d5bf96, type: 2}
+    - target: {fileID: 5866666021909216657, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'Armature'\n\tTransform 'Hips'\n\tTransform
+        'Spine1'\n\tTransform 'RightForeArm'\n\tTransform 'LeftLeg'\n\tTransform
+        'LeftArm'\n\tTransform 'RightShoulder'\n\tTransform 'LeftShoulder'\n\tTransform
+        'RightArm'\n\tTransform 'Armature'\n\tand more ...\n\tFrom animation clip
+        'Idle'\n\tFrom animation clip 'fall'\n\tFrom animation clip 'Jump'\n\tFrom
+        animation clip 'running default'"
+      objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0
@@ -846,6 +861,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1813419953}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1813419954}
   m_SourcePrefab: {fileID: 100100000, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
 --- !u!1001 &801100388
 PrefabInstance:
@@ -1796,6 +1814,17 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: b3d5ae3e57b42ae41a65377634d5bf96, type: 2}
+    - target: {fileID: 5866666021909216657, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'Armature'\n\tTransform 'Hips'\n\tTransform
+        'Spine1'\n\tTransform 'RightForeArm'\n\tTransform 'LeftLeg'\n\tTransform
+        'LeftArm'\n\tTransform 'RightShoulder'\n\tTransform 'LeftShoulder'\n\tTransform
+        'RightArm'\n\tTransform 'Armature'\n\tand more ...\n\tFrom animation clip
+        'idle'\n\tFrom animation clip 'fall'\n\tFrom animation clip 'jump'\n\tFrom
+        animation clip 'running default'"
+      objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0
@@ -2039,6 +2068,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47048e7255a7a624a9546045f23e2bf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JHJ.Scripts.Test.TestPlayer.FSM.PlayerAnimatorController
+--- !u!95 &1813419954
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991489625}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b3d5ae3e57b42ae41a65377634d5bf96, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2023176925
 GameObject:
   m_ObjectHideFlags: 0
@@ -2301,6 +2352,7 @@ MonoBehaviour:
   _mouseSensitivity: 0.18
   _lockCursor: 1
   _cameraTransform: {fileID: 0}
+  _battlePrototypeBodyYawDrive: 1
   _addTrailIfMissing: 0
   _usePartyCharacter: 1
   _walkFootstepInterval: 0.42
