@@ -9,6 +9,8 @@ TagManager:
   - Spin2
   - Spin3
   - spin4
+  - Ball
+  - Player1
   layers:
   - Default
   - TransparentFX
