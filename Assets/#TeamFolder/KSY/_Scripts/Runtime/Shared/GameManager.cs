@@ -10,7 +10,6 @@ namespace KSY.Shared
         public static GameManager Instance => instance;
 
         private Dictionary<string, Unit> players = null;
-        //private Dictionary<string, ItemBase> items = null;
 
         public void Initialize()
         {
