@@ -12,9 +12,14 @@ namespace KDH
         {
             Ball ball = other.GetComponent<Ball>();
             if (ball == null) return;
+            if (!ball.IsReady) return;
 
             ball.NotifyGoal(goalOwnerName);
-            ball.ResetBall();
+
+            // BallSpawner에 공 없어졌다고 알리기
+            FindObjectOfType<BallSpawner>().OnGoalScored();
+    
+            Destroy(other.gameObject); // ResetBall 대신 Destroy
         }
     }
 }

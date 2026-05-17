@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-// 현재 무기 탄약과 재장전 상태를 표시하는 HUD.
+// BattlePrototypeScene에서 로컬 플레이어 무기 HUD. BattlePrototypeManager.SpawnPlayers가 로컬 슬롯에만 Bind를 호출한다.
+// 서버 모델에서는 동기화된 탄약 수치를 무기 매니저가 갱신하면 이 컴포넌트는 추가 수정 없이 표시만 따라간다.
 
 namespace _TeamFolder.JCJ.Battle
 {

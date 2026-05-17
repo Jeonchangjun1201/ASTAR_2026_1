@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using _TeamFolder.JCJ.Script.Session;
 
 // 생성, 스폰, 월드 구성, 서비스 연결을 묶는 메인 매니저.
 
@@ -20,7 +21,7 @@ namespace _TeamFolder.JCJ.Script
     /// 미로 데이터 소유·전문 서비스 조율·게임 상태 전환을 담당하는 오케스트레이터.
     /// 벽/골/플레이어/코인/데코/카메라/미니맵 등은 각 인터페이스에 위임(SRP).
     /// </summary>
-    public class MazeManager : MonoBehaviour
+    public class MazeManager : MonoBehaviour, IMazeWorldGateway
     {
         public static MazeManager Instance { get; private set; }
 
@@ -103,6 +104,7 @@ namespace _TeamFolder.JCJ.Script
                 return;
             }
             Instance = this;
+            JcjClientSessionHub.RegisterMazeWorld(this);
             ApplyDifficultyPreset();
             ResolveServices();
             EnsureSceneHud();
@@ -128,7 +130,11 @@ namespace _TeamFolder.JCJ.Script
 
         private void OnDestroy()
         {
-            if (Instance == this) Instance = null;
+            if (Instance == this)
+            {
+                JcjClientSessionHub.UnregisterMazeWorld(this);
+                Instance = null;
+            }
         }
 
         private void ResolveServices()

@@ -23,7 +23,7 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
         public readonly int isRunning = Animator.StringToHash("IsRunning");
         public readonly int isJump = Animator.StringToHash("Jump");
         public readonly int isFalling = Animator.StringToHash("IsFalling");
-        public readonly int isPunching = Animator.StringToHash("Punch");
+        //public readonly int isPunching = Animator.StringToHash("Punch");
 
         private PlayerBaseState _currentState;
         public PlayerIdleState IdleState { get; private set; }
