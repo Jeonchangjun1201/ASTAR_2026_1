@@ -13,7 +13,10 @@ namespace KSY.Clients
 
         public void StartClient()
         {
-            InputMana
+            InputManager.Initialize();
+            gameManager.Initialize();
+
+            GameClient
         }
     }
 }
