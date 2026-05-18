@@ -13,4 +13,13 @@ MonoBehaviour:
   m_Name: DataTableManager
   m_EditorClassIdentifier: Assembly-CSharp::KSY.Shared.DataTableManager
   gameConfigTable:
-    tableRowList: []
+    tableRowList:
+    - key: UnitPrefab
+      numberValue: 0
+      objectValue: {fileID: 0}
+    - key: UnitMaxSpeed
+      numberValue: 5
+      objectValue: {fileID: 0}
+    - key: UnitAcceleration
+      numberValue: 30
+      objectValue: {fileID: 0}
