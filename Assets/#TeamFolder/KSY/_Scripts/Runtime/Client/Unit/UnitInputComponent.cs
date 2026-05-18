@@ -1,5 +1,4 @@
 using KSY.Shared;
-using System;
 using UnityEngine;
 
 namespace KSY.Clients
@@ -10,7 +9,6 @@ namespace KSY.Clients
         private PlayerInputReader playerInputReader = null;
 
         private Vector2 lastMoveInput = Vector2.zero;
-        private bool isFire = false;
 
         private void Awake()
         {
