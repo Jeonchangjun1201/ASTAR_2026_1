@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using KSY.Networks;
 using KSY.Shared;
 
@@ -12,7 +13,14 @@ namespace KSY.Clients
         {
             GameInstance.PlayMode = EPlayMode.Client;
             GameInstance.DataTableManager = dataTableManager;
-            ClientInstance
+            ClientInstance.GameClient = this;
+
+            session = new Session();
+            session.OnOpenedEvent += async session =>
+            {
+                await UniTask.Yield();
+                session.SendAsync(new )
+            }
         }
     }
 }
