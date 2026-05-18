@@ -1,13 +1,19 @@
 using KSY.Networks;
-using UnityEditor.PackageManager;
-using UnityEngine;
+using KSY.Shared;
 
 namespace KSY.Clients
 {
     public class GameClient
     {
         private Session session = null;
-        private Client client
+        private Client client = null;
+
+        public void Initialize(GameManager gameManager, DataTableManager dataTableManager)
+        {
+            GameInstance.PlayMode = EPlayMode.Client;
+            GameInstance.DataTableManager = dataTableManager;
+            ClientInstance
+        }
     }
 }
 

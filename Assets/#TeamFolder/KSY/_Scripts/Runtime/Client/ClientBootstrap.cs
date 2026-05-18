@@ -16,7 +16,8 @@ namespace KSY.Clients
             InputManager.Initialize();
             gameManager.Initialize();
 
-            GameClient
+            GameClient gameClient = new GameClient();
+            gameClient
         }
     }
 }
