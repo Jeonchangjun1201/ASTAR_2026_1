@@ -8,6 +8,5 @@ namespace KSY.Shared
     public partial class C2S_EnterGameRequestPacket : IPacket
     {
 
-
     }
 }
