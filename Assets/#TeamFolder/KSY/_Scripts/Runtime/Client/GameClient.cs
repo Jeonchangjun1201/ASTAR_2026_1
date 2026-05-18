@@ -23,8 +23,17 @@ namespace KSY.Clients
             };
 
             UnityPacketDispatcher unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();
-            client = new ClientBuilder
+            client = new ClientBuilder(session, unityPacketDispatcher)
+                .AddSingleton<GameClient>(this)
+                .AddSingleton<GameManager>(gameManager)
+                .AddSingleton<DataTableManager>(dataTableManager)
+                .Build(typeof(GameClient).Assembly, typeof(GameManager).Assembly);
+
+            unityPacketDispatcher.Initialize(client);
         }
+
+        public void Connect(string host, int port) => client.Connect(host, port);
+        public void Send(IPacket packet) => session.SendAsync(packet);
     }
 }
 
