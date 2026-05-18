@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using UnityEngine;
 
 // 외형 설정 저장/조회 서비스 계약 인터페이스.
