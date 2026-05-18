@@ -494,6 +494,10 @@ MonoBehaviour:
   moveSpeed: 7
   rotationSpeed: 15
   jumpForce: 7
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 131072
+  groundCheckDistance: 0.2
   _inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
 --- !u!1 &210987173
 GameObject:
@@ -1006,6 +1010,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 821052718}
+  - component: {fileID: 821052720}
   - component: {fileID: 821052719}
   m_Layer: 0
   m_Name: Game Manager
@@ -1038,11 +1043,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 821052716}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88aee7a0074947244b4423862a83aae5, type: 3}
+  m_Script: {fileID: 11500000, guid: dc2930d449b2f4d4e86f428ff89b4491, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::JHJ.Scripts.EatingthegroundGame.JHJPaintingGameTimer
+  m_EditorClassIdentifier: Assembly-CSharp::JHJ.Scripts.EatingthegroundGame.JHJPaintingGameTimerManager
   _readyTimer: 3
   _gameTimer: 60
+--- !u!114 &821052720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 821052716}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e30beb697b52fa547bcffd127710a909, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JHJ.Scripts.EatingthegroundGame.JHJPaintGameManager
+  _moveSpeedItemPrefab: {fileID: 6725022730933086212, guid: 2ad90e134aedeca459158c0a5348dcd5, type: 3}
+  _brushSizeItemPrefab: {fileID: 6384178305388021117, guid: c1cfee3729518944f84e26ab184ecc0e, type: 3}
+  _knockbackItemPrefab: {fileID: 5713507306299925210, guid: 532a687cf47cb024f856dfefd95d4847, type: 3}
+  _spawnInterval: 5
+  _spawnHeight: 15
+  _spawnAreaMin: {x: -10, y: -10}
+  _spawnAreaMax: {x: 10, y: 10}
 --- !u!1 &840715279
 GameObject:
   m_ObjectHideFlags: 0
@@ -1222,6 +1246,10 @@ MonoBehaviour:
   moveSpeed: 7
   rotationSpeed: 15
   jumpForce: 7
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckDistance: 0.2
   _inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
 --- !u!136 &956659631
 CapsuleCollider:
@@ -1929,7 +1957,7 @@ MonoBehaviour:
   _playerColors:
   - {r: 0, g: 0.60537386, b: 1, a: 1}
   _percentage: 0
-  _gameTimer: {fileID: 821052719}
+  _gameTimer: {fileID: 0}
 --- !u!114 &1475380556
 MonoBehaviour:
   m_ObjectHideFlags: 0

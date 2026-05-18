@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
-    public class JHJPaintingGameTimer : MonoSingleton<JHJPaintingGameTimer>
+    public class JHJPaintingGameTimerManager : MonoSingleton<JHJPaintingGameTimerManager>
     {
         [Header("시간 설정")]
         [SerializeField] private float _readyTimer = 3f; //대기 시간
