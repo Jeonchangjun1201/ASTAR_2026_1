@@ -6,24 +6,21 @@ namespace JHJ.Scripts.Test.TestPlayer
 {
     public enum PlayerIndex { P1, P2, P3, P4 }
 
-    // ───────────────── [1. 서버 전송용 패킷 구조체] ─────────────────
-    // 서버가 파싱하기 가장 좋게 데이터를 직렬화(Serialize)할 수 있는 바구니
     [System.Serializable]
     public struct PlayerMovementPacket
     {
-        public PlayerIndex PlayerIndex; // 몇 번 플레이어인지
-        public Vector3 Position;         // 현재 위치
-        public Vector3 Velocity;         // 현재 속도 (이동 방향 포함)
-        public Quaternion Rotation;      // 현재 회전 값
+        public PlayerIndex PlayerIndex;
+        public Vector3 Position;
+        public Vector3 Velocity;
+        public Quaternion Rotation;
     }
-    // ──────────────────────────────────────────────────────────────
 
     [RequireComponent(typeof(Rigidbody))]
     public class JHJPlayerController : MonoBehaviour
     {
         [Header("이 캐릭터는 몇 번 플레이어인지")]
         [SerializeField] private PlayerIndex _playerIndex;
-        public PlayerIndex PlayerIndex => _playerIndex; 
+        public PlayerIndex PlayerIndex => _playerIndex;
         public Rigidbody RidCompo { get; private set; }
         private Vector3 _moveDir;
 
@@ -34,7 +31,6 @@ namespace JHJ.Scripts.Test.TestPlayer
 
         [Header("점프 설정")]
         [SerializeField] private float jumpForce = 7f;
-
         [SerializeField] private LayerMask whatIsGround;
         [SerializeField] private float groundCheckDistance = 0.2f;
 
@@ -42,6 +38,10 @@ namespace JHJ.Scripts.Test.TestPlayer
         private Camera _mainCamera;
 
         private bool _canMove = false;
+
+        // 🌟 [추가] 연속 점프 버그 방지용 쿨타임 변수
+        private float _lastJumpTime = -999f;
+        private readonly float _jumpCooldown = 0.2f;
 
         private void Awake()
         {
@@ -54,20 +54,14 @@ namespace JHJ.Scripts.Test.TestPlayer
             _defaultMoveSpeed = moveSpeed;
             if (JHJPaintingGameTimerManager.Instance != null)
                 JHJPaintingGameTimerManager.Instance.OnGameStarted += UnlockMovement;
-
         }
 
-        private void UnlockMovement()
-        {
-            _canMove = true;
-        }
+        private void UnlockMovement() => _canMove = true;
 
         private void OnDestroy()
         {
-
             if (JHJPaintingGameTimerManager.Instance != null)
                 JHJPaintingGameTimerManager.Instance.OnGameStarted -= UnlockMovement;
-
         }
 
         private void OnEnable()
@@ -104,11 +98,18 @@ namespace JHJ.Scripts.Test.TestPlayer
 
         private void OnJump()
         {
+            // 🌟 [수정 1] 점프 쿨타임 적용: 0.2초 안에는 다시 점프 불가 (다다닥 점프 방지)
+            if (Time.time - _lastJumpTime < _jumpCooldown) return;
+
             if (!IsGrounded()) return;
+
+            // 🌟 [수정 2] 점프 직전 Y축 속도를 0으로 초기화하여 점프 높이를 항상 일정하게 보장
             RidCompo.linearVelocity = new Vector3(
                 RidCompo.linearVelocity.x,
                 jumpForce,
                 RidCompo.linearVelocity.z);
+
+            _lastJumpTime = Time.time; // 마지막 점프 시간 갱신
         }
 
         private void FixedUpdate() => Move();
@@ -116,10 +117,8 @@ namespace JHJ.Scripts.Test.TestPlayer
         private void Move()
         {
             if (_mainCamera == null) return;
-            if (!_canMove)
-                return;
+            if (!_canMove) return;
 
-            // 1. 카메라 기준 방향 연산
             Vector3 camForward = _mainCamera.transform.forward;
             Vector3 camRight = _mainCamera.transform.right;
             camForward.y = 0f;
@@ -129,7 +128,6 @@ namespace JHJ.Scripts.Test.TestPlayer
 
             Vector3 targetDir = camForward * _moveDir.z + camRight * _moveDir.x;
 
-            // 2. 최종 적용할 속도와 회전 값 계산 (미리 변수에 담아두기)
             Vector3 targetVelocity = targetDir * moveSpeed;
             Vector3 currentVelocity = new Vector3(RidCompo.linearVelocity.x, 0f, RidCompo.linearVelocity.z);
             Vector3 smoothedVelocity = Vector3.Lerp(currentVelocity, targetVelocity, 10f * Time.fixedDeltaTime);
@@ -143,18 +141,12 @@ namespace JHJ.Scripts.Test.TestPlayer
                 nextRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
             }
 
-            // 3. 내 화면(로컬 클라이언트)에 먼저 이동 적용
             RidCompo.linearVelocity = nextVelocity;
             transform.rotation = nextRotation;
 
-            // 4. 🌟 계산 완료된 정보들을 매개변수로 던져서 서버 전송 메서드 호출!
             SendMovementDataToServer(_playerIndex, transform.position, nextVelocity, nextRotation);
         }
 
-        // ───────────────── [2. 요청하신 서버 전송 전용 메서드] ─────────────────
-        /// <summary>
-        /// 서버나 네트워크 매니저가 받기 쉽도록, 필요한 정보들을 매개변수(Parameter)로 직접 전달받는 메서드입니다.
-        /// </summary>
         public void SendMovementDataToServer(PlayerIndex index, Vector3 position, Vector3 velocity, Quaternion rotation)
         {
             PlayerMovementPacket packet = new PlayerMovementPacket
@@ -166,17 +158,31 @@ namespace JHJ.Scripts.Test.TestPlayer
             };
         }
 
+        // 🌟 [수정 3] 얇은 선(Raycast) 대신 둥근 구(Sphere) 형태로 넓게 바닥 검사 (Fall 버그 해결)
         private bool IsGrounded()
         {
-            Vector3 rayStartPos = transform.position + Vector3.up * 0.1f;
-            return Physics.Raycast(rayStartPos, Vector3.down, groundCheckDistance + 0.1f, whatIsGround);
+            Vector3 spherePos = transform.position + Vector3.up * 0.1f;
+
+            // OverlapSphere를 사용해 반경(groundCheckDistance) 내의 모든 콜라이더를 찾습니다.
+            Collider[] colliders = Physics.OverlapSphere(spherePos, groundCheckDistance, whatIsGround);
+
+            foreach (Collider col in colliders)
+            {
+                // 부딪힌 것들 중 '자기 자신'이 아닌 것이 하나라도 있다면 땅에 닿은 것으로 인정!
+                if (col.transform.root != transform.root)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
+        // 에디터에서 바닥 검사 범위가 눈에 보이도록 수정
         private void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.red;
-            Vector3 rayStartPos = transform.position + Vector3.up * 0.1f;
-            Gizmos.DrawLine(rayStartPos, rayStartPos + Vector3.down * (groundCheckDistance + 0.1f));
+            Gizmos.color = Color.green;
+            Vector3 spherePos = transform.position + Vector3.up * 0.1f;
+            Gizmos.DrawWireSphere(spherePos, groundCheckDistance);
         }
 
         public void SetMoveSpeed(float newSpeed) => moveSpeed = newSpeed;
