@@ -1,5 +1,6 @@
 using KSY.Shared;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace KSY.Clients
 {
@@ -11,12 +12,6 @@ namespace KSY.Clients
         [SerializeField]
         private DataTableManager dataTableManager;
 
-        [SerializeField]
-        private string ipAddress;
-
-        [SerializeField]
-        private int port;
-
         public void StartClient()
         {
             InputManager.Initialize();
@@ -24,7 +19,9 @@ namespace KSY.Clients
 
             GameClient gameClient = new GameClient();
             gameClient.Initialize(gameManager, dataTableManager);
-            gameClient.Connect(ipAddress, port);
+            gameClient.Connect(ConnectInfo.IPAddress, ConnectInfo.Port);
+
+            SceneManager
         }
     }
 }

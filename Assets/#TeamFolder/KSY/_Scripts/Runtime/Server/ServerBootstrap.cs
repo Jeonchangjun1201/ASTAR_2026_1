@@ -14,6 +14,8 @@ namespace KSY.Servers
         private DataTableManager dataTableManager = null;
         [SerializeField] 
         private ListeningDataSO listeningData;
+        [SerializeField]
+        private string inGameSceneName;
         
         public async void StartServer()
         {
@@ -27,7 +29,7 @@ namespace KSY.Servers
             gameServer.Initialize(gameManager, dataTableManager);
             gameServer.Listen(port);
 
-            await SceneManager.LoadSceneAsync("KSY_InGame", LoadSceneMode.Single);
+            await SceneManager.LoadSceneAsync(inGameSceneName, LoadSceneMode.Single);
         }
     }
 }
