@@ -19,8 +19,11 @@ namespace KSY.Clients
             session.OnOpenedEvent += async session =>
             {
                 await UniTask.Yield();
-                session.SendAsync(new )
-            }
+                session.SendAsync(new C2S_EnterGameRequestPacket());
+            };
+
+            UnityPacketDispatcher unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();
+            client = new ClientBuilder
         }
     }
 }
