@@ -6,6 +6,7 @@ namespace KSY.Clients
     {
         public virtual void Initialize(KSY_InputActions inputAction) { }
         public virtual void Release() { }
+
         public abstract InputActionMap GetInputActionMap();
     }
 }

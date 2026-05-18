@@ -25,7 +25,7 @@ namespace KSY.Servers
         {
             ClientInstance.MyPlayerID = packet.PlayerID;
 
-            await SceneManager.LoadSceneAsync("Game", LoadSceneMode.Single);
+            await SceneManager.LoadSceneAsync("KSY_EatingTheGroundGameScene", LoadSceneMode.Single);
 
             foreach (KeyValuePair<string, UnitDataDTO> element in packet.Players)
             {
@@ -34,22 +34,7 @@ namespace KSY.Servers
 
                 Unit unitPrefab = dataTableManager.gameConfigTable.GetUnitPrefab();
                 Unit unit = Object.Instantiate(unitPrefab, unitData.Position, Quaternion.identity);
-                unit.Initialize(playerID, unitData.Height, unitData.CurrentHP, unitData.WeaponID);
                 gameManager.AddPlayer(playerID, unit);
-            }
-
-            foreach (KeyValuePair<string, ItemDataDTO> element in packet.Items)
-            {
-                string itemUUID = element.Key;
-                ItemDataDTO itemData = element.Value;
-
-                ItemTableRow itemTableRow = dataTableManager.itemTable.GetRow(itemData.ItemID);
-                if (itemTableRow == null)
-                    continue;
-
-                ItemBase item = Object.Instantiate(itemTableRow.itemPrefab, itemData.Position, Quaternion.identity);
-                item.Initialize(itemData.ItemID, itemUUID, itemData.Height);
-                gameManager.AddItem(itemUUID, item);
             }
 
             InputManager.EnableInput<PlayerInputReader>();

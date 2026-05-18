@@ -20,8 +20,6 @@ namespace KSY.Clients
             GameClient gameClient = new GameClient();
             gameClient.Initialize(gameManager, dataTableManager);
             gameClient.Connect(ConnectInfo.IPAddress, ConnectInfo.Port);
-
-            SceneManager
         }
     }
 }
