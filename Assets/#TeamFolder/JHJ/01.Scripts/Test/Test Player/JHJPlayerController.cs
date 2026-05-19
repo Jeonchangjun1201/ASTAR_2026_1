@@ -37,7 +37,7 @@ namespace JHJ.Scripts.Test.TestPlayer
         [SerializeField] private InputReader _inputReader;
         private Camera _mainCamera;
 
-        private bool _canMove = false;
+        private bool _canMove = true;
 
         // 🌟 [추가] 연속 점프 버그 방지용 쿨타임 변수
         private float _lastJumpTime = -999f;
@@ -76,6 +76,14 @@ namespace JHJ.Scripts.Test.TestPlayer
                     _inputReader.P2OnMove += SetMove;
                     _inputReader.P2OnJump += OnJump;
                     break;
+                case PlayerIndex.P3:
+                    _inputReader.P3OnMove += SetMove;
+                    _inputReader.p3OnJump += OnJump;
+                    break;
+                case PlayerIndex.P4:
+                    _inputReader.P4OnMove += SetMove;
+                    _inputReader.p4OnJump += OnJump;
+                    break;
             }
         }
 
@@ -91,6 +99,15 @@ namespace JHJ.Scripts.Test.TestPlayer
                     _inputReader.P2OnMove -= SetMove;
                     _inputReader.P2OnJump -= OnJump;
                     break;
+                case PlayerIndex.P3:
+                    _inputReader.P3OnMove -= SetMove;
+                    _inputReader.p3OnJump -= OnJump;
+                    break;
+                case PlayerIndex.P4:
+                    _inputReader.P4OnMove -= SetMove;
+                    _inputReader.p4OnJump -= OnJump;
+                    break;
+
             }
         }
 
@@ -158,7 +175,7 @@ namespace JHJ.Scripts.Test.TestPlayer
             };
         }
 
-        // 🌟 [수정 3] 얇은 선(Raycast) 대신 둥근 구(Sphere) 형태로 넓게 바닥 검사 (Fall 버그 해결)
+        // 얇은 선(Raycast) 대신 둥근 구(Sphere) 형태로 넓게 바닥 검사 (Fall 버그 해결)
         private bool IsGrounded()
         {
             Vector3 spherePos = transform.position + Vector3.up * 0.1f;
