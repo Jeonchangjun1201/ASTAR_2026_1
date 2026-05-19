@@ -1,4 +1,5 @@
 using KSY.Shared;
+using KSY.Utility;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +15,7 @@ namespace KSY.Clients
 
         public void StartClient()
         {
+            CustomLog.Log("StartClient", Color.blue);
             InputManager.Initialize();
             gameManager.Initialize();
 

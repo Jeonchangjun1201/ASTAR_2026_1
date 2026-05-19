@@ -2,12 +2,14 @@ using Cysharp.Threading.Tasks;
 using KSY.Clients;
 using KSY.Networks;
 using KSY.Shared;
+using KSY.Shared.Packets;
+using KSY.Utility;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace KSY.Servers
+namespace KSY.Clients.Handlers
 {
     [PacketHandler(typeof(S2C_EnterGameResponsePacket))]
     public class S2C_EnterGameResponsePacketHandler : IPacketHandler<S2C_EnterGameResponsePacket>
@@ -25,6 +27,7 @@ namespace KSY.Servers
         {
             ClientInstance.MyPlayerID = packet.PlayerID;
 
+            CustomLog.Log("S2C_EnterGameResponsePacketHandler : HandlePacket!!", Color.red);
             await SceneManager.LoadSceneAsync("KSY_EatingTheGroundGameScene", LoadSceneMode.Single);
 
             foreach (KeyValuePair<string, UnitDataDTO> element in packet.Players)

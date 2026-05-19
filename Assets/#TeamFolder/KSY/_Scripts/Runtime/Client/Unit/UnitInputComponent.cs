@@ -1,4 +1,5 @@
 using KSY.Shared;
+using KSY.Shared.Packets;
 using UnityEngine;
 
 namespace KSY.Clients
