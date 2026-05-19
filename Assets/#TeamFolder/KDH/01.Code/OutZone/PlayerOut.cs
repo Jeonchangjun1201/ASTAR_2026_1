@@ -12,14 +12,15 @@ namespace _TeamFolder.KDH._01.Code.OutZone
 
         [Header("설정")]
         [SerializeField] private float respawnTime = 3f;
-        [SerializeField] private float outRangeX = 6f; // 맵 X 경계
-        [SerializeField] private float outRangeZ = 6f; // 맵 Z 경계
+        [SerializeField] private float outRangeX = 18f;
+        [SerializeField] private float outRangeZ = 18f;
 
         private Vector3 _startPosition;
         private Quaternion _startRotation;
         private Rigidbody _rb;
         private PlayerController _playerController;
         private bool _isOut = false;
+        private bool _isReady = false;
 
         private void Start()
         {
@@ -29,13 +30,20 @@ namespace _TeamFolder.KDH._01.Code.OutZone
             _playerController = GetComponent<PlayerController>();
 
             if (outUI != null) outUI.SetActive(false);
+
+            StartCoroutine(ReadyDelay());
+        }
+
+        private IEnumerator ReadyDelay()
+        {
+            yield return new WaitForSeconds(1f);
+            _isReady = true;
         }
 
         private void Update()
         {
-            if (_isOut) return;
+            if (_isOut || !_isReady) return;
 
-            // X, Z 좌표로 맵 경계 벗어나면 아웃
             if (Mathf.Abs(transform.position.x) > outRangeX ||
                 Mathf.Abs(transform.position.z) > outRangeZ)
                 TriggerOut();
@@ -78,8 +86,16 @@ namespace _TeamFolder.KDH._01.Code.OutZone
             if (_playerController != null) _playerController.enabled = true;
             if (outUI != null) outUI.SetActive(false);
 
-            _isOut = false;
             Debug.Log($"{gameObject.name} 부활!");
+
+            // 부활 후 1초 뒤에 감지 재시작
+            StartCoroutine(RespawnDelay());
+        }
+
+        private IEnumerator RespawnDelay()
+        {
+            yield return new WaitForSeconds(1f);
+            _isOut = false;
         }
     }
 }
