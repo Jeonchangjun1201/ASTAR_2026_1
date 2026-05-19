@@ -44,7 +44,7 @@ namespace KSY.Servers
         {
             server.Rooms.Room(ServerDefine.ROOM_ID).Send(packet, filter);
         }
-
+        
         public void AddPlayer(string playerId, Session session)
         {
             server.Rooms.Room(ServerDefine.ROOM_ID).Add(playerId, session);

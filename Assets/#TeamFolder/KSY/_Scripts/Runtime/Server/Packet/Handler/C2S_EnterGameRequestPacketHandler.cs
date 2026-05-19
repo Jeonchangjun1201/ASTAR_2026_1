@@ -47,7 +47,7 @@ namespace KSY.Servers
             S2C_EnterGameBroadcastPacket broadcastPacket = new S2C_EnterGameBroadcastPacket()
             {
                 PlayerID = playerID,
-                UnitData = new CreateUnitData(unit).unitData
+                UnitData = new CreateUnitDataDTO(unit).unitData
             };
             gameServer.Send(broadcastPacket, (sessionID, session) => sessionID != playerID);
 
