@@ -376,7 +376,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &73513550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,6 +494,10 @@ MonoBehaviour:
   moveSpeed: 7
   rotationSpeed: 15
   jumpForce: 7
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckDistance: 0.2
   _inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
 --- !u!1 &210987173
 GameObject:
@@ -1222,6 +1226,10 @@ MonoBehaviour:
   moveSpeed: 7
   rotationSpeed: 15
   jumpForce: 7
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckDistance: 0.2
   _inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
 --- !u!136 &956659631
 CapsuleCollider:

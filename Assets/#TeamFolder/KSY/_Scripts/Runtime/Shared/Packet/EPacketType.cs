@@ -1,4 +1,4 @@
-namespace KSY.Shared
+namespace KSY.Shared.Packets
 {
     public enum EPacketType
     {
