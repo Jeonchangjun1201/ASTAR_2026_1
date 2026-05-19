@@ -45,9 +45,10 @@ namespace KSY.Servers
             server.Rooms.Room(ServerDefine.ROOM_ID).Send(packet, filter);
         }
 
-        public void AddPlayer(IPacket packet, Func<string, Session, bool> filter = null)
+        public void AddPlayer(string playerId, Session session)
         {
-            server.Rooms.Room(ServerDefine.ROOM_ID).Send(packet, filter);
+            server.Rooms.Room(ServerDefine.ROOM_ID).Add(playerId, session);
+            playerIDMap[session] = playerId;
         }
 
         public string GetPlayerID(Session session)
