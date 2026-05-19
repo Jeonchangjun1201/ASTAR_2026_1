@@ -1,11 +1,7 @@
 {
-    "name": "KSY.Shared",
-    "rootNamespace": "KSY.Shared",
-    "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:1105a2874dfb7ad45a2c2407b6a3072f",
-        "GUID:a08c8b2acf4c28d439b24821f169846b"
-    ],
+    "name": "KSY.Networks",
+    "rootNamespace": "KSY.Networks",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
