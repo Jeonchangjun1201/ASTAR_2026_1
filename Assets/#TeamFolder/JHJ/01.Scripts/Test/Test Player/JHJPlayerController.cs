@@ -158,7 +158,7 @@ namespace JHJ.Scripts.Test.TestPlayer
             };
         }
 
-        // 🌟 [수정 3] 얇은 선(Raycast) 대신 둥근 구(Sphere) 형태로 넓게 바닥 검사 (Fall 버그 해결)
+        // 얇은 선(Raycast) 대신 둥근 구(Sphere) 형태로 넓게 바닥 검사 (Fall 버그 해결)
         private bool IsGrounded()
         {
             Vector3 spherePos = transform.position + Vector3.up * 0.1f;
