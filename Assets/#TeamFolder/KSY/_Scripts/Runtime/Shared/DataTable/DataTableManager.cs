@@ -2,7 +2,8 @@ using UnityEngine;
 
 namespace KSY.Shared
 {
-    public class DataTableManager : MonoBehaviour
+    [CreateAssetMenu(menuName = "KSY/SO/DataTableManager")]
+    public class DataTableManager : ScriptableObject
     {
         public GameConfigTable gameConfigTable = null;
 
