@@ -15,16 +15,28 @@ namespace JHJ.Test.TestPlayer
 
         public event Action<Vector2> P1OnLook;  // 마우스 델타
         public event Action<Vector2> P2OnLook;
+        public event Action<Vector2> P3OnLook;
+        public event Action<Vector2> P4OnLook;
+
         public event Action<float> P1OnZoom;  // 스크롤 .y
         public event Action<float> P2OnZoom;
-
+        public event Action<float> P3OnZoom;
+        public event Action<float> P4OnZoom;
 
 
 
         public event Action P1OnJump;
         public event Action P2OnJump;
+        public event Action p3OnJump;
+        public event Action p4OnJump;
+
         public Vector3 moveDir1 { get; private set; }
         public Vector2 moveDir2 { get; private set; }
+
+        public Vector2 moveDir3 { get; private set; }
+
+        public Vector2 moveDir4 { get; private set; }
+
 
         private void OnEnable()
         {
