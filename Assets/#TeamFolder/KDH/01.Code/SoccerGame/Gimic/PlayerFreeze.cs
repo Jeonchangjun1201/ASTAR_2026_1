@@ -18,7 +18,6 @@ namespace KDH.Gimic
 
         public void StartFreeze(float duration)
         {
-            if (!_isfreezen) return;
             StartCoroutine(FreezeCoroutine(duration));
         }
 
