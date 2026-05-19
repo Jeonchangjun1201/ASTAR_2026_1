@@ -64,7 +64,6 @@ namespace JHJ.Test.TestPlayer
         // OnLook1 - 마우스 델타값을 P1OnLook으로 전달
         public void OnLook1(InputAction.CallbackContext context)
         {
-            Debug.Log($"OnLook1 호출됨: {context.ReadValue<Vector2>()}");
             if (context.performed || context.canceled)
                 P1OnLook?.Invoke(context.ReadValue<Vector2>());
         }
