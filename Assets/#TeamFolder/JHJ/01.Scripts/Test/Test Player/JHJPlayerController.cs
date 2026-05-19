@@ -84,6 +84,7 @@ namespace JHJ.Scripts.Test.TestPlayer
                     _inputReader.P4OnMove += SetMove;
                     _inputReader.p4OnJump += OnJump;
                     break;
+                    //김도현바보
             }
         }
 
