@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfdc75ba034f4e445899eabe79b17985, type: 3}
+  m_Name: DataTableManager
+  m_EditorClassIdentifier: Assembly-CSharp::KSY.Shared.DataTableManager
+  gameConfigTable:
+    tableRowList:
+    - key: UnitPrefab
+      numberValue: 0
+      objectValue: {fileID: 3818553746457092375, guid: fd2add2c35b51664fa1337340f008682, type: 3}
+    - key: UnitMaxSpeed
+      numberValue: 5
+      objectValue: {fileID: 0}
+    - key: UnitAcceleration
+      numberValue: 30
+      objectValue: {fileID: 0}

@@ -1,0 +1,19 @@
+{
+    "name": "KSY.Clients",
+    "rootNamespace": "KSY.Clients",
+    "references": [
+        "GUID:e257cdee722a1d34c8df75fe9ef15e30",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:1105a2874dfb7ad45a2c2407b6a3072f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

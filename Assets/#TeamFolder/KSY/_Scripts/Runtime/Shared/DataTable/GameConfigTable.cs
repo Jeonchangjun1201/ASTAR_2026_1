@@ -32,9 +32,10 @@ namespace KSY.Shared
             return tableRow;
         }
 
-        public Unit GetUnitPrefab()
-        {
-            return GetRow("").objectValue as Unit;
-        }
+        public Unit GetUnitPrefab() => GetRow("UnitPrefab").objectValue as Unit;
+
+        public float GetUnitMaxSpeed() => GetRow("UnitMaxSpeed").numberValue;
+
+        public float GetUnitAcceleration() => GetRow("UnitAcceleration").numberValue;
     }
 }
