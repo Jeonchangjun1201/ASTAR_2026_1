@@ -1,9 +1,9 @@
 using KSY.Networks;
-using KSY.Servers;
 using KSY.Shared;
+using KSY.Shared.Packets;
 using System.Threading.Tasks;
 
-namespace KSY.Servers
+namespace KSY.Servers.Handlers
 {
     [PacketHandler(typeof(C2S_MoveInputPacket))]
     public class C2S_MoveInputPacketHandler : IPacketHandler<C2S_MoveInputPacket>
@@ -31,7 +31,7 @@ namespace KSY.Servers
 
             S2C_MoveInputBroadcastPacket broadcastPacket = new S2C_MoveInputBroadcastPacket()
             {
-                PlayerID = playerID,
+                PlayerId = playerID,
                 Position = player.transform.position,
                 MoveInput = packet.MoveInput
             };

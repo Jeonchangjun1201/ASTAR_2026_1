@@ -1,12 +1,13 @@
 using KSY.Networks;
 using KSY.Shared;
+using KSY.Shared.Packets;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace KSY.Servers
+namespace KSY.Servers.Handlers
 {
     [PacketHandler(typeof(C2S_EnterGameRequestPacket))]
     public class C2S_EnterGameRequestPacketHandler : IPacketHandler<C2S_EnterGameRequestPacket>

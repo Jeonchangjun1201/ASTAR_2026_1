@@ -2,11 +2,11 @@ using MemoryPack;
 using KSY.Networks;
 using UnityEngine;
 
-namespace KSY.Shared
+namespace KSY.Shared.Packets
 {
     [Packet((ushort)EPacketType.S2C_MoveInputBroadcastPacket)]
     [MemoryPackable]
-    public class S2C_MoveInputBroadcastPacket : IPacket
+    public partial class S2C_MoveInputBroadcastPacket : IPacket
     {
         public string PlayerId;
         public Vector2 Position;
