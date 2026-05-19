@@ -16,7 +16,7 @@ MonoBehaviour:
     tableRowList:
     - key: UnitPrefab
       numberValue: 0
-      objectValue: {fileID: 0}
+      objectValue: {fileID: 3818553746457092375, guid: fd2add2c35b51664fa1337340f008682, type: 3}
     - key: UnitMaxSpeed
       numberValue: 5
       objectValue: {fileID: 0}

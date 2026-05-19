@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee08a650f53cd0540b091ac2b9b508cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KSY.Shared.Unit
-  unitMovementComponent: {fileID: 0}
+  unitMovementComponent: {fileID: 1994029673148741587}
 --- !u!114 &1994029673148741587
 MonoBehaviour:
   m_ObjectHideFlags: 0
