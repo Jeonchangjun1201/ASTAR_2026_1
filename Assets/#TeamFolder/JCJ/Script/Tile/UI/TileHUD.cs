@@ -30,7 +30,6 @@ namespace _TeamFolder.JCJ.TileGame
         private TextMeshProUGUI    _colorCallText;
         private CanvasGroup        _colorCallGroup;
         private Image              _colorCallBar;
-        private RectTransform      _colorCallBarRoot;
 
         // 결과 오버레이(첫 Finished 때 지연 생성).
         private CanvasGroup        _resultGroup;
@@ -291,7 +290,6 @@ namespace _TeamFolder.JCJ.TileGame
             barRoot.SetParent(go.transform, false);
             SetAnchors(barRoot, new Vector2(0.05f, 0.05f), new Vector2(0.95f, 0.22f),
                         new Vector2(0f, 0f), new Vector2(0f, 0f));
-            _colorCallBarRoot = barRoot;
             var barBG = new GameObject("BarBG").AddComponent<Image>();
             barBG.transform.SetParent(barRoot, false);
             var bbgRT = barBG.GetComponent<RectTransform>();

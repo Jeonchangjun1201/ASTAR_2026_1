@@ -10,6 +10,17 @@ TagManager:
   - Spin3
   - spin4
   - BattleHead
+  - GasTank
+  - Target
+  - Concrete
+  - Metal
+  - ExplosiveBarrel
+  - OutZone
+  - Player1
+  - Player2
+  - Player3
+  - Player4
+  - Ball
   layers:
   - Default
   - TransparentFX

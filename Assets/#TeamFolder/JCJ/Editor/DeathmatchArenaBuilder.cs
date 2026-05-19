@@ -31,7 +31,6 @@ public class DeathmatchArenaBuilder : EditorWindow
         GameObject building = AssetDatabase.LoadAssetAtPath<GameObject>(prefabRoot + "Building_01.prefab");
         GameObject box = AssetDatabase.LoadAssetAtPath<GameObject>(prefabRoot + "Box_01.prefab");
         GameObject brick = AssetDatabase.LoadAssetAtPath<GameObject>(prefabRoot + "Brick_01.prefab");
-        GameObject stairs = AssetDatabase.LoadAssetAtPath<GameObject>(prefabRoot + "Stairs_01.prefab");
         GameObject jug01 = AssetDatabase.LoadAssetAtPath<GameObject>(prefabRoot + "Jug_01.prefab");
         GameObject jug02 = AssetDatabase.LoadAssetAtPath<GameObject>(prefabRoot + "Jug_02.prefab");
         GameObject plank01 = AssetDatabase.LoadAssetAtPath<GameObject>(prefabRoot + "WoodPlank_01.prefab");
@@ -46,7 +45,6 @@ public class DeathmatchArenaBuilder : EditorWindow
         float wallWidth = 4f;
         Vector3 wallScale = new Vector3(2.5f, 1.5f, 1f);
         float scaledWidth = wallWidth * wallScale.x;
-        float halfCount = edge / scaledWidth;
 
         for (int i = 0; i < 4; i++)
         {

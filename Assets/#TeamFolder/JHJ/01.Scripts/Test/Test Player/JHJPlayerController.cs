@@ -1,37 +1,68 @@
-﻿using JHJ.Test.TestPlayer;
+﻿using JHJ.Scripts.EatingthegroundGame;
+using JHJ.Test.TestPlayer;
 using UnityEngine;
 
 namespace JHJ.Scripts.Test.TestPlayer
 {
     public enum PlayerIndex { P1, P2, P3, P4 }
 
+    [System.Serializable]
+    public struct PlayerMovementPacket
+    {
+        public PlayerIndex PlayerIndex;
+        public Vector3 Position;
+        public Vector3 Velocity;
+        public Quaternion Rotation;
+    }
+
     [RequireComponent(typeof(Rigidbody))]
     public class JHJPlayerController : MonoBehaviour
     {
         [Header("이 캐릭터는 몇 번 플레이어인지")]
         [SerializeField] private PlayerIndex _playerIndex;
+        public PlayerIndex PlayerIndex => _playerIndex;
         public Rigidbody RidCompo { get; private set; }
         private Vector3 _moveDir;
 
         [Header("이동 설정")]
         [SerializeField] private float moveSpeed = 5f;
-        [SerializeField] private float rotationSpeed = 15f; // 방향 바꿀 때 휙 도는 속도
+        [SerializeField] private float rotationSpeed = 15f;
         private float _defaultMoveSpeed;
 
         [Header("점프 설정")]
         [SerializeField] private float jumpForce = 7f;
+        [SerializeField] private LayerMask whatIsGround;
+        [SerializeField] private float groundCheckDistance = 0.2f;
 
         [SerializeField] private InputReader _inputReader;
+        private Camera _mainCamera;
 
-        private Camera _mainCamera; // 카메라 기준 이동을 위해 필요함
+        private bool _canMove = false;
+
+        // 🌟 [추가] 연속 점프 버그 방지용 쿨타임 변수
+        private float _lastJumpTime = -999f;
+        private readonly float _jumpCooldown = 0.2f;
 
         private void Awake()
         {
             RidCompo = GetComponent<Rigidbody>();
-            _mainCamera = Camera.main; // 씬의 메인 카메라 캐싱
+            _mainCamera = Camera.main;
         }
 
-        private void Start() => _defaultMoveSpeed = moveSpeed;
+        private void Start()
+        {
+            _defaultMoveSpeed = moveSpeed;
+            if (JHJPaintingGameTimerManager.Instance != null)
+                JHJPaintingGameTimerManager.Instance.OnGameStarted += UnlockMovement;
+        }
+
+        private void UnlockMovement() => _canMove = true;
+
+        private void OnDestroy()
+        {
+            if (JHJPaintingGameTimerManager.Instance != null)
+                JHJPaintingGameTimerManager.Instance.OnGameStarted -= UnlockMovement;
+        }
 
         private void OnEnable()
         {
@@ -67,10 +98,18 @@ namespace JHJ.Scripts.Test.TestPlayer
 
         private void OnJump()
         {
+            // 🌟 [수정 1] 점프 쿨타임 적용: 0.2초 안에는 다시 점프 불가 (다다닥 점프 방지)
+            if (Time.time - _lastJumpTime < _jumpCooldown) return;
+
+            if (!IsGrounded()) return;
+
+            // 🌟 [수정 2] 점프 직전 Y축 속도를 0으로 초기화하여 점프 높이를 항상 일정하게 보장
             RidCompo.linearVelocity = new Vector3(
                 RidCompo.linearVelocity.x,
                 jumpForce,
                 RidCompo.linearVelocity.z);
+
+            _lastJumpTime = Time.time; // 마지막 점프 시간 갱신
         }
 
         private void FixedUpdate() => Move();
@@ -78,8 +117,8 @@ namespace JHJ.Scripts.Test.TestPlayer
         private void Move()
         {
             if (_mainCamera == null) return;
+            if (!_canMove) return;
 
-            // 1. 카메라가 바라보는 '앞'과 '오른쪽' 벡터를 가져옴 (Y축 기울어짐은 무시)
             Vector3 camForward = _mainCamera.transform.forward;
             Vector3 camRight = _mainCamera.transform.right;
             camForward.y = 0f;
@@ -87,23 +126,63 @@ namespace JHJ.Scripts.Test.TestPlayer
             camForward.Normalize();
             camRight.Normalize();
 
-            // 2. 입력값을 카메라 방향에 맞춰 회전 변환
-            // W(직진)를 누르면 무조건 카메라가 보는 앞쪽으로 가게 됨
             Vector3 targetDir = camForward * _moveDir.z + camRight * _moveDir.x;
 
-            // 3. 속도 적용 (부드러운 가속)
             Vector3 targetVelocity = targetDir * moveSpeed;
             Vector3 currentVelocity = new Vector3(RidCompo.linearVelocity.x, 0f, RidCompo.linearVelocity.z);
             Vector3 smoothedVelocity = Vector3.Lerp(currentVelocity, targetVelocity, 10f * Time.fixedDeltaTime);
 
-            RidCompo.linearVelocity = new Vector3(smoothedVelocity.x, RidCompo.linearVelocity.y, smoothedVelocity.z);
+            Vector3 nextVelocity = new Vector3(smoothedVelocity.x, RidCompo.linearVelocity.y, smoothedVelocity.z);
+            Quaternion nextRotation = transform.rotation;
 
-            // 4. 캐릭터 몸통을 이동하는 방향으로 부드럽게 회전
             if (targetDir.sqrMagnitude > 0.01f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(targetDir);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+                nextRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
             }
+
+            RidCompo.linearVelocity = nextVelocity;
+            transform.rotation = nextRotation;
+
+            SendMovementDataToServer(_playerIndex, transform.position, nextVelocity, nextRotation);
+        }
+
+        public void SendMovementDataToServer(PlayerIndex index, Vector3 position, Vector3 velocity, Quaternion rotation)
+        {
+            PlayerMovementPacket packet = new PlayerMovementPacket
+            {
+                PlayerIndex = index,
+                Position = position,
+                Velocity = velocity,
+                Rotation = rotation
+            };
+        }
+
+        // 🌟 [수정 3] 얇은 선(Raycast) 대신 둥근 구(Sphere) 형태로 넓게 바닥 검사 (Fall 버그 해결)
+        private bool IsGrounded()
+        {
+            Vector3 spherePos = transform.position + Vector3.up * 0.1f;
+
+            // OverlapSphere를 사용해 반경(groundCheckDistance) 내의 모든 콜라이더를 찾습니다.
+            Collider[] colliders = Physics.OverlapSphere(spherePos, groundCheckDistance, whatIsGround);
+
+            foreach (Collider col in colliders)
+            {
+                // 부딪힌 것들 중 '자기 자신'이 아닌 것이 하나라도 있다면 땅에 닿은 것으로 인정!
+                if (col.transform.root != transform.root)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // 에디터에서 바닥 검사 범위가 눈에 보이도록 수정
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.green;
+            Vector3 spherePos = transform.position + Vector3.up * 0.1f;
+            Gizmos.DrawWireSphere(spherePos, groundCheckDistance);
         }
 
         public void SetMoveSpeed(float newSpeed) => moveSpeed = newSpeed;

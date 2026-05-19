@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JHJ.Scripts.EatingthegroundGame;
+using UnityEngine;
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
