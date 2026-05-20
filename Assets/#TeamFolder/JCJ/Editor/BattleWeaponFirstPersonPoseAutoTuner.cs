@@ -4,6 +4,8 @@ using UnityEngine;
 using _TeamFolder.JCJ.Battle;
 using _TeamFolder.JCJ.Script;
 
+namespace _TeamFolder.JCJ.Script.Editor
+{
 public static class BattleWeaponFirstPersonPoseAutoTuner
 {
     private const string MenuPath = "JCJ/Battle/Auto-Tune First Person Weapon Poses (Play Mode)";
@@ -165,4 +167,5 @@ public static class BattleWeaponFirstPersonPoseAutoTuner
         so.FindProperty("_useCustomMountPose").boolValue = false;
         so.ApplyModifiedPropertiesWithoutUndo();
     }
+}
 }

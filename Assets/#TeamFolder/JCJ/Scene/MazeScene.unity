@@ -1036,53 +1036,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1824762219}
   m_CullTransparentMesh: 1
---- !u!1 &1893482717
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1893482719}
-  - component: {fileID: 1893482718}
-  m_Layer: 0
-  m_Name: RankService
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1893482718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1893482717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e0d491253b57cc419456326faf2c441, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.JCJ.Script.RankService
-  _scoreConfig: {fileID: 11400000, guid: 9fa477bef4cc37f4ab48fefd82c3e775, type: 2}
-  _totalPlayers: 4
-  _podiumSize: 3
---- !u!4 &1893482719
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1893482717}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 95.06627, y: -2.99999, z: 113.81783}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3436533241353657232
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1134,7 +1087,7 @@ PrefabInstance:
     - target: {fileID: 4431320824708132609, guid: 5a0515344a209194c9493278a5c336e8, type: 3}
       propertyPath: _rankService
       value: 
-      objectReference: {fileID: 1893482718}
+      objectReference: {fileID: 0}
     - target: {fileID: 4431320824708132609, guid: 5a0515344a209194c9493278a5c336e8, type: 3}
       propertyPath: _timerService
       value: 
@@ -1156,55 +1109,56 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1659605301594456182, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837465, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_Name
-      value: ScoreService
+      value: MatchScoreRankManager
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7022101257205334361, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+    - target: {fileID: 9182736450192837466, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9182736450192837469, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
 --- !u!1001 &8597240140262283815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1256,7 +1210,7 @@ PrefabInstance:
     - target: {fileID: 1614648465570089205, guid: 7796e2864fdb59b4eadd775ea753f471, type: 3}
       propertyPath: _rankService
       value: 
-      objectReference: {fileID: 1893482718}
+      objectReference: {fileID: 0}
     - target: {fileID: 5996596659897987627, guid: 7796e2864fdb59b4eadd775ea753f471, type: 3}
       propertyPath: m_Name
       value: MazeManager
@@ -1277,7 +1231,6 @@ SceneRoots:
   - {fileID: 1341355577}
   - {fileID: 499139200}
   - {fileID: 1642578154}
-  - {fileID: 1893482719}
   - {fileID: 3436533241353657232}
   - {fileID: 1576013984}
   - {fileID: 4069463483286606912}

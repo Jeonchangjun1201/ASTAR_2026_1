@@ -67,7 +67,10 @@ namespace _TeamFolder.JCJ.Script
             if (_scoreReward > 0)
             {
                 RuntimePlayerIdentity.TryResolve(other, out var playerId, out var displayName);
-                gsm.Score?.Add(playerId, displayName, _scoreReward);
+                if (MatchScoreRankManager.Instance != null)
+                    MatchScoreRankManager.Instance.AddScore(playerId, displayName, _scoreReward);
+                else
+                    gsm.Score?.Add(playerId, displayName, _scoreReward);
             }
             pc.NotifyCollected();
 

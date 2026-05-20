@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 
+namespace _TeamFolder.JCJ.Script.Editor
+{
 public class DeathmatchArenaBuilder : EditorWindow
 {
     [MenuItem("Tools/Build Deathmatch Arena")]
@@ -151,4 +153,5 @@ public class DeathmatchArenaBuilder : EditorWindow
         go.isStatic = true;
         return go;
     }
+}
 }
