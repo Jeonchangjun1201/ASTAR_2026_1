@@ -71,7 +71,6 @@ namespace BFS
                     break;
             }
             moveDir *= _defaultRopePower;                                                                        // Modifying movement distance // 움직이는 거리 조정
-            team.ReceiveScore(team, IsCorrect ? 1 : -1);                                                         // Give team a score; 1 if they pressed correct key, -1 else // 팀에 점수 부여; 알맞은 키는 1, 아니면 -1
             StartCoroutine(NextInputCoroutine(team, IsCorrect));                                                 // Coroutine, gives player a penalty if they pressed wrong key. // 잘못된 키를 눌렀을 때 패널티를 주는 코루틴
             if (_scoreManager.scoreBoard[team.Team] <= 0 && !IsCorrect)
             {
@@ -83,6 +82,7 @@ namespace BFS
                         (moveDir * -1));                                                                         // Else, move rope to opposite direction unless corresponding team has score of 0 // 아니면, 반대 방향으로 이동. 해당하는 팀의 점수가 0이면 움직이지 않음
                 _uiManager.AddValue(team, IsCorrect);
             }
+            team.ReceiveScore(team, IsCorrect ? 1 : -1);                                                         // Give team a score; 1 if they pressed correct key, -1 else // 팀에 점수 부여; 알맞은 키는 1, 아니면 -1
         }
         public Vector2 DeclareGoal(ITeamTOW team)                                                                // Sets the required input key for each player // 각 플레이어에게 목표 입력 키 적용
         {

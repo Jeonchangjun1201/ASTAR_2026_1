@@ -7,6 +7,7 @@ namespace BFS
         public Dictionary<PlayerTeamTOW, int> scoreBoard { get; private set; } = new Dictionary<PlayerTeamTOW, int>();   // Dictionary, for easier score managing for each team(Key: PlayerTeamTOW enum(Team), Value: int(score)) // 점수 관리를 돕는 딕셔너리
         private List<ITeamTOW> _playerList;                                                                              // List, to sub/unsub AddScore method to OnScoreGain action for each player // 구독 및 해제를 위한 리스트
         private TOWUIManager _uiManager;
+        private PlayerTeamTOW _benefitTeam;
         public TOWScoreManager(ITeamTOW[] players, TOWUIManager uiManager)                                                                       // Constructor, receives array of ITeamTOW //생성자
         {
             _playerList = new List<ITeamTOW>();
