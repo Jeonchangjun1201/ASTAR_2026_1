@@ -1,5 +1,6 @@
 using KSY.Networks;
 using MemoryPack;
+using System.Numerics;
 
 namespace KSY.Shared.Packets
 {

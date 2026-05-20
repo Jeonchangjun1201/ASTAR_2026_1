@@ -21,23 +21,29 @@ namespace KSY.Networks
 
         public bool TryFlush(out List<ArraySegment<byte>> bufferList)
         {
+            bool hasFlushData = contextFlushBuffer.Count > 0;
+            bool isEmpty = contextQueue.Count <= 0;
+            bool hasSendContext = contextQueue.Count > 0;
             bufferList = null;
-            if(contextFlushBuffer.Count > 0)
+
+            if(hasFlushData)
             {
                 return false;   
             }
 
-            if(contextQueue.Count <= 0)
+            if(isEmpty)
             {
                 return false;
             }
 
             bufferList = new List<ArraySegment<byte>>();
-            while(contextQueue.Count > 0)
+            while(hasSendContext)
             {
                 ISendQueueContext sendQueueContext = contextQueue.Dequeue();
                 bufferList.Add(sendQueueContext.GetData());
                 contextFlushBuffer.Add(sendQueueContext);
+
+                hasSendContext = contextQueue.Count > 0;
             }
 
             return true;

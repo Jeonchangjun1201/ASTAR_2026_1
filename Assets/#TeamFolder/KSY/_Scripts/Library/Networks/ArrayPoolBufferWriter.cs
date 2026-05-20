@@ -36,6 +36,7 @@ namespace KSY.Networks
                 throw new ArgumentOutOfRangeException("count");
             }
 
+            //overflow를 방지해서 우항으로 넘겨서 연산
             if (WrittenCount > buffer.Length - count)
             {
                 throw new InvalidOperationException("Cannot advance past the end of the current buffer.");
@@ -85,6 +86,7 @@ namespace KSY.Networks
             }
         }
 
+        //Ensure : <성공 등을> 확실하게 하다, 보증하다, <지위 등을> 확보하다
         private void EnsureCapacity(int sizeHint)
         {
             if (sizeHint < 0)
@@ -97,16 +99,15 @@ namespace KSY.Networks
                 sizeHint = 1;
             }
 
-            int num = writtenCount + sizeHint;
-            if (num > buffer.Length)
+            int needSize = writtenCount + sizeHint;
+
+            if (needSize > buffer.Length)
             {
-                int num2;
-                for (num2 = buffer.Length; num2 < num; num2 *= 2)
-                {
-                }
+                int requestSize = 0;
+                for (requestSize = buffer.Length; requestSize < needSize; requestSize *= 2) ;
 
                 byte[] array = buffer;
-                buffer = pool.Rent(num2);
+                buffer = pool.Rent(requestSize);
                 array.AsSpan(0, writtenCount).CopyTo(buffer);
                 pool.Return(array);
             }

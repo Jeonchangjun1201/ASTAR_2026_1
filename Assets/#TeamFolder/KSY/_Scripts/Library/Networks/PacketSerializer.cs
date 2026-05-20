@@ -3,6 +3,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using KSY.Utility;
 using MemoryPack;
 
 namespace KSY.Networks
@@ -66,19 +67,20 @@ namespace KSY.Networks
             ArrayPoolBufferWriter bufferWriter = new ArrayPoolBufferWriter();
             try
             {
+                sbyte ushortBit = 2;
                 //BinaryPrimitives : 'Primitives'는 '원시의','초기의'라는 의미로 특정 엔디안 방식으로 데이터를 읽고 쓸 때 도움을 준다.
-                BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(2), 0);
-                bufferWriter.Advance(2);
-                BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(2), id);
-                bufferWriter.Advance(2);
+                BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(ushortBit), 0);
+                bufferWriter.Advance(ushortBit);
+                BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(ushortBit), id);
+                bufferWriter.Advance(ushortBit);
                 MemoryPackSerializer.Serialize(type, in bufferWriter, packet);
-                int writtenCount = bufferWriter.WrittenCount;
-                if (writtenCount > 65535)
-                {
-                    throw new InvalidProgramException($"Packet is too large. Size: {writtenCount}, Max: {65535}");
-                }
 
-                BinaryPrimitives.WriteUInt16BigEndian(bufferWriter.WrittenSegment.AsSpan(0, 2), (ushort)writtenCount);
+                int writtenCount = bufferWriter.WrittenCount;
+                if (writtenCount > ushort.MaxValue)
+                    throw new InvalidProgramException($"Packet is too large. Size: {writtenCount}, Max: {ushort.MaxValue}");
+                BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.WrittenSegment.AsSpan(0, 2), (ushort)writtenCount);
+
+                CustomLog.Log($"Successful packet serialization : {type.Name}", UnityEngine.Color.red);
                 return bufferWriter;
             }
             catch

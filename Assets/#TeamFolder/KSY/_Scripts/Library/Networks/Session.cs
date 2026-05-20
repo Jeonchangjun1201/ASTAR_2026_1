@@ -104,7 +104,6 @@ namespace KSY.Networks
                 throw new ArgumentNullException("packet");
             }
 
-            CustomLog.Log($"Send Packet : C2S_EnterGameRequestPacket", UnityEngine.Color.red);
             SendAsync(new PacketSendQueueContext(packetSerializer, packet));
         }
 
