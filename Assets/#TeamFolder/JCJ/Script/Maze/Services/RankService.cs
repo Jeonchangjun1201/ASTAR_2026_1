@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//  플레이어 순위와 완주 순서를 관리하는 서비스.
+// 미로 전용: 골인(완주) 순서, 포디움 종료 조건, 타이머 연동. MatchScoreRankManager 프리팹과 분리.
 
 namespace _TeamFolder.JCJ.Script
 {
+    /// <summary>
+    /// 미로 씬 전용 완주 순위. 점수 누적은 <see cref="ScoreService"/> / <see cref="MatchScoreRankManager"/>.
+    /// </summary>
     public class RankService : MonoBehaviour, IRankService
     {
         [SerializeField] private ScoreConfig _scoreConfig;
@@ -28,6 +31,19 @@ namespace _TeamFolder.JCJ.Script
         public void SetTotalPlayers(int total)
         {
             _totalPlayers = Mathf.Max(1, total);
+        }
+
+        public void Configure(ScoreConfig scoreConfig, int totalPlayers, int podiumSize)
+        {
+            if (scoreConfig != null) _scoreConfig = scoreConfig;
+            _totalPlayers = Mathf.Max(1, totalPlayers);
+            _podiumSize = Mathf.Max(1, podiumSize);
+        }
+
+        private void Awake()
+        {
+            if (_scoreConfig == null)
+                Debug.LogWarning("[RankService] ScoreConfig가 비어 있어 완주 보너스 점수가 0입니다. GameStateManager의 Maze Score Config를 연결하세요.");
         }
 
         // 골인 확정 이벤트를 순위 데이터로 바꾸는 지점이다.
@@ -71,6 +87,8 @@ namespace _TeamFolder.JCJ.Script
 
             OnPlayerFinished?.Invoke(resolvedName, rank);
             OnPlayerFinishedData?.Invoke(entry);
+            if (score > 0 && MatchScoreRankManager.Instance != null)
+                MatchScoreRankManager.Instance.AddScore(resolvedId, resolvedName, score);
             Debug.Log($"[RankService] #{rank} {resolvedName} ({score} pts)");
 
             if (_allFinishedFired) return;

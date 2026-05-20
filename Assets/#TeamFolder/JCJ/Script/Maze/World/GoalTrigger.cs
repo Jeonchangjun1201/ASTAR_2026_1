@@ -37,9 +37,8 @@ namespace _TeamFolder.JCJ.Script
             var gsm = GameStateManager.Instance;
             if (gsm == null || gsm.CurrentState != GameState.Playing) return;
 
-            // 서버 연동 시 이 RegisterFinish 호출은 서버/호스트 권한에서만 실행되도록 감싸는 것이 좋다.
-            _rankService ??= gsm.Rank;
             var identity = RuntimePlayerIdentity.Find(player);
+            _rankService ??= gsm.Rank;
             if (identity != null) _rankService?.RegisterFinish(identity.PlayerId, identity.DisplayName);
             else _rankService?.RegisterFinish(player.gameObject.name);
         }

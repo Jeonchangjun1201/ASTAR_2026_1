@@ -540,6 +540,7 @@ MonoBehaviour:
   _weaponCatalog: {fileID: 11400000, guid: c7db874023c28294fb744a74fe418bae, type: 2}
   _battleCamera: {fileID: 1173629489}
   _scoreService: {fileID: 0}
+  _matchScoreRankPrefab: {fileID: 9182736450192837465, guid: c7f2a91e4d8b6543e0a1f9c72b5d4e8f, type: 3}
   _scoreServicePrefab: {fileID: 1659605301594456182, guid: 9997c27d3637dc1498d2b69f97cb5ce6, type: 3}
   _useScoreServiceRanks: 1
   _spawnRoot: {fileID: 0}
