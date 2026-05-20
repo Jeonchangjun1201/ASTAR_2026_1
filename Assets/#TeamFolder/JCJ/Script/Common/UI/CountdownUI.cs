@@ -1,4 +1,4 @@
- using System;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -53,7 +53,6 @@ namespace _TeamFolder.JCJ.Script
             int seconds = secondsOverride ?? StartNumber;
             seconds = Mathf.Max(0, seconds);
             EnsureVisual();
-            ShowRoot(true);
 
             for (int i = seconds; i > 0; i--)
             {
@@ -95,12 +94,6 @@ namespace _TeamFolder.JCJ.Script
                 _label.transform.localScale = Vector3.zero;
                 _label.gameObject.SetActive(false);
             }
-            ShowRoot(false);
-        }
-
-        private void ShowRoot(bool visible)
-        {
-            if (_canvas != null) _canvas.enabled = visible;
         }
 
         private void EnsureVisual()

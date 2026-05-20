@@ -249,11 +249,18 @@ namespace _TeamFolder.JCJ.Script
 
         private Canvas FindOrCreateCanvas()
         {
-            var c = Object.FindFirstObjectByType<Canvas>();
-            if (c != null) return c;
-            var go = new GameObject("Canvas (auto)");
-            c = go.AddComponent<Canvas>();
+            var onSelf = GetComponent<Canvas>();
+            if (onSelf != null) return onSelf;
+
+            const string hudCanvasName = "HUD (auto)";
+            var existing = GameObject.Find(hudCanvasName);
+            if (existing != null && existing.TryGetComponent(out Canvas found))
+                return found;
+
+            var go = new GameObject(hudCanvasName);
+            var c = go.AddComponent<Canvas>();
             c.renderMode = RenderMode.ScreenSpaceOverlay;
+            c.sortingOrder = 100;
             var scaler = go.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080);

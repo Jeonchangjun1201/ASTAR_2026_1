@@ -38,7 +38,12 @@ namespace _TeamFolder.JCJ.Script
 
         private void Awake()
         {
-            _canvas ??= Object.FindFirstObjectByType<Canvas>();
+            _canvas ??= GetComponent<Canvas>();
+            if (_canvas == null)
+            {
+                var hudRoot = GameObject.Find("HUD (auto)");
+                if (hudRoot != null) _canvas = hudRoot.GetComponent<Canvas>();
+            }
             if (_canvas == null) _canvas = CreateCanvas();
             BuildUI();
             HideInstant();
