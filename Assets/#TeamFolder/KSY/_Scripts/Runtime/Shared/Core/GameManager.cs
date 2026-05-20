@@ -1,14 +1,13 @@
 using KSY.Utility;
 using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 namespace KSY.Shared
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private EventChannelSO eventChannel;
+        [field : SerializeField] public EventChannelSO EventChannel { get; private set; }
 
         private static GameManager instance = null;
         public static GameManager Instance => instance;
@@ -30,7 +29,7 @@ namespace KSY.Shared
 
         private void OnApplicationQuit()
         {
-
+            EventChannel?.InvokeEvent(new GameQuitEvent());
         }
 
         public void AddPlayer(string playerID, Unit unit)

@@ -19,7 +19,7 @@ namespace KSY.Servers.Handlers
 
         public C2S_EnterGameRequestPacketHandler(GameManager gameManager, GameServer gameServer, DataTableManager dataTableManager)
         {
-            KSY.Utility.CustomLog.Log($"Create : {typeof(C2S_EnterGameRequestPacketHandler).Name}");
+            KSY.Utility.CustomLog.Log($"Create : {typeof(C2S_EnterGameRequestPacketHandler).Name}", Color.orange);
             this.gameManager = gameManager;
             this.gameServer = gameServer;
             this.dataTableManager = dataTableManager;
@@ -27,7 +27,7 @@ namespace KSY.Servers.Handlers
 
         ValueTask IPacketHandler<C2S_EnterGameRequestPacket>.HandlePacket(Session session, C2S_EnterGameRequestPacket packet)
         {
-            CustomLog.Log("Try_HandlePacket : C2S_EnterGameRequestPacket", Color.rebeccaPurple);
+            CustomLog.Log("Try_HandlePacket : C2S_EnterGameRequestPacket", Color.orange);
             string playerID = Guid.NewGuid().ToString();
             gameServer.AddPlayer(playerID, session);
 

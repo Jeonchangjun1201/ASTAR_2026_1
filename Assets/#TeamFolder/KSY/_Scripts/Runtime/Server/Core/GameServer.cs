@@ -7,13 +7,15 @@ using System.Net.Sockets;
 
 namespace KSY.Servers
 {
-    public class GameServer : ISessionFactory, IDisposable
+    public class GameServer : ISessionFactory
     {
         private Dictionary<Session, string> playerIDMap = null;
         private Server server = null;
 
         public void Initialize(GameManager gameManager, DataTableManager dataTableManager)
         {
+            GameManager.Instance.EventChannel?.AddListener<GameQuitEvent>((evt)=> Close());
+
             GameInstance.PlayMode = EPlayMode.Server;
             GameInstance.DataTableManager = dataTableManager;
             ServerInstance.GameServer = this;
@@ -36,16 +38,14 @@ namespace KSY.Servers
         Session ISessionFactory.Create(NetworkObject networkObject, Socket connectedSocket) => new Session();
         #endregion
 
-        #region IDisposable
-        public void Dispose()
+        public void Close()
         {
             if (server != null && server.IsOpened)
             {
-                server.Close();
                 CustomLog.Log("Unity 종료로 인해 서버 소켓이 안전하게 닫혔습니다.");
+                server.Close();
             }
         }
-        #endregion
 
         public void Listen(int port)
         {

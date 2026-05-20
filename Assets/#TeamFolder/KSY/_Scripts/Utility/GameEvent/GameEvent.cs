@@ -6,7 +6,7 @@ namespace KSY.Utility
 {
     public abstract class GameEvent { }
 
-    [CreateAssetMenu(fileName = "EventChannel", menuName = "SO/Event/Channel", order = 0)]
+    [CreateAssetMenu(fileName = "EventChannel", menuName = "KSY/SO/EventChannel", order = 0)]
     public class EventChannelSO : ScriptableObject
     {
         private Dictionary<Type, Action<GameEvent>> _events = new Dictionary<Type, Action<GameEvent>>();

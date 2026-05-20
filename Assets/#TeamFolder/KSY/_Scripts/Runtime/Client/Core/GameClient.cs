@@ -21,7 +21,6 @@ namespace KSY.Clients
             session.OnOpenedEvent += async session =>
             {
                 await UniTask.Yield();
-                CustomLog.Log($"Send Packet : C2S_EnterGameRequestPacket", UnityEngine.Color.red);
                 session.SendAsync(new C2S_EnterGameRequestPacket());
             };
 
