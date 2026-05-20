@@ -107,6 +107,7 @@ namespace _TeamFolder.JCJ.Script
             JcjClientSessionHub.RegisterMazeWorld(this);
             ApplyDifficultyPreset();
             ResolveServices();
+            MatchScoreRankManager.EnsureExists();
             EnsureSceneHud();
             GenerateMazeWithButton();
         }
@@ -335,7 +336,7 @@ namespace _TeamFolder.JCJ.Script
         private void SyncRankTotal(int playerCount)
         {
             if (_rankService != null) { _rankService.SetTotalPlayers(playerCount); return; }
-            if (GameStateManager.Instance?.Rank is RankService rs) rs.SetTotalPlayers(playerCount);
+            GameStateManager.Instance?.Rank?.SetTotalPlayers(playerCount);
         }
 
         private int ResolvePlayerCount()
