@@ -6,6 +6,7 @@ namespace BFS
         [field: SerializeField] public PlateColor PlateColor { get; protected set; }          // PlateColor enum as property // 발판 색깔 이넘을 프로퍼티로 선언
         private MeshRenderer _meshRenderer;                                                   // Mesh Renderer // 메쉬 렌더러
         private ParticleSystem _destroyParticle;
+        private ParticleSystem _appearParticle;
 
         private void Awake()
         {
@@ -32,6 +33,7 @@ namespace BFS
         public void Appear()
         {
             gameObject.SetActive(true);
+            Instantiate(_appearParticle, transform.position, Quaternion.Euler(-90, 0, 0));
         }
 
         public void Disappear()
@@ -40,9 +42,9 @@ namespace BFS
             gameObject.SetActive(false);
         }
 
-        public void SetPartice(ParticleSystem particle)
+        public void SetPartice(ParticleSystem destroyParticle, ParticleSystem appearParticle)
         {
-            _destroyParticle = particle;
+            _destroyParticle = destroyParticle; _appearParticle = appearParticle;
         }
     }
 

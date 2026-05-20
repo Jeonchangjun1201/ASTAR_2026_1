@@ -27,7 +27,8 @@ namespace BFS
     {
         public PlateQue plateQue { get; private set; } = new PlateQue();      // PlateQue Instance // PlateQue 인스턴스
         public event Action<PlateColor> OnPlateAdded;                         // Action that invokes whenever new plate is added to a queue // 발판이 큐에 추가될 때마다 인보크되는 액션
-        [SerializeField] private ParticleSystem plateParticle;
+        [SerializeField] private ParticleSystem plateDestroyParticle;
+        [SerializeField] private ParticleSystem plateAppearParticle;
         private Dictionary<PlateColor, IFSPlate> _plateDict = new Dictionary<PlateColor, IFSPlate>();
                                                                               // Dictionary, can access to plate by color of plate (Key: PlateColor(enum), Value: IFSPlate(interface for plate objects)) // 색을 통해 발판에 접근할 수 있는 딕셔너리(PlateColor는 키, IFSPlate는 값)
 
@@ -37,7 +38,7 @@ namespace BFS
             foreach (IFSPlate f in fsPlates)
             {
                 _plateDict.Add(f.PlateColor, f);
-                f.SetPartice(plateParticle);
+                f.SetPartice(plateDestroyParticle, plateAppearParticle);
             }
         }
         public void EnqueuePlate()                                            // Method that adds plate to queue using PlateQue instance // PlateQue의 인스턴스를 통해 발판을 큐에 추가하는 메서드

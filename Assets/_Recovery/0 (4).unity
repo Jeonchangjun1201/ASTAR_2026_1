@@ -1262,8 +1262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e121b278b1f2074abe67ae0a4105389, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GDH.FSPlateManager
-  plateDestroyParticle: {fileID: 1669298004130292943, guid: 9f06b5e7f5cc59c40a698fbadd223bd1, type: 3}
-  plateAppearParticle: {fileID: 1669298004130292943, guid: 1be26618b647bc34d8f889043f8c9c4b, type: 3}
+  plateParticle: {fileID: 1669298004130292943, guid: 9f06b5e7f5cc59c40a698fbadd223bd1, type: 3}
 --- !u!1 &251186909
 GameObject:
   m_ObjectHideFlags: 0
