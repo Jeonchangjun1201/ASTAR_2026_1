@@ -73,7 +73,18 @@ namespace KSY.Networks
             }
         }
         #endregion
-        
+
+        public void Write(ReadOnlySpan<byte> source)
+        {
+            ThrowIfDisposed();
+            if (source.Length > 0)
+            {
+                EnsureCapacity(source.Length);
+                source.CopyTo(buffer.AsSpan(writtenCount));
+                writtenCount += source.Length;
+            }
+        }
+
         private void EnsureCapacity(int sizeHint)
         {
             if (sizeHint < 0)

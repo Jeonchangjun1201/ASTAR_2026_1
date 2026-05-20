@@ -58,7 +58,7 @@ namespace KSY.Networks
             }
 
             Type type = packet.GetType();
-            if (!packetIDMap.TryGetValue(type, out var value))
+            if (!packetIDMap.TryGetValue(type, out ushort id))
             {
                 throw new InvalidOperationException(type.FullName + " PacketID not found");
             }
@@ -66,9 +66,10 @@ namespace KSY.Networks
             ArrayPoolBufferWriter bufferWriter = new ArrayPoolBufferWriter();
             try
             {
+                //BinaryPrimitives : 'Primitives'는 '원시의','초기의'라는 의미로 특정 엔디안 방식으로 데이터를 읽고 쓸 때 도움을 준다.
                 BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(2), 0);
                 bufferWriter.Advance(2);
-                BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(2), value);
+                BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.GetSpan(2), id);
                 bufferWriter.Advance(2);
                 MemoryPackSerializer.Serialize(type, in bufferWriter, packet);
                 int writtenCount = bufferWriter.WrittenCount;
