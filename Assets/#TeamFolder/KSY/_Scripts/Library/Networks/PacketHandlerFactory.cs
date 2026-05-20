@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using UnityEngine;
 
 namespace KSY.Networks
 {
-    public class PacketHandlerFactory : MonoBehaviour
+    public class PacketHandlerFactory 
     {
         private PacketHandlerFactory()
         {

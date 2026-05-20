@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7daa6fe29743a1f429e5e661c16a07be, type: 3}
   m_Name: FSStage4
   m_EditorClassIdentifier: Assembly-CSharp::GDH.FSStageSO
-  <ColorDelayTime>k__BackingField: 0.3
+  <ColorDelayTime>k__BackingField: 0.4
   <ColorCount>k__BackingField: 10
   <StageIndex>k__BackingField: 4
   <PlateDisappearDuration>k__BackingField: 0.8

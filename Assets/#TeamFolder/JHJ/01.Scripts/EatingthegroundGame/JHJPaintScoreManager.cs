@@ -24,7 +24,7 @@ namespace JHJ.Scripts.EatingthegroundGame
             InvokeRepeating(nameof(CalculatePaintPercentage), 1f, _checkInterval);
         }
 
-        [SerializeField] private JHJPaintingGameTimer _gameTimer; // 타이머 스크립트 연결
+        [SerializeField] private JHJPaintingGameTimerManager _gameTimer; // 타이머 스크립트 연결
 
         private void OnEnable()
         {

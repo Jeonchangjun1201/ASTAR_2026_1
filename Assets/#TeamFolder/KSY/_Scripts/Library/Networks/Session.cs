@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
-using UnityEngine;
 
 namespace KSY.Networks
 {
-    public class Session : MonoBehaviour
+    public class Session
     {
         private readonly object sendLocker;
         private SendQueue sendQueue;
@@ -61,7 +60,7 @@ namespace KSY.Networks
             Volatile.Write(ref isClosed, 0);
             sendQueue = new SendQueue();
             sendArgs = new SocketAsyncEventArgs();
-            sendArgs.Completed += HandleSent;
+            sendArgs.Completed += HandleSend;
             receiveBuffer = new ReceiveBuffer(65535);
             receiveArgs = new SocketAsyncEventArgs();
             receiveArgs.Completed += HandleReceived;
@@ -136,11 +135,11 @@ namespace KSY.Networks
             sendArgs.BufferList = bufferList;
             if (!connectedSocket.SendAsync(sendArgs))
             {
-                HandleSent(null, sendArgs);
+                HandleSend(null, sendArgs);
             }
         }
 
-        private void HandleSent(object sender, SocketAsyncEventArgs sendArgs)
+        private void HandleSend(object sender, SocketAsyncEventArgs sendArgs)
         {
             if (!IsOpened)
             {
@@ -167,7 +166,7 @@ namespace KSY.Networks
             sendArgs.BufferList = bufferList;
             if (!connectedSocket.SendAsync(sendArgs))
             {
-                HandleSent(null, sendArgs);
+                HandleSend(null, sendArgs);
             }
         }
 

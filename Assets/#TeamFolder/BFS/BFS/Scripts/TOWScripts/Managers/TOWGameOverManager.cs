@@ -21,7 +21,13 @@ namespace BFS
                 ? $"{(PlayerTeamTOW)1} WINS!!!!!!" :
                 _scoreManager.scoreBoard[(PlayerTeamTOW)1].CompareTo(_scoreManager.scoreBoard[(PlayerTeamTOW)2]) == 0
                 ? "DRAW" : $"{(PlayerTeamTOW)2} WINS!!!!!!";
-            
+
+            float startTime = Time.time;
+            float endTime = Time.time + 3;
+            while(startTime <= endTime)
+            {
+                startTime += Time.time;
+            }
             EndGameText(winnerTeam);
         }
 
