@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -34,8 +34,8 @@ namespace _TeamFolder.JCJ.Script
 
         [Header("마우스 룩")]
         [SerializeField] private bool  _enableMouseLook = true;
-        [SerializeField] private float _minPitch        = -30f;
-        [SerializeField] private float _maxPitch        =  55f;
+        [SerializeField] private float _minPitch        = -48f;
+        [SerializeField] private float _maxPitch        =  48f;
 
         [Header("벽 가림")]
         [Tooltip("타깃과 사이에 벽이 있으면 카메라를 당긴다.")]
@@ -133,8 +133,10 @@ namespace _TeamFolder.JCJ.Script
         private void LateUpdate()
         {
             if (_follow == null || _rig == null) return;
-            float pitch = _rig.IsPitchAllowed ? _rig.Pitch : 0f;
-            _follow.FollowOffset = Quaternion.Euler(pitch, _rig.Yaw, 0f) * _baseFollowOffset;
+            float pitch = _rig.IsPitchAllowed ? Mathf.Clamp(_rig.Pitch, _minPitch, _maxPitch) : 0f;
+            float yaw = _rig.Yaw;
+            Quaternion orbit = Quaternion.AngleAxis(yaw, Vector3.up) * Quaternion.AngleAxis(pitch, Vector3.right);
+            _follow.FollowOffset = orbit * _baseFollowOffset;
         }
 
         private void AddDeoccluder(GameObject rigGo)

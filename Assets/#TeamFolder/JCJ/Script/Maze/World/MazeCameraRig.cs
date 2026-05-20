@@ -55,6 +55,11 @@ namespace _TeamFolder.JCJ.Script
         public float Yaw => _yaw;
         public float Pitch => _pitch;
 
+        public void SetPitch(float pitch)
+        {
+            _pitch = Mathf.Clamp(pitch, _minPitch, _maxPitch);
+        }
+
         // 카메라 피벗이 따라갈 플레이어를 바꾼다.
         // 관전 전환이나 로컬 소유 플레이어 변경 시점에 연결되는 메서드다.
         public void SetTarget(Transform target)
@@ -87,6 +92,13 @@ namespace _TeamFolder.JCJ.Script
 
         private void LateUpdate()
         {
+            var battleCam = GetComponent<_TeamFolder.JCJ.Battle.BattleFirstPersonCamera>();
+            if (battleCam != null && battleCam.enabled && battleCam.FollowTarget != null)
+            {
+                if (battleCam.SuspendAutomaticCameraFollow) return;
+                return;
+            }
+
             if (_target != null) transform.position = _target.position;
             transform.rotation = Quaternion.Euler(_pitch, _yaw, 0f);
         }

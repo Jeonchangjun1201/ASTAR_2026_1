@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using _TeamFolder.JCJ.Battle.Session;
 
 // 설정 패널 전체 열기/닫기와 탭 구성을 관리하는 UI.
 
@@ -13,6 +14,8 @@ namespace _TeamFolder.JCJ.Script
     [DefaultExecutionOrder(-50)]
     public class SettingsPanel : MonoBehaviour
     {
+        public static bool IsOpen { get; private set; }
+
         [SerializeField] private bool _toggleWithEscape = true;
         [SerializeField] private bool _autoOpenOnStart = false;
 
@@ -39,6 +42,7 @@ namespace _TeamFolder.JCJ.Script
         private void OnDestroy()
         {
             if (_settings != null) _settings.OnChanged -= HandleChanged;
+            IsOpen = false;
         }
 
         private void Update()
@@ -58,12 +62,11 @@ namespace _TeamFolder.JCJ.Script
         public void SetVisible(bool visible)
         {
             if (_root == null) return;
+            IsOpen = visible;
             _root.SetActive(visible);
             if (visible)
             {
-                // 설정 창을 열 때는 게임 중이어도 마우스로 UI를 누를 수 있게 커서를 풀어준다.
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                GameplayCursor.SetLocked(false);
             }
             else
             {
@@ -73,7 +76,12 @@ namespace _TeamFolder.JCJ.Script
 
         private static void ApplyCursorLockForGameplay()
         {
-            // 창을 닫으면 Maze/Tile 중 실제 플레이 상태인 게임이 있는지 확인해 커서 상태를 되돌린다.
+            if (BattleMatchRegistry.TryGetMatch(out _))
+            {
+                GameplayCursor.SetLocked(true);
+                return;
+            }
+
             bool lockCursor = false;
 
             var maze = GameStateManager.Instance;
@@ -91,8 +99,7 @@ namespace _TeamFolder.JCJ.Script
                     || tile.State == _TeamFolder.JCJ.TileGame.GameState.Countdown;
             }
 
-            Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !lockCursor;
+            GameplayCursor.SetLocked(lockCursor);
         }
 
         private void BuildUi()

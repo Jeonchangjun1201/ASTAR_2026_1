@@ -7,10 +7,10 @@ public class CountDown : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI text;
-    
-    [SerializeField] private float displayDuration = 1f; 
-
+    [SerializeField] private float displayDuration = 1f;
     [SerializeField] private GameObject[] stopObj;
+
+    public static event Action OnCountdownFinished;
 
     private void Start()
     {
@@ -22,7 +22,7 @@ public class CountDown : MonoBehaviour
         foreach (var obj in stopObj)
             if (obj != null) obj.SetActive(false);
 
-        string[] steps = { "3", "2", "1", "start"};
+        string[] steps = { "3", "2", "1", "Start!" };
 
         foreach (string step in steps)
         {
@@ -34,6 +34,7 @@ public class CountDown : MonoBehaviour
 
         foreach (var obj in stopObj)
             if (obj != null) obj.SetActive(true);
+
+        OnCountdownFinished?.Invoke(); // ← 추가!
     }
 }
-

@@ -18,9 +18,12 @@ MonoBehaviour:
   _automatic: 1
   _viewPrefab: {fileID: 100100000, guid: 02baef62b1bfedf40bb369fb7542b9e7, type: 3}
   _projectilePrefab: {fileID: 100100000, guid: a984edf822daa0a48b97ca832ed223bf, type: 3}
-  _viewLocalPosition: {x: 0.18, y: -0.23, z: 0.28}
-  _viewLocalEuler: {x: 0, y: 0, z: 0}
+  _viewLocalPosition: {x: 0.16, y: -0.54, z: 0.22}
+  _viewLocalEuler: {x: 0, y: -7, z: 0}
   _viewLocalScale: {x: 1.32, y: 1.32, z: 1.32}
+  _useCustomMountPose: 1
+  _mountLocalPosition: {x: 0.058, y: -0.368, z: 0.105}
+  _mountLocalEulerAngles: {x: 0, y: 0, z: 0}
   _damage: 26
   _fireInterval: 0.115
   _muzzleVelocity: 52
