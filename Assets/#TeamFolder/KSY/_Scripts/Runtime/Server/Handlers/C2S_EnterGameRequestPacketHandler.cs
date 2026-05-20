@@ -1,6 +1,7 @@
 using KSY.Networks;
 using KSY.Shared;
 using KSY.Shared.Packets;
+using KSY.Utility;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace KSY.Servers.Handlers
 
         public C2S_EnterGameRequestPacketHandler(GameManager gameManager, GameServer gameServer, DataTableManager dataTableManager)
         {
+            KSY.Utility.CustomLog.Log($"Create : {typeof(C2S_EnterGameRequestPacketHandler).Name}");
             this.gameManager = gameManager;
             this.gameServer = gameServer;
             this.dataTableManager = dataTableManager;
@@ -25,6 +27,7 @@ namespace KSY.Servers.Handlers
 
         ValueTask IPacketHandler<C2S_EnterGameRequestPacket>.HandlePacket(Session session, C2S_EnterGameRequestPacket packet)
         {
+            CustomLog.Log("Try_HandlePacket : C2S_EnterGameRequestPacket", Color.rebeccaPurple);
             string playerID = Guid.NewGuid().ToString();
             gameServer.AddPlayer(playerID, session);
 
@@ -35,7 +38,7 @@ namespace KSY.Servers.Handlers
 
             Dictionary<string, UnitDataDTO> players = new Dictionary<string, UnitDataDTO>();
             gameManager.ForEachPlayer((otherPlayerID, otherPlayer) => {
-                players[otherPlayerID] = new CreateUnitDataDTO(otherPlayer).unitData;
+                players[otherPlayerID] = new CreateUnitData(otherPlayer).unitData;
             });
 
             S2C_EnterGameResponsePacket responsePacket = new S2C_EnterGameResponsePacket()
@@ -48,9 +51,10 @@ namespace KSY.Servers.Handlers
             S2C_EnterGameBroadcastPacket broadcastPacket = new S2C_EnterGameBroadcastPacket()
             {
                 PlayerID = playerID,
-                UnitData = new CreateUnitDataDTO(unit).unitData
+                UnitData = new CreateUnitData(unit).unitData
             };
             gameServer.Send(broadcastPacket, (sessionID, session) => sessionID != playerID);
+            CustomLog.Log("Success_HandlePacket : C2S_EnterGameRequestPacket", Color.rebeccaPurple);
 
             return new ValueTask();
         }

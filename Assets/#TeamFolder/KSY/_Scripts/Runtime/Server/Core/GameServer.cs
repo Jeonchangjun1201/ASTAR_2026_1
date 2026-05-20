@@ -1,12 +1,13 @@
 ﻿using KSY.Networks;
 using KSY.Shared;
+using KSY.Utility;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 
 namespace KSY.Servers
 {
-    public class GameServer : ISessionFactory
+    public class GameServer : ISessionFactory, IDisposable
     {
         private Dictionary<Session, string> playerIDMap = null;
         private Server server = null;
@@ -35,6 +36,17 @@ namespace KSY.Servers
         Session ISessionFactory.Create(NetworkObject networkObject, Socket connectedSocket) => new Session();
         #endregion
 
+        #region IDisposable
+        public void Dispose()
+        {
+            if (server != null && server.IsOpened)
+            {
+                server.Close();
+                CustomLog.Log("Unity 종료로 인해 서버 소켓이 안전하게 닫혔습니다.");
+            }
+        }
+        #endregion
+
         public void Listen(int port)
         {
             server.Listen(port);
@@ -55,6 +67,6 @@ namespace KSY.Servers
         {
             playerIDMap.TryGetValue(session, out string playerID);
             return playerID;
-        }        
+        }
     }
 }

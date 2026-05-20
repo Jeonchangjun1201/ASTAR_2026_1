@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace KSY.Utility
 {
-    public abstract class GameEvent
-    { }
+    public abstract class GameEvent { }
+
     [CreateAssetMenu(fileName = "EventChannel", menuName = "SO/Event/Channel", order = 0)]
     public class EventChannelSO : ScriptableObject
     {
@@ -44,7 +44,7 @@ namespace KSY.Utility
                     else
                         _events[evtType] = internalHandler;
                 }
-                _lookUpTable.Remove(handler); //여기가 castHandler로 적혀있어서 리스너가 빠지질 않았어.
+                _lookUpTable.Remove(handler); 
             }
         }
 
@@ -61,6 +61,5 @@ namespace KSY.Utility
             _events.Clear();
             _lookUpTable.Clear();
         }
-
     }
 }

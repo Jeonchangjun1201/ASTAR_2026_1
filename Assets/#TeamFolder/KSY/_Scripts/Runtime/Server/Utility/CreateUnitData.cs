@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace KSY.Servers
 {
-    public struct CreateUnitDataDTO
+    public struct CreateUnitData
     {
         public UnitDataDTO unitData;
 
-        public CreateUnitDataDTO(Unit unit)
+        public CreateUnitData(Unit unit)
         {
             Vector2 position = unit.gameObject.transform.position;
 

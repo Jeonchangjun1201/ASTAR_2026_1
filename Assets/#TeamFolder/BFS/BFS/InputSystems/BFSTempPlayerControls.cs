@@ -94,7 +94,7 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""Value"",
+                    ""event"": ""Value"",
                     ""id"": ""d77d766d-fd7e-4d89-a6cf-1e1aba1e2d07"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -103,7 +103,7 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
                 },
                 {
                     ""name"": ""Jump"",
-                    ""type"": ""Button"",
+                    ""event"": ""Button"",
                     ""id"": ""0e3e0c92-b6a0-4e33-b5b3-db90a32fd75b"",
                     ""expectedControlType"": """",
                     ""processors"": """",

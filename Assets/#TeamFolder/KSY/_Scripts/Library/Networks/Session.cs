@@ -43,8 +43,6 @@ namespace KSY.Networks
 
         public void Open(Socket connectedSocket, PacketSerializer packetSerializer, IPacketDispatcher packetDispatcher)
         {
-            //Argument, ���ڸ� ���Ѵ�. ���ڴ� Parameter�ʹ� �ٸ� �������� �Ű������� �޼��忡 ���޵Ǵ� �� ���� ��ü�� ���ϰ�
-            //Argument�� ������ ���޵Ǵ� ���� ���Ѵ�. ������ ���ͷ��� ���� ����.
             if (connectedSocket == null)
                 throw new ArgumentNullException("connectedSocket");
 
@@ -127,9 +125,7 @@ namespace KSY.Networks
             {
                 sendQueue.Enqueue(sendQueueContext);
                 if (!sendQueue.TryFlush(out bufferList))
-                {
                     return;
-                }
             }
 
             sendArgs.BufferList = bufferList;
