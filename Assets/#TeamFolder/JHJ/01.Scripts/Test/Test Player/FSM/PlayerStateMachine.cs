@@ -54,8 +54,17 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
                     _inputReader.P2OnMove += OnMoveInput;
                     _inputReader.P2OnJump += OnJumpInput;
                     break;
+                case PlayerIndex.P3:
+                    _inputReader.P3OnMove += OnMoveInput;
+                    _inputReader.p3OnJump += OnJumpInput;
+                    break;
+                case PlayerIndex.P4:
+                    _inputReader.P4OnMove += OnMoveInput;
+                    _inputReader.p4OnJump += OnJumpInput;
+                    break;
             }
         }
+
 
         private void OnDisable()
         {
@@ -68,6 +77,15 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
                 case PlayerIndex.P2:
                     _inputReader.P2OnMove -= OnMoveInput;
                     _inputReader.P2OnJump -= OnJumpInput;
+                    break;
+                case PlayerIndex.P3:
+                    _inputReader.P3OnMove -= OnMoveInput;
+                    _inputReader.p3OnJump -= OnJumpInput;
+                    break;
+                    break;
+                case PlayerIndex.P4:
+                    _inputReader.P4OnMove -= OnMoveInput;
+                    _inputReader.p4OnJump -= OnJumpInput;
                     break;
             }
         }
