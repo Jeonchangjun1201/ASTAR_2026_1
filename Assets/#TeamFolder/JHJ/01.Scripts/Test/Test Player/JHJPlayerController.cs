@@ -32,7 +32,7 @@ namespace JHJ.Scripts.Test.TestPlayer
         [Header("점프 설정")]
         [SerializeField] private float jumpForce = 7f;
         [SerializeField] private LayerMask whatIsGround;
-        [SerializeField] private float groundCheckDistance = 0.2f;
+        [SerializeField] private Vector3 groundCheckDistance;
 
         [SerializeField] private InputReader _inputReader;
         private Camera _mainCamera;
@@ -182,7 +182,7 @@ namespace JHJ.Scripts.Test.TestPlayer
             Vector3 spherePos = transform.position + Vector3.up * 0.1f;
 
             // OverlapSphere를 사용해 반경(groundCheckDistance) 내의 모든 콜라이더를 찾습니다.
-            Collider[] colliders = Physics.OverlapSphere(spherePos, groundCheckDistance, whatIsGround);
+            Collider[] colliders = Physics.OverlapBox(spherePos, groundCheckDistance,Quaternion.identity);
 
             foreach (Collider col in colliders)
             {
@@ -200,7 +200,7 @@ namespace JHJ.Scripts.Test.TestPlayer
         {
             Gizmos.color = Color.green;
             Vector3 spherePos = transform.position + Vector3.up * 0.1f;
-            Gizmos.DrawWireSphere(spherePos, groundCheckDistance);
+            Gizmos.DrawWireCube(spherePos, groundCheckDistance);
         }
 
         public void SetMoveSpeed(float newSpeed) => moveSpeed = newSpeed;

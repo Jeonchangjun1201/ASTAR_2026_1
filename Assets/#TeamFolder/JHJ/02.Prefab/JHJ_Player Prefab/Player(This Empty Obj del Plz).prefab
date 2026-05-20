@@ -328,6 +328,10 @@ MonoBehaviour:
   moveSpeed: 7
   rotationSpeed: 15
   jumpForce: 7
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 131072
+  groundCheckDistance: {x: 0.72, y: -0.21, z: 0.57}
   _inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
 --- !u!1 &8824966187117968299
 GameObject:
@@ -387,9 +391,9 @@ Transform:
   m_GameObject: {fileID: 8861263253644238376}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0.194, z: 0}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2080973330410238104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
