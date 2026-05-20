@@ -18,7 +18,6 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private TextMeshProUGUI _timerText;
         [SerializeField] private TextMeshProUGUI _rankFeedText;
         [SerializeField] private TextMeshProUGUI _scoreText;
-        [SerializeField] private TextMeshProUGUI _countdownText;
         [SerializeField] private Slider _staminaSlider;
         [SerializeField] private Image _staminaFill;
 
@@ -26,9 +25,6 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private GameObject _resultPanel;
         [SerializeField] private TextMeshProUGUI _resultText;
         [SerializeField] private CanvasGroup _resultGroup;
-        [SerializeField] private Button _restartButton;
-        [SerializeField] private Transform _restartButtonVisual;
-
         [Header("플레이어 참조(스태미나 바)")]
         [SerializeField] private PlayerController _localPlayer;
 
@@ -43,14 +39,11 @@ namespace _TeamFolder.JCJ.Script
             _timerText           ??= _builder.TimerText;
             _rankFeedText        ??= _builder.RankFeedText;
             _scoreText           ??= _builder.ScoreText;
-            _countdownText       ??= _builder.CountdownText;
             _staminaSlider       ??= _builder.StaminaSlider;
             _staminaFill         ??= _builder.StaminaFill;
             _resultPanel         ??= _builder.ResultPanel;
             _resultText          ??= _builder.ResultText;
             _resultGroup         ??= _builder.ResultCanvasGroup;
-            _restartButton       ??= _builder.RestartButton;
-            _restartButtonVisual ??= _builder.RestartButtonVisual;
         }
 
         // GameStateManager와 각 서비스 이벤트를 HUD에 연결하는 시작 단계다.
@@ -71,16 +64,10 @@ namespace _TeamFolder.JCJ.Script
                 gsm.Rank.OnPlayerFinished += AppendRankFeed;
                 gsm.Rank.OnAllFinished    += ShowResult;
             }
-            if (gsm.Countdown != null)
-            {
-                gsm.Countdown.OnTick += ShowCountdown;
-                gsm.Countdown.OnGo   += ShowGo;
-            }
             if (gsm.Score != null)
                 gsm.Score.OnScoreChanged += RefreshScore;
 
             if (_rankFeedText != null)  _rankFeedText.text  = string.Empty;
-            if (_countdownText != null) _countdownText.text = string.Empty;
             if (_resultGroup != null)
             {
                 _resultGroup.gameObject.SetActive(false);
@@ -88,7 +75,6 @@ namespace _TeamFolder.JCJ.Script
             }
             else _resultPanel?.SetActive(false);
 
-            if (_restartButton != null) _restartButton.onClick.AddListener(RequestRestart);
         }
 
         private void OnDestroy()
@@ -102,11 +88,6 @@ namespace _TeamFolder.JCJ.Script
             {
                 gsm.Rank.OnPlayerFinished -= AppendRankFeed;
                 gsm.Rank.OnAllFinished    -= ShowResult;
-            }
-            if (gsm.Countdown != null)
-            {
-                gsm.Countdown.OnTick -= ShowCountdown;
-                gsm.Countdown.OnGo   -= ShowGo;
             }
             if (gsm.Score != null)
                 gsm.Score.OnScoreChanged -= RefreshScore;
@@ -145,7 +126,6 @@ namespace _TeamFolder.JCJ.Script
         // 서버 상태 전환을 UI에 반영할 때 가장 먼저 보게 되는 메서드다.
         private void HandleStateChanged(GameState state)
         {
-            if (state == GameState.Playing) ClearCountdownImmediate();
             // 종료 화면은 PodiumPresenter가 담당 — 여기서는 구식 결과 패널 대신 진행 중 HUD만 정리.
             if (state == GameState.Waiting)
             {
@@ -209,36 +189,5 @@ namespace _TeamFolder.JCJ.Script
             HudTweenHelpers.FlashFullscreen(tint, duration: 0.25f, maxAlpha: 0.20f);
         }
 
-        private void ShowCountdown(int remaining)
-        {
-            if (_countdownText == null) return;
-            _countdownText.text = remaining.ToString();
-            HudTweenHelpers.BounceCountdown(_countdownText.transform);
-        }
-
-        private void ShowGo()
-        {
-            if (_countdownText == null) return;
-            _countdownText.text = "GO!";
-            HudTweenHelpers.GoBurst(_countdownText.transform, _countdownText);
-        }
-
-        private void ClearCountdownImmediate()
-        {
-            if (_countdownText == null) return;
-            _countdownText.text = string.Empty;
-            _countdownText.transform.localScale = Vector3.zero;
-        }
-
-        // 로컬 재시작 버튼 동작이다.
-        // 서버 매치에서는 이 버튼이 직접 재생성하지 않고 재시작 요청을 보내는 쪽으로 바뀌기 쉽다.
-        private void RequestRestart()
-        {
-            var mm = MazeManager.Instance;
-            if (mm == null) return;
-
-            HudTweenHelpers.HidePanel(_resultGroup);
-            mm.GenerateMazeWithButton();
-        }
     }
 }
