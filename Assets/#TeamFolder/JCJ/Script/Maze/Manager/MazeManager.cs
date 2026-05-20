@@ -108,6 +108,7 @@ namespace _TeamFolder.JCJ.Script
             ApplyDifficultyPreset();
             ResolveServices();
             EnsureSceneHud();
+            GenerateMazeWithButton();
         }
 
         private void ApplyDifficultyPreset()

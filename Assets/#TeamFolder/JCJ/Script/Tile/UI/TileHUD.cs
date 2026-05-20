@@ -25,8 +25,6 @@ namespace _TeamFolder.JCJ.TileGame
         private TextMeshProUGUI    _timerText;
         private TextMeshProUGUI    _aliveText;
         private TextMeshProUGUI    _livesText;
-        private TextMeshProUGUI    _countdownText;
-        private RectTransform      _countdownRect;
         private TextMeshProUGUI    _colorCallText;
         private CanvasGroup        _colorCallGroup;
         private Image              _colorCallBar;
@@ -36,7 +34,6 @@ namespace _TeamFolder.JCJ.TileGame
         private TextMeshProUGUI    _resultBody;
 
         // 코루틴 핸들 — StopAllCoroutines 대신 필요한 것만 중지(이 컴포넌트의 다른 UI 트윈 유지).
-        private Coroutine          _countdownCo;
         private Coroutine          _colorCallBarCo;
         private Coroutine          _colorCallFadeCo;
         private Coroutine          _resultFadeCo;
@@ -45,7 +42,6 @@ namespace _TeamFolder.JCJ.TileGame
         {
             BuildCanvas();
             BuildTopBar();
-            BuildCountdown();
             BuildColorCallBanner();
             BuildLegend();
         }
@@ -74,33 +70,6 @@ namespace _TeamFolder.JCJ.TileGame
             sb.Append("LIVES  ");
             for (int i = 0; i < max; i++) sb.Append(i < lives ? '#' : '-');
             _livesText.text = sb.ToString();
-        }
-
-        public void ShowCountdown(string label)
-        {
-            if (_countdownText == null) return;
-            _countdownText.gameObject.SetActive(true);
-            _countdownText.text = label;
-            _countdownRect.localScale = Vector3.one * 1.6f;
-            if (_countdownCo != null) StopCoroutine(_countdownCo);
-            _countdownCo = StartCoroutine(CountdownPop());
-        }
-
-        public void HideCountdown()
-        {
-            if (_countdownText != null) _countdownText.gameObject.SetActive(false);
-        }
-
-        private IEnumerator CountdownPop()
-        {
-            float t = 0f;
-            while (t < 0.22f)
-            {
-                t += Time.unscaledDeltaTime;
-                float e = 1f - Mathf.Pow(1f - t / 0.22f, 3f);
-                _countdownRect.localScale = Vector3.Lerp(Vector3.one * 1.6f, Vector3.one, e);
-                yield return null;
-            }
         }
 
         // 안전색 공지를 HUD에 띄우는 진입점이다.
@@ -155,9 +124,9 @@ namespace _TeamFolder.JCJ.TileGame
         // ── 결과 오버레이 ───────────────────────────
         // 라운드 종료 결과와 재시작 버튼을 띄우는 UI 진입점이다.
         // 서버 매치에서는 버튼이 직접 다시 시작하지 않도록 onRestart 연결 방식만 바꾸면 된다.
-        public void ShowResults(IReadOnlyList<string> rankingLines, System.Action onRestart)
+        public void ShowResults(IReadOnlyList<string> rankingLines)
         {
-            if (_resultGroup == null) BuildResultOverlay(onRestart);
+            if (_resultGroup == null) BuildResultOverlay();
             _resultGroup.gameObject.SetActive(true);
             _resultGroup.alpha = 0f;
             _resultGroup.interactable = true;
@@ -239,18 +208,6 @@ namespace _TeamFolder.JCJ.TileGame
             SetAnchors(lives.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0.5f),
                         new Vector2(18f, 8f), new Vector2(-16f, -6f));
             _livesText = lives;
-        }
-
-        private void BuildCountdown()
-        {
-            var txt = NewText("Countdown", _canvas.transform, 200, TextAlignmentOptions.Center, JCJUiColors.HudAccent);
-            SetAnchors(txt.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                        new Vector2(0f, 40f), new Vector2(640f, 300f));
-            txt.fontStyle = FontStyles.Bold;
-            ApplyOutline(txt, 0.28f);
-            txt.gameObject.SetActive(false);
-            _countdownText = txt;
-            _countdownRect = txt.rectTransform;
         }
 
         private void BuildColorCallBanner()
@@ -394,7 +351,7 @@ namespace _TeamFolder.JCJ.TileGame
             descText.text = description;
         }
 
-        private void BuildResultOverlay(System.Action onRestart)
+        private void BuildResultOverlay()
         {
             var go = new GameObject("ResultOverlay");
             go.transform.SetParent(_canvas.transform, false);
@@ -440,26 +397,6 @@ namespace _TeamFolder.JCJ.TileGame
             body.lineSpacing = 8f;
             ApplyOutline(body, 0.1f);
             _resultBody = body;
-
-            var btnGO = new GameObject("RestartBtn");
-            btnGO.transform.SetParent(panel.transform, false);
-            var btnRT = btnGO.AddComponent<RectTransform>();
-            SetAnchors(btnRT, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
-                        new Vector2(0f, 72f), new Vector2(340f, 82f));
-            var btnBG = btnGO.AddComponent<Image>();
-            btnBG.color = new Color(0.88f, 0.92f, 0.99f, 1f);
-            var btnSh = btnGO.AddComponent<Shadow>();
-            btnSh.effectColor = new Color(0f, 0f, 0f, 0.25f);
-            btnSh.effectDistance = new Vector2(3f, -3f);
-            var btn = btnGO.AddComponent<Button>();
-            btn.targetGraphic = btnBG;
-            btn.onClick.AddListener(() => onRestart?.Invoke());
-
-            var btnTxt = NewText("Label", btnGO.transform, 30, TextAlignmentOptions.Center,
-                                  new Color(0.06f, 0.08f, 0.12f));
-            SetAnchors(btnTxt.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            btnTxt.text = "PLAY AGAIN";
-            btnTxt.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
 
             _resultGroup.alpha = 0f;
             _resultGroup.gameObject.SetActive(false);
