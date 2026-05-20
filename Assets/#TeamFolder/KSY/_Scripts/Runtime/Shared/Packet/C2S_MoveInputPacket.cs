@@ -2,7 +2,7 @@ using KSY.Networks;
 using MemoryPack;
 using UnityEngine;
 
-namespace KSY.Shared
+namespace KSY.Shared.Packets
 {
     [Packet((ushort)EPacketType.C2S_MoveInputPacket)]
     [MemoryPackable]

@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace KSY.Networks
 {
-    public class Room : MonoBehaviour
+    public class Room
     {
         //인터페이스에서는 내부에서 암묵적으로 public 접근 제한자를 띄고 있다.
         public interface ICallback

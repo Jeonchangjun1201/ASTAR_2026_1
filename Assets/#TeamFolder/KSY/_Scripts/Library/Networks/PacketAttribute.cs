@@ -2,8 +2,8 @@ using System;
 
 namespace KSY.Networks
 {
-    //AttributeUsage : Specifies the usage of another attribute class, This class cannot be inherited
-    //AllowMultiple : 하나의 대상에 동일한 Attribute를 여러 개 붙일 수 있는지 여부
+    //Attribute used to reduce packet memory
+
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class PacketAttribute : Attribute
     {

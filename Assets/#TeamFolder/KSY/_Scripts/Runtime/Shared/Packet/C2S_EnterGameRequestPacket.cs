@@ -1,7 +1,7 @@
 using KSY.Networks;
 using MemoryPack;
 
-namespace KSY.Shared
+namespace KSY.Shared.Packets
 {
     [Packet((ushort)EPacketType.C2S_EnterGameRequestPacket)]
     [MemoryPackable]

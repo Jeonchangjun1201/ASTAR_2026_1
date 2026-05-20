@@ -25,7 +25,7 @@ namespace JHJ.Scripts.EatingthegroundGame
         [SerializeField] private float _spawnInterval = 5f; // 몇 초마다 떨어질지
         [SerializeField] private float _spawnHeight = 15f;  // 하늘 높이 (Y축)
 
-        // 맵의 크기에 맞춰 인스펙터에서 조절해 주세요.
+        // 맵의 크기에 맞춰 인스펙터에서 조절
         [SerializeField] private Vector2 _spawnAreaMin = new Vector2(-10, -10); // 최소 X, Z
         [SerializeField] private Vector2 _spawnAreaMax = new Vector2(10, 10);   // 최대 X, Z
 

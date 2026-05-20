@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace KSY.Clients
+namespace KSY.Shared
 {
     public class UnitMovementComponent : MonoBehaviour
     {
