@@ -23,6 +23,11 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private float _gameDuration = 120f;
         [SerializeField] private int _countdownSeconds = 3;
 
+        [Header("미로 완주 순위 (RankService 전용)")]
+        [SerializeField] private ScoreConfig _mazeScoreConfig;
+        [SerializeField] private int _mazeTotalPlayers = 4;
+        [SerializeField] private int _mazePodiumSize = 3;
+
         public ITimerService     Timer     => _timerService;
         public IRankService      Rank      => _rankService;
         public ICountdownService Countdown => _countdownService;
@@ -61,10 +66,22 @@ namespace _TeamFolder.JCJ.Script
 
         private void AutoBuildServices()
         {
+            var scoreRank = MatchScoreRankManager.EnsureExists();
+            if (_scoreService == null && scoreRank?.Score is ScoreService scoreConcrete)
+                _scoreService = scoreConcrete;
+
             if (_timerService == null)     _timerService     = SceneComponentResolver.GetOrAdd<TimerService>(this);
             if (_rankService == null)      _rankService      = SceneComponentResolver.GetOrAdd<RankService>(this);
             if (_countdownService == null) _countdownService = SceneComponentResolver.GetOrAdd<CountdownService>(this);
             if (_scoreService == null)     _scoreService     = SceneComponentResolver.FindOrCreate<ScoreService>(null, "ScoreService");
+
+            ApplyMazeRankConfig();
+        }
+
+        private void ApplyMazeRankConfig()
+        {
+            if (_rankService == null) return;
+            _rankService.Configure(_mazeScoreConfig, _mazeTotalPlayers, _mazePodiumSize);
         }
 
         private void SubscribeServiceEvents()
@@ -130,6 +147,7 @@ namespace _TeamFolder.JCJ.Script
             if (_countdownService != null) _countdownService.Cancel();
             if (_timerService != null) _timerService.ResetTimer();
             if (_rankService != null) _rankService.ResetRankings();
+            MatchScoreRankManager.Instance?.ResetScores();
             if (_scoreService != null) _scoreService.Reset();
             ChangeStateInternal(GameState.Waiting);
         }

@@ -36,8 +36,9 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         [SerializeField] private GameObject _playerPrefab; // Instantiate 할 플레이어 바디 프리팹이다.
         [SerializeField] private BattleWeaponCatalog _weaponCatalog; // 랭크별 무기 목록 데이터 소스이다.
         [SerializeField] private BattleFirstPersonCamera _battleCamera; // 로컬 플레이어 카메라 참조이다.
-        [SerializeField] private ScoreService _scoreService; // 선택적으로 외부 랭크를 가져온다.
-        [SerializeField] private GameObject _scoreServicePrefab; // 서비스가 없을 때 생성할 프리팹이다.
+        [SerializeField] private ScoreService _scoreService;
+        [SerializeField] private GameObject _matchScoreRankPrefab;
+        [SerializeField] private GameObject _scoreServicePrefab;
         [SerializeField] private bool _useScoreServiceRanks = true; // 점수 서비스에서 랭크 배열을 덮어쓸지 여부이다.
         [SerializeField] private Transform _spawnRoot; // 스폰 포인트 자식들의 부모 트랜스폼이다.
         [SerializeField] private int _localPlayerIndex; // 로컬 플레이어 슬롯 인덱스이다.
@@ -720,8 +721,16 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
 
         private void ResolveScoreService()
         {
+            if (_scoreService == null && MatchScoreRankManager.Instance != null)
+                _scoreService = MatchScoreRankManager.Instance.Score as ScoreService;
             if (_scoreService == null) _scoreService = ScoreService.Instance;
             if (_scoreService == null) _scoreService = Object.FindFirstObjectByType<ScoreService>();
+            if (_scoreService == null && _matchScoreRankPrefab != null)
+            {
+                var root = Instantiate(_matchScoreRankPrefab);
+                root.name = _matchScoreRankPrefab.name;
+                _scoreService = root.GetComponent<ScoreService>();
+            }
             if (_scoreService == null && _scoreServicePrefab != null)
             {
                 var scoreServiceObject = Instantiate(_scoreServicePrefab);
@@ -734,7 +743,8 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         // 서버가 랭크/시드/매치메이킹 결과를 내려주면 이 지점에서 내부 배열만 치환하면 된다.
         private void ApplyRanksFromScoreService()
         {
-            if (!_useScoreServiceRanks || _scoreService == null) return;
+            var score = (IScoreService)_scoreService ?? MatchScoreRankManager.Instance?.Score;
+            if (!_useScoreServiceRanks || score == null) return;
 
             int playerCount = Mathf.Max(4, _playerRanks != null ? _playerRanks.Length : 0);
             var resolvedRanks = new int[playerCount];
@@ -742,7 +752,7 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
 
             for (int i = 0; i < playerCount; i++)
             {
-                int rank = _scoreService.GetRankForPlayerIndex(i);
+                int rank = score.GetRankForPlayerIndex(i);
                 if (rank > 0)
                 {
                     resolvedRanks[i] = Mathf.Clamp(rank, 1, playerCount);

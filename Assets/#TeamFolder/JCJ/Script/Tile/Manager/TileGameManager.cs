@@ -36,6 +36,7 @@ namespace _TeamFolder.JCJ.TileGame
         [SerializeField] private bool buildCamera = true;
         [Tooltip("ColorCallDirector 없으면 자동 추가.")]
         [SerializeField] private bool buildColorCall = true;
+        [SerializeField] private CountdownUI countdownUI;
 
         // 서비스(자동 해석).
         private TileHUD             _hud;
@@ -181,17 +182,28 @@ namespace _TeamFolder.JCJ.TileGame
             _state = GameState.Countdown;
             GameplayCursor.SetLocked(false);
 
+            countdownUI ??= FindFirstObjectByType<CountdownUI>();
             int seconds = Mathf.Max(0, gameConfig.countdownSeconds);
-            for (int i = seconds; i > 0; i--)
+            if (countdownUI != null)
             {
-                _hud?.ShowCountdown(i.ToString());
-                TileAudio.PlayStatic(TileSfx.CountdownTick, 0.8f, 1f);
-                yield return new WaitForSeconds(1f);
+                void Tick(int _) => TileAudio.PlayStatic(TileSfx.CountdownTick, 0.8f, 1f);
+                void Go() => TileAudio.PlayStatic(TileSfx.Go, 1f, 1f);
+                countdownUI.OnTick += Tick;
+                countdownUI.OnGo += Go;
+                yield return countdownUI.PlayRoutine(seconds);
+                countdownUI.OnTick -= Tick;
+                countdownUI.OnGo -= Go;
             }
-            _hud?.ShowCountdown("GO!");
-            TileAudio.PlayStatic(TileSfx.Go, 1f, 1f);
-            yield return new WaitForSeconds(0.6f);
-            _hud?.HideCountdown();
+            else
+            {
+                for (int i = seconds; i > 0; i--)
+                {
+                    TileAudio.PlayStatic(TileSfx.CountdownTick, 0.8f, 1f);
+                    yield return new WaitForSeconds(1f);
+                }
+                TileAudio.PlayStatic(TileSfx.Go, 1f, 1f);
+                yield return new WaitForSeconds(0.6f);
+            }
 
             // 입력 잠금 해제.
             foreach (var p in _allPlayers)
@@ -347,10 +359,30 @@ namespace _TeamFolder.JCJ.TileGame
 
             GameplayCursor.SetLocked(false);
 
+            SyncTileScoresToMatchScoreManager();
+
             var ranking = BuildRanking();
             if (TileAudio.Instance != null) TileAudio.Instance.DuckMusic(4f);
             TileAudio.PlayStatic(TileSfx.Fanfare, 1f, 1f);
-            _hud?.ShowResults(ranking, RestartRound);
+            _hud?.ShowResults(ranking);
+        }
+
+        /// <summary>타일 라운드 점수만 전역 점수 프리팹에 반영(완주 순위·포디움 없음).</summary>
+        private void SyncTileScoresToMatchScoreManager()
+        {
+            var mgr = MatchScoreRankManager.Instance;
+            if (mgr == null) return;
+
+            foreach (var pair in _scores)
+            {
+                if (pair.Key == null) continue;
+                var identity = RuntimePlayerIdentity.Find(pair.Key);
+                string id = identity != null ? identity.PlayerId : pair.Key.name;
+                string name = identity != null
+                    ? identity.DisplayName
+                    : (string.IsNullOrEmpty(pair.Key.name) ? $"Player {pair.Key.PlayerIndex + 1}" : pair.Key.name);
+                if (pair.Value > 0) mgr.AddScore(id, name, pair.Value);
+            }
         }
 
         /// <summary>
@@ -435,7 +467,7 @@ namespace _TeamFolder.JCJ.TileGame
             }
 
             _hud?.HideResults();
-            _hud?.HideCountdown();
+            countdownUI?.Cancel();
 
             BeginRoundInternal();
         }
@@ -553,6 +585,9 @@ namespace _TeamFolder.JCJ.TileGame
         // ── 서비스 해석 ─────────────────────────────
         private void ResolveServices()
         {
+            MatchScoreRankManager.EnsureExists();
+            countdownUI ??= FindFirstObjectByType<CountdownUI>();
+
             if (buildHUD)
             {
                 _hud = SceneComponentResolver.FindOrCreate<TileHUD>(transform, "TileHUD");

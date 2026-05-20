@@ -34,12 +34,16 @@ namespace _TeamFolder.JCJ.Script
         private readonly RectTransform[]   _slotRoot  = new RectTransform[3];
         private TextMeshProUGUI _earnedText;
         private TextMeshProUGUI _totalText;
-        private Button _playAgainButton;
         private Tween _counterTween;
 
         private void Awake()
         {
-            _canvas ??= Object.FindFirstObjectByType<Canvas>();
+            _canvas ??= GetComponent<Canvas>();
+            if (_canvas == null)
+            {
+                var hudRoot = GameObject.Find("HUD (auto)");
+                if (hudRoot != null) _canvas = hudRoot.GetComponent<Canvas>();
+            }
             if (_canvas == null) _canvas = CreateCanvas();
             BuildUI();
             HideInstant();
@@ -47,18 +51,20 @@ namespace _TeamFolder.JCJ.Script
 
         private void Start()
         {
+            if (GameStateManager.Instance?.Rank != null)
+                GameStateManager.Instance.Rank.OnAllFinished += HandleFinished;
+
             var gsm = GameStateManager.Instance;
-            if (gsm == null) return;
-            if (gsm.Rank != null) gsm.Rank.OnAllFinished += HandleFinished;
-            gsm.OnStateChanged += OnStateChanged;
+            if (gsm != null) gsm.OnStateChanged += OnStateChanged;
         }
 
         private void OnDestroy()
         {
+            if (GameStateManager.Instance?.Rank != null)
+                GameStateManager.Instance.Rank.OnAllFinished -= HandleFinished;
+
             var gsm = GameStateManager.Instance;
-            if (gsm == null) return;
-            if (gsm.Rank != null) gsm.Rank.OnAllFinished -= HandleFinished;
-            gsm.OnStateChanged -= OnStateChanged;
+            if (gsm != null) gsm.OnStateChanged -= OnStateChanged;
             _counterTween?.Kill();
         }
 
@@ -234,35 +240,6 @@ namespace _TeamFolder.JCJ.Script
             ttlr.anchoredPosition = new Vector2(0, 100);
             ttlr.sizeDelta = new Vector2(900, 100);
             _totalText.text = "0";
-
-            // 다시 하기 버튼
-            var btnGo = new GameObject("PlayAgain", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
-            btnGo.transform.SetParent(root.transform, false);
-            var brt = (RectTransform)btnGo.transform;
-            brt.anchorMin = brt.anchorMax = new Vector2(0.5f, 0f);
-            brt.pivot = new Vector2(0.5f, 0f);
-            brt.anchoredPosition = new Vector2(0, 30);
-            brt.sizeDelta = new Vector2(320, 72);
-            var bimg = btnGo.GetComponent<Image>();
-            bimg.color = JCJUiColors.PodiumBody;
-            _playAgainButton = btnGo.GetComponent<Button>();
-            _playAgainButton.targetGraphic = bimg;
-            var bcols = _playAgainButton.colors;
-            bcols.normalColor      = JCJUiColors.PodiumBody;
-            bcols.highlightedColor = Color.white;
-            bcols.pressedColor     = new Color(0.78f, 0.80f, 0.84f);
-            bcols.selectedColor    = Color.white;
-            _playAgainButton.colors = bcols;
-            _playAgainButton.onClick.AddListener(PlayAgain);
-            HudTweenHelpers.ButtonHover(_playAgainButton, btnGo.transform);
-
-            var label = CreateText("Label", btnGo.transform, TextAlignmentOptions.Center, 30, Color.black,
-                                   FontStyles.Bold | FontStyles.UpperCase);
-            var lrt = label.rectTransform;
-            lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one;
-            lrt.offsetMin = lrt.offsetMax = Vector2.zero;
-            label.text = "Play Again";
-            label.raycastTarget = false;
         }
 
         private void BuildSlot(int idx, Transform parent, Vector2 anchoredPos, float heightScale, Color badgeColour, string medal)
@@ -334,11 +311,5 @@ namespace _TeamFolder.JCJ.Script
             return c;
         }
 
-        private void PlayAgain()
-        {
-            HideInstant();
-            var mm = MazeManager.Instance;
-            if (mm != null) mm.GenerateMazeWithButton();
-        }
     }
 }

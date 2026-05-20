@@ -107,7 +107,9 @@ namespace _TeamFolder.JCJ.Script
             JcjClientSessionHub.RegisterMazeWorld(this);
             ApplyDifficultyPreset();
             ResolveServices();
+            MatchScoreRankManager.EnsureExists();
             EnsureSceneHud();
+            GenerateMazeWithButton();
         }
 
         private void ApplyDifficultyPreset()
@@ -154,21 +156,31 @@ namespace _TeamFolder.JCJ.Script
 
         private static void EnsureSceneHud()
         {
-            var canvas = Object.FindFirstObjectByType<Canvas>();
-            if (canvas == null)
-            {
-                var go = new GameObject("HUD (auto)");
-                canvas = go.AddComponent<Canvas>();
-                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                go.AddComponent<UnityEngine.UI.CanvasScaler>();
-                go.AddComponent<UnityEngine.UI.GraphicRaycaster>();
-            }
+            var canvas = FindOrCreateHudCanvas();
 
             if (Object.FindFirstObjectByType<GameHUD>() == null)
                 canvas.gameObject.AddComponent<GameHUD>();
 
             if (Object.FindFirstObjectByType<PodiumPresenter>() == null)
                 canvas.gameObject.AddComponent<PodiumPresenter>();
+        }
+
+        private static Canvas FindOrCreateHudCanvas()
+        {
+            const string hudCanvasName = "HUD (auto)";
+            var existing = GameObject.Find(hudCanvasName);
+            if (existing != null && existing.TryGetComponent(out Canvas found))
+                return found;
+
+            var go = new GameObject(hudCanvasName);
+            var canvas = go.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 100;
+            var scaler = go.AddComponent<UnityEngine.UI.CanvasScaler>();
+            scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080);
+            go.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+            return canvas;
         }
 
         // ───────── Public API ─────────
@@ -324,7 +336,7 @@ namespace _TeamFolder.JCJ.Script
         private void SyncRankTotal(int playerCount)
         {
             if (_rankService != null) { _rankService.SetTotalPlayers(playerCount); return; }
-            if (GameStateManager.Instance?.Rank is RankService rs) rs.SetTotalPlayers(playerCount);
+            GameStateManager.Instance?.Rank?.SetTotalPlayers(playerCount);
         }
 
         private int ResolvePlayerCount()

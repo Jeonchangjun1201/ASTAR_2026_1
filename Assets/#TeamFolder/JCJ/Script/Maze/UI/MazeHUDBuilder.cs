@@ -15,13 +15,10 @@ namespace _TeamFolder.JCJ.Script
         public TextMeshProUGUI TimerText { get; private set; }
         public TextMeshProUGUI RankFeedText { get; private set; }
         public TextMeshProUGUI ScoreText { get; private set; }
-        public TextMeshProUGUI CountdownText { get; private set; }
         public Slider StaminaSlider { get; private set; }
         public Image StaminaFill { get; private set; }
         public GameObject ResultPanel { get; private set; }
         public TextMeshProUGUI ResultText { get; private set; }
-        public Button RestartButton { get; private set; }
-        public Transform RestartButtonVisual { get; private set; }
         public CanvasGroup ResultCanvasGroup { get; private set; }
         public Canvas Canvas { get; private set; }
 
@@ -29,7 +26,6 @@ namespace _TeamFolder.JCJ.Script
         {
             Canvas = FindOrCreateCanvas();
 
-            CountdownText ??= BuildCountdownText(Canvas.transform);
             TimerText     ??= BuildTimerText(Canvas.transform);
             ScoreText     ??= BuildScoreText(Canvas.transform);
             RankFeedText  ??= BuildRankFeedText(Canvas.transform);
@@ -38,22 +34,6 @@ namespace _TeamFolder.JCJ.Script
         }
 
         // ── UI 요소 ───────────────────────────────────
-        private TextMeshProUGUI BuildCountdownText(Transform parent)
-        {
-            var go = CreateText("CountdownText", parent, TextAlignmentOptions.Center, 220, JCJUiColors.HudAccentBright, FontStyles.Bold);
-            go.outlineColor = Color.black;
-            go.outlineWidth = 0.25f;
-            var rt = go.rectTransform;
-            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = Vector2.zero;
-            rt.sizeDelta = new Vector2(900, 360);
-            go.text = "";
-            go.raycastTarget = false;
-            go.transform.localScale = Vector3.zero;
-            return go;
-        }
-
         private TextMeshProUGUI BuildTimerText(Transform parent)
         {
             var panel = CreatePanel("TimerPanel", parent, new Vector2(280, 88));
@@ -201,39 +181,10 @@ namespace _TeamFolder.JCJ.Script
             var result = CreateText("ResultText", card.transform, TextAlignmentOptions.Center, 28, JCJUiColors.HudMutedText, FontStyles.Normal);
             var resRT = result.rectTransform;
             resRT.anchorMin = new Vector2(0, 0); resRT.anchorMax = new Vector2(1, 1);
-            resRT.offsetMin = new Vector2(44, 128);
-            resRT.offsetMax = new Vector2(-44, -158);
+            resRT.offsetMin = new Vector2(44, 64);
+            resRT.offsetMax = new Vector2(-44, -64);
             result.raycastTarget = false;
             ResultText = result;
-
-            var btnGo = new GameObject("RestartButton");
-            btnGo.transform.SetParent(card.transform, false);
-            var brt = btnGo.AddComponent<RectTransform>();
-            brt.anchorMin = new Vector2(0.5f, 0f); brt.anchorMax = new Vector2(0.5f, 0f);
-            brt.pivot = new Vector2(0.5f, 0f);
-            brt.anchoredPosition = new Vector2(0, 44);
-            brt.sizeDelta = new Vector2(300, 76);
-
-            var bImg = btnGo.AddComponent<Image>();
-            bImg.color = new Color(0.88f, 0.92f, 0.99f, 1f);
-            var button = btnGo.AddComponent<Button>();
-            button.targetGraphic = bImg;
-            RestartButton = button;
-            RestartButtonVisual = btnGo.transform;
-
-            var colors = button.colors;
-            colors.normalColor      = bImg.color;
-            colors.highlightedColor = JCJUiColors.HudAccentBright;
-            colors.pressedColor     = new Color(0.72f, 0.78f, 0.90f);
-            colors.selectedColor    = JCJUiColors.HudAccentBright;
-            button.colors = colors;
-
-            var label = CreateText("Label", btnGo.transform, TextAlignmentOptions.Center, 26, new Color(0.06f, 0.08f, 0.12f), FontStyles.Bold | FontStyles.UpperCase);
-            Stretch(label.rectTransform);
-            label.text = "Play Again";
-            label.raycastTarget = false;
-
-            HudTweenHelpers.ButtonHover(button, btnGo.transform);
 
             go.SetActive(false);
             ResultPanel = go;
@@ -298,11 +249,18 @@ namespace _TeamFolder.JCJ.Script
 
         private Canvas FindOrCreateCanvas()
         {
-            var c = Object.FindFirstObjectByType<Canvas>();
-            if (c != null) return c;
-            var go = new GameObject("Canvas (auto)");
-            c = go.AddComponent<Canvas>();
+            var onSelf = GetComponent<Canvas>();
+            if (onSelf != null) return onSelf;
+
+            const string hudCanvasName = "HUD (auto)";
+            var existing = GameObject.Find(hudCanvasName);
+            if (existing != null && existing.TryGetComponent(out Canvas found))
+                return found;
+
+            var go = new GameObject(hudCanvasName);
+            var c = go.AddComponent<Canvas>();
             c.renderMode = RenderMode.ScreenSpaceOverlay;
+            c.sortingOrder = 100;
             var scaler = go.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080);

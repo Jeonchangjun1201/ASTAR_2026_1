@@ -39,7 +39,7 @@ namespace _TeamFolder.JCJ.Script
         private Image _flashImage;
         private TextMeshProUGUI _bannerText;
         private CanvasGroup _bannerGroup;
-        private RankService _rank;
+        private IRankService _rank;
         private Transform _goalOverride;
         private bool _hooked;
 
@@ -96,7 +96,7 @@ namespace _TeamFolder.JCJ.Script
                     Invoke(nameof(HookRankService), 0.2f);
                 return;
             }
-            _rank = gsm.Rank as RankService;
+            _rank = gsm.Rank;
             if (_rank != null)
             {
                 _rank.OnPlayerFinishedData += HandlePlayerFinished;

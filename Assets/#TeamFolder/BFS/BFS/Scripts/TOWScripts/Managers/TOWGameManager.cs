@@ -47,7 +47,7 @@ namespace BFS
         }
         public void StartGame()
         {
-            uiManager.ChangeText(uiManager.GameOverText, "START!");
+            uiManager.ChangeText(uiManager.GameOverText, "START!", 3);
             qteManager.StartMinigame();
             _timeManager.StartTimer(gameTime);
         }
