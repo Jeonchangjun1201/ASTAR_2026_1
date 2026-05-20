@@ -50,3 +50,6 @@ MonoBehaviour:
   _scoreService: {fileID: 0}
   _gameDuration: 120
   _countdownSeconds: 3
+  _mazeScoreConfig: {fileID: 11400000, guid: 9fa477bef4cc37f4ab48fefd82c3e775, type: 2}
+  _mazeTotalPlayers: 4
+  _mazePodiumSize: 3

@@ -32,13 +32,20 @@ namespace _TeamFolder.JCJ.Script
 
     /// <summary>
     /// 플레이어 완주 순위와 최종 랭킹 확정을 담당하는 서비스 계약.
+    /// 서버 권한 모드에서는 <see cref="FinishRequested"/>로 RPC를 보내고,
+    /// 서버 확정 후 <see cref="ApplyAuthoritativeFinish"/>로 클라이언트 상태를 맞춘다.
     /// </summary>
     public interface IRankService
     {
         event Action<string, int> OnPlayerFinished;
+        event Action<PlayerRankData> OnPlayerFinishedData;
         event Action<List<PlayerRankData>> OnAllFinished;
+        /// <summary>서버 권한 모드: (playerId, displayName) 완주 요청. 네트워크 레이어가 구독한다.</summary>
+        event Action<string, string> FinishRequested;
+
         void RegisterFinish(string playerName);
         void RegisterFinish(string playerId, string playerName);
+        void ApplyAuthoritativeFinish(string playerId, string playerName);
         IReadOnlyList<PlayerRankData> GetRankings();
         void SetTotalPlayers(int total);
         void ResetRankings();
@@ -62,13 +69,22 @@ namespace _TeamFolder.JCJ.Script
 
     /// <summary>
     /// 플레이어별 점수 누적과 점수 변경 알림을 제공하는 서비스 계약.
+    /// 서버 권한 모드에서는 <see cref="ScoreChangeRequested"/>로 RPC를 보내고,
+    /// 서버 확정 후 <see cref="ApplyAuthoritativeDelta"/>로 클라이언트 상태를 맞춘다.
     /// </summary>
     public interface IScoreService
     {
-        event Action<string, int, int> OnScoreChanged; // (플레이어 이름, 변화량, 합계)
+        event Action<string, int, int> OnScoreChanged;
+        /// <summary>서버 권한 모드: (playerId, displayName, delta) 점수 변경 요청.</summary>
+        event Action<string, string, int> ScoreChangeRequested;
+
         int GetScore(string playerName);
         void Add(string playerName, int delta);
         void Add(string playerId, string displayName, int delta);
+        void ApplyAuthoritativeDelta(string playerId, string displayName, int delta);
+        IReadOnlyList<PlayerRankData> GetRankings();
+        int GetRankForPlayerIndex(int playerIndex);
+        int GetRankByAliases(params string[] aliases);
         void Reset();
     }
 
