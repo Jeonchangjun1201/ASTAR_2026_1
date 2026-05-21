@@ -5,35 +5,28 @@ namespace KDH
     public class TopPlayer : MonoBehaviour
     {
         [Header("조이스틱")]
-        public FixedJoystick joystick;
+        [SerializeField] private FixedJoystick joystick;
 
         [Header("이동")]
-        public float moveSpeed = 5f;
+        [SerializeField] private float moveSpeed = 5f;
 
-        private Rigidbody rb;
-            
+        private Rigidbody _rb;
 
         private void Awake()
         {
-            rb = GetComponent<Rigidbody>();
+            _rb = GetComponent<Rigidbody>();
         }
 
         private void FixedUpdate()
         {
-            Move();
-        }
+            if (joystick == null) return;
+            if (Mathf.Abs(joystick.Horizontal) < 0.01f && 
+                Mathf.Abs(joystick.Vertical) < 0.01f) return;
 
-        private void Move()
-        {
-            Vector3 dir = new Vector3(
-                joystick.Horizontal,
-                0f,
-                joystick.Vertical
-            );
-
-            rb.MovePosition(
-                rb.position + dir * moveSpeed * Time.fixedDeltaTime
-            );
+            Vector3 dir = new Vector3(joystick.Horizontal, 0f, joystick.Vertical);
+            Vector3 newPos = _rb.position + dir * moveSpeed * Time.fixedDeltaTime;
+            newPos.y = _rb.position.y; // Y축 고정
+            _rb.MovePosition(newPos);
         }
     }
 }
