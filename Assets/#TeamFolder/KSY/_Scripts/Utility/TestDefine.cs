@@ -1,4 +1,4 @@
-namespace KSY.Shared
+namespace KSY.Utility
 {
     public static class TestDefine
     {
