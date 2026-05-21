@@ -54,16 +54,13 @@ namespace KSY.Networks
         public ArrayPoolBufferWriter Serialize(IPacket packet)
         {
             if (packet == null)
-            {
                 throw new ArgumentNullException("packet");
-            }
-
+            
             Type type = packet.GetType();
-            if (!packetIDMap.TryGetValue(type, out ushort id))
-            {
-                throw new InvalidOperationException(type.FullName + " PacketID not found");
-            }
 
+            if (!packetIDMap.TryGetValue(type, out ushort id))
+                throw new InvalidOperationException(type.FullName + " PacketID not found");
+            
             ArrayPoolBufferWriter bufferWriter = new ArrayPoolBufferWriter();
             try
             {
