@@ -20,6 +20,12 @@ namespace KSY.Utility
             return value != null;
         }
 
+        public static bool TryGetComponentInChildren<T>(this GameObject _gameObject, out T value)
+        {
+            value = _gameObject.GetComponentInChildren<T>();
+            return value != null;
+        }
+
         public static bool TryGetComponentsInChildren<T>(this Component component, out T[] value)
         {
             value = component.GetComponentsInChildren<T>();
