@@ -17,20 +17,20 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   threshold:
-    m_OverrideState: 0
-    m_Value: 4.87
+    m_OverrideState: 1
+    m_Value: 1.35
   intensity:
-    m_OverrideState: 0
-    m_Value: 3.47
+    m_OverrideState: 1
+    m_Value: 1.05
   scatter:
-    m_OverrideState: 0
-    m_Value: 0.7
+    m_OverrideState: 1
+    m_Value: 0.191
   clamp:
     m_OverrideState: 0
     m_Value: 65472
   tint:
-    m_OverrideState: 1
-    m_Value: {r: 1, g: 0, b: 0, a: 1}
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
   highQualityFiltering:
     m_OverrideState: 0
     m_Value: 0
@@ -64,8 +64,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
   components:
   - {fileID: -8700260120413494082}
-  - {fileID: 8655035521536724189}
---- !u!114 &8655035521536724189
+  - {fileID: 4153027141731920580}
+--- !u!114 &4153027141731920580
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,40 +74,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bd486065ce11414fa40e631affc4900, type: 3}
-  m_Name: ProbeVolumesOptions
-  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.ProbeVolumesOptions
+  m_Script: {fileID: 11500000, guid: 66f335fb1ffd8684294ad653bf1c7564, type: 3}
+  m_Name: ColorAdjustments
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.ColorAdjustments
   active: 1
-  normalBias:
-    m_OverrideState: 0
-    m_Value: 0.05
-  viewBias:
-    m_OverrideState: 0
-    m_Value: 0.1
-  scaleBiasWithMinProbeDistance:
+  postExposure:
     m_OverrideState: 0
     m_Value: 0
-  samplingNoise:
+  contrast:
+    m_OverrideState: 1
+    m_Value: 24
+  colorFilter:
     m_OverrideState: 0
-    m_Value: 0.1
-  animateSamplingNoise:
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  hueShift:
     m_OverrideState: 0
-    m_Value: 1
-  leakReductionMode:
-    m_OverrideState: 0
-    m_Value: 2
-  minValidDotProductValue:
-    m_OverrideState: 0
-    m_Value: 0.1
-  occlusionOnlyReflectionNormalization:
-    m_OverrideState: 0
-    m_Value: 1
-  intensityMultiplier:
-    m_OverrideState: 0
-    m_Value: 1
-  skyOcclusionIntensityMultiplier:
-    m_OverrideState: 0
-    m_Value: 1
-  worldOffset:
-    m_OverrideState: 0
-    m_Value: {x: 0, y: 0, z: 0}
+    m_Value: 0
+  saturation:
+    m_OverrideState: 1
+    m_Value: 0
