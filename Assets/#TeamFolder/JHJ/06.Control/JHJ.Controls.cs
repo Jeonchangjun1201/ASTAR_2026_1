@@ -94,7 +94,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Movement1"",
-                    ""type"": ""Value"",
+                    ""event"": ""Value"",
                     ""id"": ""12364eca-f955-4e28-b2bc-d467c1ea45ee"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -103,7 +103,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Movement2"",
-                    ""type"": ""Value"",
+                    ""event"": ""Value"",
                     ""id"": ""9511ccac-24f4-4b93-93cc-d5cbf4500ac5"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -112,7 +112,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Movement3"",
-                    ""type"": ""Value"",
+                    ""event"": ""Value"",
                     ""id"": ""08596008-eab1-47ef-8b1f-136696b5c8ab"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -121,7 +121,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Movement4"",
-                    ""type"": ""Value"",
+                    ""event"": ""Value"",
                     ""id"": ""ed597533-55ef-4d86-90d7-20973ca9270d"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -130,7 +130,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Jump1"",
-                    ""type"": ""Button"",
+                    ""event"": ""Button"",
                     ""id"": ""9e439ed9-519b-437f-9e91-d08263dd45ef"",
                     ""expectedControlType"": """",
                     ""processors"": """",
@@ -139,7 +139,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Look1"",
-                    ""type"": ""Value"",
+                    ""event"": ""Value"",
                     ""id"": ""7d9eeaad-4889-411f-9d35-b723b02bb7e6"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -148,7 +148,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Zoom1"",
-                    ""type"": ""Value"",
+                    ""event"": ""Value"",
                     ""id"": ""9e990a9e-5f92-4f85-ac37-7dd4fcb4291b"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",

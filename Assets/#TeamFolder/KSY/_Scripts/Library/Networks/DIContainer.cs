@@ -43,7 +43,7 @@ namespace KSY.Networks
         {
             if(type.IsValueType)
             {
-                throw new InvalidOperationException("Cannot register an instance of " + type.FullName + " in the DIContainer because it is not a reference type. Only reference-type instance can be registered.");
+                throw new InvalidOperationException("Cannot register an instance of " + type.FullName + " in the DIContainer because it is not a reference event. Only reference-event instance can be registered.");
             }
 
             instances[type] = instance;

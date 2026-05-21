@@ -94,7 +94,7 @@ public partial class @TOWControls: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""Value"",
+                    ""event"": ""Value"",
                     ""id"": ""9b2c00a9-b8ab-48ac-b956-435f4cac8c6b"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",

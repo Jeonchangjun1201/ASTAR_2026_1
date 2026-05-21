@@ -1,3 +1,4 @@
+using KSY.Utility;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -40,6 +41,7 @@ namespace KSY.Networks
 
         public void Close()
         {
+            CustomLog.Log("Attempt to close the server");
             try
             {
                 if (Volatile.Read(ref isClosed) != 1)
@@ -50,6 +52,7 @@ namespace KSY.Networks
             }
             catch
             {
+                CustomLog.Log("Close a Failed Server", UnityEngine.Color.darkRed);
             }
             finally
             {
