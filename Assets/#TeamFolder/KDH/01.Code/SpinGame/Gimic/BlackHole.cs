@@ -6,11 +6,11 @@ namespace KDH
     public class BlackHole : MonoBehaviour
     {
         [Header("블랙홀 설정")]
-        [SerializeField] private float spawnInterval = 15f;  // 생성 간격
-        [SerializeField] private float blackHoleLifetime = 5f; // 유지 시간
-        [SerializeField] private float pullForce = 10f;      // 당기는 힘
-        [SerializeField] private float pullRadius = 8f;      // 당기는 범위
-        [SerializeField] private GameObject blackHolePrefab; // 블랙홀 프리팹
+        [SerializeField] private float spawnInterval = 15f;
+        [SerializeField] private float blackHoleLifetime = 5f;
+        [SerializeField] private float pullForce = 10f;
+        [SerializeField] private float pullRadius = 8f;
+        [SerializeField] private GameObject blackHolePrefab;
 
         private GameObject _currentBlackHole;
 
@@ -30,14 +30,17 @@ namespace KDH
 
         private IEnumerator SpawnBlackHole()
         {
-            // 맵 중앙 근처 랜덤 위치
             Vector3 spawnPos = new Vector3(
                 Random.Range(-3f, 3f),
-                0.1f, // 낮게
+                1.1f,
                 Random.Range(-3f, 3f)
             );
 
             _currentBlackHole = Instantiate(blackHolePrefab, spawnPos, Quaternion.identity);
+
+            // Collider 끄기 → 팽이랑 충돌 안 함
+            Collider col = _currentBlackHole.GetComponent<Collider>();
+            if (col != null) col.enabled = false;
 
             BlackHolePull pull = _currentBlackHole.AddComponent<BlackHolePull>();
             pull.Initialize(pullForce, pullRadius);

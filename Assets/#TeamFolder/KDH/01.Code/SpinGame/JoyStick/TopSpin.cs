@@ -5,66 +5,81 @@ namespace KDH
     public class TopSpin : MonoBehaviour
     {
         [Header("회전")]
-        public float startSpinSpeed = 1000f;
-        public float slowDownSpeed = 20f;
+        [SerializeField] private float startSpinSpeed = 1000f;
+        [SerializeField] private float slowDownSpeed = 20f;
 
         [Header("흔들림")]
-        public float wobbleSpeed = 4f;
-        public float maxWobbleAngle = 25f;
+        [SerializeField] private float wobbleSpeed = 4f;
+        [SerializeField] private float maxWobbleAngle = 25f;
 
-        [Header("넘어짐")]
-        public float fallSpinThreshold = 80f;
+        [Header("넘어짐 판정")]
+        [SerializeField] private float fallSpinThreshold = 80f;
+        [SerializeField] private float fallTiltAngle = 60f;
 
-        private float currentSpinSpeed;
-        private float currentYRotation = 0f;
-        private float timeValue = 0f;
-        private bool isFallen = false;
-        private Quaternion startRotation;
-        private TopPlayer _topPlayer; // JHJPlayerController 대신 TopPlayer로 변경!
+        private float _currentSpinSpeed;
+        private float _currentYRotation = 0f;
+        private float _timeValue = 0f;
+        private bool _isFallen = false;
+        private TopPlayer _topPlayer;
+        private Rigidbody _rb;
 
         public static event System.Action<string> OnTopFallen;
 
         private void Awake()
         {
-            currentSpinSpeed = startSpinSpeed;
-            startRotation = transform.rotation;
-            _topPlayer = GetComponent<TopPlayer>(); // 같은 오브젝트에서 찾기
+            _currentSpinSpeed = startSpinSpeed;
+            _topPlayer = GetComponent<TopPlayer>();
+            _rb = GetComponent<Rigidbody>();
         }
 
         private void Update()
         {
-            if (isFallen) return;
+            if (_isFallen) return;
             Spin();
+            CheckFall();
         }
 
         private void Spin()
         {
-            timeValue += Time.deltaTime;
+            _timeValue += Time.deltaTime;
 
-            currentSpinSpeed -= slowDownSpeed * Time.deltaTime;
-            currentSpinSpeed = Mathf.Max(currentSpinSpeed, 0f);
+            _currentSpinSpeed -= slowDownSpeed * Time.deltaTime;
+            _currentSpinSpeed = Mathf.Max(_currentSpinSpeed, 0f);
 
-            float speedRatio = currentSpinSpeed / startSpinSpeed;
+            float speedRatio = _currentSpinSpeed / startSpinSpeed;
             float wobbleAmount = (1f - speedRatio * speedRatio) * maxWobbleAngle;
 
-            currentYRotation += currentSpinSpeed * Time.deltaTime;
+            _currentYRotation += _currentSpinSpeed * Time.deltaTime;
 
-            float xTilt = Mathf.Sin(timeValue * wobbleSpeed) * wobbleAmount;
-            float zTilt = Mathf.Cos(timeValue * wobbleSpeed) * wobbleAmount;
+            float xTilt = Mathf.Sin(_timeValue * wobbleSpeed) * wobbleAmount;
+            float zTilt = Mathf.Cos(_timeValue * wobbleSpeed) * wobbleAmount;
 
-            transform.rotation = startRotation * Quaternion.Euler(xTilt, currentYRotation, zTilt);
+            // localEulerAngles로 변경!
+            _rb.MoveRotation(Quaternion.Euler(xTilt, _currentYRotation, zTilt));
+        }
 
-            if (currentSpinSpeed <= fallSpinThreshold)
+        private void CheckFall()
+        {
+            if (_currentSpinSpeed <= fallSpinThreshold)
+            {
+                FallDown();
+                return;
+            }
+
+            float tiltAngle = Vector3.Angle(transform.up, Vector3.up);
+            if (tiltAngle > fallTiltAngle)
                 FallDown();
         }
 
         private void FallDown()
         {
-            isFallen = true;
+            _isFallen = true;
 
-            transform.rotation = startRotation * Quaternion.Euler(90f, currentYRotation, 0f);
+            transform.rotation = Quaternion.Euler(90f, _currentYRotation, 0f);
 
-            // TopPlayer 끄기 → 조이스틱 입력 막힘
+            _rb.linearVelocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+
             if (_topPlayer != null)
                 _topPlayer.enabled = false;
 

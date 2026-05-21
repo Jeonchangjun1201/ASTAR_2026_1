@@ -15,7 +15,6 @@ namespace KDH
 
         private void FixedUpdate()
         {
-            // 범위 안에 있는 팽이 전부 당기기
             Collider[] colliders = Physics.OverlapSphere(transform.position, _pullRadius);
             foreach (Collider col in colliders)
             {
@@ -25,21 +24,15 @@ namespace KDH
                     Rigidbody rb = col.GetComponent<Rigidbody>();
                     if (rb == null) continue;
 
-                    // 블랙홀 방향으로 당기기
-                    Vector3 direction = (transform.position - col.transform.position).normalized;
-                    float distance = Vector3.Distance(transform.position, col.transform.position);
+                    Vector3 direction = (transform.position - col.transform.position);
+                    direction.y = 0f; // Y축 힘 제거!
+                    direction.Normalize();
 
-                    // 가까울수록 더 강하게 당김
+                    float distance = Vector3.Distance(transform.position, col.transform.position);
                     float force = _pullForce * (1f - distance / _pullRadius);
                     rb.AddForce(direction * force, ForceMode.Force);
                 }
             }
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.black;
-            Gizmos.DrawWireSphere(transform.position, _pullRadius);
         }
     }
 }
