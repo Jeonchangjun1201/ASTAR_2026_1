@@ -60,7 +60,7 @@ namespace KSY.Networks
             Volatile.Write(ref isClosed, 0);
             sendQueue = new SendQueue();
             sendArgs = new SocketAsyncEventArgs();
-            sendArgs.Completed += HandleSend;
+            sendArgs.Completed += HandleSent;
             receiveBuffer = new ReceiveBuffer(65535);
             receiveArgs = new SocketAsyncEventArgs();
             receiveArgs.Completed += HandleReceived;
@@ -133,10 +133,10 @@ namespace KSY.Networks
             sendArgs.BufferList = dataList;
             bool pending = connectedSocket.SendAsync(sendArgs);
             if (!pending)
-                HandleSend(null, sendArgs);
+                HandleSent(null, sendArgs);
         }
 
-        private void HandleSend(object sender, SocketAsyncEventArgs sendArgs)
+        private void HandleSent(object sender, SocketAsyncEventArgs sendArgs)
         {
             if (!IsOpened)
             {
@@ -165,7 +165,7 @@ namespace KSY.Networks
             sendArgs.BufferList = bufferList;
             bool pending = connectedSocket.SendAsync(sendArgs);
             if (!pending)
-                HandleSend(null, sendArgs);      
+                HandleSent(null, sendArgs);      
         }
 
         private void ReceiveAsync()
@@ -178,6 +178,9 @@ namespace KSY.Networks
 
             receiveBuffer.CleanUp();
             receiveArgs.SetBuffer(receiveBuffer.FreeBuffer);
+            bool pending = connectedSocket.ReceiveAsync(receiveArgs);
+            if (!pending)
+                HandleReceived(null, receiveArgs);
         }
 
         private async void HandleReceived(object sender, SocketAsyncEventArgs receiveArgs)
@@ -206,6 +209,8 @@ namespace KSY.Networks
 
                 receiveBuffer.MoveReadIndex(bytesProcessed);
             }
+
+            ReceiveAsync();
         }
 
         private async ValueTask<int> HandlePacket(ArraySegment<byte> buffer)
