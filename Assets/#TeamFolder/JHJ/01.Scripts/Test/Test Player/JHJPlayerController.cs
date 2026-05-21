@@ -41,7 +41,7 @@ namespace JHJ.Scripts.Test.TestPlayer
 
         // 🌟 [추가] 연속 점프 버그 방지용 쿨타임 변수
         private float _lastJumpTime = -999f;
-        private readonly float _jumpCooldown = 0.2f;
+        private readonly float _jumpCooldown = 0.3f;
 
         private void Awake()
         {
