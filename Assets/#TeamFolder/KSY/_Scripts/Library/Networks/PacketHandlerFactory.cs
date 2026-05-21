@@ -1,3 +1,4 @@
+using KSY.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +29,18 @@ namespace KSY.Networks
                 //IsDefined : 특정 Attribute가 적용되어 있는지 여부를 확인할 때 사용하는 메서드
                 Type[] array = (from t in assemblies.SelectMany((Assembly a)=>a.GetTypes())
                                 where typeof(IPacketHandlerBase).IsAssignableFrom(t)
-                                where t.IsDefined(typeof(PacketAttribute), inherit: false)
+                                where t.IsDefined(typeof(PacketHandlerAttribute), inherit: false)
                                 where !t.IsAbstract && !t.IsInterface
                                 select t).ToArray();
+
                 foreach (Type type in array)
                 {
+                    KSY.Utility.CustomLog.Log($"Assemblies has {type.Name}", UnityEngine.Color.yellow);
                     PacketHandlerAttribute customAttribute = type.GetCustomAttribute<PacketHandlerAttribute>();
                     if (customAttribute != null)
                     {
+                        //KSY.Utility.CustomLog.Log($"{assemblies} has {type.Name}", UnityEngine.Color.red);
+
                         Type packetType = customAttribute.PacketType;
                         if(!(packetType == null) && packetType.IsDefined(typeof(PacketAttribute), inherit: false) && typeof(IPacket).IsAssignableFrom(packetType))
                         {

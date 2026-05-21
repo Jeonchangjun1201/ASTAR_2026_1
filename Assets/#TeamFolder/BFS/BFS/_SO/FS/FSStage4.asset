@@ -15,5 +15,5 @@ MonoBehaviour:
   <ColorDelayTime>k__BackingField: 0.4
   <ColorCount>k__BackingField: 10
   <StageIndex>k__BackingField: 4
-  <PlateDisappearDuration>k__BackingField: 0.8
-  <CountDownTime>k__BackingField: 1
+  <PlateDisappearDuration>k__BackingField: 2
+  <CountDownTime>k__BackingField: 2

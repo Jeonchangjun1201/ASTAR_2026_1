@@ -1,3 +1,4 @@
+using KSY.Utility;
 using System.Net;
 using System.Net.Sockets;
 
@@ -19,6 +20,7 @@ namespace KSY.Networks
 
         public void Connect(string host, int port)
         {
+            CustomLog.Log("Try Client to Server Connect", UnityEngine.Color.oldLace);
             var addressFamily = AddressFamily.InterNetworkV6;
             var socketType = SocketType.Stream;
             var protocolType = ProtocolType.Tcp;
@@ -46,6 +48,8 @@ namespace KSY.Networks
         {
             if (connectArgs.SocketError == SocketError.Success)
                 session.Open(connectArgs.ConnectSocket, packetSerializer, packetDispatcher);
+            else
+                CustomLog.Log($"Failed : Socket Connect\n{connectArgs.SocketError}", UnityEngine.Color.orange);
         }
     }
 }
