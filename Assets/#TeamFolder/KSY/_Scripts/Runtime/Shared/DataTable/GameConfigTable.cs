@@ -1,3 +1,4 @@
+using Codice.Client.BaseCommands;
 using KSY.Shared.DataTable;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +33,18 @@ namespace KSY.Shared
             return tableRow;
         }
 
-        public Unit GetUnitPrefab() => GetRow("UnitPrefab").objectValue as Unit;
+        public Unit GetUnitPrefab()
+        {
+            if (GetRow("UnitPrefab").objectValue is GameObject go)
+            {
+                if (go.TryGetComponent(out Unit unit))
+                {
+                    return unit;
+                }
+                else if (go.GetComponentInChildren<Unit>())
+            }
+            GetRow("UnitPrefab").objectValue as Unit;
+        }
 
         public float GetUnitMaxSpeed() => GetRow("UnitMaxSpeed").numberValue;
 

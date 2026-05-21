@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using Object = UnityEngine.Object;
 
 namespace KSY.Servers.Handlers
@@ -31,6 +32,9 @@ namespace KSY.Servers.Handlers
             string playerID = Guid.NewGuid().ToString();
             gameServer.AddPlayer(playerID, session);
 
+            if (dataTableManager == null) CustomLog.Log("dbmanager is null");
+            if (dataTableManager.gameConfigTable == null) CustomLog.Log("db table is null");
+            if (dataTableManager.gameConfigTable.GetUnitPrefab() == null) CustomLog.Log("unit is null");
             Unit unitPrefab = dataTableManager.gameConfigTable.GetUnitPrefab();
             Unit unit = Object.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity);
             unit.Initialize(playerID);
