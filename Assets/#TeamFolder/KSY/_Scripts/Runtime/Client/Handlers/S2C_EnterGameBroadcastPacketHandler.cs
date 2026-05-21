@@ -4,7 +4,6 @@ using KSY.Shared.Packets;
 using KSY.Utility;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace KSY.Clients.Handlers
 {

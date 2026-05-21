@@ -1,5 +1,6 @@
 ﻿using KSY.Networks;
 using KSY.Shared;
+using KSY.Utility;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -13,6 +14,8 @@ namespace KSY.Servers
 
         public void Initialize(GameManager gameManager, DataTableManager dataTableManager)
         {
+            GameManager.Instance.EventChannel?.AddListener<GameQuitEvent>((evt)=> Close());
+
             GameInstance.PlayMode = EPlayMode.Server;
             GameInstance.DataTableManager = dataTableManager;
             ServerInstance.GameServer = this;
@@ -35,6 +38,15 @@ namespace KSY.Servers
         Session ISessionFactory.Create(NetworkObject networkObject, Socket connectedSocket) => new Session();
         #endregion
 
+        public void Close()
+        {
+            if (server != null && server.IsOpened)
+            {
+                CustomLog.Log("Unity 종료로 인해 서버 소켓이 안전하게 닫혔습니다.");
+                server.Close();
+            }
+        }
+
         public void Listen(int port)
         {
             server.Listen(port);
@@ -55,6 +67,6 @@ namespace KSY.Servers
         {
             playerIDMap.TryGetValue(session, out string playerID);
             return playerID;
-        }        
+        }
     }
 }

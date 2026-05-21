@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using KSY.Networks;
 using KSY.Shared;
 using KSY.Shared.Packets;
+using KSY.Utility;
 
 namespace KSY.Clients
 {
@@ -29,7 +30,7 @@ namespace KSY.Clients
                 .AddSingleton<GameManager>(gameManager)
                 .AddSingleton<DataTableManager>(dataTableManager)
                 .Build(typeof(GameClient).Assembly, typeof(GameManager).Assembly);
-
+            
             unityPacketDispatcher.Initialize(client);
         }
 

@@ -54,7 +54,7 @@ namespace PYH.Player
                 return value;
             }
 
-            Debug.LogError("Module of invalid type!");
+            Debug.LogError("Module of invalid event!");
             return null;
         }
         
