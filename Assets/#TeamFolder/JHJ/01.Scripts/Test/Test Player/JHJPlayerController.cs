@@ -39,7 +39,7 @@ namespace JHJ.Scripts.Test.TestPlayer
 
         private bool _canMove = true;
 
-        // 🌟 [추가] 연속 점프 버그 방지용 쿨타임 변수
+        //연속 점프 버그 방지용 쿨타임 변수
         private float _lastJumpTime = -999f;
         private readonly float _jumpCooldown = 0.3f;
 
@@ -84,7 +84,7 @@ namespace JHJ.Scripts.Test.TestPlayer
                     _inputReader.P4OnMove += SetMove;
                     _inputReader.p4OnJump += OnJump;
                     break;
-                    //김도현바보
+                    
             }
         }
 
@@ -116,12 +116,12 @@ namespace JHJ.Scripts.Test.TestPlayer
 
         private void OnJump()
         {
-            // 🌟 [수정 1] 점프 쿨타임 적용: 0.2초 안에는 다시 점프 불가 (다다닥 점프 방지)
+          
             if (Time.time - _lastJumpTime < _jumpCooldown) return;
 
             if (!IsGrounded()) return;
 
-            // 🌟 [수정 2] 점프 직전 Y축 속도를 0으로 초기화하여 점프 높이를 항상 일정하게 보장
+            //점프 직전 Y축 속도를 0으로 초기화하여 점프 높이를 항상 일정하게 보장
             RidCompo.linearVelocity = new Vector3(
                 RidCompo.linearVelocity.x,
                 jumpForce,
