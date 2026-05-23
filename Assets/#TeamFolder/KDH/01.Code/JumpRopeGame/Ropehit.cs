@@ -21,7 +21,7 @@ namespace KDH
                 // 플레이어 비활성화
                 other.gameObject.SetActive(false);
 
-                Debug.Log($"{other.gameObject.name} 탈락!");
+                Debug.Log($"{other.gameObject.name} out");
             }
         }
     }

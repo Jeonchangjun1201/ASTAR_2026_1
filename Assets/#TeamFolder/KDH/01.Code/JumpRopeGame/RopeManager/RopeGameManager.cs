@@ -24,20 +24,28 @@ namespace KDH
         {
             _alivePlayers.Remove(playerName);
 
-            if (statusText != null)
-                statusText.text = $"{playerName} 탈락!\n남은 플레이어: {_alivePlayers.Count}명";
+            if (_alivePlayers.Count > 1)
+            {
+                // 탈락자 있고 게임 진행 중
+                UpdateText($"{playerName} Out!\nLeft Player : {_alivePlayers.Count}");
+            }
+            else if (_alivePlayers.Count == 1)
+            {
+                // 최후의 1인 → 우승
+                UpdateText($"{_alivePlayers[0]} Win!");
+                Debug.Log($"{_alivePlayers[0]} Win!");
+            }
+            else
+            {
+                // 전원 탈락
+                UpdateText("jola mothano");
+            }
+        }
 
-            if (_alivePlayers.Count == 1)
-            {
-                if (statusText != null)
-                    statusText.text = $"{_alivePlayers[0]} 우승!";
-                Debug.Log($"{_alivePlayers[0]} 우승!");
-            }
-            else if (_alivePlayers.Count == 0)
-            {
-                if (statusText != null)
-                    statusText.text = "전원 탈락!";
-            }
+        private void UpdateText(string message)
+        {
+            if (statusText != null)
+                statusText.text = message;
         }
     }
 }
