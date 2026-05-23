@@ -661,8 +661,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18506d1356613c64c8b2abece832f032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraMove
-  moveDuration: 3
-  stayDuration: 1
+  moveDuration: 1
+  stayDuration: 0.5
 --- !u!1 &241728677
 GameObject:
   m_ObjectHideFlags: 0
@@ -1829,7 +1829,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 131072
-  groundCheckDistance: 0.2
+  groundCheckDistance: {x: 0, y: 0, z: 0}
   _inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
 --- !u!136 &570416214
 CapsuleCollider:
@@ -2591,7 +2591,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 990986086}
-  - component: {fileID: 990986085}
+  - component: {fileID: 990986087}
   m_Layer: 0
   m_Name: CountDown
   m_TagString: Untagged
@@ -2599,27 +2599,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &990986085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 990986084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 006db68363597eb49ab59e8b6a804a7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CountDown
-  text: {fileID: 1820580366}
-  displayDuration: 5
-  startDuration: 0.5
-  stopObj:
-  - {fileID: 1576443759}
-  - {fileID: 1796972926795374987}
-  - {fileID: 1400909598}
-  - {fileID: 570416208}
-  - {fileID: 1610552704}
 --- !u!4 &990986086
 Transform:
   m_ObjectHideFlags: 0
@@ -2635,6 +2614,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &990986087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990986084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 006db68363597eb49ab59e8b6a804a7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.KDH._01.Code.SoccerGame.Manager.CountDown
+  text: {fileID: 1820580366}
+  displayDuration: 1
+  startDuration: 0.5
+  stopObj:
+  - {fileID: 1576443759}
+  - {fileID: 1796972926795374987}
+  - {fileID: 1400909598}
+  - {fileID: 570416208}
+  - {fileID: 1610552704}
 --- !u!1 &1018621294
 GameObject:
   m_ObjectHideFlags: 0
@@ -3323,7 +3323,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 131072
-  groundCheckDistance: 0.2
+  groundCheckDistance: {x: 0, y: 0, z: 0}
   _inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
 --- !u!136 &1400909604
 CapsuleCollider:
@@ -3878,7 +3878,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 131072
-  groundCheckDistance: 0.2
+  groundCheckDistance: {x: 0, y: 0, z: 0}
   _inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
 --- !u!136 &1610552710
 CapsuleCollider:
@@ -5164,7 +5164,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 131072
-  groundCheckDistance: 0.2
+  groundCheckDistance: {x: 0, y: 0, z: 0}
   _inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
 --- !u!136 &5911342958100587854
 CapsuleCollider:
