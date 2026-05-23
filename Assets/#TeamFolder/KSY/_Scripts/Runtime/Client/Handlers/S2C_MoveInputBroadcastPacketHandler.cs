@@ -18,16 +18,17 @@ namespace KSY.Clients.Handlers
 
         ValueTask IPacketHandler<S2C_MoveInputBroadcastPacket>.HandlePacket(Session session, S2C_MoveInputBroadcastPacket packet)
         {
-            CustomLog.Log("S2C_MoveInputBroadcastPacketHandler : HandlePacket", UnityEngine.Color.orange);
-            Unit unit = gameManager.GetPlayer(packet.PlayerId);
-            if (unit == null)
+            //CustomLog.Log("S2C_MoveInputBroadcastPacketHandler : HandlePacket", UnityEngine.Color.orange);
+            Player player = gameManager.GetPlayer(packet.PlayerId);
+            if (player == null)
             {
                 CustomLog.Log("S2C_MoveInputBroadcastPacketHandler : Not Found Player", UnityEngine.Color.orange);
                 return new ValueTask();
             }
 
-            unit.transform.position = packet.Position;
-            unit.UnitMovementComponent.SetMovementInput(packet.MoveInput);
+            CustomLog.Log($"before position : {player.transform.position}, after position : {packet.Position}");
+            player.MovementComponent.MyTransform.position = packet.Position;
+            player.MovementComponent.SetMoveDirection(packet.MoveInput);
             return new ValueTask();
         }
     }

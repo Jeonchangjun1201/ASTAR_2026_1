@@ -8,7 +8,7 @@ namespace KSY.Shared.Packets
     [MemoryPackable]
     public partial class C2S_MoveInputPacket : IPacket
     {
-        public Vector2 MoveInput { get; set; }
+        public Vector3 MoveInput { get; set; }
     }
 }
 

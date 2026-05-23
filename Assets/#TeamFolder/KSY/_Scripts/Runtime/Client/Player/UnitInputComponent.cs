@@ -6,15 +6,14 @@ namespace KSY.Clients
 {
     public class UnitInputComponent : MonoBehaviour
     {
-        private Unit unit = null;
+        private Player player = null;
         private PlayerInputReader playerInputReader = null;
 
         private Vector2 lastMoveInput = Vector2.zero;
 
         private void Awake()
         {
-            unit = GetComponent<Unit>();
-
+            player = GetComponent<Player>();
             playerInputReader = InputManager.GetInput<PlayerInputReader>();
         }
 

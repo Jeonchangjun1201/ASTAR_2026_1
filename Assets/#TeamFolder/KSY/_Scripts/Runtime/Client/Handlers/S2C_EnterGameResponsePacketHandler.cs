@@ -34,14 +34,15 @@ namespace KSY.Clients.Handlers
                 string playerID = element.Key;
                 UnitDataDTO unitData = element.Value;
 
-                Unit unitPrefab = dataTableManager.gameConfigTable.GetUnitPrefab();
-                Unit unit = Object.Instantiate(unitPrefab, unitData.Position, Quaternion.identity);
+                Player unitPrefab = dataTableManager.gameConfigTable.GetPlayerPrefab();
+                Player unit = Object.Instantiate(unitPrefab, unitData.Position, Quaternion.identity);
+                unit.Initialize(playerID);
                 gameManager.AddPlayer(playerID, unit);
             }
 
             InputManager.EnableInput<PlayerInputReader>();
 
-            Unit myPlayer = gameManager.GetPlayer(packet.PlayerID);
+            Player myPlayer = gameManager.GetPlayer(packet.PlayerID);
             myPlayer.gameObject.AddComponent<UnitInputComponent>();
         }
     }

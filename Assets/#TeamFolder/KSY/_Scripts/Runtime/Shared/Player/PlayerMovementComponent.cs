@@ -1,0 +1,71 @@
+﻿using KSY.Utility;
+using UnityEngine;
+
+namespace Players
+{
+    public class PlayerMovementComponent : MonoBehaviour
+    {
+        [SerializeField] private float gravity = -9.8f;
+        [SerializeField] private CharacterController controller;
+
+        public Transform MyTransform { get; private set; }
+        public bool CanManualMove { get; set; } = true;
+        public bool IsGround => controller.isGrounded;
+        public Vector3 Velocity => _velocity;
+
+        private float _verticalVelocity;
+        private Vector3 _velocity;
+        private Vector3 _movementDirection;
+
+        public void Initialize(float maxSpeed)
+        {
+            this.MyTransform = GetComponent<Transform>();
+        }
+
+        public void SetMoveDirection(Vector3 inputDirection)
+        {
+            CustomLog.Log($"{inputDirection}");
+            Vector3 newDirection = new Vector3(inputDirection.x, 0f, inputDirection.y);
+            this._movementDirection = newDirection;
+        }
+
+        private void FixedUpdate()
+        {
+            CalculateMovement();
+            ApplyGravity();
+            MoveCharacter();
+        }
+
+        private void CalculateMovement()
+        {
+            //CalculateAcceleration();
+
+            this._velocity = _movementDirection * Time.fixedDeltaTime;
+
+            //if (_velocity.sqrMagnitude > Mathf.Epsilon)
+            //{
+            //    Quaternion targetRotation = Quaternion.LookRotation(_velocity);
+            //    _myTrfm.rotation = Quaternion.Lerp(_myTrfm.rotation, targetRotation, Time.fixedDeltaTime * _rotationSpeed);
+            //}
+        }
+
+        private void ApplyGravity()
+        {
+            if (IsGround && _verticalVelocity <= 0)
+            {
+                _verticalVelocity = -0.3f; 
+            }
+            else
+            {
+                _verticalVelocity += gravity * Time.fixedDeltaTime;
+            }
+            _velocity.y = _verticalVelocity; 
+        }
+
+        private void MoveCharacter()
+        {
+            Physics.SyncTransforms();
+            this.controller.Move(_velocity);
+        }
+    }
+}
