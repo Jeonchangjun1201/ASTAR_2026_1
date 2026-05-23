@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PYH.MiniGame
+namespace _TeamFolder.PYH._02.Scripts.MiniGame
 {
     public abstract class AbstractMiniGame : MonoBehaviour { }
 }

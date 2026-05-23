@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace PYH.Player
+namespace _TeamFolder.PYH._02.Scripts.Player
 {
     [RequireComponent(typeof(Rigidbody))]
     public class Player : MonoBehaviour
