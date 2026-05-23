@@ -11,14 +11,11 @@ namespace KDH
         private Vector3 _lastVelocity;
         private Vector3 _startPosition;
 
-        // string 대신 GameObject 참조로 변경 (더 효율적)
         public GameObject LastTouchPlayer { get; private set; }
 
-        // 골 이벤트: (scorer, goalOwner) - 누가 넣었고 어느 골대인지
         public static event System.Action<GameObject, string> OnGoalScored;
 
         private bool _isReady = false;
-
         public bool IsReady => _isReady;
 
         private void Start()
@@ -41,13 +38,11 @@ namespace KDH
             if (_rb.linearVelocity.magnitude > 0.1f)
                 _lastVelocity = _rb.linearVelocity;
         }
-        
-        
+
         private void OnCollisionEnter(Collision collision)
         {
             if (!_isReady) return;
-            
-            // Player1~4 태그 전부 감지
+
             if (collision.gameObject.CompareTag("Player1") ||
                 collision.gameObject.CompareTag("Player2") ||
                 collision.gameObject.CompareTag("Player3") ||
@@ -61,7 +56,6 @@ namespace KDH
                 ReflectBall(collision.contacts[0].normal);
         }
 
-        // GoalZone에서 호출
         public void NotifyGoal(string goalOwnerName)
         {
             OnGoalScored?.Invoke(LastTouchPlayer, goalOwnerName);
@@ -77,6 +71,15 @@ namespace KDH
             StartCoroutine(ReadyDelay());
             LastTouchPlayer = null;
             LaunchBall();
+        }
+
+        // 서버에서 위치/방향 받아서 적용
+        public void ApplyTransform(Vector3 position, Vector3 velocity)
+        {
+            _rb.linearVelocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+            transform.position = position;
+            _rb.linearVelocity = velocity;
         }
 
         private void ReflectBall(Vector3 normal)

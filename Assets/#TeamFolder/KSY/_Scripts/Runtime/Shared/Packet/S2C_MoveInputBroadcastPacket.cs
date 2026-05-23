@@ -9,7 +9,7 @@ namespace KSY.Shared.Packets
     public partial class S2C_MoveInputBroadcastPacket : IPacket
     {
         public string PlayerId;
-        public Vector2 Position;
-        public Vector2 MoveInput;
+        public Vector3 Position;
+        public Vector3 MoveInput;
     }
 }

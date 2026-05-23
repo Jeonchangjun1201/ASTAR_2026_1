@@ -17,15 +17,7 @@ namespace _TeamFolder.JCJ.Script
         public static void ApplyLowFrictionMaterial(Collider collider, ref PhysicsMaterial lowFrictionPlayerMaterial)
         {
             if (collider == null) return;
-
-            lowFrictionPlayerMaterial ??= new PhysicsMaterial("MazePlayerLowFriction")
-            {
-                dynamicFriction = 0f,
-                staticFriction = 0f,
-                bounciness = 0f,
-                frictionCombine = PhysicsMaterialCombine.Minimum,
-                bounceCombine = PhysicsMaterialCombine.Minimum
-            };
+            lowFrictionPlayerMaterial = JcjPhysicsMaterials.PlayerLowFriction;
             collider.sharedMaterial = lowFrictionPlayerMaterial;
         }
 

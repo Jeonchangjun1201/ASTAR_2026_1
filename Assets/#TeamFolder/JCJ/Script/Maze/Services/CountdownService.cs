@@ -59,12 +59,10 @@ namespace _TeamFolder.JCJ.Script
 
         private IEnumerator RunCountdown(int seconds)
         {
-            for (int i = seconds; i >= 1; i--)
-            {
-                OnTick?.Invoke(i);
-                yield return new WaitForSeconds(1f);
-            }
-            OnGo?.Invoke();
+            yield return JcjCountdownRunner.RunSeconds(
+                seconds,
+                i => OnTick?.Invoke(i),
+                () => OnGo?.Invoke());
             _routine = null;
         }
 

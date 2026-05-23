@@ -7,7 +7,7 @@ namespace KSY.Servers
     {
         public UnitDataDTO unitData;
 
-        public CreateUnitData(Unit unit)
+        public CreateUnitData(Player unit)
         {
             Vector2 position = unit.gameObject.transform.position;
 

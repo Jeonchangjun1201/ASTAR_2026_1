@@ -1,3 +1,4 @@
+using _TeamFolder.KDH._01.Code.JumpRopeGame.RopeManager;
 using UnityEngine;
 using JHJ.Scripts.Test.TestPlayer;
 
@@ -21,7 +22,11 @@ namespace KDH
                 // 플레이어 비활성화
                 other.gameObject.SetActive(false);
 
-                Debug.Log($"{other.gameObject.name} 탈락!");
+                Debug.Log($"{other.gameObject.name} out");
+                
+                Debug.Log($"충돌한 오브젝트 이름: {other.gameObject.name}");
+                
+                Debug.Log($"OnTriggerEnter 호출! {other.gameObject.name}");
             }
         }
     }

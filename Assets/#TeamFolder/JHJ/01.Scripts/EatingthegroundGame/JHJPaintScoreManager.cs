@@ -28,7 +28,7 @@ namespace JHJ.Scripts.EatingthegroundGame
 
         private void OnEnable()
         {
-            // 타이머의 '종료 이벤트'를 구독합니다. (게임이 끝나면 HandleGameEnd 함수 실행)
+            // 타이머의 '종료 이벤트'를 구독 (게임이 끝나면 HandleGameEnd 함수 실행)
             if (_gameTimer != null)
                 _gameTimer.OnGameEnded += HandleGameEnd;
         }
@@ -68,7 +68,7 @@ namespace JHJ.Scripts.EatingthegroundGame
 
 
 
-            // 이미지의 모든 픽셀 색상 정보를 1줄짜리 긴 배열(목록)로 뽑아주는 함수.
+            // 이미지의 모든 픽셀 색상 정보를 1줄짜리 긴 배열(목록)로 뽑아주는 함수
             Color[] pixels = _tempTexture.GetPixels();
 
             int totalPixels = pixels.Length;

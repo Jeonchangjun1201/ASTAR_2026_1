@@ -1,16 +1,16 @@
+using Players;
 using UnityEngine;
 
 namespace KSY.Shared
 {
-    public class Unit : MonoBehaviour
+    public class Player : MonoBehaviour
     {
         [SerializeField]
-        private UnitMovementComponent unitMovementComponent = null;
-        public UnitMovementComponent UnitMovementComponent => unitMovementComponent;
+        private PlayerMovementComponent movementComponent = null;
+        public PlayerMovementComponent MovementComponent => movementComponent;
 
         public string PlayerID => _playerID;
         private string _playerID = string.Empty;
-
 
         public void Initialize(string playerID)
         {
@@ -18,7 +18,7 @@ namespace KSY.Shared
 
             GameConfigTable gameConfigTable = GameInstance.DataTableManager.gameConfigTable;
             
-            unitMovementComponent.Initialize(gameConfigTable.GetUnitMaxSpeed(), gameConfigTable.GetUnitAcceleration());
+            movementComponent.Initialize(gameConfigTable.GetPlayerMaxSpeed());
         }
     }
 }

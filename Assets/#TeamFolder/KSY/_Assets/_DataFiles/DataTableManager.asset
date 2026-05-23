@@ -14,12 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KSY.Shared.DataTableManager
   gameConfigTable:
     tableRowList:
-    - key: UnitPrefab
+    - key: PlayerPrefab
       numberValue: 0
-      objectValue: {fileID: 3818553746457092375, guid: fd2add2c35b51664fa1337340f008682, type: 3}
+      objectValue: {fileID: 2827347532904647120, guid: f966b715d2a64c249968c315e8950df6, type: 3}
     - key: UnitMaxSpeed
       numberValue: 5
-      objectValue: {fileID: 0}
-    - key: UnitAcceleration
-      numberValue: 30
       objectValue: {fileID: 0}
