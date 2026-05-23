@@ -33,20 +33,20 @@ namespace KSY.Shared
             return tableRow;
         }
 
-        public Unit GetUnitPrefab()
+        public Player GetPlayerPrefab()
         {
-            if (GetRow("UnitPrefab").objectValue is GameObject prefab)
+            GameObject prefab = GetRow("PlayerPrefab").objectValue as GameObject;
+            if (prefab != null)
             {
-                if (prefab.TryGetComponent(out Unit unitCompo))              
-                    return unitCompo;       
-                else if (prefab.TryGetComponentInChildren<Unit>(out var childrenUnitCompo))
-                    return childrenUnitCompo;
+                if (prefab.TryGetComponent(out Player playerCompo))              
+                    return playerCompo;       
+                else if (prefab.TryGetComponentInChildren<Player>(out var childrenPlayerCompo))
+                    return childrenPlayerCompo;
             }
+
             return null;
         }
 
-        public float GetUnitMaxSpeed() => GetRow("UnitMaxSpeed").numberValue;
-
-        public float GetUnitAcceleration() => GetRow("UnitAcceleration").numberValue;
+        public float GetPlayerMaxSpeed() => GetRow("UnitMaxSpeed").numberValue;
     }
 }

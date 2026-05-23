@@ -29,8 +29,8 @@ namespace KSY.Servers.Handlers
         {
             string playerID = Guid.NewGuid().ToString();
             gameServer.AddPlayer(playerID, session);
-            Unit unitPrefab = dataTableManager.gameConfigTable.GetUnitPrefab();
-            Unit unit = Object.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity);
+            Player unitPrefab = dataTableManager.gameConfigTable.GetPlayerPrefab();
+            Player unit = Object.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity);
             unit.Initialize(playerID);
             gameManager.AddPlayer(playerID, unit);
 

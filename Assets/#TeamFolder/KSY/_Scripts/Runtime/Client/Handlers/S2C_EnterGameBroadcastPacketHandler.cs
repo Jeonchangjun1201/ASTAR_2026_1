@@ -23,8 +23,8 @@ namespace KSY.Clients.Handlers
         ValueTask IPacketHandler<S2C_EnterGameBroadcastPacket>.HandlePacket(Session session, S2C_EnterGameBroadcastPacket packet)
         {
             CustomLog.Log("S2C_EnterGameBroadcastPacketHandler : HandlePacket", Color.orange);
-            Unit unitPrefab = dataTableManager.gameConfigTable.GetUnitPrefab();
-            Unit unit = Object.Instantiate(unitPrefab, packet.UnitData.Position, Quaternion.identity);
+            Player unitPrefab = dataTableManager.gameConfigTable.GetPlayerPrefab();
+            Player unit = Object.Instantiate(unitPrefab, packet.UnitData.Position, Quaternion.identity);
             unit.Initialize(packet.PlayerID);
             gameManager.AddPlayer(packet.PlayerID, unit);
             return new ValueTask();

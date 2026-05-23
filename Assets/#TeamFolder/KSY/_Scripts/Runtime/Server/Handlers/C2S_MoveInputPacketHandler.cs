@@ -23,16 +23,16 @@ namespace KSY.Servers.Handlers
             if (string.IsNullOrEmpty(playerID) == true)
                 return new ValueTask();
 
-            Unit player = gameManager.GetPlayer(playerID);
+            Player player = gameManager.GetPlayer(playerID);
             if (player == null)
                 return new ValueTask();
 
-            player.UnitMovementComponent.SetMovementInput(packet.MoveInput);
+            player.MovementComponent.SetMoveDirection(packet.MoveInput);
 
             S2C_MoveInputBroadcastPacket broadcastPacket = new S2C_MoveInputBroadcastPacket()
             {
                 PlayerId = playerID,
-                Position = player.transform.position,
+                Position = player.MovementComponent.MyTransform.position,
                 MoveInput = packet.MoveInput
             };
             gameServer.Send(broadcastPacket);
