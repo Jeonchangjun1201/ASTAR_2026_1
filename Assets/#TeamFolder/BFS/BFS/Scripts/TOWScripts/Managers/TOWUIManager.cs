@@ -12,6 +12,16 @@ namespace BFS
         [field: SerializeField] public TextMeshProUGUI GameOverText;
         [field: SerializeField] public TextMeshProUGUI GoalText;
         [field: SerializeField] public Slider TeamSlider;
+
+        private float _slideValue;
+        private void Awake()
+        {
+            _slideValue = TeamSlider.value;
+        }
+        private void Update()
+        {
+            ChangeBarValue();
+        }
         public void ChangeText(TextMeshProUGUI text, string content)
         {
             text.text = content;
@@ -25,9 +35,9 @@ namespace BFS
         {
             float val = isCorrect ? 0.02f : -0.02f;
             if (team.Team == PlayerTeamTOW.TEAMONE)
-                TeamSlider.value += val;
+                _slideValue += val;
             else
-                TeamSlider.value -= val;
+                _slideValue -= val;
         }
         private IEnumerator TextDurationCoroutine(TextMeshProUGUI text, float duration)
         {
@@ -36,5 +46,11 @@ namespace BFS
             yield return new WaitForSeconds(duration);
             text.text = null;
         }
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
+        }
+        //private void ChangeBarValue() => TeamSlider.value = Mathf.Lerp(TeamSlider.value, _slideValue, Time.deltaTime);
+        private void ChangeBarValue() => TeamSlider.value = Mathf.Lerp(TeamSlider.value, _slideValue, Time.deltaTime);
     }
 }

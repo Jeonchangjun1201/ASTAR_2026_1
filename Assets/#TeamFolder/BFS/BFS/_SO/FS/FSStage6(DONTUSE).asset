@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7daa6fe29743a1f429e5e661c16a07be, type: 3}
   m_Name: FSStage6(DONTUSE)
   m_EditorClassIdentifier: Assembly-CSharp::GDH.FSStageSO
-  <ColorDelayTime>k__BackingField: 0.00000001
+  <ColorDelayTime>k__BackingField: 0.001
   <ColorCount>k__BackingField: 666
   <StageIndex>k__BackingField: 1
   <PlateDisappearDuration>k__BackingField: 0.5

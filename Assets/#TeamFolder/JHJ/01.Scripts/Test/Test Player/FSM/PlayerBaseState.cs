@@ -17,11 +17,7 @@
     {
         public PlayerIdleState(PlayerStateMachine ctx) : base(ctx) { }
 
-        public override void EnterState()
-        {
-            _ctx.Animator.SetBool(_ctx.isRunning, false);
-            _ctx.Animator.SetBool(_ctx.isFalling, false);
-        }
+        public override void EnterState() { } // 애니메이션 처리는 Controller에 위임
 
         public override void UpdateState()
         {
@@ -39,10 +35,7 @@
     {
         public PlayerRunState(PlayerStateMachine ctx) : base(ctx) { }
 
-        public override void EnterState()
-        {
-            _ctx.Animator.SetBool(_ctx.isRunning, true);
-        }
+        public override void EnterState() { }
 
         public override void UpdateState()
         {
@@ -52,23 +45,16 @@
                 _ctx.ChangeState(_ctx.FallState);
         }
 
-        public override void FixedUpdateState() { }  
+        public override void FixedUpdateState() { }
 
-        public override void ExitState()
-        {
-            _ctx.Animator.SetBool(_ctx.isRunning, false);
-        }
+        public override void ExitState() { }
     }
 
     public class PlayerJumpState : PlayerBaseState
     {
         public PlayerJumpState(PlayerStateMachine ctx) : base(ctx) { }
 
-        public override void EnterState()
-        {
-            _ctx.Animator.SetTrigger(_ctx.isJump);
-            
-        }
+        public override void EnterState() { }
 
         public override void UpdateState()
         {
@@ -76,7 +62,7 @@
                 _ctx.ChangeState(_ctx.FallState);
         }
 
-        public override void FixedUpdateState() { }  
+        public override void FixedUpdateState() { }
         public override void ExitState() { }
     }
 
@@ -84,10 +70,7 @@
     {
         public PlayerFallState(PlayerStateMachine ctx) : base(ctx) { }
 
-        public override void EnterState()
-        {
-            _ctx.Animator.SetBool(_ctx.isFalling, true);
-        }
+        public override void EnterState() { }
 
         public override void UpdateState()
         {
@@ -100,11 +83,8 @@
             }
         }
 
-        public override void FixedUpdateState() { }  
+        public override void FixedUpdateState() { }
 
-        public override void ExitState()
-        {
-            _ctx.Animator.SetBool(_ctx.isFalling, false);
-        }
+        public override void ExitState() { }
     }
 }

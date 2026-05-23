@@ -23,7 +23,7 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
         private void RefreshAnimatorParams()
         {
             string targetState = GetCurrentStateName();
-            if (targetState == _currentStateName) return; 
+            if (targetState == _currentStateName) return;
 
             _currentStateName = targetState;
             ApplyAnimatorState(targetState);
@@ -40,24 +40,28 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
 
         private void ApplyAnimatorState(string stateName)
         {
-            _animator.SetBool(_stateMachine.isRunning, false);
-            _animator.SetBool(_stateMachine.isFalling, false);
+            // 🌟 [수정] Any State 트랜지션이 꼬이지 않도록 모든 트리거 초기화 (필수)
+            _animator.ResetTrigger(_stateMachine.idle);
+            _animator.ResetTrigger(_stateMachine.isRunning);
+            _animator.ResetTrigger(_stateMachine.isJump);
+            _animator.ResetTrigger(_stateMachine.isFalling);
 
+            // 🌟 [수정] 사진의 파라미터(동그라미) 타입에 맞춰 모두 SetTrigger로 변경
             switch (stateName)
             {
-                case "Run":
-                    _animator.SetBool(_stateMachine.isRunning, true);
+                case "Idle":
+                    _animator.SetTrigger(_stateMachine.idle);
                     break;
-
+                case "Run":
+                    _animator.SetTrigger(_stateMachine.isRunning);
+                    break;
                 case "Jump":
                     _animator.SetTrigger(_stateMachine.isJump);
                     break;
-
                 case "Fall":
-                    _animator.SetBool(_stateMachine.isFalling, true);
+                    _animator.SetTrigger(_stateMachine.isFalling);
                     break;
             }
         }
     }
-
 }
