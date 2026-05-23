@@ -20,7 +20,6 @@ namespace _TeamFolder.JCJ.Script
         [Tooltip("벽 프리팹이 기준으로 잡은 셀 크기. 런타임에 X/Z 스케일을 (cellSize / 이 값)으로 맞춘다.")]
         [SerializeField] private float _prefabReferenceCell = 3f;
 
-        private static PhysicsMaterial _lowFrictionWallMaterial;
 
         public void Render(int[,] data, float cellSize, GameObject wallPrefab, Transform parent)
         {
@@ -61,20 +60,9 @@ namespace _TeamFolder.JCJ.Script
         private static void ApplyLowFriction(GameObject wall)
         {
             if (wall == null) return;
-            _lowFrictionWallMaterial ??= new PhysicsMaterial("MazeWallLowFriction")
-            {
-                dynamicFriction = 0f,
-                staticFriction = 0f,
-                bounciness = 0f,
-                frictionCombine = PhysicsMaterialCombine.Minimum,
-                bounceCombine = PhysicsMaterialCombine.Minimum
-            };
 
             foreach (var col in wall.GetComponentsInChildren<Collider>(true))
-            {
-                if (col == null) continue;
-                col.sharedMaterial = _lowFrictionWallMaterial;
-            }
+                JcjPhysicsMaterials.ApplyWallLowFriction(col);
         }
 
         private void CombineVisuals(GameObject container)

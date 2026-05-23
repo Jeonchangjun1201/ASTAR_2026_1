@@ -259,6 +259,7 @@ namespace _TeamFolder.JCJ.TileGame
         {
             if (Mouse.current == null || _follow == null) return;
             if (Cursor.lockState != CursorLockMode.Locked) return;
+            if (SettingsPanel.IsOpen) return;
 
             float dx = Mouse.current.delta.x.ReadValue();
             float dy = Mouse.current.delta.y.ReadValue();

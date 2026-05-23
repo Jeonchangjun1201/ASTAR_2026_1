@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using _TeamFolder.JCJ.Script;
 using _TeamFolder.JCJ.Script.Session;
 
@@ -51,6 +52,9 @@ namespace _TeamFolder.JCJ.TileGame
         private float                             _timerRemaining;
         private int                               _maxLives;
 
+        private bool _localSpectating;
+        private int  _spectateIndex;
+
         public GameState  State  => _state;
         public GameConfig Config => gameConfig;
         public event System.Action RoundStartRequested;
@@ -92,6 +96,12 @@ namespace _TeamFolder.JCJ.TileGame
 
         private void Update()
         {
+            if (_localSpectating && _state == GameState.Playing)
+            {
+                if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+                    CycleSpectateTarget();
+            }
+
             if (!JcjRuntimeAuthority.UseLocalSimulation) return;
             if (_state != GameState.Playing) return;
             _timerRemaining -= Time.deltaTime;
@@ -139,6 +149,8 @@ namespace _TeamFolder.JCJ.TileGame
             ResolveServices();
 
             _state = GameState.Waiting;
+            _localSpectating = false;
+            _spectateIndex = 0;
             _alivePlayers.Clear();
             _allPlayers.Clear();
             _scores.Clear();
@@ -196,13 +208,10 @@ namespace _TeamFolder.JCJ.TileGame
             }
             else
             {
-                for (int i = seconds; i > 0; i--)
-                {
-                    TileAudio.PlayStatic(TileSfx.CountdownTick, 0.8f, 1f);
-                    yield return new WaitForSeconds(1f);
-                }
-                TileAudio.PlayStatic(TileSfx.Go, 1f, 1f);
-                yield return new WaitForSeconds(0.6f);
+                yield return JcjCountdownRunner.RunSeconds(
+                    seconds,
+                    _ => TileAudio.PlayStatic(TileSfx.CountdownTick, 0.8f, 1f),
+                    () => TileAudio.PlayStatic(TileSfx.Go, 1f, 1f));
             }
 
             // 입력 잠금 해제.
@@ -284,9 +293,12 @@ namespace _TeamFolder.JCJ.TileGame
             TileAudio.PlayStatic(TileSfx.EliminatePeer, 0.8f, 1f);
             RefreshHudDynamic();
 
-            // 카메라 인수:
-            //  - 생존자 있음 → 첫 생존자로 전환 + 짧은 쉐이크.
-            //  - 모두 사망 → 판 전체를 보는 오버뷰(시체에 카메라가 붙어 떨리는 것 방지).
+            if (p.IsLocalControlled && _alivePlayers.Count > 0)
+            {
+                _localSpectating = true;
+                _spectateIndex = 0;
+            }
+
             if (_camera != null)
             {
                 if (_alivePlayers.Count > 0)
@@ -611,6 +623,21 @@ namespace _TeamFolder.JCJ.TileGame
                 _colorCall.OnDropped     += HandleColorCallDropped;
                 _colorCall.OnEventEnded  -= HandleColorCallEnded;
                 _colorCall.OnEventEnded  += HandleColorCallEnded;
+            }
+        }
+
+        // ── 관전 전환 ────────────────────────────────
+        private void CycleSpectateTarget()
+        {
+            if (SettingsPanel.IsOpen) return;
+            if (_alivePlayers.Count == 0) return;
+
+            _spectateIndex = (_spectateIndex + 1) % _alivePlayers.Count;
+            var next = _alivePlayers[_spectateIndex];
+            if (next != null && _camera != null)
+            {
+                _camera.RegisterTarget(next.transform);
+                Debug.Log($"[TileGameManager] 관전 전환 (클릭) → {next.gameObject.name}");
             }
         }
 

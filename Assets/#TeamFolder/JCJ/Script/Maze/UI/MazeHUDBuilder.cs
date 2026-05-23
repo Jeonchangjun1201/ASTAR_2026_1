@@ -258,15 +258,7 @@ namespace _TeamFolder.JCJ.Script
             if (existing != null && existing.TryGetComponent(out Canvas found))
                 return found;
 
-            var go = new GameObject(hudCanvasName);
-            var c = go.AddComponent<Canvas>();
-            c.renderMode = RenderMode.ScreenSpaceOverlay;
-            c.sortingOrder = 100;
-            var scaler = go.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920, 1080);
-            go.AddComponent<GraphicRaycaster>();
-            return c;
+            return JcjUiFactory.FindOrCreateOverlayCanvas(hudCanvasName, sortOrder: 100);
         }
     }
 }

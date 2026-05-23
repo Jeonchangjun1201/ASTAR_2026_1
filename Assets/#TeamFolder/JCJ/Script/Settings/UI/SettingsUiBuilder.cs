@@ -408,29 +408,16 @@ namespace _TeamFolder.JCJ.Script
 
         public static Canvas EnsureCanvas()
         {
-            var canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
+            var canvas = JcjUiFactory.FindFirstOverlayCanvas();
             if (canvas == null)
-            {
-                var go = new GameObject("Canvas (auto)");
-                canvas = go.AddComponent<Canvas>();
-                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                canvas.sortingOrder = 50;
-                go.AddComponent<GraphicRaycaster>();
-            }
-            ConfigureCanvasScaler(canvas);
+                canvas = JcjUiFactory.FindOrCreateOverlayCanvas("Canvas (auto)", sortOrder: 50);
+            else
+                JcjUiFactory.ConfigureOverlayScaler(canvas);
             return canvas;
         }
 
-        private static void ConfigureCanvasScaler(Canvas canvas)
-        {
-            var scaler = canvas.GetComponent<CanvasScaler>();
-            if (scaler == null) scaler = canvas.gameObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            scaler.matchWidthOrHeight = 0.5f;
-            scaler.referencePixelsPerUnit = 100f;
-        }
+        private static void ConfigureCanvasScaler(Canvas canvas) =>
+            JcjUiFactory.ConfigureOverlayScaler(canvas);
 
         public static void EnsureEventSystem()
         {

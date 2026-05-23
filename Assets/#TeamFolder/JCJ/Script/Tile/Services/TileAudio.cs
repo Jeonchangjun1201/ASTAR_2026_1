@@ -69,9 +69,7 @@ namespace _TeamFolder.JCJ.TileGame
             _music.spatialBlend = 0f;
             _music.volume = ResolveBgmVolume();
 
-            if (Camera.main != null && Camera.main.GetComponent<AudioListener>() == null
-                && Object.FindFirstObjectByType<AudioListener>() == null)
-                Camera.main.gameObject.AddComponent<AudioListener>();
+            JcjAudioAmbience.EnsureAudioListener();
 
             StartMusic();
         }
@@ -162,32 +160,12 @@ namespace _TeamFolder.JCJ.TileGame
         // ── 앰비언트 베드(미로와 동일 8초 드론) ──
         private void StartMusic()
         {
-            var clip = BuildAmbientBed();
+            var clip = JcjAudioAmbience.CreateAmbientBed("TileAmbient");
             if (clip == null) return;
             _music.clip = clip;
             _music.volume = ResolveBgmVolume();
             _music.Play();
         }
 
-        private static AudioClip BuildAmbientBed()
-        {
-            const int sr = 44100;
-            const float dur = 8f;
-            int len = (int)(sr * dur);
-            var samples = new float[len];
-            for (int i = 0; i < len; i++)
-            {
-                float t = i / (float)sr;
-                float a = 0.12f * Mathf.Sin(2f * Mathf.PI * 110f * t);
-                float b = 0.09f * Mathf.Sin(2f * Mathf.PI * 165f * t + Mathf.Sin(t * 0.2f));
-                float c = 0.07f * Mathf.Sin(2f * Mathf.PI * 220f * t + Mathf.Sin(t * 0.13f) * 0.5f);
-                // 느린 LFO로 잔잔하게 부풀었다 줄어드는 배경음을 만든다.
-                float lfo = 0.7f + 0.3f * Mathf.Sin(2f * Mathf.PI * t / 4f);
-                samples[i] = (a + b + c) * lfo;
-            }
-            var clip = AudioClip.Create("TileAmbient", len, 1, sr, false);
-            clip.SetData(samples, 0);
-            return clip;
-        }
     }
 }
