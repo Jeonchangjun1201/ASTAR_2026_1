@@ -1,7 +1,9 @@
 {
     "name": "KSY.Networks",
     "rootNamespace": "KSY.Networks",
-    "references": [],
+    "references": [
+        "GUID:1105a2874dfb7ad45a2c2407b6a3072f"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

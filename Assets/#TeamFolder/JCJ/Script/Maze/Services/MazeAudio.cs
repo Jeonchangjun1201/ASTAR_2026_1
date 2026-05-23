@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 //  미로 모드 효과음을 재생하는 오디오 유틸.
 
@@ -22,24 +22,26 @@ namespace _TeamFolder.JCJ.Script
     }
 
     /// <summary>
-    /// 싱글톤 오디오. 2D SFX용 AudioSource 하나와 게임 이벤트 자동 구독(카운트다운·픽업·종료·타이머).
+    /// 싱글톤 오디오. SFX는 <see cref="JcjSoundPlayback"/> 경유, BGM 전용 AudioSource와 게임 이벤트 자동 구독.
     /// 클립은 <see cref="SfxSynth"/> 생성이라 에셋 불필요.
     /// </summary>
     public class MazeAudio : MonoBehaviour
     {
         public static MazeAudio Instance { get; private set; }
 
-        [Header("믹스")]
-        [Range(0f, 1f)] [SerializeField] private float _masterVolume = 0.85f;
-        [Range(0f, 1f)] [SerializeField] private float _sfxVolume    = 1.0f;
-        [Tooltip("플레이 아래 깔리는 앰비언트 뮤직. 0이면 끔.")]
-        [Range(0f, 1f)] [SerializeField] private float _musicVolume  = 0.12f;
+        [Header("씬 믹스 트림 (설정창 MASTER/BGM/VFX와 곱해짐)")]
+        [Tooltip("씬별 BGM 트림. 최종 = MASTER×BGM(설정)×이 값")]
+        [Range(0f, 1f)] [SerializeField] private float _musicBedTrim = 0.12f;
+        [Tooltip("씬별 SFX 트림. 최종 = MASTER×VFX(설정)×이 값")]
+        [Range(0f, 1f)] [SerializeField] private float _sfxTrim = 1f;
+
+        /// <summary>씬 SFX 트림 — <see cref="JcjSoundPlayback"/> VFX 버스에 곱해진다.</summary>
+        public float SceneVfxTrim => _sfxTrim;
 
         [Header("Behaviour")]
         [Tooltip("GameStateManager 이벤트(카운트다운, 픽업, 종료)를 자동 구독. 끄면 외부에서 직접 Play를 호출해야 함.")]
         [SerializeField] private bool _autoHookGameEvents = true;
 
-        private AudioSource _sfx;
         private AudioSource _music;
 
         // 캐시 클립(첫 사용 시 생성).
@@ -62,28 +64,24 @@ namespace _TeamFolder.JCJ.Script
             if (Instance != null && Instance != this) { Destroy(this); return; }
             Instance = this;
 
-            _sfx = gameObject.AddComponent<AudioSource>();
-            _sfx.playOnAwake = false;
-            _sfx.spatialBlend = 0f;
-
             _music = gameObject.AddComponent<AudioSource>();
             _music.loop = true;
             _music.playOnAwake = false;
             _music.spatialBlend = 0f;
-            _music.volume = _masterVolume * _musicVolume;
+            _music.volume = ResolveBgmVolume();
 
             EnsureAudioListener();
         }
 
         private void Start()
         {
-            if (_musicVolume > 0f)
+            if (_musicBedTrim > 0f)
             {
                 _musicBed ??= BuildAmbientBed();
                 if (_musicBed != null)
                 {
                     _music.clip = _musicBed;
-                    _music.volume = _masterVolume * _musicVolume;
+                    _music.volume = ResolveBgmVolume();
                     _music.Play();
                 }
             }
@@ -107,10 +105,20 @@ namespace _TeamFolder.JCJ.Script
         private void PlayInternal(MazeSfx sfx, float volumeScale, float pitch)
         {
             var clip = GetClip(sfx);
-            if (clip == null || _sfx == null) return;
-            _sfx.pitch = Mathf.Clamp(pitch, 0.5f, 2f);
-            _sfx.PlayOneShot(clip, Mathf.Clamp01(_masterVolume * _sfxVolume * volumeScale));
+            if (clip == null) return;
+            JcjSoundPlayback.PlayVfx(clip, volumeScale, pitch, _sfxTrim);
         }
+
+        /// <summary>설정창 MASTER×BGM 변경 시 재생 중 BGM 볼륨을 갱신한다.</summary>
+        public void ApplyUserVolumeSettings()
+        {
+            if (_music == null || !_music.isPlaying) return;
+            var gsm = GameStateManager.Instance;
+            float mul = gsm != null && gsm.CurrentState == GameState.Finished ? 0.3f : 1f;
+            _music.volume = ResolveBgmVolume() * mul;
+        }
+
+        private float ResolveBgmVolume() => JcjAudioVolume.EffectiveBgm * _musicBedTrim;
 
         private AudioClip GetClip(MazeSfx sfx) => sfx switch
         {
@@ -120,7 +128,7 @@ namespace _TeamFolder.JCJ.Script
             MazeSfx.StaminaOrb    => _staminaOrbClip  ??= SfxSynth.MakeChimeStamina(),
             MazeSfx.StaminaOut    => _staminaOutClip  ??= SfxSynth.MakeStaminaOut(),
             MazeSfx.Jump          => _jumpClip        ??= SfxSynth.MakeJump(),
-            MazeSfx.Footstep      => _footstepClip    ??= SfxSynth.MakeFootstep(),
+            MazeSfx.Footstep      => _footstepClip    ??= JcjFootstepAudio.GetClip() ?? SfxSynth.MakeFootstep(),
             MazeSfx.Whoosh        => _whooshClip      ??= SfxSynth.MakeWhoosh(),
             MazeSfx.Fanfare       => _fanfareClip     ??= SfxSynth.MakeFanfare(),
             MazeSfx.UiTick        => _uiTickClip      ??= SfxSynth.MakeUiTick(),
@@ -191,12 +199,12 @@ namespace _TeamFolder.JCJ.Script
             {
                 // 결과 연출 중 배경 음악 볼륨 낮춤.
                 if (_music != null && _music.isPlaying)
-                    _music.volume = _masterVolume * _musicVolume * 0.3f;
+                    _music.volume = ResolveBgmVolume() * 0.3f;
             }
             else if (state == GameState.Countdown || state == GameState.Playing)
             {
                 if (_music != null && _music.isPlaying)
-                    _music.volume = _masterVolume * _musicVolume;
+                    _music.volume = ResolveBgmVolume();
             }
         }
 

@@ -1,3 +1,4 @@
+using KSY.Utility;
 using UnityEngine;
 
 namespace KSY.Shared
@@ -7,45 +8,45 @@ namespace KSY.Shared
         [SerializeField]
         private Rigidbody body = null;
 
-        private Vector3 movementInput = Vector3.zero;
-        private Vector3 moveDirection = Vector3.zero;
-        private float moveSpeed = 0f;
-        private int currentDirection = 0;
+        private Vector3 _movementInput = Vector3.zero;
+        private Vector3 _moveDirection = Vector3.zero;
+        private float _moveSpeed = 0f;
+        private int _currentDirection = 0;
 
-        private float maxSpeed = 0f;
-        private float acceleration = 0f;
+        private float _maxSpeed = 0f;
+        private float _acceleration = 0f;
 
         public void Initialize(float maxSpeed, float acceleration)
         {
-            this.maxSpeed = maxSpeed;
-            this.acceleration = acceleration;
+            this._maxSpeed = maxSpeed;
+            this._acceleration = acceleration;
+            CustomLog.Log($"Max Speed : {_maxSpeed}, Acceleration : {_acceleration}", UnityEngine.Color.purple);
         }
 
         private void FixedUpdate()
         {
-            float acceleration = this.acceleration * (movementInput == Vector3.zero ? -1 : 1);
-            moveSpeed = Mathf.Clamp(moveSpeed + Time.fixedDeltaTime * acceleration, 0, maxSpeed);
+            _moveSpeed = Mathf.Clamp(_moveSpeed + Time.fixedDeltaTime * _acceleration, 0, _maxSpeed);
 
-            body.linearVelocity = moveDirection * moveSpeed;
+            body.linearVelocity = _moveDirection * _moveSpeed;
 
-            if (movementInput.x != 0)
-                SetDirection((int)Mathf.Sign(movementInput.x));
+            if (_movementInput.x != 0)
+                SetDirection((int)Mathf.Sign(_movementInput.x));
         }
 
         private void SetDirection(int direction)
         {
-            if (currentDirection == direction)
+            if (_currentDirection == direction)
                 return;
 
-            currentDirection = direction;
+            _currentDirection = direction;
             transform.rotation = Quaternion.Euler(0, direction > 0 ? 0 : 180, 0);
         }
 
         public void SetMovementInput(Vector3 input)
         {
-            movementInput = input.normalized;
-            if (movementInput != Vector3.zero)
-                moveDirection = movementInput;
+            CustomLog.Log($"{gameObject.name}'s Move Direction : {_movementInput}", Color.blue);
+            _movementInput = input.normalized;
+            _moveDirection = _movementInput;
         }
     }
 }

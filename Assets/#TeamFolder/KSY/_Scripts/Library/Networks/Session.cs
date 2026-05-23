@@ -1,7 +1,9 @@
+using KSY.Utility;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace KSY.Networks
 {
@@ -43,8 +45,6 @@ namespace KSY.Networks
 
         public void Open(Socket connectedSocket, PacketSerializer packetSerializer, IPacketDispatcher packetDispatcher)
         {
-            //Argument, ���ڸ� ���Ѵ�. ���ڴ� Parameter�ʹ� �ٸ� �������� �Ű������� �޼��忡 ���޵Ǵ� �� ���� ��ü�� ���ϰ�
-            //Argument�� ������ ���޵Ǵ� ���� ���Ѵ�. ������ ���ͷ��� ���� ����.
             if (connectedSocket == null)
                 throw new ArgumentNullException("connectedSocket");
 
@@ -60,7 +60,7 @@ namespace KSY.Networks
             Volatile.Write(ref isClosed, 0);
             sendQueue = new SendQueue();
             sendArgs = new SocketAsyncEventArgs();
-            sendArgs.Completed += HandleSend;
+            sendArgs.Completed += HandleSent;
             receiveBuffer = new ReceiveBuffer(65535);
             receiveArgs = new SocketAsyncEventArgs();
             receiveArgs.Completed += HandleReceived;
@@ -127,47 +127,47 @@ namespace KSY.Networks
             {
                 sendQueue.Enqueue(sendQueueContext);
                 if (!sendQueue.TryFlush(out bufferList))
-                {
                     return;
-                }
             }
 
             sendArgs.BufferList = bufferList;
-            if (!connectedSocket.SendAsync(sendArgs))
-            {
-                HandleSend(null, sendArgs);
-            }
+            bool pending = connectedSocket.SendAsync(sendArgs);
+            if (!pending)
+                HandleSent(null, sendArgs);
         }
 
-        private void HandleSend(object sender, SocketAsyncEventArgs sendArgs)
+        private void HandleSent(object sender, SocketAsyncEventArgs sendArgs)
         {
             if (!IsOpened)
             {
+                CustomLog.Log("Failed : The session has not been opened.");
                 Close();
                 return;
             }
 
-            if (sendArgs.SocketError != 0 || sendArgs.BytesTransferred <= 0)
+            if (sendArgs.SocketError != SocketError.Success ||
+                sendArgs.BytesTransferred <= 0)
             {
+                CustomLog.Log("Failed : Send Packet.");
                 Close();
                 return;
             }
+
+            //CustomLog.Log("Success : Send Packet", UnityEngine.Color.red);
 
             List<ArraySegment<byte>> bufferList = null;
             lock (sendLocker)
             {
                 sendQueue.Clear();
-                if (!sendQueue.TryFlush(out bufferList))
-                {
+                bool hasPacketData = sendQueue.TryFlush(out bufferList);
+                if (!hasPacketData)
                     return;
-                }
             }
 
             sendArgs.BufferList = bufferList;
-            if (!connectedSocket.SendAsync(sendArgs))
-            {
-                HandleSend(null, sendArgs);
-            }
+            bool pending = connectedSocket.SendAsync(sendArgs);
+            if (!pending)
+                HandleSent(null, sendArgs);      
         }
 
         private void ReceiveAsync()
@@ -180,32 +180,64 @@ namespace KSY.Networks
 
             receiveBuffer.CleanUp();
             receiveArgs.SetBuffer(receiveBuffer.FreeBuffer);
+            bool pending = connectedSocket.ReceiveAsync(receiveArgs);
+            if (!pending)
+                HandleReceived(null, receiveArgs);
         }
 
         private async void HandleReceived(object sender, SocketAsyncEventArgs receiveArgs)
         {
+            if (!IsOpened)
+            {
+                CustomLog.Log("Failed : The session has not been opened.");
+                Close();
+                return;
+            }
 
+            if (receiveArgs.SocketError != SocketError.Success || 
+                receiveArgs.BytesTransferred <= 0)
+            {
+                CustomLog.Log("Failed : Receive Packet.");
+                Close();
+                return;
+            }
+
+            receiveBuffer.MoveWriteIndex(receiveArgs.BytesTransferred);
+            while (true)
+            {
+                int bytesProcessed = await HandlePacket(receiveBuffer.UsedBuffer);
+                if (bytesProcessed <= 0)
+                    break;
+
+                receiveBuffer.MoveReadIndex(bytesProcessed);
+            }
+
+            ReceiveAsync();
         }
 
-        // private async ValueTask<int> HandlePacket(ArraySegment<byte> buffer)
-        // {
-        //     if (buffer.Count < 2)
-        //     {
-        //         return 0;
-        //     }
+        private async ValueTask<int> HandlePacket(ArraySegment<byte> buffer)
+        {
+            if (buffer.Count < 2)
+                return 0;
 
-        //     ushort packetSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
-        //     if (packetSize > ushort.MaxValue || packetSize > buffer.Count)
-        //     {
-        //         return 0;
-        //     }
+            ushort packetSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
+            if (packetSize > ushort.MaxValue || packetSize > buffer.Count)
+                return 0;
 
-        //     ArraySegment<byte> packetData = new ArraySegment<byte>(buffer.Array, buffer.Offset + 2, packetSize - 2);
-        //     try
-        //     {
-        //         KSY_IPacket packet = packetSerializer.Deserialize();
-        //     }
-        // }
+            ArraySegment<byte> packetData = new ArraySegment<byte>(buffer.Array, buffer.Offset + 2, buffer.Count - 2);
+            try
+            {
+                IPacket packet = packetSerializer.Deserialize(packetData);
+                if (packet != null)
+                    await packetDispatcher.Dispatch(this, packet);
+            }
+            catch (Exception ex)
+            {
+                this.OnErrorEvent?.Invoke(this, ex);
+            }
+
+            return packetSize;
+        }
     }
 }
 

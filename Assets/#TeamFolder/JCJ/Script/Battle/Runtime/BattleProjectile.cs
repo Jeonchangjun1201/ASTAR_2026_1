@@ -10,7 +10,6 @@ namespace _TeamFolder.JCJ.Battle
     {
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
-        private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
         private Vector3 _velocity;
         private float _gravity;
@@ -24,7 +23,6 @@ namespace _TeamFolder.JCJ.Battle
         private AudioClip _impactSfx;
         private Color _projectileColor = new(1f, 0.78f, 0.25f, 1f);
         private float _projectileVisualScale = 0.08f;
-        private float _trailTime = 0.18f;
         private string _weaponId = string.Empty;
         private Transform _visualRoot;
         private Renderer _visualRenderer;
@@ -51,7 +49,6 @@ namespace _TeamFolder.JCJ.Battle
             _impactSfx = definition.ImpactSfx;
             _projectileColor = definition.ProjectileColor;
             _projectileVisualScale = definition.ProjectileVisualScale;
-            _trailTime = definition.ProjectileTrailTime;
             _weaponId = definition.WeaponId;
 
             EnsureFallbackVisuals();

@@ -20,9 +20,12 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
         public PlayerBaseState CurrentState => _currentState;
 
         // 애니메이션 파라미터 해시
-        public readonly int isRunning = Animator.StringToHash("IsRunning");
-        public readonly int isJump = Animator.StringToHash("Jump");
-        public readonly int isFalling = Animator.StringToHash("IsFalling");
+        public readonly int isRunning = Animator.StringToHash("run");
+        public readonly int isJump = Animator.StringToHash("jump");
+        public readonly int isFalling = Animator.StringToHash("fall");
+        public readonly int idle = Animator.StringToHash("idle");
+        public readonly int getUp = Animator.StringToHash("getup");
+        public readonly int feel = Animator.StringToHash("feel");
         //public readonly int isPunching = Animator.StringToHash("Punch");
 
         private PlayerBaseState _currentState;
@@ -54,8 +57,17 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
                     _inputReader.P2OnMove += OnMoveInput;
                     _inputReader.P2OnJump += OnJumpInput;
                     break;
+                case PlayerIndex.P3:
+                    _inputReader.P3OnMove += OnMoveInput;
+                    _inputReader.p3OnJump += OnJumpInput;
+                    break;
+                case PlayerIndex.P4:
+                    _inputReader.P4OnMove += OnMoveInput;
+                    _inputReader.p4OnJump += OnJumpInput;
+                    break;
             }
         }
+
 
         private void OnDisable()
         {
@@ -68,6 +80,15 @@ namespace JHJ.Scripts.Test.TestPlayer.FSM
                 case PlayerIndex.P2:
                     _inputReader.P2OnMove -= OnMoveInput;
                     _inputReader.P2OnJump -= OnJumpInput;
+                    break;
+                case PlayerIndex.P3:
+                    _inputReader.P3OnMove -= OnMoveInput;
+                    _inputReader.p3OnJump -= OnJumpInput;
+                    break;
+                    break;
+                case PlayerIndex.P4:
+                    _inputReader.P4OnMove -= OnMoveInput;
+                    _inputReader.p4OnJump -= OnJumpInput;
                     break;
             }
         }

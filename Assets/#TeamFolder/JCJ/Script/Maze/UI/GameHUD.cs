@@ -58,13 +58,17 @@ namespace _TeamFolder.JCJ.Script
             }
 
             gsm.OnStateChanged += HandleStateChanged;
-            if (gsm.Timer != null)     gsm.Timer.OnTimerUpdated += RefreshTimer;
+            if (gsm.Timer != null) gsm.Timer.OnTimerUpdated += RefreshTimer;
+
             if (gsm.Rank != null)
             {
                 gsm.Rank.OnPlayerFinished += AppendRankFeed;
-                gsm.Rank.OnAllFinished    += ShowResult;
+                gsm.Rank.OnAllFinished += ShowResult;
             }
-            if (gsm.Score != null)
+
+            if (MatchScoreRankManager.Instance != null)
+                MatchScoreRankManager.Instance.OnScoreChanged += RefreshScore;
+            else if (gsm.Score != null)
                 gsm.Score.OnScoreChanged += RefreshScore;
 
             if (_rankFeedText != null)  _rankFeedText.text  = string.Empty;
@@ -83,13 +87,17 @@ namespace _TeamFolder.JCJ.Script
             if (gsm == null) return;
 
             gsm.OnStateChanged -= HandleStateChanged;
-            if (gsm.Timer != null)     gsm.Timer.OnTimerUpdated  -= RefreshTimer;
+            if (gsm.Timer != null) gsm.Timer.OnTimerUpdated -= RefreshTimer;
+
             if (gsm.Rank != null)
             {
                 gsm.Rank.OnPlayerFinished -= AppendRankFeed;
-                gsm.Rank.OnAllFinished    -= ShowResult;
+                gsm.Rank.OnAllFinished -= ShowResult;
             }
-            if (gsm.Score != null)
+
+            if (MatchScoreRankManager.Instance != null)
+                MatchScoreRankManager.Instance.OnScoreChanged -= RefreshScore;
+            else if (gsm.Score != null)
                 gsm.Score.OnScoreChanged -= RefreshScore;
         }
 

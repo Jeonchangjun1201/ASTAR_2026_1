@@ -54,7 +54,7 @@ namespace _TeamFolder.PYH._02.Scripts.Player
                 return value;
             }
 
-            Debug.LogError("Module of invalid type!");
+            Debug.LogError("Module of invalid event!");
             return null;
         }
         

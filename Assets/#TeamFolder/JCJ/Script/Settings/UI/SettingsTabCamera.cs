@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 // 카메라 옵션을 표시하고 수정하는 탭 UI.
@@ -7,22 +7,30 @@ namespace _TeamFolder.JCJ.Script
 {
     public class SettingsTabCamera : ISettingsTab
     {
-        public string Title => "카메라";
+        public string Title => _dpiOnly ? "DPI" : "카메라";
 
+        private readonly bool _dpiOnly;
         private ISettingsService _settings;
         private Slider _sensitivity;
         private Toggle _verticalRotation;
         private Text _sensitivityValue;
 
+        public SettingsTabCamera(bool dpiOnly = false)
+        {
+            _dpiOnly = dpiOnly;
+        }
+
         public GameObject Build(RectTransform contentArea, ISettingsService settings)
         {
             _settings = settings;
 
-            var section = SettingsUiBuilder.CreateSection(contentArea, "카메라 설정");
+            var sectionTitle = _dpiOnly ? "마우스 감도 (DPI)" : "카메라 설정";
+            var section = SettingsUiBuilder.CreateSection(contentArea, sectionTitle);
             var rt = (RectTransform)section.transform;
 
             BuildSensitivityRow(rt);
-            BuildToggleRow(rt, "카메라 세로 회전", v => _settings.Mutate(d => d.lockPitch = !v), out _verticalRotation);
+            if (!_dpiOnly)
+                BuildToggleRow(rt, "카메라 세로 회전", v => _settings.Mutate(d => d.lockPitch = !v), out _verticalRotation);
 
             Refresh(_settings.Data);
             return section;

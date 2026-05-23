@@ -360,6 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cdc2dfe0a5313c4fa990a88f5f2298e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KSY.Shared.GameManager
+  <EventChannel>k__BackingField: {fileID: 0}
 --- !u!4 &448399145
 Transform:
   m_ObjectHideFlags: 0

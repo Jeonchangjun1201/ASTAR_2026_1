@@ -24,10 +24,10 @@ namespace KDH
         {
             // 팽이끼리 부딪혔을 때 마지막 터치 기록
             // 상대방 팽이에 붙어있는 TopManager의 소유자를 가져옴
-            if (collision.gameObject.CompareTag("Spin1") ||
-                collision.gameObject.CompareTag("Spin2") ||
-                collision.gameObject.CompareTag("Spin3") ||
-                collision.gameObject.CompareTag("Spin4"))
+            if (collision.gameObject.CompareTag("Player1") ||
+                collision.gameObject.CompareTag("Player2") ||
+                collision.gameObject.CompareTag("Player3") ||
+                collision.gameObject.CompareTag("Player4"))
             {
                 _lastTouchPlayer = collision.gameObject.name;
                 Debug.Log($"{gameObject.name} 마지막 터치: {_lastTouchPlayer}");

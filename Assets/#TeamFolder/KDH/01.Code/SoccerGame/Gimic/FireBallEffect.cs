@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace KDH.Gimic
@@ -22,7 +21,6 @@ namespace KDH.Gimic
                 if(blind != null)
                     blind.StartBlind(redBlindTime);
                 
-                //Destroy(gameObject);
                 _used = true;
             }
         }

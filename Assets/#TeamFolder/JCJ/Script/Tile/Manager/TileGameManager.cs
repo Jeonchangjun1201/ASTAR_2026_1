@@ -359,10 +359,30 @@ namespace _TeamFolder.JCJ.TileGame
 
             GameplayCursor.SetLocked(false);
 
+            SyncTileScoresToMatchScoreManager();
+
             var ranking = BuildRanking();
             if (TileAudio.Instance != null) TileAudio.Instance.DuckMusic(4f);
             TileAudio.PlayStatic(TileSfx.Fanfare, 1f, 1f);
             _hud?.ShowResults(ranking);
+        }
+
+        /// <summary>타일 라운드 점수만 전역 점수 프리팹에 반영(완주 순위·포디움 없음).</summary>
+        private void SyncTileScoresToMatchScoreManager()
+        {
+            var mgr = MatchScoreRankManager.Instance;
+            if (mgr == null) return;
+
+            foreach (var pair in _scores)
+            {
+                if (pair.Key == null) continue;
+                var identity = RuntimePlayerIdentity.Find(pair.Key);
+                string id = identity != null ? identity.PlayerId : pair.Key.name;
+                string name = identity != null
+                    ? identity.DisplayName
+                    : (string.IsNullOrEmpty(pair.Key.name) ? $"Player {pair.Key.PlayerIndex + 1}" : pair.Key.name);
+                if (pair.Value > 0) mgr.AddScore(id, name, pair.Value);
+            }
         }
 
         /// <summary>
@@ -565,6 +585,7 @@ namespace _TeamFolder.JCJ.TileGame
         // ── 서비스 해석 ─────────────────────────────
         private void ResolveServices()
         {
+            MatchScoreRankManager.EnsureExists();
             countdownUI ??= FindFirstObjectByType<CountdownUI>();
 
             if (buildHUD)
@@ -594,15 +615,15 @@ namespace _TeamFolder.JCJ.TileGame
         }
 
         // ── 컬러콜 콜백 ─────────────────────────────
-        private void HandleColorCallAnnounced(TileColor safe, float warn)
+        private void HandleColorCallAnnounced(TileColor safe, float warn, int layerIndex)
         {
-            _hud?.ShowColorCallAnnounce(safe, warn);
-            // 이벤트 끝날 때 점수 줄 생존 의도만 기록.
+            int layers = tileBoard != null ? tileBoard.LayerCount : 3;
+            _hud?.ShowColorCallAnnounce(safe, warn, layerIndex, layers);
             foreach (var p in _alivePlayers)
                 if (p != null) p.SurvivedLastColorCall = false;
         }
 
-        private void HandleColorCallDropped(TileColor safe, int dropped)
+        private void HandleColorCallDropped(TileColor safe, int dropped, int layerIndex)
         {
             _camera?.Shake(0.5f, 0.6f);
         }

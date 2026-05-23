@@ -39,7 +39,7 @@ namespace _TeamFolder.JCJ.Script
         private Image _flashImage;
         private TextMeshProUGUI _bannerText;
         private CanvasGroup _bannerGroup;
-        private RankService _rank;
+        private IRankService _rank;
         private Transform _goalOverride;
         private bool _hooked;
 
@@ -96,7 +96,7 @@ namespace _TeamFolder.JCJ.Script
                     Invoke(nameof(HookRankService), 0.2f);
                 return;
             }
-            _rank = gsm.Rank as RankService;
+            _rank = gsm.Rank;
             if (_rank != null)
             {
                 _rank.OnPlayerFinishedData += HandlePlayerFinished;
@@ -165,6 +165,7 @@ namespace _TeamFolder.JCJ.Script
             _bannerText.fontSize = 110f;
             _bannerText.fontStyle = FontStyles.Bold;
             _bannerText.color = new Color(0.98f, 0.98f, 1f, 1f);
+            _bannerText.font = Resources.Load<TMP_FontAsset>("Fonts/Paperlogy-3Light SDF");
             var brt = _bannerText.rectTransform;
             brt.anchorMin = new Vector2(0.5f, 0.5f);
             brt.anchorMax = new Vector2(0.5f, 0.5f);

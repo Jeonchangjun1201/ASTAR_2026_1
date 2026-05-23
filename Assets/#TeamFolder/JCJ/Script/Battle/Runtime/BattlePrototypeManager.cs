@@ -36,8 +36,9 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         [SerializeField] private GameObject _playerPrefab; // Instantiate 할 플레이어 바디 프리팹이다.
         [SerializeField] private BattleWeaponCatalog _weaponCatalog; // 랭크별 무기 목록 데이터 소스이다.
         [SerializeField] private BattleFirstPersonCamera _battleCamera; // 로컬 플레이어 카메라 참조이다.
-        [SerializeField] private ScoreService _scoreService; // 선택적으로 외부 랭크를 가져온다.
-        [SerializeField] private GameObject _scoreServicePrefab; // 서비스가 없을 때 생성할 프리팹이다.
+        [SerializeField] private ScoreService _scoreService;
+        [SerializeField] private GameObject _matchScoreRankPrefab;
+        [SerializeField] private GameObject _scoreServicePrefab;
         [SerializeField] private bool _useScoreServiceRanks = true; // 점수 서비스에서 랭크 배열을 덮어쓸지 여부이다.
         [SerializeField] private Transform _spawnRoot; // 스폰 포인트 자식들의 부모 트랜스폼이다.
         [SerializeField] private int _localPlayerIndex; // 로컬 플레이어 슬롯 인덱스이다.
@@ -117,6 +118,7 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
                 return; // 로컬 SpawnPlayers와 연출 시작을 실행하지 않는다.
             }
             SpawnPlayers(); // 로컬에서는 즉시 플레이어 오브젝트를 만든다.
+            ApplySavedPlayerSettings(); // 런타임 스폰 직후 저장된 DPI·키 설정을 반영한다.
             CalculateTeamTargets(); // 팀 목표 점수를 계산한다.
             RefreshLeaderboard(); // UI를 첫 동기화한다.
             StartMatchPresentation(); // 인트로 코루틴을 시작한다.
@@ -648,6 +650,7 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
             if (playerRanks != null && playerRanks.Length > 0) _playerRanks = (int[])playerRanks.Clone(); // 외부 배열을 변경하지 않도록 복사한다.
             if (playerTeamIndices != null && playerTeamIndices.Length > 0) _playerTeamIndices = (int[])playerTeamIndices.Clone(); // 동일하게 복사한다.
             if (_playerSlots.Count == 0) SpawnPlayers(); // 서버 데이터 도착 전까지 슬롯이 비어 있으면 여기서 로컬 스폰을 수행한다.
+            ApplySavedPlayerSettings(); // 권한 매치 셋업으로 늦게 스폰된 플레이어에도 설정을 적용한다.
             CalculateTeamTargets(); // 새 랭크 합으로 목표 점수를 다시 계산한다.
             RefreshLeaderboard(); // UI에 즉시 반영한다.
             if (slotCountBefore == 0 && _playerSlots.Count > 0) StartMatchPresentation(); // 최초로 슬롯이 생긴 경우에만 인트로를 연다.
@@ -689,17 +692,29 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         private Vector3 SelectInitialSpawnPosition(int playerIndex)
         {
             if (_spawnRoot == null || _spawnRoot.childCount == 0) return Vector3.up * 0.65f;
-            int cornerIndex = Mathf.Clamp(playerIndex, 0, Mathf.Min(3, _spawnRoot.childCount - 1));
-            Vector3 primaryCorner = _spawnRoot.GetChild(cornerIndex).position + Vector3.up * 0.65f;
-            if (!IsSpawnBlocked(primaryCorner)) return primaryCorner;
 
+            var open = new List<(Vector3 position, float score)>(_spawnRoot.childCount);
             for (int i = 0; i < _spawnRoot.childCount; i++)
             {
                 Vector3 candidate = _spawnRoot.GetChild(i).position + Vector3.up * 0.65f;
-                if (!IsSpawnBlocked(candidate)) return candidate;
+                if (IsSpawnBlocked(candidate)) continue;
+
+                float nearestAlly = float.MaxValue;
+                for (int j = 0; j < _players.Count; j++)
+                {
+                    if (_players[j] == null) continue;
+                    float sqr = (_players[j].transform.position - candidate).sqrMagnitude;
+                    if (sqr < nearestAlly) nearestAlly = sqr;
+                }
+                open.Add((candidate, nearestAlly));
             }
 
-            return primaryCorner;
+            if (open.Count == 0)
+                return _spawnRoot.GetChild(Random.Range(0, _spawnRoot.childCount)).position + Vector3.up * 0.65f;
+
+            open.Sort((a, b) => b.score.CompareTo(a.score));
+            int pick = Mathf.Min(4, open.Count);
+            return open[Random.Range(0, pick)].position;
         }
 
         private void AttachArenaBoundary(GameObject playerObject, Vector3 safePosition)
@@ -720,8 +735,16 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
 
         private void ResolveScoreService()
         {
+            if (_scoreService == null && MatchScoreRankManager.Instance != null)
+                _scoreService = MatchScoreRankManager.Instance.Score as ScoreService;
             if (_scoreService == null) _scoreService = ScoreService.Instance;
             if (_scoreService == null) _scoreService = Object.FindFirstObjectByType<ScoreService>();
+            if (_scoreService == null && _matchScoreRankPrefab != null)
+            {
+                var root = Instantiate(_matchScoreRankPrefab);
+                root.name = _matchScoreRankPrefab.name;
+                _scoreService = root.GetComponent<ScoreService>();
+            }
             if (_scoreService == null && _scoreServicePrefab != null)
             {
                 var scoreServiceObject = Instantiate(_scoreServicePrefab);
@@ -734,7 +757,8 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         // 서버가 랭크/시드/매치메이킹 결과를 내려주면 이 지점에서 내부 배열만 치환하면 된다.
         private void ApplyRanksFromScoreService()
         {
-            if (!_useScoreServiceRanks || _scoreService == null) return;
+            var score = (IScoreService)_scoreService ?? MatchScoreRankManager.Instance?.Score;
+            if (!_useScoreServiceRanks || score == null) return;
 
             int playerCount = Mathf.Max(4, _playerRanks != null ? _playerRanks.Length : 0);
             var resolvedRanks = new int[playerCount];
@@ -742,7 +766,7 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
 
             for (int i = 0; i < playerCount; i++)
             {
-                int rank = _scoreService.GetRankForPlayerIndex(i);
+                int rank = score.GetRankForPlayerIndex(i);
                 if (rank > 0)
                 {
                     resolvedRanks[i] = Mathf.Clamp(rank, 1, playerCount);
@@ -793,6 +817,34 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         {
             if (controller == null) return;
             controller.SetBattlePrototypeBodyYawDrive(true);
+        }
+
+        /// <summary>
+        /// PlayerPrefs에 저장된 DPI·키 바인딩을 배틀 플레이어 InputActionMap에 반영한다.
+        /// 플레이어가 런타임 스폰되므로 Maze/Tile과 달리 스폰 직후 한 번 더 호출해야 한다.
+        /// </summary>
+        private void ApplySavedPlayerSettings()
+        {
+            var settingsService = SettingsService.EnsureInstance();
+            var data = settingsService?.Data;
+            if (data == null) return;
+
+            var keyBinder = Object.FindFirstObjectByType<KeyRebindBinder>();
+
+            var rig = MazeCameraRig.Instance;
+            if (rig != null) rig.SetAllowPitch(!data.lockPitch);
+
+            for (int i = 0; i < _playerSlots.Count; i++)
+            {
+                var controller = _playerSlots[i].Controller;
+                if (controller == null) continue;
+
+                controller.SetMouseSensitivity(data.cameraSensitivity);
+                var map = controller.GetInputMap();
+                if (map == null) continue;
+                if (keyBinder != null) keyBinder.Register(map);
+                else KeyRebindBinder.ApplyToMap(map, data);
+            }
         }
     }
 }

@@ -59,14 +59,20 @@ namespace _TeamFolder.JCJ.Script
             trail.colorGradient = gradient;
         }
 
-        public static void UpdateFootstepSfx(bool isGrounded, Vector2 moveInput, bool isSprinting, float walkFootstepInterval, float sprintFootstepInterval, ref float nextFootstepTime)
+        /// <summary>지상에서 이동 입력이 있으면 발소리 루프, 아니면 정지.</summary>
+        public static void UpdateFootstepLoop(bool isGrounded, Vector2 moveInput, bool isSprinting)
         {
-            if (!isGrounded || moveInput.sqrMagnitude < 0.04f) return;
-            if (Time.time < nextFootstepTime) return;
+            bool walking = isGrounded && moveInput.sqrMagnitude >= 0.04f;
+            if (!walking)
+            {
+                JcjFootstepAudio.SetWalking(false);
+                return;
+            }
 
-            float interval = isSprinting ? sprintFootstepInterval : walkFootstepInterval;
-            nextFootstepTime = Time.time + interval;
-            MazeAudio.Play(MazeSfx.Footstep, volumeScale: isSprinting ? 0.9f : 0.7f, pitch: Random.Range(0.92f, 1.08f));
+            JcjFootstepAudio.SetWalking(
+                true,
+                volumeScale: isSprinting ? 0.9f : 0.7f,
+                pitch: isSprinting ? 1.08f : 1f);
         }
 
         public static void UpdateVisualState(IPlayerVisual visual, bool isGrounded, Vector2 moveInput, bool isSprinting, Rigidbody rb = null)

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2100c6536fdc323489b5ebec77aad7b4, type: 3}
   m_Name: ListeningInfo
   m_EditorClassIdentifier: Assembly-CSharp::KSY.Servers.ListeningDataSO
-  <Port>k__BackingField: 9060
+  <Port>k__BackingField: 9696

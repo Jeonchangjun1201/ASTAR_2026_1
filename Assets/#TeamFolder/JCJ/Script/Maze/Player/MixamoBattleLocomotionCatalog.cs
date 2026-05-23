@@ -5,11 +5,11 @@ namespace _TeamFolder.JCJ.Script
         public const string AssetFolder = "Assets/#TeamFolder/JCJ/MixamoBattle/";
         public const string ResourcesRelativeFolder = "JCJBattleLocomotion";
 
-        public const string UrlIdle = "https://www.mixamo.com/#/?page=1&type=Motion%2CMotionPack&query=rifle%20aiming%20idle";
-        public const string UrlWalkAiming = "https://www.mixamo.com/#/?page=1&type=Motion%2CMotionPack&query=walking%20aiming%20rifle";
-        public const string UrlRun = "https://www.mixamo.com/#/?page=1&type=Motion%2CMotionPack&query=rifle%20run";
-        public const string UrlStop = "https://www.mixamo.com/#/?page=1&type=Motion%2CMotionPack&query=stop%20walking%20rifle";
-        public const string UrlYBot = "https://www.mixamo.com/#/?page=1&type=Character&query=y%20bot";
+        public const string UrlIdle = "https://www.mixamo.com/#/?page=1&event=Motion%2CMotionPack&query=rifle%20aiming%20idle";
+        public const string UrlWalkAiming = "https://www.mixamo.com/#/?page=1&event=Motion%2CMotionPack&query=walking%20aiming%20rifle";
+        public const string UrlRun = "https://www.mixamo.com/#/?page=1&event=Motion%2CMotionPack&query=rifle%20run";
+        public const string UrlStop = "https://www.mixamo.com/#/?page=1&event=Motion%2CMotionPack&query=stop%20walking%20rifle";
+        public const string UrlYBot = "https://www.mixamo.com/#/?page=1&event=Character&query=y%20bot";
 
         public const string PartyCharacterIdleAimingFbx = "party_character@Idle Aiming.fbx";
         public const string MixamoTitleIdle = "Rifle Aiming Idle";

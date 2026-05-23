@@ -51,18 +51,20 @@ namespace _TeamFolder.JCJ.Script
 
         private void Start()
         {
+            if (GameStateManager.Instance?.Rank != null)
+                GameStateManager.Instance.Rank.OnAllFinished += HandleFinished;
+
             var gsm = GameStateManager.Instance;
-            if (gsm == null) return;
-            if (gsm.Rank != null) gsm.Rank.OnAllFinished += HandleFinished;
-            gsm.OnStateChanged += OnStateChanged;
+            if (gsm != null) gsm.OnStateChanged += OnStateChanged;
         }
 
         private void OnDestroy()
         {
+            if (GameStateManager.Instance?.Rank != null)
+                GameStateManager.Instance.Rank.OnAllFinished -= HandleFinished;
+
             var gsm = GameStateManager.Instance;
-            if (gsm == null) return;
-            if (gsm.Rank != null) gsm.Rank.OnAllFinished -= HandleFinished;
-            gsm.OnStateChanged -= OnStateChanged;
+            if (gsm != null) gsm.OnStateChanged -= OnStateChanged;
             _counterTween?.Kill();
         }
 
@@ -293,6 +295,7 @@ namespace _TeamFolder.JCJ.Script
             t.color = color;
             t.fontStyle = style;
             t.raycastTarget = false;
+            t.font = Resources.Load<TMP_FontAsset>("Fonts/Paperlogy-3Light SDF");
             return t;
         }
 

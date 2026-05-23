@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 // 설정 값을 저장하고 변경 이벤트를 전달하는 서비스.
@@ -30,7 +30,10 @@ namespace _TeamFolder.JCJ.Script
             if (existing != null) return existing;
             var go = new GameObject("[JCJ_SettingsService]");
             DontDestroyOnLoad(go);
-            return go.AddComponent<SettingsService>();
+            var service = go.AddComponent<SettingsService>();
+            if (go.GetComponent<AudioSettingsBinder>() == null)
+                go.AddComponent<AudioSettingsBinder>();
+            return service;
         }
 
         private void Awake()
@@ -42,6 +45,8 @@ namespace _TeamFolder.JCJ.Script
             }
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            if (GetComponent<AudioSettingsBinder>() == null)
+                gameObject.AddComponent<AudioSettingsBinder>();
             Load();
         }
 

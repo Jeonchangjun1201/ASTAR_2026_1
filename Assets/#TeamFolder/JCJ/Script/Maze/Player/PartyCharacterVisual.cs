@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
-using _TeamFolder.JCJ.Battle;
 using _TeamFolder.JCJ.Battle.Session;
 
 // 플레이어에 파티 캐릭터 비주얼과 애니메이션을 붙이는 처리.
