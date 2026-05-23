@@ -297,7 +297,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2967699284760061925, guid: 388b740f7906b1b4ab4bb69f4a0b7cb3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3373614826393924419, guid: 388b740f7906b1b4ab4bb69f4a0b7cb3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1209,11 +1209,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DownTownMapCameraMove
   moveDuration: 1
   stayDuration: 0.5
---- !u!1 &954100808 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2967699284760061925, guid: 388b740f7906b1b4ab4bb69f4a0b7cb3, type: 3}
-  m_PrefabInstance: {fileID: 89888520}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1017337681
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1236,7 +1231,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3021199384441735918, guid: 49a222b06343c1b478e144dd7d8890a6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3021199384441735919, guid: 49a222b06343c1b478e144dd7d8890a6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1560,11 +1555,6 @@ Transform:
   - {fileID: 740930187}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1207138409 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3021199384441735918, guid: 49a222b06343c1b478e144dd7d8890a6, type: 3}
-  m_PrefabInstance: {fileID: 1017337681}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1369210519
 GameObject:
   m_ObjectHideFlags: 0
@@ -2023,8 +2013,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cd5faaa0f484f719650ca920c5238d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KDH.RopeGameManager
-  currentMap: {fileID: 954100808}
-  nextMap: {fileID: 1207138409}
+  statusText: {fileID: 0}
+  maps: []
   mapChangeDelay: 2
   countDown: {fileID: 689672359}
   cameraSequence: {fileID: 854098573}
