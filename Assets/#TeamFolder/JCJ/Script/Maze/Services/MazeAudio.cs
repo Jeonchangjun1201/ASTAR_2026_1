@@ -70,14 +70,14 @@ namespace _TeamFolder.JCJ.Script
             _music.spatialBlend = 0f;
             _music.volume = ResolveBgmVolume();
 
-            EnsureAudioListener();
+            JcjAudioAmbience.EnsureAudioListener();
         }
 
         private void Start()
         {
             if (_musicBedTrim > 0f)
             {
-                _musicBed ??= BuildAmbientBed();
+                _musicBed ??= JcjAudioAmbience.CreateAmbientBed("MazeAmbientBed");
                 if (_musicBed != null)
                 {
                     _music.clip = _musicBed;
@@ -208,53 +208,5 @@ namespace _TeamFolder.JCJ.Script
             }
         }
 
-        // ── 앰비언트 뮤직 베드 ───────────────
-
-        private static AudioClip BuildAmbientBed()
-        {
-            // 느리고 공기감 있는 드론 — 디튠 사인 2 + 필터 노이즈 패드, 8초 루프.
-            const int sr = 44100;
-            const float duration = 8f;
-            int total = Mathf.CeilToInt(duration * sr);
-            var buffer = new float[total];
-
-            float f1 = 110f;          // A2
-            float f2 = 164.81f;       // E3 (perfect fifth)
-            float f3 = 220f;          // A3
-
-            float prev = 0f;
-            float rc = 1f / (Mathf.PI * 2f * 800f);
-            float dt = 1f / sr;
-            float alpha = dt / (rc + dt);
-
-            for (int i = 0; i < total; i++)
-            {
-                float t = (float)i / sr;
-                float lfo = 0.5f + 0.5f * Mathf.Sin(Mathf.PI * 2f * 0.1f * t);
-                float tone = 0.18f * Mathf.Sin(Mathf.PI * 2f * f1 * t)
-                           + 0.12f * Mathf.Sin(Mathf.PI * 2f * f2 * t)
-                           + 0.09f * Mathf.Sin(Mathf.PI * 2f * f3 * t);
-                float noise = (Random.value * 2f - 1f) * 0.04f;
-                prev = prev + alpha * (noise - prev);
-
-                // 루프 이음새가 튀지 않도록 시작과 끝을 부드럽게 크로스페이드한다.
-                float fade = 1f;
-                if (t < 0.5f)         fade = t / 0.5f;
-                else if (t > duration - 0.5f) fade = (duration - t) / 0.5f;
-
-                buffer[i] = (tone * lfo + prev) * fade * 0.6f;
-            }
-
-            var clip = AudioClip.Create("MazeAmbientBed", total, 1, sr, false);
-            clip.SetData(buffer, 0);
-            return clip;
-        }
-
-        private static void EnsureAudioListener()
-        {
-            if (Object.FindFirstObjectByType<AudioListener>() != null) return;
-            var cam = Camera.main;
-            if (cam != null) cam.gameObject.AddComponent<AudioListener>();
-        }
     }
 }

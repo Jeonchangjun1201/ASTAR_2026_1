@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using _TeamFolder.JCJ.Script;
 
 // 모든 타일이 공통으로 쓰는 기본 동작과 상태를 담는 베이스 클래스.
 
