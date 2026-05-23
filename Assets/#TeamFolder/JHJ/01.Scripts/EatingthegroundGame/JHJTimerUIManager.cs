@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using JHJ.Scripts.EatingthegroundGame;
-using PYH.Util;
+using _TeamFolder.PYH._02.Scripts.Util;
 
 public class JHJTimerUIManager : MonoSingleton<JHJTimerUIManager>
 {
