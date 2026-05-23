@@ -15,7 +15,6 @@ namespace KSY.Clients
 
         public void StartClient()
         {
-            CustomLog.Log("StartClient", Color.blue);
             InputManager.Initialize();
             gameManager.Initialize();
 

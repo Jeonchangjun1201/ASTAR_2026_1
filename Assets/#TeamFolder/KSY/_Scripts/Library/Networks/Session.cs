@@ -153,7 +153,7 @@ namespace KSY.Networks
                 return;
             }
 
-            CustomLog.Log("Success : Send Packet", UnityEngine.Color.red);
+            //CustomLog.Log("Success : Send Packet", UnityEngine.Color.red);
 
             List<ArraySegment<byte>> bufferList = null;
             lock (sendLocker)

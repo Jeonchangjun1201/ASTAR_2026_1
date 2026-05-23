@@ -38,6 +38,7 @@ namespace KSY.Networks
             {
                 callback.OnAdded(this, session);
                 sessionClosedHandlers[session] = HandleSessionClosed;
+                session.OnClosedEvent += HandleSessionClosed;
             }
 
             //함수 내에서 매개변수를 사용하지 않음을 명시적으로 드러냄 '_'

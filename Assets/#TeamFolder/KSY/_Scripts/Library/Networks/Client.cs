@@ -20,7 +20,6 @@ namespace KSY.Networks
 
         public void Connect(string host, int port)
         {
-            CustomLog.Log("Try Client to Server Connect", UnityEngine.Color.oldLace);
             var addressFamily = AddressFamily.InterNetworkV6;
             var socketType = SocketType.Stream;
             var protocolType = ProtocolType.Tcp;

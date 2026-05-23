@@ -4,7 +4,6 @@ using KSY.Shared.Packets;
 using KSY.Utility;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace KSY.Clients.Handlers
 {
@@ -16,6 +15,7 @@ namespace KSY.Clients.Handlers
 
         public S2C_EnterGameBroadcastPacketHandler(GameManager gameManager, DataTableManager dataTableManager)
         {
+            CustomLog.Log("Create : S2C_EnterGameBroadcastPacketHandler", Color.orange);
             this.gameManager = gameManager;
             this.dataTableManager = dataTableManager;
         }
