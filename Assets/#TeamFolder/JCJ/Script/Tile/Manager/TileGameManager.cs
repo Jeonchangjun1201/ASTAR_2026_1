@@ -615,15 +615,15 @@ namespace _TeamFolder.JCJ.TileGame
         }
 
         // ── 컬러콜 콜백 ─────────────────────────────
-        private void HandleColorCallAnnounced(TileColor safe, float warn)
+        private void HandleColorCallAnnounced(TileColor safe, float warn, int layerIndex)
         {
-            _hud?.ShowColorCallAnnounce(safe, warn);
-            // 이벤트 끝날 때 점수 줄 생존 의도만 기록.
+            int layers = tileBoard != null ? tileBoard.LayerCount : 3;
+            _hud?.ShowColorCallAnnounce(safe, warn, layerIndex, layers);
             foreach (var p in _alivePlayers)
                 if (p != null) p.SurvivedLastColorCall = false;
         }
 
-        private void HandleColorCallDropped(TileColor safe, int dropped)
+        private void HandleColorCallDropped(TileColor safe, int dropped, int layerIndex)
         {
             _camera?.Shake(0.5f, 0.6f);
         }

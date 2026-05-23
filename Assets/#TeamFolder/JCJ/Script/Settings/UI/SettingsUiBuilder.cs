@@ -12,7 +12,6 @@ namespace _TeamFolder.JCJ.Script
     public static class SettingsUiBuilder
     {
         private static readonly Color PanelBg     = new(0.05f, 0.06f, 0.09f, 0.96f);
-        private static readonly Color PanelLight  = new(0.10f, 0.12f, 0.16f, 0.95f);
         private static readonly Color AccentLine  = JCJUiColors.HudAccentLine;
         private static readonly Color HeaderText  = JCJUiColors.HudPrimaryText;
         private static readonly Color BodyText    = JCJUiColors.HudPrimaryText;

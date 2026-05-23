@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -116,6 +116,7 @@ namespace _TeamFolder.JCJ.TileGame
                     TileColor color = pool[x * d + z];
                     Vector3   pos   = HexGridToWorld(x, z, origin);
                     BaseTile  tile  = factory.CreateTile(color, pos, transform, cfg.fallDelayMultiplier);
+                    tile.SetGridIndex(layerIndex, x, z);
                     grid[x, z] = tile;
                 }
             }
@@ -179,14 +180,18 @@ namespace _TeamFolder.JCJ.TileGame
         }
 
         /// <summary>최상 생존 층에서 색별 살아 있는 타일 개수.</summary>
-        // 최상 레이어의 색 분포를 집계한다.
-        // ColorCallDirector가 안전색을 정할 때 읽는 입력 데이터라 서버에서도 같은 계산 기준을 써야 한다.
         public Dictionary<TileColor, int> CountTopLayerColors()
         {
+            return CountLayerColors(GetTopAliveLayerIndex());
+        }
+
+        /// <summary>지정한 층에서 색별 살아 있는 타일 개수.</summary>
+        public Dictionary<TileColor, int> CountLayerColors(int layerIndex)
+        {
             var counts = new Dictionary<TileColor, int>();
-            int top = GetTopAliveLayerIndex();
-            if (top < 0) return counts;
-            foreach (var t in _layerTiles[top])
+            if (_layerTiles == null || layerIndex < 0 || layerIndex >= _layerTiles.Count)
+                return counts;
+            foreach (var t in _layerTiles[layerIndex])
             {
                 if (t == null || t.HasFallen) continue;
                 if (!counts.ContainsKey(t.TileTag)) counts[t.TileTag] = 0;
@@ -195,20 +200,36 @@ namespace _TeamFolder.JCJ.TileGame
             return counts;
         }
 
-        /// <summary>
-        /// 최상단 생존 층에서 safeColors에 없는 모든 타일을 떨어뜨린다.
-        /// ColorCallDirector가 컬러콜 판정 때 사용한다.
-        /// </summary>
+        /// <summary>살아 있는 타일이 남아있는 모든 레이어 인덱스를 반환.</summary>
+        public List<int> GetAliveLayerIndices()
+        {
+            var result = new List<int>();
+            if (_layerTiles == null) return result;
+            for (int i = 0; i < _layerTiles.Count; i++)
+            {
+                foreach (var t in _layerTiles[i])
+                {
+                    if (t != null && !t.HasFallen) { result.Add(i); break; }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>최상단 생존 층에서 safeColors에 없는 모든 타일을 떨어뜨린다.</summary>
         public int DropTopLayerExcept(System.Collections.Generic.HashSet<TileColor> safeColors,
                                        bool skipPreDelay = true)
         {
-            // ColorCallDirector가 호출하는 핵심 함수다.
-            // 최상 생존 층에서 안전색이 아닌 타일을 모두 낙하 예약한다.
-            // 서버 연동 시 이 함수는 서버/호스트에서만 실행하고 결과 tileId 목록을 클라에 보내는 것이 안전하다.
+            return DropLayerExcept(GetTopAliveLayerIndex(), safeColors, skipPreDelay);
+        }
+
+        /// <summary>지정 층에서 safeColors에 없는 모든 타일을 떨어뜨린다.</summary>
+        public int DropLayerExcept(int layerIndex, System.Collections.Generic.HashSet<TileColor> safeColors,
+                                    bool skipPreDelay = true)
+        {
             int dropped = 0;
-            int top = GetTopAliveLayerIndex();
-            if (top < 0) return 0;
-            foreach (var t in _layerTiles[top])
+            if (_layerTiles == null || layerIndex < 0 || layerIndex >= _layerTiles.Count)
+                return 0;
+            foreach (var t in _layerTiles[layerIndex])
             {
                 if (t == null || t.HasFallen || t.IsCondemned) continue;
                 if (safeColors != null && safeColors.Contains(t.TileTag)) continue;
@@ -279,22 +300,75 @@ namespace _TeamFolder.JCJ.TileGame
             return grid[x, z];
         }
 
-        /// <summary>모든 층에서 center 반경 내 살아있는 타일 반환 (BombGimmick 사용).</summary>
-        public List<BaseTile> GetTilesInRadius(Vector3 center, float radius)
+        /// <summary>같은 층에서 육각 그리드 ringCount 칸 이내 타일(폭탄 등).</summary>
+        public List<BaseTile> GetTilesInHexRange(BaseTile origin, int ringCount)
         {
             var result = new List<BaseTile>();
-            if (_layerTiles == null) return result;
+            if (origin == null || _layerTiles == null || origin.LayerIndex < 0)
+                return result;
 
-            foreach (var grid in _layerTiles)
+            ringCount = Mathf.Max(0, ringCount);
+            int layer = origin.LayerIndex;
+            if (layer < 0 || layer >= _layerTiles.Count) return result;
+
+            var visited = new HashSet<long>();
+            var queue = new Queue<(int x, int z, int dist)>();
+            long Key(int x, int z) => ((long)x << 32) | (uint)z;
+
+            queue.Enqueue((origin.GridX, origin.GridZ, 0));
+            visited.Add(Key(origin.GridX, origin.GridZ));
+
+            while (queue.Count > 0)
             {
-                foreach (var tile in grid)
+                var (x, z, dist) = queue.Dequeue();
+                if (dist > ringCount) continue;
+
+                var tile = GetTile(layer, x, z);
+                if (tile != null && !tile.HasFallen && dist > 0)
+                    result.Add(tile);
+
+                if (dist >= ringCount) continue;
+
+                foreach (var (nx, nz) in GetHexNeighborCoords(x, z))
                 {
-                    if (tile == null || tile.HasFallen) continue;
-                    if (Vector3.Distance(tile.transform.position, center) <= radius)
-                        result.Add(tile);
+                    long key = Key(nx, nz);
+                    if (!visited.Add(key)) continue;
+                    queue.Enqueue((nx, nz, dist + 1));
                 }
             }
+
             return result;
+        }
+
+        /// <summary>폭발 링 등 시각화용 — ringCount 칸 반경의 월드 반지름.</summary>
+        public float GetHexRingWorldRadius(int ringCount)
+        {
+            ringCount = Mathf.Max(1, ringCount);
+            float step = Mathf.Max(ColumnSpacing, RowSpacing);
+            return HexRadius + ringCount * step * 0.92f;
+        }
+
+        private static System.Collections.Generic.IEnumerable<(int x, int z)> GetHexNeighborCoords(int x, int z)
+        {
+            // TileBoard.HexGridToWorld 와 동일한 odd-column 오프셋 그리드.
+            if ((x & 1) == 1)
+            {
+                yield return (x + 1, z);
+                yield return (x + 1, z + 1);
+                yield return (x, z + 1);
+                yield return (x - 1, z + 1);
+                yield return (x - 1, z);
+                yield return (x, z - 1);
+            }
+            else
+            {
+                yield return (x + 1, z - 1);
+                yield return (x + 1, z);
+                yield return (x, z + 1);
+                yield return (x - 1, z);
+                yield return (x - 1, z - 1);
+                yield return (x, z - 1);
+            }
         }
 
         // ── 스폰 위치 ──────────────────────────────────

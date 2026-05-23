@@ -31,12 +31,17 @@ MonoBehaviour:
   hexGap: 0
   useLayerVerticalSpacing: 1
   layerVerticalSpacing: 6
-  stepDelay: 1.2
-  warnDuration: 0.45
-  fallDuration: 1
+  stepDelay: 0.75
+  stepDelayDefault: 0.75
+  stepDelayWeb: 2.2
+  warnDuration: 0.35
+  fallDuration: 0.55
   fallDistance: 15
-  bombDelay: 1.5
-  bombRadius: 2.5
+  tileFadeOutEnabled: 1
+  tileFallShortDistance: 2.5
+  bombDelay: 1.1
+  bombHexRange: 1
+  bombRadius: 3.5
   webDuration: 1.8
   webSpeedRatio: 0.45
   balloonForce: 12

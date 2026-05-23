@@ -295,6 +295,7 @@ namespace _TeamFolder.JCJ.Script
             t.color = color;
             t.fontStyle = style;
             t.raycastTarget = false;
+            t.font = Resources.Load<TMP_FontAsset>("Fonts/Paperlogy-3Light SDF");
             return t;
         }
 

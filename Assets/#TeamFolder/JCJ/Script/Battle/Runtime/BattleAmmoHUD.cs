@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using _TeamFolder.JCJ.Script;
 
 // BattlePrototypeScene에서 로컬 플레이어 무기 HUD. BattlePrototypeManager.SpawnPlayers가 로컬 슬롯에만 Bind를 호출한다.
 // 서버 모델에서는 동기화된 탄약 수치를 무기 매니저가 갱신하면 이 컴포넌트는 추가 수정 없이 표시만 따라간다.
@@ -10,6 +11,7 @@ namespace _TeamFolder.JCJ.Battle
     {
         private BattleWeaponManager _weaponManager;
         private BattleHealth _localHealth;
+        private PlayerMovementController _localMovement;
         private Text _magText;
         private Text _reserveText;
         private Text _weaponNameText;
@@ -23,6 +25,9 @@ namespace _TeamFolder.JCJ.Battle
         private Text _hpText;
         private Image _hpFill;
         private float _lastHealth = -1f;
+        private Text _staminaText;
+        private Image _staminaFill;
+        private float _lastStamina = -1f;
 
         // 로컬 플레이어 무기 매니저와 HUD 이벤트를 연결하는 진입점이다.
         // 서버 구조에서도 HUD는 동기화된 무기 상태를 이 경로로 받아 표시하면 된다.
@@ -44,6 +49,7 @@ namespace _TeamFolder.JCJ.Battle
                     _weaponManager.CurrentWeapon != null ? _weaponManager.CurrentWeapon.MagazineSize : 0);
                 RefreshWeaponName();
                 _localHealth = _weaponManager.GetComponent<BattleHealth>();
+                _localMovement = _weaponManager.GetComponent<PlayerMovementController>();
             }
         }
 
@@ -78,6 +84,7 @@ namespace _TeamFolder.JCJ.Battle
             }
 
             UpdateLocalHealth();
+            UpdateStaminaBar();
             UpdateProtectionIndicator();
         }
 
@@ -97,6 +104,25 @@ namespace _TeamFolder.JCJ.Battle
             else { _hpText.color = new Color(1f, 0.3f, 0.3f); _hpFill.color = new Color(0.9f, 0.15f, 0.15f); }
 
             _hpFill.rectTransform.anchorMax = new Vector2(ratio, 1f);
+        }
+
+        private void UpdateStaminaBar()
+        {
+            if (_localMovement == null || _staminaFill == null) return;
+            float st = _localMovement.Stamina;
+            if (Mathf.Approximately(st, _lastStamina)) return;
+            _lastStamina = st;
+
+            float max = _localMovement.MaxStamina;
+            float ratio = max > 0f ? Mathf.Clamp01(st / max) : 1f;
+            _staminaFill.rectTransform.anchorMax = new Vector2(ratio, 1f);
+
+            if (ratio > 0.4f) _staminaFill.color = new Color(0.45f, 0.78f, 1f);
+            else if (ratio > 0.15f) _staminaFill.color = new Color(1f, 0.75f, 0.25f);
+            else _staminaFill.color = new Color(1f, 0.3f, 0.3f);
+
+            if (_staminaText != null)
+                _staminaText.text = Mathf.CeilToInt(st) + " / " + Mathf.CeilToInt(max);
         }
 
         private void HandleAmmoChanged(int magazine, int reserve, int magSize)
@@ -265,6 +291,48 @@ namespace _TeamFolder.JCJ.Battle
             _hpFill = hpFillObj.GetComponent<Image>();
             _hpFill.color = new Color(0.2f, 0.85f, 0.2f);
             _hpFill.raycastTarget = false;
+
+            var stPanel = MakeRect(canvasObj.transform, "StaminaPanel", new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f));
+            stPanel.anchoredPosition = new Vector2(130f, 145f);
+            stPanel.sizeDelta = new Vector2(240f, 45f);
+            var stPanelImg = stPanel.gameObject.AddComponent<Image>();
+            stPanelImg.color = new Color(0f, 0f, 0f, 0.45f);
+            stPanelImg.raycastTarget = false;
+
+            var stLabel = MakeText(stPanel, "StLabel", 12, FontStyle.Normal, TextAnchor.MiddleLeft);
+            var stLabelRt = stLabel.GetComponent<RectTransform>();
+            stLabelRt.anchorMin = new Vector2(0f, 0.6f);
+            stLabelRt.anchorMax = new Vector2(1f, 1f);
+            stLabelRt.offsetMin = new Vector2(10f, 0f);
+            stLabelRt.offsetMax = new Vector2(-10f, -2f);
+            stLabel.text = "STAMINA";
+            stLabel.color = new Color(0.6f, 0.75f, 0.9f);
+
+            _staminaText = MakeText(stPanel, "StValue", 14, FontStyle.Bold, TextAnchor.MiddleRight);
+            var stValRt = _staminaText.GetComponent<RectTransform>();
+            stValRt.anchorMin = new Vector2(0f, 0.6f);
+            stValRt.anchorMax = new Vector2(1f, 1f);
+            stValRt.offsetMin = new Vector2(10f, 0f);
+            stValRt.offsetMax = new Vector2(-10f, -2f);
+
+            var stBarBg = MakeRect(stPanel, "StBarBg", new Vector2(0f, 0f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f));
+            stBarBg.offsetMin = new Vector2(8f, 4f);
+            stBarBg.offsetMax = new Vector2(-8f, -2f);
+            var stBarBgImg = stBarBg.gameObject.AddComponent<Image>();
+            stBarBgImg.color = new Color(0.15f, 0.18f, 0.22f, 0.8f);
+            stBarBgImg.raycastTarget = false;
+
+            var stFillObj = new GameObject("StFill", typeof(RectTransform), typeof(Image));
+            stFillObj.transform.SetParent(stBarBg, false);
+            var stFillRt = stFillObj.GetComponent<RectTransform>();
+            stFillRt.anchorMin = Vector2.zero;
+            stFillRt.anchorMax = Vector2.one;
+            stFillRt.offsetMin = Vector2.zero;
+            stFillRt.offsetMax = Vector2.zero;
+            stFillRt.pivot = new Vector2(0f, 0.5f);
+            _staminaFill = stFillObj.GetComponent<Image>();
+            _staminaFill.color = new Color(0.45f, 0.78f, 1f);
+            _staminaFill.raycastTarget = false;
 
             _protectionText = MakeText(canvasObj.transform, "ProtectionText", 22, FontStyle.Bold, TextAnchor.MiddleCenter);
             var protectionRt = _protectionText.GetComponent<RectTransform>();

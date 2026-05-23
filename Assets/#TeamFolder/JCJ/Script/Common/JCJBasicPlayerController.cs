@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -40,7 +40,6 @@ namespace _TeamFolder.JCJ.Script
         private float _lastGroundedTime = -999f;
         private float _jumpBufferedUntil = -999f;
         private bool _wasGrounded;
-
         public InputActionMap GetInputMap()
         {
             return _inputMap;
@@ -124,6 +123,7 @@ namespace _TeamFolder.JCJ.Script
 
         private void OnDisable()
         {
+            JcjFootstepAudio.Stop();
             _inputMap?.Disable();
         }
 
@@ -179,6 +179,20 @@ namespace _TeamFolder.JCJ.Script
                 IsGrounded = false;
                 IsFalling = false;
             }
+
+            UpdateFootstepSfx();
+        }
+
+        private void UpdateFootstepSfx()
+        {
+            if (!_isLocalControlled)
+            {
+                JcjFootstepAudio.Stop();
+                return;
+            }
+
+            bool walking = IsGrounded && _moveInput.sqrMagnitude >= 0.04f;
+            JcjFootstepAudio.SetWalking(walking, 0.7f, 1f);
         }
 
         private void HandleBindingsChanged(JCJBasicPlayerBindingsData data)
