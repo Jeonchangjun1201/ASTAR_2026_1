@@ -1,7 +1,7 @@
 ﻿using KSY.Utility;
 using UnityEngine;
 
-namespace Players
+namespace KSY.Shared
 {
     public class PlayerMovementComponent : MonoBehaviour
     {
@@ -13,12 +13,17 @@ namespace Players
         public bool IsGround => controller.isGrounded;
         public Vector3 Velocity => _velocity;
 
+        private Player _player;
+        private float _speed;
+        private float _rotationSpeed;
         private float _verticalVelocity;
         private Vector3 _velocity;
         private Vector3 _movementDirection;
 
-        public void Initialize(float maxSpeed)
+        public void Initialize(float speed, float rotationSpeed)
         {
+            this._speed = speed;
+            this._rotationSpeed = rotationSpeed;
             this.MyTransform = GetComponent<Transform>();
         }
 
@@ -38,15 +43,13 @@ namespace Players
 
         private void CalculateMovement()
         {
-            //CalculateAcceleration();
+            this._velocity = _movementDirection * (_speed * Time.fixedDeltaTime);
 
-            this._velocity = _movementDirection * Time.fixedDeltaTime;
-
-            //if (_velocity.sqrMagnitude > Mathf.Epsilon)
-            //{
-            //    Quaternion targetRotation = Quaternion.LookRotation(_velocity);
-            //    _myTrfm.rotation = Quaternion.Lerp(_myTrfm.rotation, targetRotation, Time.fixedDeltaTime * _rotationSpeed);
-            //}
+            if (_velocity.sqrMagnitude > Mathf.Epsilon)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(_velocity);
+                MyTransform.rotation = Quaternion.Lerp(MyTransform.rotation, targetRotation, Time.fixedDeltaTime * _rotationSpeed);
+            }
         }
 
         private void ApplyGravity()
