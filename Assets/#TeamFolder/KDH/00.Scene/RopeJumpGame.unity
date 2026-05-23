@@ -599,6 +599,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47048e7255a7a624a9546045f23e2bf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JHJ.Scripts.Test.TestPlayer.FSM.PlayerAnimatorController
+--- !u!1 &432957929 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2967699284760061925, guid: 388b740f7906b1b4ab4bb69f4a0b7cb3, type: 3}
+  m_PrefabInstance: {fileID: 89888520}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &470467834
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,6 +618,7 @@ GameObject:
   - component: {fileID: 470467837}
   - component: {fileID: 470467836}
   - component: {fileID: 470467835}
+  - component: {fileID: 470467841}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Player2
@@ -639,7 +645,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 470467834}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45f53c3f78804484ba9fda0a63523c38, type: 3}
   m_Name: 
@@ -737,6 +743,22 @@ Transform:
   - {fileID: 105574312}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &470467841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470467834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be6f553178a408ba5f7947cac199107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.KDH._01.Code.JumpRopeGame.RopeJumpController
+  playerIndex: 1
+  inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
+  jumpForce: 7
+  groundCheckSize: {x: 0, y: 0, z: 0}
 --- !u!1 &482774330
 GameObject:
   m_ObjectHideFlags: 0
@@ -1431,6 +1453,7 @@ GameObject:
   - component: {fileID: 1104038925}
   - component: {fileID: 1104038924}
   - component: {fileID: 1104038923}
+  - component: {fileID: 1104038929}
   m_Layer: 0
   m_Name: Player4
   m_TagString: Player4
@@ -1457,7 +1480,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1104038922}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45f53c3f78804484ba9fda0a63523c38, type: 3}
   m_Name: 
@@ -1555,6 +1578,22 @@ Transform:
   - {fileID: 740930187}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1104038929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104038922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be6f553178a408ba5f7947cac199107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.KDH._01.Code.JumpRopeGame.RopeJumpController
+  playerIndex: 3
+  inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
+  jumpForce: 7
+  groundCheckSize: {x: 0, y: 0, z: 0}
 --- !u!1 &1369210519
 GameObject:
   m_ObjectHideFlags: 0
@@ -1706,6 +1745,7 @@ GameObject:
   - component: {fileID: 1379379561}
   - component: {fileID: 1379379560}
   - component: {fileID: 1379379559}
+  - component: {fileID: 1379379565}
   m_Layer: 0
   m_Name: Player3
   m_TagString: Player3
@@ -1732,7 +1772,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1379379558}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45f53c3f78804484ba9fda0a63523c38, type: 3}
   m_Name: 
@@ -1830,6 +1870,22 @@ Transform:
   - {fileID: 1769772056}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1379379565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1379379558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be6f553178a408ba5f7947cac199107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.KDH._01.Code.JumpRopeGame.RopeJumpController
+  playerIndex: 2
+  inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
+  jumpForce: 7
+  groundCheckSize: {x: 0, y: 0, z: 0}
 --- !u!1 &1442052042 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
@@ -2013,8 +2069,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cd5faaa0f484f719650ca920c5238d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KDH.RopeGameManager
-  statusText: {fileID: 0}
-  maps: []
+  statusText: {fileID: 1369210521}
+  maps:
+  - {fileID: 432957929}
+  - {fileID: 1984386083}
   mapChangeDelay: 2
   countDown: {fileID: 689672359}
   cameraSequence: {fileID: 854098573}
@@ -2358,6 +2416,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1442052044}
   m_SourcePrefab: {fileID: 100100000, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
+--- !u!1 &1984386083 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3021199384441735918, guid: 49a222b06343c1b478e144dd7d8890a6, type: 3}
+  m_PrefabInstance: {fileID: 1017337681}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2076398757
 GameObject:
   m_ObjectHideFlags: 0
@@ -2468,7 +2531,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1019808279550894266}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45f53c3f78804484ba9fda0a63523c38, type: 3}
   m_Name: 
@@ -2496,6 +2559,7 @@ GameObject:
   - component: {fileID: 5429108381796120178}
   - component: {fileID: 529832319436633596}
   - component: {fileID: 6605095454197537186}
+  - component: {fileID: 6605095454197537187}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Player1
@@ -2797,6 +2861,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6f2413adfb450a882030e1fa03b3c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KDH.RopeHit
+--- !u!114 &6605095454197537187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1019808279550894266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be6f553178a408ba5f7947cac199107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.KDH._01.Code.JumpRopeGame.RopeJumpController
+  playerIndex: 0
+  inputReader: {fileID: 11400000, guid: 11a8cc3a142093f44b5557cda39fbedc, type: 2}
+  jumpForce: 7
+  groundCheckSize: {x: -0.35, y: 0.38, z: -0.35}
 --- !u!114 &6815364992823441458
 MonoBehaviour:
   m_ObjectHideFlags: 0
