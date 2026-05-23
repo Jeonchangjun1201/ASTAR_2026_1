@@ -178,18 +178,8 @@ namespace _TeamFolder.JCJ.Script
             _bannerGroup.interactable   = false;
         }
 
-        private Canvas FindOrCreateCanvas()
-        {
-            var c = Object.FindFirstObjectByType<Canvas>();
-            if (c != null) return c;
-            var go = new GameObject("Canvas (auto)");
-            c = go.AddComponent<Canvas>();
-            c.renderMode = RenderMode.ScreenSpaceOverlay;
-            c.sortingOrder = 5;
-            go.AddComponent<CanvasScaler>();
-            go.AddComponent<GraphicRaycaster>();
-            return c;
-        }
+        private Canvas FindOrCreateCanvas() =>
+            JcjUiFactory.FindOrCreateOverlayCanvas("Canvas (auto)", sortOrder: 5);
 
         private IEnumerator FlashOverlayRoutine()
         {

@@ -94,16 +94,7 @@ namespace _TeamFolder.JCJ.TileGame
 
             // 마찰 0 재질 — 공중에서 벽 옆면에 붙는 현상 완화(기본 재질은 마찰 있음).
             if (_collider != null && _collider.sharedMaterial == null)
-            {
-                _collider.sharedMaterial = new PhysicsMaterial("PlayerNoFriction")
-                {
-                    dynamicFriction = 0f,
-                    staticFriction  = 0f,
-                    bounciness      = 0f,
-                    frictionCombine = PhysicsMaterialCombine.Minimum,
-                    bounceCombine   = PhysicsMaterialCombine.Minimum,
-                };
-            }
+                JcjPhysicsMaterials.ApplyPlayerLowFriction(_collider);
 
             // groundMask가 Nothing이면 전체 레이캐스트 레이어로 폴백 — Default 타일도 검출.
             if (groundMask.value == 0)
@@ -252,7 +243,8 @@ namespace _TeamFolder.JCJ.TileGame
             float h = _isInputInverted ? -moveInput.x : moveInput.x;
             float v = _isInputInverted ? -moveInput.y : moveInput.y;
 
-            Vector3 desired = GetCameraRelativeDirection(h, v) * (moveSpeed * _speedMultiplier);
+            Vector3 desired = PlayerControllerMovementModule.GetCameraRelativeDirection(
+                new Vector2(h, v), ResolveCameraTransform()) * (moveSpeed * _speedMultiplier);
             Vector3 move = desired;
             move.y = _rb.linearVelocity.y;
             _rb.linearVelocity = move;
@@ -266,34 +258,15 @@ namespace _TeamFolder.JCJ.TileGame
             }
         }
 
-        /// <summary>
-        /// WASD를 메인 카메라 요에 맞춘 월드 방향으로 변환. W는 항상 카메라에서 멀어지는 쪽. 입력 없으면 zero.
-        /// </summary>
-        private Vector3 GetCameraRelativeDirection(float h, float v)
+        private Transform ResolveCameraTransform()
         {
-            if (Mathf.Approximately(h, 0f) && Mathf.Approximately(v, 0f))
-                return Vector3.zero;
-
-            // Camera.main 지연 해석 — 씬 설정 중 Cinemachine이 main을 바꿀 수 있어 캐시가 죽었으면 갱신.
             if (_cachedCameraTf == null)
             {
                 var cam = Camera.main;
                 _cachedCameraTf = cam != null ? cam.transform : null;
             }
-            if (_cachedCameraTf == null) return new Vector3(h, 0f, v).normalized;
 
-            // 카메라 기저를 수평면에 투영 — 지상 이동은 요만 사용.
-            Vector3 fwd = _cachedCameraTf.forward;   fwd.y   = 0f;
-            Vector3 right = _cachedCameraTf.right;   right.y = 0f;
-            if (fwd.sqrMagnitude < 0.0001f)
-            {
-                // 카메라가 수직이면 월드 축으로 폴백.
-                return new Vector3(h, 0f, v).normalized;
-            }
-            fwd.Normalize();
-            right.Normalize();
-
-            return (fwd * v + right * h).normalized;
+            return _cachedCameraTf;
         }
 
         private void HandleJumpInput()
@@ -326,24 +299,8 @@ namespace _TeamFolder.JCJ.TileGame
 
         private void CheckGround()
         {
-            // 캡슐 실제 바닥 위에서 레이 시작 — bounds로 스케일 무관 검사.
-            float bottomY = _collider != null
-                ? _collider.bounds.min.y
-                : transform.position.y - 0.5f;
-
-            Vector3 origin = new(transform.position.x, bottomY + 0.05f, transform.position.z);
-
-            if (Physics.Raycast(origin, Vector3.down, groundCheckDist + 0.05f,
-                                groundMask, QueryTriggerInteraction.Ignore))
-            {
-                IsGrounded = true;
-                return;
-            }
-
-            // SphereCast 보조 — 작은 반지름, 옆 벽이 아니라 아래 바닥만.
-            float smallRadius = 0.08f * Mathf.Abs(transform.lossyScale.x);
-            IsGrounded = Physics.SphereCast(origin, smallRadius, Vector3.down, out _,
-                groundCheckDist, groundMask, QueryTriggerInteraction.Ignore);
+            IsGrounded = PlayerControllerMovementModule.CheckGround(
+                _collider, transform, groundCheckDist, groundMask);
         }
 
         // ── 기믹 효과(기존 계약) ─────────────────────
