@@ -3,39 +3,17 @@ using UnityEngine.InputSystem;
 using _TeamFolder.JCJ.Battle;
 using _TeamFolder.JCJ.Battle.Session;
 
-// 플레이어 입력, 이동, 점프, 스태미나를 묶는 본체 컨트롤러.
+// 입력·비주얼·게임 상태 오케스트레이션. 물리 이동은 PlayerMovementController가 담당한다.
 
 namespace _TeamFolder.JCJ.Script
 {
     [RequireComponent(typeof(Rigidbody))]
-    public partial class PlayerController : MonoBehaviour
+    [RequireComponent(typeof(PlayerMovementController))]
+    public class PlayerController : MonoBehaviour
     {
         [Header("식별")]
         [Tooltip("true = 키보드 입력 받음(로컬). false = 원격/AI(가만히 있음, 잡기 결과만 받음).")]
         [SerializeField] private bool _isLocalControlled = true;
-
-        [Header("이동")]
-        [SerializeField] private float _moveSpeed = 4.5f;
-        [SerializeField] private float _sprintMultiplier = 1.3f;
-        [SerializeField] private float _jumpForce = 6f;
-        [SerializeField] private float _rotationSpeed = 15f;
-        [Tooltip("Y 속도가 이 값보다 낮으면 낙하(점프 아님)로 본다.")]
-        [SerializeField] private float _fallVelocityThreshold = -0.5f;
-
-        [Header("스태미나")]
-        [SerializeField] private float _maxStamina = 100f;
-        [SerializeField] private float _sprintDrainPerSec = 30f;
-        [SerializeField] private float _staminaRegenPerSec = 20f;
-        [SerializeField] private float _minStaminaToSprint = 10f;
-        [Tooltip("스태미나가 0이 된 뒤, 이 시간(초)이 지나야 다시 스프린트 시작 가능(회복은 계속).")]
-        [SerializeField] private float _sprintReenableDelay = 1f;
-
-        [Header("지면 판정")]
-        [Tooltip("캡슐 아래쪽으로 이 거리만큼 더 내려가도 지면으로 친다.")]
-        [SerializeField] private float _groundCheckDist = 0.3f;
-        [SerializeField] private LayerMask _groundLayer;
-        [Tooltip("_groundLayer가 비어있으면 Player 레이어 제외 전체로 폴백")]
-        [SerializeField] private bool _fallbackAllButPlayer = true;
 
         [Header("마우스 룩")]
         [SerializeField] private bool _enableMouseLook = true;
@@ -43,7 +21,7 @@ namespace _TeamFolder.JCJ.Script
         [SerializeField] private bool _lockCursor = true;
 
         [Header("카메라")]
-        [Tooltip("카메라 기준 이동 방향 계산용 — Main Camera Transform 연결")]
+        [Tooltip("카메라 기준 이동 방향 — 비어 있으면 Movement가 Main Camera를 사용")]
         [SerializeField] private Transform _cameraTransform;
 
         [Header("배틀(FP)")]
@@ -55,20 +33,13 @@ namespace _TeamFolder.JCJ.Script
         [Tooltip("PartyCharacters 리깅 비주얼(권장). 끄거나 프리팹 없으면 절차적 프리미티브로 폴백.")]
         [SerializeField] private bool _usePartyCharacter = true;
 
-        [Header("효과음")]
-        [Tooltip("걷기 속도에서 발소리 간격(초). 스프린트는 더 짧아짐.")]
-        [SerializeField] private float _walkFootstepInterval = 0.42f;
-        [SerializeField] private float _sprintFootstepInterval = 0.27f;
-
-        public float Stamina { get; private set; }
-        public float MaxStamina => _maxStamina;
-        public bool IsSprinting { get; private set; }
-        public float MoveSpeed => _moveSpeed;
+        public float Stamina => _movement != null ? _movement.Stamina : 0f;
+        public float MaxStamina => _movement != null ? _movement.MaxStamina : 0f;
+        public bool IsSprinting => _movement != null && _movement.IsSprinting;
+        public float MoveSpeed => _movement != null ? _movement.MoveSpeed : 0f;
         public bool IsSpectating { get; private set; }
 
-        private float _externalSpeedMul = 1f;
-        private float _externalSpeedUntil;
-
+        private PlayerMovementController _movement;
         private Rigidbody _rb;
         private Collider _collider;
         private static PhysicsMaterial _lowFrictionPlayerMaterial;
@@ -80,29 +51,15 @@ namespace _TeamFolder.JCJ.Script
         private Vector2 _lookInput;
         private Vector2 _moveInput;
         private bool _sprintHeld;
-        private bool _isGrounded;
-        private bool _wasGrounded;
-        private bool _isFalling;
-        private float _spawnTime;
-        private float _airborneSince;
-        private float _jumpBufferedUntil;
-        private float _lastGroundedTime = -999f;
-        private float _jumpCooldownUntil;
         private IPlayerVisual _visual;
-        private float _nextFootstepTime;
-        private bool _staminaWasAbove;
-        private float _sprintAvailableTime;
         private bool _lookInputEnabled = true;
         private bool _jumpEnabled = true;
 
-        private const float SpawnGrace = 0.6f;
-        private const float FallAirborneDelay = 0.25f;
-        private const float JumpBufferTime = 0.15f;
-        private const float CoyoteTime = 0.12f;
-        private const float JumpLockout = 0.25f;
-
         private void Awake()
         {
+            _movement = GetComponent<PlayerMovementController>();
+            if (_movement == null)
+                _movement = gameObject.AddComponent<PlayerMovementController>();
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
             _rb.interpolation = RigidbodyInterpolation.Interpolate;
@@ -110,22 +67,10 @@ namespace _TeamFolder.JCJ.Script
             _collider = GetComponent<Collider>();
             ApplyLowFrictionMaterial();
 
-            Stamina = _maxStamina;
-            _sprintAvailableTime = 0f;
+            if (_cameraTransform != null)
+                _movement.SetCameraTransform(_cameraTransform);
 
-            if (_groundLayer.value == 0 && _fallbackAllButPlayer)
-                _groundLayer = Physics.DefaultRaycastLayers;
-
-            _spawnTime = Time.time;
-            _isGrounded = true;
-            _wasGrounded = true;
-
-            // 입력 바인딩은 로컬 소유 플레이어만 활성화해야 한다.
-            // 서버 연결 후에는 "내 플레이어인지" 판정이 끝난 뒤 IsLocalControlled를 세팅하는 진입점이 된다.
             BuildInputActions();
-
-            if (_cameraTransform == null && Camera.main != null)
-                _cameraTransform = Camera.main.transform;
 
             if (_addTrailIfMissing && GetComponent<TrailRenderer>() == null)
                 AddDefaultTrail();
@@ -133,6 +78,16 @@ namespace _TeamFolder.JCJ.Script
             _visual = GetComponent<IPlayerVisual>();
             if (_visual == null) _visual = AttachPreferredVisual();
             HideBasePrimitiveMesh();
+
+            _movement.JumpPerformed += HandleJumpPerformed;
+        }
+
+        private void OnDestroy()
+        {
+            if (_movement != null)
+                _movement.JumpPerformed -= HandleJumpPerformed;
+            _inputMap?.Disable();
+            _inputMap?.Dispose();
         }
 
         private void OnEnable()
@@ -144,11 +99,15 @@ namespace _TeamFolder.JCJ.Script
                 GameplayCursor.SetLocked(true);
 
             if (GameStateManager.Instance != null)
+            {
                 GameStateManager.Instance.OnStateChanged += OnGameStateChanged;
+                OnGameStateChanged(GameStateManager.Instance.CurrentState);
+            }
         }
 
         private void OnDisable()
         {
+            JcjFootstepAudio.Stop();
             _inputMap?.Disable();
 
             if (_lockCursor)
@@ -158,77 +117,31 @@ namespace _TeamFolder.JCJ.Script
                 GameStateManager.Instance.OnStateChanged -= OnGameStateChanged;
         }
 
-        private void OnDestroy()
-        {
-            _inputMap?.Disable();
-            _inputMap?.Dispose();
-        }
-
-        // 프레임 입력 읽기와 시각 상태 갱신 루프다.
-        // 서버 구조에서는 로컬 오너만 입력을 채우고 원격 플레이어는 동기화된 결과를 표시하는 흐름으로 이해하면 된다.
         private void Update()
         {
+            if (_movement == null) return;
+
             if (!_isLocalControlled)
             {
                 _moveInput = Vector2.zero;
                 _lookInput = Vector2.zero;
-                _isGrounded = CheckGround();
-                bool remoteInGrace = (Time.time - _spawnTime) < SpawnGrace;
-                if (_isGrounded)
-                {
-                    _airborneSince = 0f;
-                    if (!_wasGrounded && _isFalling && !remoteInGrace) _visual?.OnLand();
-                    _isFalling = false;
-                }
-                else
-                {
-                    if (_airborneSince <= 0f) _airborneSince = Time.time;
-                    float airborneTime = Time.time - _airborneSince;
-                    if (!_isFalling
-                        && !remoteInGrace
-                        && airborneTime > FallAirborneDelay
-                        && _rb.linearVelocity.y < _fallVelocityThreshold)
-                    {
-                        _visual?.OnFall();
-                        _isFalling = true;
-                    }
-                }
-
-                _wasGrounded = _isGrounded;
+                ApplyAirborneVisuals(_movement.TickAirborne(respectJumpCooldown: false));
                 UpdateRemoteVisualState();
                 return;
             }
 
             _moveInput = _moveAction != null ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
             _lookInput = _lookAction != null ? _lookAction.ReadValue<Vector2>() : Vector2.zero;
-            _isGrounded = Time.time >= _jumpCooldownUntil && CheckGround();
-
-            bool inGrace = (Time.time - _spawnTime) < SpawnGrace;
-
-            if (_isGrounded)
-            {
-                _airborneSince = 0f;
-                if (!_wasGrounded && _isFalling && !inGrace) _visual?.OnLand();
-                _isFalling = false;
-            }
-            else
-            {
-                if (_airborneSince <= 0f) _airborneSince = Time.time;
-                float airborneTime = Time.time - _airborneSince;
-                if (!_isFalling
-                    && !inGrace
-                    && airborneTime > FallAirborneDelay
-                    && _rb.linearVelocity.y < _fallVelocityThreshold)
-                {
-                    _visual?.OnFall();
-                    _isFalling = true;
-                }
-            }
-
-            _wasGrounded = _isGrounded;
+            ApplyAirborneVisuals(_movement.TickAirborne(respectJumpCooldown: true));
             DispatchMouseLook();
             UpdateVisualState();
             MaintainGameplayCursor();
+        }
+
+        private void ApplyAirborneVisuals(PlayerAirborneVisualDelta delta)
+        {
+            if (delta.Landed) _visual?.OnLand();
+            if (delta.StartedFall) _visual?.OnFall();
         }
 
         private void MaintainGameplayCursor()
@@ -251,44 +164,27 @@ namespace _TeamFolder.JCJ.Script
             transform.rotation = Quaternion.Euler(e.x, rig.Yaw, e.z);
         }
 
-        // 실제 물리 이동과 점프 적용 단계다.
-        // 네트워크를 붙일 때는 입력 예측을 둘지, 서버 위치를 그대로 받을지 결정하는 핵심 경계다.
         private void FixedUpdate()
         {
-            if (_rb != null && _rb.isKinematic) return;
-
             if (!_isLocalControlled)
             {
-                // 원격 플레이어는 물리 이동도 처리하지 않는다.
-                // 서버가 위치/속도를 authoritative 하게 내려주면 그 값만 적용하는 자리다.
                 ClearInputState();
                 return;
             }
 
             var gsm = GameStateManager.Instance;
-            if (gsm != null && gsm.CurrentState != GameState.Playing)
-            {
-                ApplyFriction();
-                return;
-            }
+            bool canMove = gsm == null || gsm.CurrentState == GameState.Playing;
 
-            UpdateStamina();
-            ApplyMovement();
-
-            if (_isGrounded) _lastGroundedTime = Time.time;
-            bool wantsJump = Time.time <= _jumpBufferedUntil;
-            bool canStillJump = (Time.time - _lastGroundedTime) <= CoyoteTime;
-            if (_jumpEnabled && wantsJump && canStillJump)
-            {
-                ApplyJump();
-                _visual?.OnJump();
-                MazeAudio.Play(MazeSfx.Jump);
-                _jumpBufferedUntil = 0f;
-                _lastGroundedTime = -999f;
-                _jumpCooldownUntil = Time.time + JumpLockout;
-            }
+            var input = new PlayerMovementInput { Move = _moveInput, SprintHeld = _sprintHeld };
+            _movement.ProcessFixedStep(input, canMove);
 
             UpdateFootstepSfx();
+        }
+
+        private void HandleJumpPerformed()
+        {
+            _visual?.OnJump();
+            MazeAudio.Play(MazeSfx.Jump);
         }
 
         public bool IsLocalControlled
@@ -296,8 +192,6 @@ namespace _TeamFolder.JCJ.Script
             get => _isLocalControlled;
             set
             {
-                // 서버 연결 뒤 소유권 확정 결과를 반영하는 핵심 플래그다.
-                // true인 개체만 입력, 점프 버퍼, 마우스 룩을 허용한다.
                 _isLocalControlled = value;
                 ApplyLocalControlState();
                 if (!_isLocalControlled) ClearInputState();
@@ -308,8 +202,7 @@ namespace _TeamFolder.JCJ.Script
         {
             PlayerControllerInputModule.BuildInputActions(
                 () => _isLocalControlled,
-                // 서버 입력 패킷을 보낼 구조로 바꿀 때도 점프 버퍼 생성 시점은 여기서 유지하면 된다.
-                () => _jumpBufferedUntil = Time.time + JumpBufferTime,
+                () => _movement.BufferJump(),
                 held => _sprintHeld = held,
                 out _inputMap,
                 out _moveAction,
@@ -339,7 +232,7 @@ namespace _TeamFolder.JCJ.Script
         public void SetJumpEnabled(bool enabled)
         {
             _jumpEnabled = enabled;
-            if (!enabled) _jumpBufferedUntil = 0f;
+            _movement.SetJumpEnabled(enabled);
             if (_jumpAction != null)
             {
                 if (enabled && _moveAction != null && _moveAction.enabled) _jumpAction.Enable();
@@ -372,15 +265,19 @@ namespace _TeamFolder.JCJ.Script
 
         private void ClearInputState()
         {
-            bool isSprinting = IsSprinting;
-            PlayerControllerInputModule.ClearInputState(ref _moveInput, ref _lookInput, ref _sprintHeld, ref isSprinting, ref _jumpBufferedUntil);
-            IsSprinting = isSprinting;
+            bool unusedSprint = false;
+            float unusedJumpBuffer = 0f;
+            PlayerControllerInputModule.ClearInputState(
+                ref _moveInput,
+                ref _lookInput,
+                ref _sprintHeld,
+                ref unusedSprint,
+                ref unusedJumpBuffer);
+            _movement.ClearSprintState();
         }
 
         private void OnGameStateChanged(GameState state)
         {
-            // 게임 상태에 맞춰 이동 입력과 커서 잠금을 바꾸는 연결 지점이다.
-            // 서버 상태가 Countdown/Playing/Finished로 바뀌면 그 값을 이 메서드 경로로 연결하면 된다.
             bool canMove = state == GameState.Playing;
             SetMovementEnabled(canMove);
 
@@ -400,90 +297,16 @@ namespace _TeamFolder.JCJ.Script
 
         public void ApplyExternalSlow(float speedRatio, float duration)
         {
-            if (duration <= 0f) return;
-            // 현재는 로컬 상태 변화지만 서버 게임에서는 감속 시작/종료 시각을 서버 기준으로 동기화해야 한다.
-            _externalSpeedMul = Mathf.Clamp01(Mathf.Max(0f, speedRatio));
-            _externalSpeedUntil = Time.time + duration;
+            _movement.ApplyExternalSlow(speedRatio, duration);
         }
 
         public void RefillStamina(float amount)
         {
-            if (amount <= 0f) return;
-            Stamina = Mathf.Min(_maxStamina, Stamina + amount);
-            if (Stamina >= _minStaminaToSprint)
-                _sprintAvailableTime = 0f;
-        }
-
-        private float ResolveExternalSpeedMul()
-        {
-            return PlayerControllerMovementModule.ResolveExternalSpeedMul(_externalSpeedUntil, _externalSpeedMul);
-        }
-
-        private void UpdateStamina()
-        {
-            float stamina = Stamina;
-            bool isSprinting = IsSprinting;
-            PlayerControllerMovementModule.UpdateStamina(
-                ref stamina,
-                _maxStamina,
-                _sprintDrainPerSec,
-                _staminaRegenPerSec,
-                _minStaminaToSprint,
-                _sprintReenableDelay,
-                _sprintHeld,
-                _moveInput,
-                ref isSprinting,
-                ref _sprintAvailableTime,
-                ref _staminaWasAbove);
-            Stamina = stamina;
-            IsSprinting = isSprinting;
-        }
-
-        private void ApplyMovement()
-        {
-            PlayerControllerMovementModule.ApplyMovement(
-                _rb,
-                transform,
-                _moveInput,
-                _cameraTransform,
-                _moveSpeed,
-                _sprintMultiplier,
-                IsSprinting,
-                ResolveExternalSpeedMul(),
-                _rotationSpeed);
-        }
-
-        private void ApplyFriction()
-        {
-            PlayerControllerMovementModule.ApplyFriction(_rb);
-        }
-
-        private void ApplyJump()
-        {
-            PlayerControllerMovementModule.ApplyJump(_rb, _jumpForce);
-        }
-
-        private Vector3 GetMoveDirection()
-        {
-            return PlayerControllerMovementModule.GetCameraRelativeDirection(_moveInput, _cameraTransform);
-        }
-
-        private Vector3 GetCameraRelativeDirection()
-        {
-            if (_cameraTransform == null && Camera.main != null)
-                _cameraTransform = Camera.main.transform;
-            return PlayerControllerMovementModule.GetCameraRelativeDirection(_moveInput, _cameraTransform);
-        }
-
-        private bool CheckGround()
-        {
-            return PlayerControllerMovementModule.CheckGround(_collider, transform, _groundCheckDist, _groundLayer);
+            _movement.RefillStamina(amount);
         }
 
         public void SetSpectating(bool spectating)
         {
-            // 관전 전환은 입력 잠금과 UI 표시 여부를 함께 바꾸는 신호다.
-            // 서버 기준 탈락/완주 이벤트를 받았을 때 이 함수를 호출하도록 맞추면 된다.
             IsSpectating = spectating;
             if (spectating) ClearInputState();
         }
@@ -515,23 +338,20 @@ namespace _TeamFolder.JCJ.Script
 
         private void UpdateFootstepSfx()
         {
-            PlayerControllerPresentationModule.UpdateFootstepSfx(
-                _isGrounded,
+            PlayerControllerPresentationModule.UpdateFootstepLoop(
+                _movement.IsGrounded,
                 _moveInput,
-                IsSprinting,
-                _walkFootstepInterval,
-                _sprintFootstepInterval,
-                ref _nextFootstepTime);
+                IsSprinting);
         }
 
         private void UpdateVisualState()
         {
-            PlayerControllerPresentationModule.UpdateVisualState(_visual, _isGrounded, _moveInput, IsSprinting, _rb);
+            PlayerControllerPresentationModule.UpdateVisualState(_visual, _movement.IsGrounded, _moveInput, IsSprinting, _rb);
         }
 
         private void UpdateRemoteVisualState()
         {
-            if (_visual == null || !_isGrounded || _rb == null) return;
+            if (_visual == null || !_movement.IsGrounded || _rb == null) return;
             var planarVelocity = _rb.linearVelocity;
             planarVelocity.y = 0f;
             float speed = planarVelocity.magnitude;
@@ -541,14 +361,15 @@ namespace _TeamFolder.JCJ.Script
                 return;
             }
 
-            float sprintThreshold = _moveSpeed * _sprintMultiplier * 0.8f;
+            float sprintMul = _movement.SprintMultiplier;
+            float sprintThreshold = MoveSpeed * sprintMul * 0.8f;
             if (speed >= sprintThreshold)
             {
-                _visual.OnSprint(Mathf.Clamp01(speed / (_moveSpeed * _sprintMultiplier)));
+                _visual.OnSprint(Mathf.Clamp01(speed / (MoveSpeed * sprintMul)));
                 return;
             }
 
-            _visual.OnWalk(Mathf.Clamp01(speed / _moveSpeed));
+            _visual.OnWalk(Mathf.Clamp01(speed / MoveSpeed));
         }
     }
 }

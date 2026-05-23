@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 // PlayerController의 이동, 점프, 지면 판정을 계산하는 모듈.
 
@@ -12,6 +12,12 @@ namespace _TeamFolder.JCJ.Script
             return Mathf.Clamp01(externalSpeedMul);
         }
 
+        public static float ResolveExhaustionSpeedMul(float exhaustedUntil, float exhaustionMoveSpeedMul)
+        {
+            if (Time.time >= exhaustedUntil) return 1f;
+            return Mathf.Clamp(exhaustionMoveSpeedMul, 0.2f, 1f);
+        }
+
         public static void UpdateStamina(
             ref float stamina,
             float maxStamina,
@@ -19,18 +25,23 @@ namespace _TeamFolder.JCJ.Script
             float staminaRegenPerSec,
             float minStaminaToSprint,
             float sprintReenableDelay,
+            float exhaustionDuration,
             bool sprintHeld,
             Vector2 moveInput,
             ref bool isSprinting,
             ref float sprintAvailableTime,
+            ref float exhaustedUntil,
             ref bool staminaWasAbove)
         {
             bool hasInput = moveInput.sqrMagnitude > 0.01f;
+            bool wantsSprint = sprintHeld && hasInput;
             bool cooldownDone = Time.time >= sprintAvailableTime;
-            bool canContinue = isSprinting && stamina > 0f;
-            bool canStartFresh = cooldownDone && stamina > 0.01f && stamina >= minStaminaToSprint;
-            bool canSprint = canContinue || canStartFresh;
-            isSprinting = sprintHeld && hasInput && canSprint;
+
+            // 시작: 최소 스태미나 이상 + 쿨다운 종료. 유지: 0 초과까지 달리며 전부 소진.
+            if (isSprinting)
+                isSprinting = wantsSprint && stamina > 0f;
+            else
+                isSprinting = wantsSprint && cooldownDone && stamina >= minStaminaToSprint;
 
             if (isSprinting)
             {
@@ -40,6 +51,7 @@ namespace _TeamFolder.JCJ.Script
                     stamina = 0f;
                     isSprinting = false;
                     sprintAvailableTime = Time.time + Mathf.Max(0f, sprintReenableDelay);
+                    exhaustedUntil = Time.time + Mathf.Max(0f, exhaustionDuration);
                     if (staminaWasAbove) MazeAudio.Play(MazeSfx.StaminaOut, 0.9f);
                 }
             }
@@ -60,10 +72,11 @@ namespace _TeamFolder.JCJ.Script
             float sprintMultiplier,
             bool isSprinting,
             float externalSpeedMul,
+            float exhaustionSpeedMul,
             float rotationSpeed)
         {
             Vector3 direction = GetCameraRelativeDirection(moveInput, cameraTransform);
-            float speed = moveSpeed * (isSprinting ? sprintMultiplier : 1f) * externalSpeedMul;
+            float speed = moveSpeed * (isSprinting ? sprintMultiplier : 1f) * externalSpeedMul * exhaustionSpeedMul;
 
             Vector3 velocity = direction * speed;
             velocity.y = rb.linearVelocity.y;

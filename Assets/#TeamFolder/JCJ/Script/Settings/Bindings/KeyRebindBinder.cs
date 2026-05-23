@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -69,7 +69,7 @@ namespace _TeamFolder.JCJ.Script
             }
         }
 
-        private static void ApplyToMap(InputActionMap map, SettingsData data)
+        public static void ApplyToMap(InputActionMap map, SettingsData data)
         {
             // SettingsData에 저장된 키 설정을 실제 InputActionMap override로 반영한다.
             // 이 함수는 설정 UI에서 키를 바꾸거나 기본값으로 되돌릴 때마다 호출된다.

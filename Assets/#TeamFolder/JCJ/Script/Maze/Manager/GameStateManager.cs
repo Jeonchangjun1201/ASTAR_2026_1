@@ -9,6 +9,7 @@ namespace _TeamFolder.JCJ.Script
     /// <summary>
     /// 미로 게임의 Waiting, Countdown, Playing, Finished 상태를 전환하고 타이머·랭킹·점수 서비스를 묶어준다.
     /// </summary>
+    [DefaultExecutionOrder(-200)]
     public class GameStateManager : MonoBehaviour, IGameStateServerGateway
     {
         public static GameStateManager Instance { get; private set; }

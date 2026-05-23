@@ -9,6 +9,15 @@ using _TeamFolder.JCJ.Battle.Session;
 namespace _TeamFolder.JCJ.Script
 {
     /// <summary>
+    /// 설정 패널에 표시할 탭 구성. BattleMinimal은 DPI·키 바인딩만 노출한다.
+    /// </summary>
+    public enum SettingsPanelProfile
+    {
+        Full,
+        BattleMinimal,
+    }
+
+    /// <summary>
     /// 런타임 설정 창을 생성하고 탭 전환, 저장, 기본값 복원, 커서 잠금을 관리한다.
     /// </summary>
     [DefaultExecutionOrder(-50)]
@@ -16,6 +25,7 @@ namespace _TeamFolder.JCJ.Script
     {
         public static bool IsOpen { get; private set; }
 
+        [SerializeField] private SettingsPanelProfile _profile = SettingsPanelProfile.Full;
         [SerializeField] private bool _toggleWithEscape = true;
         [SerializeField] private bool _autoOpenOnStart = false;
 
@@ -31,6 +41,7 @@ namespace _TeamFolder.JCJ.Script
         private void Start()
         {
             _settings = SettingsService.EnsureInstance();
+            EnsureAudioBinder(_settings);
             _customize = CustomizeService.EnsureInstance();
             SettingsUiBuilder.EnsureEventSystem();
             BuildUi();
@@ -213,10 +224,21 @@ namespace _TeamFolder.JCJ.Script
             _tabButtons.Clear();
 
             // 탭을 추가할 때는 ISettingsTab 구현체만 등록하면 버튼과 콘텐츠 생성 흐름을 공유한다.
-            _tabs.Add(new SettingsTabCamera());
-            _tabs.Add(new SettingsTabMinimap());
-            _tabs.Add(new SettingsTabCustomize());
-            _tabs.Add(new SettingsTabKeys());
+            switch (_profile)
+            {
+                case SettingsPanelProfile.BattleMinimal:
+                    _tabs.Add(new SettingsTabCamera(dpiOnly: true));
+                    _tabs.Add(new SettingsTabSound());
+                    _tabs.Add(new SettingsTabKeys());
+                    break;
+                default:
+                    _tabs.Add(new SettingsTabCamera());
+                    _tabs.Add(new SettingsTabMinimap());
+                    _tabs.Add(new SettingsTabCustomize());
+                    _tabs.Add(new SettingsTabSound());
+                    _tabs.Add(new SettingsTabKeys());
+                    break;
+            }
 
             for (int i = 0; i < _tabs.Count; i++)
             {
@@ -257,16 +279,16 @@ namespace _TeamFolder.JCJ.Script
 
         private void ResetAll()
         {
-            // 기본값 버튼은 게임 설정과 캐릭터 색상 설정을 함께 초기화한다.
             _settings?.ResetToDefaults();
-            _customize?.ResetToDefaults();
+            if (_profile != SettingsPanelProfile.BattleMinimal)
+                _customize?.ResetToDefaults();
         }
 
         private void SaveAll()
         {
-            // 색상 커스터마이즈도 PlayerPrefs에 저장해 다음 씬이나 재실행 후에도 유지한다.
             _settings?.Save();
-            _customize?.Save();
+            if (_profile != SettingsPanelProfile.BattleMinimal)
+                _customize?.Save();
         }
 
         private static void CreateBottomBarButton(RectTransform parent, string holderName, string label, float width, System.Action onClick)
@@ -312,6 +334,13 @@ namespace _TeamFolder.JCJ.Script
             {
                 if (_tabs[i] != null) _tabs[i].Refresh(data);
             }
+        }
+
+        private static void EnsureAudioBinder(ISettingsService settings)
+        {
+            if (settings is not SettingsService service) return;
+            if (service.GetComponent<AudioSettingsBinder>() == null)
+                service.gameObject.AddComponent<AudioSettingsBinder>();
         }
     }
 }

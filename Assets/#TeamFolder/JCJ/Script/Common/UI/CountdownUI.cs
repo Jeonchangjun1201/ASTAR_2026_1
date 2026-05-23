@@ -126,6 +126,7 @@ namespace _TeamFolder.JCJ.Script
             _label.outlineColor = Color.black;
             _label.outlineWidth = 0.25f;
             _label.raycastTarget = false;
+            _label.font = Resources.Load<TMP_FontAsset>("Fonts/Paperlogy-3Light SDF");
         }
     }
 }
