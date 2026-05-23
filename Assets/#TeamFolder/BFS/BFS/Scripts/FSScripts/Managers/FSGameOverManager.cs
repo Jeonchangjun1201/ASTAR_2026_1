@@ -34,7 +34,7 @@ namespace BFS
                     if (player.IsOut == false)
                         Lastplayer = player;
                 }
-                string s = Lastplayer.GetComponentInParent<PlayerBFS>().gameObject.name + " WON!!!";
+                string s = Lastplayer.gameObject.name + " WON!!!";
                 OnGameEnd?.Invoke(s);
             }
             else                                                                                         // Else // 이 외; 생존자가 여러 명(마지막 스테이지까지 통과)일 때

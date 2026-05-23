@@ -15,13 +15,14 @@ namespace KSY.Clients.Handlers
 
         public S2C_EnterGameBroadcastPacketHandler(GameManager gameManager, DataTableManager dataTableManager)
         {
+            CustomLog.Log("Create : S2C_EnterGameBroadcastPacketHandler", Color.orange);
             this.gameManager = gameManager;
             this.dataTableManager = dataTableManager;
         }
 
         ValueTask IPacketHandler<S2C_EnterGameBroadcastPacket>.HandlePacket(Session session, S2C_EnterGameBroadcastPacket packet)
         {
-            CustomLog.Log("EnterGameBroadcastPacketHandler : HandlePacket!!", Color.red);
+            CustomLog.Log("S2C_EnterGameBroadcastPacketHandler : HandlePacket", Color.orange);
             Unit unitPrefab = dataTableManager.gameConfigTable.GetUnitPrefab();
             Unit unit = Object.Instantiate(unitPrefab, packet.UnitData.Position, Quaternion.identity);
             unit.Initialize(packet.PlayerID);

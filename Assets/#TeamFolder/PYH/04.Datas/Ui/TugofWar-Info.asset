@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f1beb775cd948d19a7f1c86da42fe8e, type: 3}
+  m_Name: TugofWar-Info
+  m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.PYH._02.Scripts.UI.Scene.GuideUiSO
+  <MiniGameName>k__BackingField: "\uC904\uB2E4\uB9AC\uAE30"
+  <MiniGameInfo>k__BackingField: "\uC544\uBB34 \uC124\uBA85 \uC5C6\uC5B4\uC694"
+  <MiniGameIcon>k__BackingField: {fileID: 21300000, guid: 343059ed918672a4e9f64dcb4cd65d94, type: 3}

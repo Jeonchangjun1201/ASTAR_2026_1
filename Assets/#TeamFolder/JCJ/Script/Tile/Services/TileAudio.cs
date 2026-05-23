@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
+using _TeamFolder.JCJ.Script;
 using SfxSynth = _TeamFolder.JCJ.Script.SfxSynth;
 
 // 타일 미니게임 효과음을 재생하는 오디오 유틸.
@@ -42,15 +43,17 @@ namespace _TeamFolder.JCJ.TileGame
     {
         public static TileAudio Instance { get; private set; }
 
-        [Header("Volume")]
-        [Range(0f, 1f)] public float sfxVolume   = 0.8f;
-        [Range(0f, 1f)] public float musicVolume = 0.22f;
+        [Header("씬 믹스 트림 (설정창 MASTER/BGM/VFX와 곱해짐)")]
+        [Range(0f, 1f)] public float sfxTrim = 0.8f;
+        [Range(0f, 1f)] public float musicBedTrim = 0.22f;
+
+        /// <summary>씬 SFX 트림 — <see cref="JcjSoundPlayback"/> VFX 버스에 곱해진다.</summary>
+        public float SceneVfxTrim => sfxTrim;
 
         [Header("음악")]
         [Tooltip("라운드 종료 시 음악 볼륨을 이 비율로 낮춤.")]
         [Range(0f, 1f)] public float duckFraction = 0.35f;
 
-        private AudioSource _sfx;
         private AudioSource _music;
         private readonly Dictionary<TileSfx, AudioClip> _clips = new();
         private Coroutine _duckCo;
@@ -60,15 +63,11 @@ namespace _TeamFolder.JCJ.TileGame
             if (Instance != null && Instance != this) { Destroy(this); return; }
             Instance = this;
 
-            _sfx = gameObject.AddComponent<AudioSource>();
-            _sfx.playOnAwake = false;
-            _sfx.spatialBlend = 0f;
-
             _music = gameObject.AddComponent<AudioSource>();
             _music.playOnAwake = false;
             _music.loop = true;
             _music.spatialBlend = 0f;
-            _music.volume = musicVolume;
+            _music.volume = ResolveBgmVolume();
 
             if (Camera.main != null && Camera.main.GetComponent<AudioListener>() == null
                 && Object.FindFirstObjectByType<AudioListener>() == null)
@@ -92,10 +91,17 @@ namespace _TeamFolder.JCJ.TileGame
         public void Play(TileSfx sfx, float volume = 1f, float pitch = 1f)
         {
             var clip = GetClip(sfx);
-            if (clip == null || _sfx == null) return;
-            _sfx.pitch = pitch;
-            _sfx.PlayOneShot(clip, Mathf.Clamp01(volume) * sfxVolume);
+            if (clip == null) return;
+            JcjSoundPlayback.PlayVfx(clip, volume, pitch, sfxTrim);
         }
+
+        public void ApplyUserVolumeSettings()
+        {
+            if (_music == null || !_music.isPlaying) return;
+            _music.volume = ResolveBgmVolume();
+        }
+
+        private float ResolveBgmVolume() => JcjAudioVolume.EffectiveBgm * musicBedTrim;
 
         public void DuckMusic(float seconds)
         {
@@ -108,12 +114,12 @@ namespace _TeamFolder.JCJ.TileGame
         {
             if (_music == null) yield break;
             float start = _music.volume;
-            float target = musicVolume * duckFraction;
+            float target = ResolveBgmVolume() * duckFraction;
             float t = 0f;
             while (t < 0.25f) { t += Time.unscaledDeltaTime; _music.volume = Mathf.Lerp(start, target, t / 0.25f); yield return null; }
             yield return new WaitForSecondsRealtime(seconds);
             t = 0f;
-            while (t < 1f) { t += Time.unscaledDeltaTime; _music.volume = Mathf.Lerp(target, musicVolume, t); yield return null; }
+            while (t < 1f) { t += Time.unscaledDeltaTime; _music.volume = Mathf.Lerp(target, ResolveBgmVolume(), t); yield return null; }
         }
 
         // ── Clip cache / synthesis ───────────────────
@@ -131,7 +137,7 @@ namespace _TeamFolder.JCJ.TileGame
             {
                 case TileSfx.CountdownTick:      return SfxSynth.MakeCountdownTick();
                 case TileSfx.Go:                 return SfxSynth.MakeGoBeep();
-                case TileSfx.Footstep:           return SfxSynth.MakeFootstep();
+                case TileSfx.Footstep:           return JcjFootstepAudio.GetClip() ?? SfxSynth.MakeFootstep();
                 case TileSfx.Jump:               return SfxSynth.MakeJump();
                 case TileSfx.Trampoline:         return SfxSynth.MakeJump();           // 점프 클립 재사용
                 case TileSfx.Whoosh:             return SfxSynth.MakeWhoosh();
@@ -159,7 +165,7 @@ namespace _TeamFolder.JCJ.TileGame
             var clip = BuildAmbientBed();
             if (clip == null) return;
             _music.clip = clip;
-            _music.volume = musicVolume;
+            _music.volume = ResolveBgmVolume();
             _music.Play();
         }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 // 폭발로 주변 타일과 플레이어에 영향을 주는 폭탄 기믹 처리.
@@ -7,7 +7,7 @@ namespace _TeamFolder.JCJ.TileGame
 {
     /// <summary>
     /// 폭탄 기믹 (Red 타일).
-    /// 밟으면 bombDelay 후 주변 bombRadius 내 타일을 강제 낙하시키고 자신도 낙하.
+    /// 밟으면 bombDelay 후 같은 층 육각 그리드 bombHexRange 칸 내 타일을 강제 낙하.
     /// </summary>
     public class BombGimmick : MonoBehaviour, IGimmick
     {
@@ -37,7 +37,10 @@ namespace _TeamFolder.JCJ.TileGame
             TileAudio.PlayStatic(TileSfx.BombTick, 0.6f, 0.8f);
             // 폭발 반경과 같은 크기의 예고 링.
             Vector3 center = tile.transform.position;
-            var ring = SpawnTelegraphRing(center, _config.bombRadius, _config.bombDelay);
+            float ringRadius = _board != null
+                ? _board.GetHexRingWorldRadius(_config.bombHexRange)
+                : _config.bombRadius;
+            var ring = SpawnTelegraphRing(center, ringRadius, _config.bombDelay);
 
             yield return StartCoroutine(BlinkRed(tile, _config.bombDelay));
 
@@ -48,9 +51,12 @@ namespace _TeamFolder.JCJ.TileGame
             // 대기 중 밟던 타일이 다른 폭발로 사라졌을 수 있음 — 저장한 중심으로 반경 쿼리, 없으면 마지막 낙하 생략.
             if (_board != null)
             {
-                var nearby = _board.GetTilesInRadius(center, _config.bombRadius);
-                foreach (var t in nearby)
-                    if (t != null && t != tile) t.StartFalling(skipPreDelay: true);
+                var nearby = _board.GetTilesInHexRange(tile, _config.bombHexRange);
+                for (int i = 0; i < nearby.Count; i++)
+                {
+                    if (nearby[i] != null)
+                        nearby[i].StartFalling(skipPreDelay: true);
+                }
             }
             if (tile != null) tile.StartFalling(skipPreDelay: true);
         }

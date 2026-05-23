@@ -118,6 +118,7 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
                 return; // 로컬 SpawnPlayers와 연출 시작을 실행하지 않는다.
             }
             SpawnPlayers(); // 로컬에서는 즉시 플레이어 오브젝트를 만든다.
+            ApplySavedPlayerSettings(); // 런타임 스폰 직후 저장된 DPI·키 설정을 반영한다.
             CalculateTeamTargets(); // 팀 목표 점수를 계산한다.
             RefreshLeaderboard(); // UI를 첫 동기화한다.
             StartMatchPresentation(); // 인트로 코루틴을 시작한다.
@@ -649,6 +650,7 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
             if (playerRanks != null && playerRanks.Length > 0) _playerRanks = (int[])playerRanks.Clone(); // 외부 배열을 변경하지 않도록 복사한다.
             if (playerTeamIndices != null && playerTeamIndices.Length > 0) _playerTeamIndices = (int[])playerTeamIndices.Clone(); // 동일하게 복사한다.
             if (_playerSlots.Count == 0) SpawnPlayers(); // 서버 데이터 도착 전까지 슬롯이 비어 있으면 여기서 로컬 스폰을 수행한다.
+            ApplySavedPlayerSettings(); // 권한 매치 셋업으로 늦게 스폰된 플레이어에도 설정을 적용한다.
             CalculateTeamTargets(); // 새 랭크 합으로 목표 점수를 다시 계산한다.
             RefreshLeaderboard(); // UI에 즉시 반영한다.
             if (slotCountBefore == 0 && _playerSlots.Count > 0) StartMatchPresentation(); // 최초로 슬롯이 생긴 경우에만 인트로를 연다.
@@ -690,17 +692,29 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         private Vector3 SelectInitialSpawnPosition(int playerIndex)
         {
             if (_spawnRoot == null || _spawnRoot.childCount == 0) return Vector3.up * 0.65f;
-            int cornerIndex = Mathf.Clamp(playerIndex, 0, Mathf.Min(3, _spawnRoot.childCount - 1));
-            Vector3 primaryCorner = _spawnRoot.GetChild(cornerIndex).position + Vector3.up * 0.65f;
-            if (!IsSpawnBlocked(primaryCorner)) return primaryCorner;
 
+            var open = new List<(Vector3 position, float score)>(_spawnRoot.childCount);
             for (int i = 0; i < _spawnRoot.childCount; i++)
             {
                 Vector3 candidate = _spawnRoot.GetChild(i).position + Vector3.up * 0.65f;
-                if (!IsSpawnBlocked(candidate)) return candidate;
+                if (IsSpawnBlocked(candidate)) continue;
+
+                float nearestAlly = float.MaxValue;
+                for (int j = 0; j < _players.Count; j++)
+                {
+                    if (_players[j] == null) continue;
+                    float sqr = (_players[j].transform.position - candidate).sqrMagnitude;
+                    if (sqr < nearestAlly) nearestAlly = sqr;
+                }
+                open.Add((candidate, nearestAlly));
             }
 
-            return primaryCorner;
+            if (open.Count == 0)
+                return _spawnRoot.GetChild(Random.Range(0, _spawnRoot.childCount)).position + Vector3.up * 0.65f;
+
+            open.Sort((a, b) => b.score.CompareTo(a.score));
+            int pick = Mathf.Min(4, open.Count);
+            return open[Random.Range(0, pick)].position;
         }
 
         private void AttachArenaBoundary(GameObject playerObject, Vector3 safePosition)
@@ -803,6 +817,34 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         {
             if (controller == null) return;
             controller.SetBattlePrototypeBodyYawDrive(true);
+        }
+
+        /// <summary>
+        /// PlayerPrefs에 저장된 DPI·키 바인딩을 배틀 플레이어 InputActionMap에 반영한다.
+        /// 플레이어가 런타임 스폰되므로 Maze/Tile과 달리 스폰 직후 한 번 더 호출해야 한다.
+        /// </summary>
+        private void ApplySavedPlayerSettings()
+        {
+            var settingsService = SettingsService.EnsureInstance();
+            var data = settingsService?.Data;
+            if (data == null) return;
+
+            var keyBinder = Object.FindFirstObjectByType<KeyRebindBinder>();
+
+            var rig = MazeCameraRig.Instance;
+            if (rig != null) rig.SetAllowPitch(!data.lockPitch);
+
+            for (int i = 0; i < _playerSlots.Count; i++)
+            {
+                var controller = _playerSlots[i].Controller;
+                if (controller == null) continue;
+
+                controller.SetMouseSensitivity(data.cameraSensitivity);
+                var map = controller.GetInputMap();
+                if (map == null) continue;
+                if (keyBinder != null) keyBinder.Register(map);
+                else KeyRebindBinder.ApplyToMap(map, data);
+            }
         }
     }
 }

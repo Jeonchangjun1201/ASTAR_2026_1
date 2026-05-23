@@ -1,6 +1,7 @@
 using KSY.Networks;
 using KSY.Shared;
 using KSY.Shared.Packets;
+using KSY.Utility;
 using System.Threading.Tasks;
 
 namespace KSY.Clients.Handlers
@@ -16,10 +17,14 @@ namespace KSY.Clients.Handlers
         }
 
         ValueTask IPacketHandler<S2C_MoveInputBroadcastPacket>.HandlePacket(Session session, S2C_MoveInputBroadcastPacket packet)
-        {                                           
+        {
+            CustomLog.Log("S2C_MoveInputBroadcastPacketHandler : HandlePacket", UnityEngine.Color.orange);
             Unit unit = gameManager.GetPlayer(packet.PlayerId);
             if (unit == null)
+            {
+                CustomLog.Log("S2C_MoveInputBroadcastPacketHandler : Not Found Player", UnityEngine.Color.orange);
                 return new ValueTask();
+            }
 
             unit.transform.position = packet.Position;
             unit.UnitMovementComponent.SetMovementInput(packet.MoveInput);

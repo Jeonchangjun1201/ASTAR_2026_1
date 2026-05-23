@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using Object = UnityEngine.Object;
 
 namespace KSY.Servers.Handlers
@@ -19,7 +20,6 @@ namespace KSY.Servers.Handlers
 
         public C2S_EnterGameRequestPacketHandler(GameManager gameManager, GameServer gameServer, DataTableManager dataTableManager)
         {
-            KSY.Utility.CustomLog.Log($"Create : {typeof(C2S_EnterGameRequestPacketHandler).Name}", Color.orange);
             this.gameManager = gameManager;
             this.gameServer = gameServer;
             this.dataTableManager = dataTableManager;
@@ -27,10 +27,8 @@ namespace KSY.Servers.Handlers
 
         ValueTask IPacketHandler<C2S_EnterGameRequestPacket>.HandlePacket(Session session, C2S_EnterGameRequestPacket packet)
         {
-            CustomLog.Log("Try_HandlePacket : C2S_EnterGameRequestPacket", Color.orange);
             string playerID = Guid.NewGuid().ToString();
             gameServer.AddPlayer(playerID, session);
-
             Unit unitPrefab = dataTableManager.gameConfigTable.GetUnitPrefab();
             Unit unit = Object.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity);
             unit.Initialize(playerID);
@@ -54,7 +52,7 @@ namespace KSY.Servers.Handlers
                 UnitData = new CreateUnitData(unit).unitData
             };
             gameServer.Send(broadcastPacket, (sessionID, session) => sessionID != playerID);
-            CustomLog.Log("Success_HandlePacket : C2S_EnterGameRequestPacket", Color.rebeccaPurple);
+            CustomLog.Log("Send : S2C_EnterGameBroadcastPacket", UnityEngine.Color.red);
 
             return new ValueTask();
         }

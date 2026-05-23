@@ -28,7 +28,7 @@ namespace KSY.Servers
             gameServer.Initialize(gameManager, dataTableManager);
             gameServer.Listen(port);
 
-            await SceneManager.LoadSceneAsync(inGameSceneName, LoadSceneMode.Single);
+            await SceneManager.LoadSceneAsync(TestDefine.TEST_LOAD_SCENE_NAME, LoadSceneMode.Single);
         }
     }
 }

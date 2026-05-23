@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using _TeamFolder.JCJ.Script; // IPlayerVisual / PartyCharacterVisual (미로와 공유)
@@ -33,9 +33,6 @@ namespace _TeamFolder.JCJ.TileGame
 
         [Header("탈락")]
         [SerializeField] private float eliminationY = -6f;
-
-        [Header("발소리")]
-        [SerializeField] private float stepIntervalWalk = 0.38f;
 
         // 플레이 상태.
         public event System.Action<PlayerController> OnFell;          // 떨어짐, 목숨 남음
@@ -77,8 +74,6 @@ namespace _TeamFolder.JCJ.TileGame
         private Coroutine _slowRoutine;
         private Coroutine _confusionRoutine;
         private Coroutine _balloonRoutine;
-
-        private float _nextFootstepTime;
 
         // 애니메이션 훅.
         private IPlayerVisual _visual;
@@ -127,6 +122,7 @@ namespace _TeamFolder.JCJ.TileGame
 
         private void OnDisable()
         {
+            JcjFootstepAudio.Stop();
             _inputMap?.Disable();
         }
 
@@ -185,7 +181,12 @@ namespace _TeamFolder.JCJ.TileGame
             if (IsEliminated) return;
             // 현재는 로컬 테스트용으로 IsLocalControlled가 true인 플레이어만 움직인다.
             // 원격 플레이어는 서버/네트워크 위치 동기화로 움직이고, 여기 입력 기반 이동은 타지 않아야 한다.
-            if (InputLocked || !IsLocalControlled) { KillHorizontal(); return; }
+            if (InputLocked || !IsLocalControlled)
+            {
+                JcjFootstepAudio.Stop();
+                KillHorizontal();
+                return;
+            }
             HandleMovement();
             UpdateFootstepSfx();
         }
@@ -310,10 +311,17 @@ namespace _TeamFolder.JCJ.TileGame
 
         private void UpdateFootstepSfx()
         {
-            if (!IsGrounded || _rb.linearVelocity.sqrMagnitude < 1.5f) return;
-            if (Time.time < _nextFootstepTime) return;
-            _nextFootstepTime = Time.time + stepIntervalWalk / Mathf.Max(0.3f, _speedMultiplier);
-            TileAudio.PlayStatic(TileSfx.Footstep, 0.35f, Random.Range(0.9f, 1.1f));
+            bool walking = IsGrounded && _rb.linearVelocity.sqrMagnitude >= 1.5f;
+            if (!walking)
+            {
+                JcjFootstepAudio.Stop();
+                return;
+            }
+
+            float speedNorm = Mathf.Clamp01(
+                new Vector2(_rb.linearVelocity.x, _rb.linearVelocity.z).magnitude
+                / Mathf.Max(0.01f, moveSpeed * _speedMultiplier));
+            JcjFootstepAudio.SetWalking(true, 0.35f, Mathf.Lerp(0.95f, 1.1f, speedNorm));
         }
 
         private void CheckGround()

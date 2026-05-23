@@ -2,15 +2,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace PYH.MiniGame
+namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
 {
-    using Player;
-
     public class HumanGolf : AbstractMiniGame, IMiniGame
     {
         private bool _init;
 
-        [field:SerializeField] public Player[] PlayerList { get; private set; }
+        [field:SerializeField] public Player.Player[] PlayerList { get; private set; }
 
         public int MaxPlayer { get; private set; }
         public int CurrentPlayer { get; private set; }
@@ -21,11 +19,11 @@ namespace PYH.MiniGame
             if (_init) return;
             _init = true;
 
-            PlayerList = FindObjectsOfType<Player>().ToArray<Player>(); // Temporary, Load Player
+            PlayerList = FindObjectsOfType<Player.Player>().ToArray<Player.Player>(); // Temporary, Load Player
 
             for (int i = 0; i < PlayerList.Length; i++)
             {
-                Player player = PlayerList[i];
+                Player.Player player = PlayerList[i];
 
                 player.index = i;
                 player.OnOutPlayerEvent += OutPlayer;
@@ -34,7 +32,7 @@ namespace PYH.MiniGame
             CurrentPlayer = PlayerList.Length;
         }
 
-        public void OutPlayer(Player player, int index)
+        public void OutPlayer(Player.Player player, int index)
         {
             Debug.Log($"{player.gameObject.name} �÷��̾�, �̺�Ʈ ����");
 

@@ -1,5 +1,5 @@
-﻿using PYH.Util;
-using System.Threading;
+﻿using System.Threading;
+using _TeamFolder.PYH._02.Scripts.Util;
 using UnityEngine;
 
 namespace JHJ.Scripts.EatingthegroundGame

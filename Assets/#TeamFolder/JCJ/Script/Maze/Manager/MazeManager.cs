@@ -109,6 +109,21 @@ namespace _TeamFolder.JCJ.Script
             ResolveServices();
             MatchScoreRankManager.EnsureExists();
             EnsureSceneHud();
+        }
+
+        private void Start()
+        {
+            // 미로 씬은 로컬 라운드가 기본이다. 다른 씬에서 DontDestroyOnLoad된 ServerAuthoritative가 남아 있으면
+            // StartGame/카운트다운/타이머가 요청만 되고 실제로는 Waiting에 고정된다.
+            JcjRuntimeAuthority.EnsureInstance().SetMode(JcjAuthorityMode.LocalSimulation);
+
+            if (GameStateManager.Instance == null)
+            {
+                Debug.LogError("[MazeManager] GameStateManager가 없어 라운드를 시작할 수 없습니다.");
+                return;
+            }
+
+            // Awake보다 Start에서 생성해야 GameStateManager.Start()까지 끝난 뒤 카운트다운·타이머가 연결된다.
             GenerateMazeWithButton();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
-using PYH.Util; // 작성하신 싱글톤 유틸
+using _TeamFolder.PYH._02.Scripts.Util;
+// 작성하신 싱글톤 유틸
 using UnityEngine;
 using static JHJItemPacket;
 

@@ -74,14 +74,17 @@ namespace KSY.Networks
 
                 int writtenCount = bufferWriter.WrittenCount;
                 if (writtenCount > ushort.MaxValue)
+                {
+                    CustomLog.LogError("Packet Serialization");
                     throw new InvalidProgramException($"Packet is too large. Size: {writtenCount}, Max: {ushort.MaxValue}");
+                }
                 BinaryPrimitives.WriteUInt16LittleEndian(bufferWriter.WrittenSegment.AsSpan(0, 2), (ushort)writtenCount);
 
-                CustomLog.Log($"Successful packet serialization : {type.Name}", UnityEngine.Color.red);
                 return bufferWriter;
             }
             catch
             {
+                CustomLog.LogError("Packet Serialization");
                 bufferWriter.Dispose();
                 throw;
             }

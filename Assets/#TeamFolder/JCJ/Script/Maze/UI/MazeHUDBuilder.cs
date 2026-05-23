@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -200,6 +200,7 @@ namespace _TeamFolder.JCJ.Script
             t.fontSize = size;
             t.color = color;
             t.fontStyle = style;
+            t.font = Resources.Load<TMP_FontAsset>("Fonts/Paperlogy-3Light SDF");
             return t;
         }
 

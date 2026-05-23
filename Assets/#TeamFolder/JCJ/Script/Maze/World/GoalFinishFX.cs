@@ -165,6 +165,7 @@ namespace _TeamFolder.JCJ.Script
             _bannerText.fontSize = 110f;
             _bannerText.fontStyle = FontStyles.Bold;
             _bannerText.color = new Color(0.98f, 0.98f, 1f, 1f);
+            _bannerText.font = Resources.Load<TMP_FontAsset>("Fonts/Paperlogy-3Light SDF");
             var brt = _bannerText.rectTransform;
             brt.anchorMin = new Vector2(0.5f, 0.5f);
             brt.anchorMax = new Vector2(0.5f, 0.5f);
