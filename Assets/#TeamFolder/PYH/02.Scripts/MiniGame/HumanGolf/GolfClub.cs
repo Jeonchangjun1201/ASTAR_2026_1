@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using _TeamFolder.PYH._02.Scripts.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace PYH.Player
+namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
 {
     public class GolfClub : PlayerModuleBase
     {
-        private Player _owner;
+        private Player.Player _owner;
         [SerializeField] private LayerMask _whatIsPlayer;
         [SerializeField] private float hitboxDistance;
         [SerializeField] private float hitboxSize;
@@ -20,7 +21,7 @@ namespace PYH.Player
         private Coroutine _swingCoroutine;
         private bool _isSwing;
 
-        public override void Initialize(Player player)
+        public override void Initialize(Player.Player player)
         {
             _owner = player;
         }
@@ -79,7 +80,7 @@ namespace PYH.Player
                 {
                     if (hitted.Contains(a)) continue;
 
-                    if (a.gameObject.TryGetComponent(out Player player))
+                    if (a.gameObject.TryGetComponent(out Player.Player player))
                     {
                         player.Push(transform.position + transform.forward, (_maxPower / 100) * _perPower);
                     }

@@ -1,4 +1,4 @@
-namespace PYH.MiniGame
+namespace _TeamFolder.PYH._02.Scripts.MiniGame
 {
     public enum MiniGameType
     {

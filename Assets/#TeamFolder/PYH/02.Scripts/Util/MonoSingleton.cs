@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PYH.Util
+namespace _TeamFolder.PYH._02.Scripts.Util
 {
     public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace PYH.Player
+namespace _TeamFolder.PYH._02.Scripts.Player
 {
     public class LookMousePointer : MonoBehaviour
     {

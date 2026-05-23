@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace PYH.Manager
+namespace _TeamFolder.PYH._02.Scripts.MiniGame.Manager
 {
     public class TimeManager : MonoBehaviour
     {

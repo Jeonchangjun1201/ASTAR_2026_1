@@ -1,16 +1,14 @@
 using System.Linq;
-using PYH.MiniGame;
-using PYH.Player;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace MiniGame.PassTheBomb
+namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
 {
     public class PassTheBomb : AbstractMiniGame, IMiniGame
     {
         private bool _init;
         
-        public Player[] PlayerList { get; private set; }
+        public Player.Player[] PlayerList { get; private set; }
         public int MaxPlayer { get; private set; }
         public int CurrentPlayer { get; private set; }
         [field: SerializeField] public UnityEvent OnMiniGameEndEvent { get; private set; }
@@ -23,11 +21,11 @@ namespace MiniGame.PassTheBomb
 
             Debug.Assert(currentBomb != null, "currentBomb is null");
             
-            PlayerList = FindObjectsOfType<Player>().ToArray<Player>(); // Temporary, Load Player
+            PlayerList = FindObjectsOfType<Player.Player>().ToArray<Player.Player>(); // Temporary, Load Player
 
             for (int i = 0; i < PlayerList.Length; i++)
             {
-                Player player = PlayerList[i];
+                Player.Player player = PlayerList[i];
 
                 player.index = i;
                 player.onExplosionEvent += OutPlayer;
@@ -37,7 +35,7 @@ namespace MiniGame.PassTheBomb
             currentBomb.StartBomb(RandomPlayer());
         }
         
-        public void OutPlayer(Player player, int index)
+        public void OutPlayer(Player.Player player, int index)
         {
             CurrentPlayer--;
             player.onExplosionEvent -= OutPlayer;
@@ -83,9 +81,9 @@ namespace MiniGame.PassTheBomb
             }
         }
 
-        private Player RandomPlayer()
+        private Player.Player RandomPlayer()
         {
-            Player player = PlayerList[Random.Range(0, PlayerList.Length)];
+            Player.Player player = PlayerList[Random.Range(0, PlayerList.Length)];
 
             return !player.gameObject.activeSelf ? RandomPlayer() : player;
         }

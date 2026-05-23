@@ -1,9 +1,8 @@
 using System.Collections;
-using PYH.Player;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace MiniGame.PassTheBomb
+namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
 {
     public class Bomb : MonoBehaviour
     {
@@ -11,13 +10,13 @@ namespace MiniGame.PassTheBomb
     
         [SerializeField] private int maxTime;
     
-        private Player _currentPlayer;
+        private Player.Player _currentPlayer;
         private Coroutine _timerCoroutine;
 
         [SerializeField] private float cooldown;
         private float _lastTime;
 
-        public void StartBomb(Player startPlayer)
+        public void StartBomb(Player.Player startPlayer)
         {
             Debug.Log(startPlayer.gameObject.name + "에게 부착되어 시작.");
             _currentPlayer = startPlayer;
@@ -34,7 +33,7 @@ namespace MiniGame.PassTheBomb
             _timerCoroutine = StartCoroutine(BombTimer());
         }
         
-        private void SetPlayer(Player targetPlayer)
+        private void SetPlayer(Player.Player targetPlayer)
         {
             if (targetPlayer == null) return;
             if (targetPlayer == _currentPlayer) return;
