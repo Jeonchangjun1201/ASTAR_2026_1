@@ -6,6 +6,6 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
     {
         public bool IsOpen { get; protected set; }
         
-        public abstract void InteractPopup();
+        public abstract bool InteractPopup();
     }
 }

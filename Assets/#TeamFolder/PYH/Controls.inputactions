@@ -7,6 +7,15 @@
             "id": "272f6d14-89ba-496f-b7ff-215263d3219f",
             "actions": [
                 {
+                    "name": "Play",
+                    "type": "Button",
+                    "id": "7c53f4d1-8db1-4cc8-b465-959dba08b1e1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Setting",
                     "type": "Button",
                     "id": "0522014e-8556-41cf-819d-e0159aca3f78",
@@ -19,6 +28,15 @@
                     "name": "Guide",
                     "type": "Button",
                     "id": "f1d611fb-4726-4a9b-8028-a9419311b651",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Quit",
+                    "type": "Button",
+                    "id": "c7a94f87-30fc-4a8c-908b-1bc4be5eabce",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -45,6 +63,28 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Guide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "30189f1c-b181-4a94-9f9c-d481da640d96",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Play",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "576bf6b1-9424-4f4f-9d33-8ad8354d90f5",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
