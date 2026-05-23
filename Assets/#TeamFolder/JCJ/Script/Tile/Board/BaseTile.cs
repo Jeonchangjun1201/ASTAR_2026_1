@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 // 모든 타일이 공통으로 쓰는 기본 동작과 상태를 담는 베이스 클래스.
@@ -26,6 +26,16 @@ namespace _TeamFolder.JCJ.TileGame
 
         /// <summary>이 타일의 색 태그(ColorCallDirector가 생존 필터에 사용).</summary>
         public TileColor TileTag  { get; private set; }
+        public int LayerIndex { get; private set; } = -1;
+        public int GridX { get; private set; }
+        public int GridZ { get; private set; }
+
+        public void SetGridIndex(int layer, int x, int z)
+        {
+            LayerIndex = layer;
+            GridX = x;
+            GridZ = z;
+        }
         /// <summary>낙하 확정(경고 시작 또는 처리 중)이면 true.</summary>
         public bool IsCondemned   => HasFallen || IsProcessing;
 

@@ -1,3 +1,4 @@
+using KSY.Utility;
 using KSY.Shared.DataTable;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +33,17 @@ namespace KSY.Shared
             return tableRow;
         }
 
-        public Unit GetUnitPrefab() => GetRow("UnitPrefab").objectValue as Unit;
+        public Unit GetUnitPrefab()
+        {
+            if (GetRow("UnitPrefab").objectValue is GameObject prefab)
+            {
+                if (prefab.TryGetComponent(out Unit unitCompo))              
+                    return unitCompo;       
+                else if (prefab.TryGetComponentInChildren<Unit>(out var childrenUnitCompo))
+                    return childrenUnitCompo;
+            }
+            return null;
+        }
 
         public float GetUnitMaxSpeed() => GetRow("UnitMaxSpeed").numberValue;
 

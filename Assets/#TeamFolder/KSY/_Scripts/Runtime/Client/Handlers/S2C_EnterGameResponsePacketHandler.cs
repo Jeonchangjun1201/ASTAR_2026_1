@@ -27,8 +27,7 @@ namespace KSY.Clients.Handlers
         {
             ClientInstance.MyPlayerID = packet.PlayerID;
 
-            CustomLog.Log("S2C_EnterGameResponsePacketHandler : HandlePacket!!", Color.red);
-            await SceneManager.LoadSceneAsync("KSY_EatingTheGroundGameScene", LoadSceneMode.Single);
+            await SceneManager.LoadSceneAsync(TestDefine.TEST_LOAD_SCENE_NAME, LoadSceneMode.Single);
 
             foreach (KeyValuePair<string, UnitDataDTO> element in packet.Players)
             {

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 // 보드 크기, 색상, 라운드 규칙을 담는 설정 데이터.
 
@@ -65,11 +65,11 @@ namespace _TeamFolder.JCJ.TileGame
         [Tooltip("Web/Confusion 등 '어쩔수없음' 기믹용 stepDelay (초) — 길게 유지해 회피 시간 보장.")]
         public float stepDelayWeb = 3.5f;
         [Tooltip("일반/일반기믹 타일용 stepDelay (초) — 빠르게 단축해 긴장감 부여.")]
-        public float stepDelayDefault = 1.2f;
+        public float stepDelayDefault = 0.75f;
         [Tooltip("경고 깜빡임 지속 시간 (초)")]
-        public float warnDuration = 0.7f;
+        public float warnDuration = 0.35f;
         [Tooltip("낙하 애니메이션 소요 시간 (초)")]
-        public float fallDuration = 1.0f;
+        public float fallDuration = 0.55f;
         [Tooltip("낙하 거리 (유닛) — 호환성용. tileFadeOutEnabled가 켜져 있으면 tileFallShortDistance가 우선.")]
         public float fallDistance = 15.0f;
         [Tooltip("페이드 아웃 + 짧은 낙하 사용 여부.")]
@@ -79,9 +79,11 @@ namespace _TeamFolder.JCJ.TileGame
 
         [Header("─ 폭탄 기믹 ───────────────────────")]
         [Tooltip("밟은 후 폭발까지 대기 (초)")]
-        public float bombDelay  = 2.0f;
-        [Tooltip("폭발 반경 (유닛 / 1~3블럭)")]
-        [Range(1f, 4f)] public float bombRadius = 2.5f;
+        public float bombDelay  = 1.2f;
+        [Tooltip("폭발 육각 반경(칸). 1 = 인접 6칸 포함.")]
+        [Range(0, 3)] public int bombHexRange = 1;
+        [Tooltip("폭발 링 표시용 월드 반지름(레거시 폴백)")]
+        [Range(1f, 6f)] public float bombRadius = 3.5f;
 
         [Header("─ 거미줄 기믹 ─────────────────────")]
         [Tooltip("이동 제한 지속 시간 (초)")]

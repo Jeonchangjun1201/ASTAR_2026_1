@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace PYH.UI
+namespace _TeamFolder.PYH._02.Scripts.UI
 {
     public class ForDebugTimerUi : MonoBehaviour
     {

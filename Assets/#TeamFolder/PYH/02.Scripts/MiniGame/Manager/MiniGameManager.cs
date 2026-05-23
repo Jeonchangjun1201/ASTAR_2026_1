@@ -1,7 +1,6 @@
-using PYH.MiniGame;
 using UnityEngine;
 
-namespace PYH.Manager
+namespace _TeamFolder.PYH._02.Scripts.MiniGame.Manager
 {
     public class MiniGameManager : MonoBehaviour
     {

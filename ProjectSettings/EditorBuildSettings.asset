@@ -6,14 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
     path: Assets/#TeamFolder/KSY/_Scenes/KSY_Lobby.unity
     guid: 0e33a410a58375745addb983c74dbc66
   - enabled: 1
-    path: Assets/#TeamFolder/KSY/_Scenes/MiniGame/KSY_EatingTheGround Game Scene.unity
-    guid: 81633f67b23553046aa475cc1d3e4c8c
+    path: Assets/#TeamFolder/KSY/_Scenes/KSY_InGame.unity
+    guid: a6157ebe625bc65419cc4394be16f085
   m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 9eb07e2d669e9c94e9d7d3c782a916f7, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

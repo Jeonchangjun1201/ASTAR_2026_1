@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using _TeamFolder.JCJ.Script;
@@ -16,7 +16,6 @@ namespace _TeamFolder.JCJ.Battle
         private static readonly int AimingAnimatorId = Animator.StringToHash("aiming");
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
-        private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
         private static readonly int MainTexId = Shader.PropertyToID("_MainTex");
         private const string RuntimeProjectilePoolKey = "battle.runtime_projectile";
         private const string TracerPoolKey = "battle.tracer";
@@ -107,6 +106,7 @@ namespace _TeamFolder.JCJ.Battle
         private void Update()
         {
             if (!_isLocalControlled) return;
+            if (SettingsPanel.IsOpen) return;
 
             bool aiming = _inputEnabled && _aimAction != null && _aimAction.IsPressed();
             var cam = BattleFirstPersonCamera.Instance;
@@ -640,13 +640,6 @@ namespace _TeamFolder.JCJ.Battle
                 _weaponMount.SetParent(transform, true);
         }
 
-        private void ApplyWeaponMountSerializedLocalPose(Transform mount)
-        {
-            if (mount == null) return;
-            mount.localPosition = _weaponMountLocalPosition;
-            mount.localRotation = Quaternion.Euler(_weaponMountLocalEulerAngles);
-        }
-
         private void SyncWeaponMountToPlayerLocal()
         {
             if (!_isLocalControlled) return;
@@ -743,90 +736,6 @@ namespace _TeamFolder.JCJ.Battle
             }
         }
 
-        private void SpawnProceduralMuzzleFlash()
-        {
-            var flashRoot = new GameObject("BattleMuzzleFlash");
-            flashRoot.transform.SetPositionAndRotation(_muzzle.position + _muzzle.forward * 0.04f, _muzzle.rotation);
-            float flashScale = GetMuzzleFlashScale(_currentWeapon);
-            flashRoot.transform.localScale = Vector3.one * flashScale;
-
-            CreateMuzzleSparks(flashRoot.transform);
-
-            var flashLight = flashRoot.AddComponent<Light>();
-            flashLight.type = LightType.Point;
-            flashLight.color = new Color(1f, 0.8f, 0.4f);
-            flashLight.intensity = Mathf.Lerp(1.2f, 3.2f, Mathf.InverseLerp(0.04f, 0.15f, _currentWeapon.ProjectileVisualScale));
-            flashLight.range = Mathf.Lerp(1.5f, 3.8f, Mathf.InverseLerp(0.04f, 0.15f, _currentWeapon.ProjectileVisualScale));
-            flashLight.shadows = LightShadows.None;
-            flashRoot.AddComponent<BattleMuzzleFlashFade>();
-
-            Destroy(flashRoot, 0.15f);
-        }
-
-        private void CreateMuzzleSparks(Transform parent)
-        {
-            var psObj = new GameObject("MuzzleSparks");
-            psObj.transform.SetParent(parent, false);
-
-            var ps = psObj.AddComponent<ParticleSystem>();
-            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
-            var main = ps.main;
-            main.duration = 0.08f;
-            main.loop = false;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(0.03f, 0.1f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(3f, 8f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.008f, 0.02f);
-            main.startColor = new ParticleSystem.MinMaxGradient(
-                new Color(1f, 0.9f, 0.5f, 1f),
-                new Color(1f, 0.6f, 0.2f, 1f));
-            main.gravityModifier = 1.5f;
-            main.simulationSpace = ParticleSystemSimulationSpace.World;
-            main.maxParticles = 12;
-
-            var emission = ps.emission;
-            emission.enabled = true;
-            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 5, 10) });
-            emission.rateOverTime = 0f;
-
-            var shape = ps.shape;
-            shape.shapeType = ParticleSystemShapeType.Cone;
-            shape.angle = 12f;
-            shape.radius = 0.005f;
-
-            var colorOverLife = ps.colorOverLifetime;
-            colorOverLife.enabled = true;
-            var gradient = new Gradient();
-            gradient.SetKeys(
-                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(1f, 0.5f, 0.1f), 1f) },
-                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
-            colorOverLife.color = gradient;
-
-            var sizeOverLife = ps.sizeOverLifetime;
-            sizeOverLife.enabled = true;
-            sizeOverLife.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 0f));
-
-            var psr = psObj.GetComponent<ParticleSystemRenderer>();
-            if (psr != null) psr.material = CreateSafeParticleMaterial();
-
-            ps.Play();
-        }
-
-        private static Material CreateSafeParticleMaterial()
-        {
-            var shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
-            if (shader == null) shader = Shader.Find("Particles/Standard Unlit");
-            if (shader == null) shader = Shader.Find("Sprites/Default");
-            if (shader == null) shader = Shader.Find("UI/Default");
-
-            var mat = new Material(shader);
-            mat.color = new Color(1f, 0.85f, 0.5f, 1f);
-            mat.SetFloat("_Surface", 1f);
-            mat.SetFloat("_Blend", 0f);
-            mat.renderQueue = 3100;
-            return mat;
-        }
-
         private void SpawnShotTracer(Vector3 direction)
         {
             var tracerObject = BattlePoolManager.Spawn(
@@ -890,21 +799,6 @@ namespace _TeamFolder.JCJ.Battle
             Object.Destroy(tempObj, clip.length / basePitch + 0.1f);
         }
 
-        private static Material CreateSafeMaterial(Color color)
-        {
-            var shader = Shader.Find("Sprites/Default");
-            if (shader == null) shader = Shader.Find("UI/Default");
-            if (shader == null) shader = Shader.Find("Unlit/Color");
-            if (shader == null) shader = Shader.Find("Hidden/InternalColored");
-
-            var mat = new Material(shader);
-            mat.color = color;
-            if (mat.HasProperty(BaseColorId)) mat.SetColor(BaseColorId, color);
-            if (mat.HasProperty(ColorId)) mat.SetColor(ColorId, color);
-            mat.renderQueue = 3100;
-            return mat;
-        }
-
         private static float GetEffectiveProjectileRadius(BattleWeaponDefinition definition)
         {
             if (definition == null) return 0.04f;
@@ -913,14 +807,6 @@ namespace _TeamFolder.JCJ.Battle
             if (definition.Damage >= 80f || radius >= 0.1f) return Mathf.Clamp(radius * 1.2f, 0.06f, 0.16f);
             if (definition.Automatic) return Mathf.Clamp(radius * 1.7f, 0.05f, 0.085f);
             return Mathf.Clamp(radius * 1.5f, 0.045f, 0.1f);
-        }
-
-        private static float GetMuzzleFlashScale(BattleWeaponDefinition definition)
-        {
-            if (definition == null) return 1f;
-            float scale = definition.ProjectileVisualScale / 0.07f;
-            if (definition.Damage >= 80f) scale *= 1.15f;
-            return Mathf.Clamp(scale, 0.65f, 1.9f);
         }
 
         private static float GetTracerLength(BattleWeaponDefinition definition)

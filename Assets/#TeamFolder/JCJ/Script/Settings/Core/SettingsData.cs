@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 // 카메라, 미니맵, 키 설정 값을 담는 데이터 모델.
@@ -22,9 +22,13 @@ namespace _TeamFolder.JCJ.Script
     [Serializable]
     public class SettingsData
     {
-        public const int CurrentVersion = 1;
+        public const int CurrentVersion = 2;
 
         public int version = CurrentVersion;
+
+        [Range(0f, 1f)] public float masterVolume = JcjAudioVolume.DefaultMaster;
+        [Range(0f, 1f)] public float bgmVolume = JcjAudioVolume.DefaultBgm;
+        [Range(0f, 1f)] public float vfxVolume = JcjAudioVolume.DefaultVfx;
 
         [Range(0.05f, 1f)] public float cameraSensitivity = 0.18f;
         public bool lockPitch = true;
@@ -50,6 +54,17 @@ namespace _TeamFolder.JCJ.Script
         {
             // 저장 파일이 손상되었거나 예전 값이 들어와도 플레이 가능한 범위로 되돌린다.
             if (version <= 0) version = CurrentVersion;
+            if (version < 2)
+            {
+                masterVolume = JcjAudioVolume.DefaultMaster;
+                bgmVolume = JcjAudioVolume.DefaultBgm;
+                vfxVolume = JcjAudioVolume.DefaultVfx;
+                version = CurrentVersion;
+            }
+
+            masterVolume = Mathf.Clamp01(masterVolume);
+            bgmVolume = Mathf.Clamp01(bgmVolume);
+            vfxVolume = Mathf.Clamp01(vfxVolume);
             cameraSensitivity = Mathf.Clamp(cameraSensitivity, 0.05f, 1f);
             minimapSize = Mathf.Clamp(minimapSize, 120f, 360f);
             if (minimapPlayerColor.a < 0.05f) minimapPlayerColor.a = 1f;

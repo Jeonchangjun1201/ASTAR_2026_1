@@ -1,15 +1,13 @@
 using UnityEngine;
 
-namespace PYH.MiniGame
+namespace _TeamFolder.PYH._02.Scripts.MiniGame
 {
-    using Player;
-
     [RequireComponent(typeof(Collider))]
     public class OverZone : MonoBehaviour
     {
         public void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.TryGetComponent(out Player player))
+            if (collision.gameObject.TryGetComponent(out Player.Player player))
             {
                 player.OverPlayer();
             }

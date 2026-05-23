@@ -122,15 +122,15 @@ namespace KSY.Networks
                 throw new InvalidOperationException("Session is not opened");
             }
 
-            List<ArraySegment<byte>> dataList = null;
+            List<ArraySegment<byte>> bufferList = null;
             lock (sendLocker)
             {
                 sendQueue.Enqueue(sendQueueContext);
-                if (!sendQueue.TryFlush(out dataList))
+                if (!sendQueue.TryFlush(out bufferList))
                     return;
             }
 
-            sendArgs.BufferList = dataList;
+            sendArgs.BufferList = bufferList;
             bool pending = connectedSocket.SendAsync(sendArgs);
             if (!pending)
                 HandleSent(null, sendArgs);
@@ -152,6 +152,8 @@ namespace KSY.Networks
                 Close();
                 return;
             }
+
+            //CustomLog.Log("Success : Send Packet", UnityEngine.Color.red);
 
             List<ArraySegment<byte>> bufferList = null;
             lock (sendLocker)

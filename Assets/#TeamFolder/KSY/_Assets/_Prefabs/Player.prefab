@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4721476918393549679}
+  - component: {fileID: 8898881547184818918}
+  - component: {fileID: 1994029673148741587}
   - component: {fileID: 3307200146533552880}
   - component: {fileID: 4487444244173537455}
   - component: {fileID: 4249677718178050531}
-  - component: {fileID: 8898881547184818918}
-  - component: {fileID: 1994029673148741587}
   - component: {fileID: 4688161327676014302}
   m_Layer: 0
   m_Name: Player
@@ -37,6 +37,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8898881547184818918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3818553746457092375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee08a650f53cd0540b091ac2b9b508cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KSY.Shared.Unit
+  unitMovementComponent: {fileID: 1994029673148741587}
+--- !u!114 &1994029673148741587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3818553746457092375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4980825e42cc4074592c1dd02b61c091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KSY.Clients.UnitMovementComponent
+  body: {fileID: 4688161327676014302}
 --- !u!33 &3307200146533552880
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -115,32 +141,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8898881547184818918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3818553746457092375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee08a650f53cd0540b091ac2b9b508cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KSY.Shared.Unit
-  unitMovementComponent: {fileID: 1994029673148741587}
---- !u!114 &1994029673148741587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3818553746457092375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4980825e42cc4074592c1dd02b61c091, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KSY.Clients.UnitMovementComponent
-  body: {fileID: 4688161327676014302}
 --- !u!54 &4688161327676014302
 Rigidbody:
   m_ObjectHideFlags: 0

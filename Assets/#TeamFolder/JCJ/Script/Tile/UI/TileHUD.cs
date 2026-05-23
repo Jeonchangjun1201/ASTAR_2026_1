@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -72,15 +72,15 @@ namespace _TeamFolder.JCJ.TileGame
             _livesText.text = sb.ToString();
         }
 
-        // 안전색 공지를 HUD에 띄우는 진입점이다.
-        // 서버가 안전색을 결정하더라도 클라이언트 UI 반영은 이 메서드로 충분하다.
-        public void ShowColorCallAnnounce(TileColor color, float duration)
+        public void ShowColorCallAnnounce(TileColor color, float duration, int layerIndex = -1, int totalLayers = 3)
         {
             if (_colorCallGroup == null) return;
-            _colorCallText.text = $"COLOR CALL  —  {color.ToString().ToUpper()} ONLY";
-            _colorCallText.color = TileColorToDisplay(color);
+            int floor = layerIndex >= 0 ? totalLayers - layerIndex : -1;
+            string layerLabel = floor > 0 ? $"{floor}층" : "전체";
+            _colorCallText.text = $"{layerLabel} — <color=#{ColorUtility.ToHtmlStringRGB(TileColorToDisplay(color))}>{TileColorToKoreanLabel(color)}</color>만 안전!";
+            _colorCallText.color = JCJUiColors.HudPrimaryText;
+            _colorCallText.richText = true;
             _colorCallGroup.alpha = 1f;
-            // 문자열로 시작한 코루틴만 nameof 중지 가능 — 핸들로 잡아 바 트윈을 확실히 취소.
             if (_colorCallBarCo != null) StopCoroutine(_colorCallBarCo);
             _colorCallBarCo = StartCoroutine(ColorCallBarRoutine(duration));
         }
@@ -288,7 +288,7 @@ namespace _TeamFolder.JCJ.TileGame
             SetAnchors(title.rectTransform,
                 new Vector2(0f, 1f), new Vector2(1f, 1f),
                 new Vector2(0f, -28f), new Vector2(0f, 44f));
-            title.text = "TILE GUIDE";
+            title.text = "타일 안내";
             title.fontStyle = FontStyles.Bold;
             title.characterSpacing = 1.5f;
             ApplyOutline(title, 0.12f);
@@ -296,13 +296,13 @@ namespace _TeamFolder.JCJ.TileGame
             // 항목: 표시 색 → 라벨 → 짧은 설명
             var entries = new (TileColor color, string name, string desc)[]
             {
-                (TileColor.Green,   "NORMAL",  "Just falls"),
-                (TileColor.Red,     "BOMB",    "Explodes nearby"),
-                (TileColor.Purple,  "WEB",     "Slows you down"),
-                (TileColor.Cyan,    "ICE",     "Slippery surface"),
-                (TileColor.Orange,  "BALLOON", "Floats up"),
-                (TileColor.Lime,    "JUMP",    "Big launch"),
-                (TileColor.Magenta, "CONFUSE", "Inverts controls"),
+                (TileColor.Green,   "일반",   "밟으면 곧 사라짐"),
+                (TileColor.Red,     "폭탄",   "잠시 후 주변 폭발"),
+                (TileColor.Purple,  "거미줄", "이동이 느려짐"),
+                (TileColor.Cyan,    "얼음",   "미끄러운 바닥"),
+                (TileColor.Orange,  "풍선",   "잠깐 공중으로 뜸"),
+                (TileColor.Lime,    "점프",   "높게 튀어 오름"),
+                (TileColor.Magenta, "혼란",   "조작이 반대로 됨"),
             };
 
             float rowHeight = 54f;
@@ -415,6 +415,7 @@ namespace _TeamFolder.JCJ.TileGame
             t.enableAutoSizing = false;
             t.rectTransform.localScale = Vector3.one;
             t.enableVertexGradient = false;
+            t.font = Resources.Load<TMP_FontAsset>("Fonts/Paperlogy-3Light SDF");
             return t;
         }
 
@@ -488,6 +489,20 @@ namespace _TeamFolder.JCJ.TileGame
             TileColor.Lime    => new Color(0.75f, 1.00f, 0.55f),
             TileColor.Magenta => new Color(1.00f, 0.65f, 0.90f),
             _                 => JCJUiColors.HudAccent,
+        };
+
+        private static string TileColorToKoreanLabel(TileColor c) => c switch
+        {
+            TileColor.Green   => "초록",
+            TileColor.Blue    => "파랑",
+            TileColor.Yellow  => "노랑",
+            TileColor.Red     => "빨강",
+            TileColor.Purple  => "보라",
+            TileColor.Cyan    => "하늘",
+            TileColor.Orange  => "주황",
+            TileColor.Lime    => "연두",
+            TileColor.Magenta => "분홍",
+            _                 => c.ToString(),
         };
     }
 }
