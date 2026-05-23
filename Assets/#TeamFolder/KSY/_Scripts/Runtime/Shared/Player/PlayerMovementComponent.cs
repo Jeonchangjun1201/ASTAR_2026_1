@@ -1,5 +1,6 @@
 ﻿using KSY.Utility;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace KSY.Shared
 {
@@ -14,14 +15,17 @@ namespace KSY.Shared
         public Vector3 Velocity => _velocity;
 
         private Player _player;
+        private int _runAnimationHashClip = Animator.StringToHash("RUN");
+        private int _idleAnimationHashClip = Animator.StringToHash("IDLE");
         private float _speed;
         private float _rotationSpeed;
         private float _verticalVelocity;
         private Vector3 _velocity;
         private Vector3 _movementDirection;
 
-        public void Initialize(float speed, float rotationSpeed)
+        public void Initialize(Player player, float speed, float rotationSpeed)
         {
+            this._player = player;
             this._speed = speed;
             this._rotationSpeed = rotationSpeed;
             this.MyTransform = GetComponent<Transform>();
@@ -32,6 +36,11 @@ namespace KSY.Shared
             CustomLog.Log($"{inputDirection}");
             Vector3 newDirection = new Vector3(inputDirection.x, 0f, inputDirection.y);
             this._movementDirection = newDirection;
+
+            if (_movementDirection != Vector3.zero)
+                _player.RendererComponent?.PlayClip(_runAnimationHashClip, 0, 0, 0);
+            else
+                _player.RendererComponent?.PlayClip(_idleAnimationHashClip, 0, 0, 0);
         }
 
         private void FixedUpdate()

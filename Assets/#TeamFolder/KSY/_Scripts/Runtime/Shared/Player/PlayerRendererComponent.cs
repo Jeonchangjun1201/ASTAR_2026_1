@@ -6,13 +6,14 @@ namespace KSY.Shared
     [RequireComponent(typeof(Animator))]
     public class PlayerRendererComponent : MonoBehaviour
     {
-        public Animator AnimatorComponent { get; private set; }
+        public Animator AnimatorComponent => _animatorComponent;
 
+        private Animator _animatorComponent;
         private Player _player;
 
         public void Initialize(Player player)
         {
-            if (!gameObject.TryGetComponent(out Animator animatorComponent))
+            if (!gameObject.TryGetComponent(out _animatorComponent))
             {
                 CustomLog.LogError("Animator is null");
                 return;
@@ -23,7 +24,7 @@ namespace KSY.Shared
 
         public void PlayClip(int clipHash, float normalizedTime, float crossFadeDuration, int layerIndex = 0)
         {
-            AnimatorComponent.CrossFadeInFixedTime(clipHash, crossFadeDuration, layerIndex, normalizedTime);
+            _animatorComponent.CrossFadeInFixedTime(clipHash, crossFadeDuration, layerIndex, normalizedTime);
         }
     }
 }

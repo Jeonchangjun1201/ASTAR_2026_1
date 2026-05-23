@@ -5,21 +5,23 @@ namespace KSY.Shared
 {
     public class Player : MonoBehaviour
     {
-        public PlayerMovementComponent MovementComponent { get; private set; }
-        public PlayerRendererComponent RendererComponent { get; private set; }
-
+        public PlayerMovementComponent MovementComponent => _movementComponent;
+        public PlayerRendererComponent RendererComponent => _rendererComponent;
         public string PlayerID => _playerID;
+
+        private PlayerMovementComponent _movementComponent;
+        private PlayerRendererComponent _rendererComponent;
         private string _playerID = string.Empty;
 
         public void Initialize(string playerID)
         {
             this._playerID = playerID;
-            if(!gameObject.TryGetComponentInChildren(out PlayerMovementComponent MovementComponent))
+            if(!gameObject.TryGetComponentInChildren(out _movementComponent))
             {
                 CustomLog.LogError("MovementComponent is null");
                 return;
             }
-            if (!gameObject.TryGetComponentInChildren(out PlayerRendererComponent RendererComponent))
+            if (!gameObject.TryGetComponentInChildren(out _rendererComponent))
             {
                 CustomLog.LogError("RendererComponent is null");
                 return;
@@ -30,8 +32,8 @@ namespace KSY.Shared
             float speed = gameConfigTable.GetPlayerSpeed();
             float rotationSpeed = gameConfigTable.GetPlayerRotationSpeed();
 
-            this.MovementComponent.Initialize(speed, rotationSpeed);
-            this.RendererComponent.Initialize(this);
+            this._movementComponent.Initialize(this, speed, rotationSpeed);
+            this._rendererComponent.Initialize(this);
         }
     }
 }
