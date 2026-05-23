@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 3
   tags:
   - Wall
-  - Spin1
   - Spin2
   - Spin3
   - spin4
@@ -21,6 +20,7 @@ TagManager:
   - Player3
   - Player4
   - Ball
+  - Ground
   layers:
   - Default
   - TransparentFX
