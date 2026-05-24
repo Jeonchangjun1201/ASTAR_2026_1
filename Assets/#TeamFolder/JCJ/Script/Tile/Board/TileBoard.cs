@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using _TeamFolder.JCJ.Script;
 using Random = UnityEngine.Random;
 
 // 타일 보드 생성, 저장, 조회를 담당하는 보드 관리자.
@@ -105,7 +106,7 @@ namespace _TeamFolder.JCJ.TileGame
                 + new Vector3(-boardWidth * 0.5f, yPos, -boardDepth * 0.5f);
 
             TileColor[] pool = BuildColorPool(total, cfg);
-            Shuffle(pool);
+            JcjCollectionUtil.Shuffle(pool);
 
             BaseTile[,] grid = new BaseTile[w, d];
 
@@ -153,15 +154,6 @@ namespace _TeamFolder.JCJ.TileGame
                 pool.Add(normals[Random.Range(0, normals.Length)]);
 
             return pool.ToArray();
-        }
-
-        private static void Shuffle<T>(T[] arr)
-        {
-            for (int i = arr.Length - 1; i > 0; i--)
-            {
-                int j = Random.Range(0, i + 1);
-                (arr[i], arr[j]) = (arr[j], arr[i]);
-            }
         }
 
         // ── ColorCall 쿼리 / 액션 ────────────────────

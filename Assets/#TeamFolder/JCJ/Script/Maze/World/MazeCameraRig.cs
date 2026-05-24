@@ -79,6 +79,7 @@ namespace _TeamFolder.JCJ.Script
         public void AddLook(Vector2 delta)
         {
             if (!_enabled) return;
+            if (SettingsPanel.IsOpen) return;
             float sens = 1f;
             var battleCam = _TeamFolder.JCJ.Battle.BattleFirstPersonCamera.Instance;
             if (battleCam != null) sens = battleCam.AimSensitivityMultiplier;
