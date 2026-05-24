@@ -11,7 +11,7 @@ namespace _TeamFolder.JCJ.Script.Session
     /// </summary>
     public interface ITileRoundGateway
     {
-        _TeamFolder.JCJ.TileGame.GameState State { get; }
+        GameState State { get; }
         GameConfig Config { get; }
 
         event Action RoundStartRequested;

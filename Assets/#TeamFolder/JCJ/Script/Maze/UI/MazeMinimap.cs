@@ -165,17 +165,8 @@ namespace _TeamFolder.JCJ.Script
             _rawImage = img;
         }
 
-        private Canvas FindOrCreateCanvas()
-        {
-            var c = Object.FindFirstObjectByType<Canvas>();
-            if (c != null) return c;
-            var go = new GameObject("Canvas (auto)");
-            c = go.AddComponent<Canvas>();
-            c.renderMode = RenderMode.ScreenSpaceOverlay;
-            go.AddComponent<CanvasScaler>();
-            go.AddComponent<GraphicRaycaster>();
-            return c;
-        }
+        private Canvas FindOrCreateCanvas() =>
+            JcjUiFactory.FindOrCreateOverlayCanvas();
 
         private void BuildTexture()
         {

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using _TeamFolder.KDH._01.Code.SoccerGame.Manager;
 
 namespace KDH
 {

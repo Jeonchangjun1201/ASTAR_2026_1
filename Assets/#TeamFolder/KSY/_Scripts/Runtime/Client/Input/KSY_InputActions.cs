@@ -96,7 +96,7 @@ namespace KSY.Clients
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""event"": ""Value"",
+                    ""type"": ""Value"",
                     ""id"": ""67e8510c-ec32-4be8-867e-2f0edc338f3b"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",

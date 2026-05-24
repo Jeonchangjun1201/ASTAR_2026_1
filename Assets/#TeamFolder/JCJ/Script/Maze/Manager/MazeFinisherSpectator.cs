@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
-
-// 골인한 플레이어를 관전 상태로 전환하는 처리.
+using UnityEngine.InputSystem;
 
 namespace _TeamFolder.JCJ.Script
 {
     /// <summary>
     /// 골인한 플레이어를 조작 불가 관전 상태로 전환하고 로컬 카메라를 다음 생존자에게 넘긴다.
+    /// 관전 중 좌클릭으로 다음 생존자에게 카메라를 전환할 수 있다.
     /// </summary>
     [DefaultExecutionOrder(25)]
     public class MazeFinisherSpectator : MonoBehaviour
@@ -20,13 +20,21 @@ namespace _TeamFolder.JCJ.Script
         [Tooltip("골인한 플레이어 콜라이더 비활성 여부 (다른 플레이어와 충돌 X).")]
         [SerializeField] private bool _disableFinisherColliders = true;
 
+        [Header("관전 입력")]
+        [Tooltip("관전 중 마우스 감도.")]
+        [SerializeField] private float _spectatorMouseSensitivity = 0.18f;
+
         private bool _subscribed;
         private readonly HashSet<string> _finishedPlayerIds = new();
 
+        private bool _isSpectating;
+        private PlayerController _currentSpectateTarget;
+
         public void ResetState()
         {
-            // Play Again 후 Player_1 같은 이름이 재사용되므로 이전 라운드 완주자 목록을 비운다.
             _finishedPlayerIds.Clear();
+            _isSpectating = false;
+            _currentSpectateTarget = null;
         }
 
         private void OnEnable()
@@ -41,6 +49,62 @@ namespace _TeamFolder.JCJ.Script
         {
             ResolveReferences();
             Subscribe();
+        }
+
+        private void Update()
+        {
+            if (!_isSpectating) return;
+
+            HandleSpectatorMouseLook();
+
+            if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+                CycleSpectateTarget();
+        }
+
+        private void HandleSpectatorMouseLook()
+        {
+            if (SettingsPanel.IsOpen) return;
+            if (_currentSpectateTarget != null && _currentSpectateTarget.IsLocalControlled) return;
+
+            var rig = MazeCameraRig.Instance;
+            if (rig == null || Mouse.current == null) return;
+
+            Vector2 delta = Mouse.current.delta.ReadValue();
+            rig.AddLook(delta * _spectatorMouseSensitivity);
+        }
+
+        private void CycleSpectateTarget()
+        {
+            if (SettingsPanel.IsOpen) return;
+
+            var alive = GetAlivePlayerList();
+            if (alive.Count == 0) return;
+
+            int cur = alive.IndexOf(_currentSpectateTarget);
+            int next = (cur + 1) % alive.Count;
+            var target = alive[next];
+
+            if (target == _currentSpectateTarget) return;
+
+            _currentSpectateTarget = target;
+            ResolveReferences();
+            if (_cameraService != null) _cameraService.Follow(target.transform);
+            UpdateMinimapTarget(target);
+            Debug.Log($"[FinisherSpectator] 관전 전환 (클릭) → {target.gameObject.name}");
+        }
+
+        private List<PlayerController> GetAlivePlayerList()
+        {
+            var result = new List<PlayerController>();
+            var all = FindObjectsByType<PlayerController>(FindObjectsSortMode.InstanceID);
+            foreach (var pc in all)
+            {
+                if (pc == null || !pc.gameObject.activeInHierarchy) continue;
+                var identity = RuntimePlayerIdentity.Find(pc);
+                if (identity != null && _finishedPlayerIds.Contains(identity.PlayerId)) continue;
+                result.Add(pc);
+            }
+            return result;
         }
 
         private void ResolveReferences()
@@ -84,13 +148,14 @@ namespace _TeamFolder.JCJ.Script
             var finisher = FindPlayerById(entry.PlayerId);
             if (finisher == null) return;
 
-            // EnterSpectatorMode 안에서 IsLocalControlled가 false로 바뀐다.
-            // 따라서 카메라 전환 여부는 변경 전 값을 따로 저장해서 판단한다.
             bool wasLocalControlled = finisher.IsLocalControlled;
             EnterSpectatorMode(finisher);
 
             if (wasLocalControlled)
+            {
+                _isSpectating = true;
                 SwitchCameraToNextAlivePlayer(finisher);
+            }
         }
 
         private static PlayerController FindPlayerById(string playerId)
@@ -109,8 +174,6 @@ namespace _TeamFolder.JCJ.Script
 
         private void EnterSpectatorMode(PlayerController pc)
         {
-            // 관전 모드 진입은 "조작권 제거 + 물리 정지 + 렌더/콜라이더 숨김" 세 단계로 처리한다.
-            // 여기서 다음 플레이어에게 조작권을 넘기면 관전이 아니라 빙의가 되므로 금지한다.
             pc.SetSpectating(true);
             pc.IsLocalControlled = false;
             pc.SetMovementEnabled(false);
@@ -147,8 +210,6 @@ namespace _TeamFolder.JCJ.Script
 
         private void SwitchCameraToNextAlivePlayer(PlayerController finisher)
         {
-            // 남아 있는 플레이어 중 아직 완주하지 않은 대상을 찾아 카메라만 따라간다.
-            // 입력 권한은 넘기지 않는다. 관전 대상은 자동 조종/서버 동기화 대상으로 남아야 한다.
             var next = FindNextAlivePlayer(finisher);
             if (next == null)
             {
@@ -156,6 +217,7 @@ namespace _TeamFolder.JCJ.Script
                 return;
             }
 
+            _currentSpectateTarget = next;
             ResolveReferences();
             if (_cameraService != null) _cameraService.Follow(next.transform);
             UpdateMinimapTarget(next);
@@ -164,8 +226,6 @@ namespace _TeamFolder.JCJ.Script
 
         private static void UpdateMinimapTarget(PlayerController target)
         {
-            // 관전 카메라가 다음 플레이어로 넘어가면 미니맵의 중심도 같이 바꾼다.
-            // 그렇지 않으면 이미 탈출한 플레이어 위치가 계속 내 위치처럼 표시된다.
             var minimap = Object.FindFirstObjectByType<MazeMinimap>();
             if (minimap == null || target == null) return;
 
