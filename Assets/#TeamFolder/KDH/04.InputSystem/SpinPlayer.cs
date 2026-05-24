@@ -94,7 +94,7 @@ public partial class @SpinPlayer: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""event"": ""Value"",
+                    ""type"": ""Value"",
                     ""id"": ""cde45ac4-b0c0-410b-97c3-8669ffb98b17"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",

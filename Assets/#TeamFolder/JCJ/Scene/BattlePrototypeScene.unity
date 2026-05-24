@@ -1883,8 +1883,13 @@ MonoBehaviour:
   _teamTwoName: RED TEAM
   _weaponRollDuration: 1.2
   _weaponRevealDuration: 1
+  _weaponRollSfx: {fileID: 8300000, guid: 25db1bd038ce62941b7252cf67655ffc, type: 3}
+  _weaponRollSfxVolume: 0.9
+  _weaponRevealSfx: {fileID: 8300000, guid: 04177c757a1307e4d979f3075f981210, type: 3}
+  _weaponRevealSfxVolume: 1
   _countdownStepDuration: 1
   _countdownStart: 3
+  _countdownSfxVolume: 0.9
   _respawnDelay: 3
   _spawnProtectionDuration: 2
   _arenaBoundaryPadding: 1.4
