@@ -152,11 +152,11 @@ namespace Sortify
             GUILayout.Label(
                 "Sortify stores certain user preferences locally on your device to provide a personalized and efficient experience." +
                 "\n\n" +
-                "By installing this tool, you agree to the following terms regarding data storage:",
+                "By installing this tool, you agree to the following terms regarding Data storage:",
                 EditorStyles.wordWrappedLabel);
             EditorGUILayout.Space(10);
 
-            GUILayout.Label("Why we save data locally:", EditorStyles.boldLabel);
+            GUILayout.Label("Why we save Data locally:", EditorStyles.boldLabel);
             GUILayout.Label(
                 "Sortify was designed to work seamlessly in team environments. Instead of storing settings in the project files, " +
                 "we use a local storage approach to prevent personal preferences, such as colors, favorites, custom components, or user names, from " +
@@ -164,18 +164,18 @@ namespace Sortify
                 EditorStyles.wordWrappedLabel);
             EditorGUILayout.Space(10);
 
-            GUILayout.Label("What data we store:", EditorStyles.boldLabel);
+            GUILayout.Label("What Data we store:", EditorStyles.boldLabel);
             GUILayout.Label(
-                "The data saved locally does not include any sensitive or private information. " +
+                "The Data saved locally does not include any sensitive or private information. " +
                 "We only store user-specific settings, including color themes, favorite objects, custom component lists, and user names, " +
                 "to personalize your Sortify experience. These files are stored as simple .json files, so you can view and modify them directly if needed.",
                 EditorStyles.wordWrappedLabel);
             EditorGUILayout.Space(10);
 
-            GUILayout.Label("Privacy and data security:", EditorStyles.boldLabel);
+            GUILayout.Label("Privacy and Data security:", EditorStyles.boldLabel);
             GUILayout.Label(
-                "All stored data is strictly limited to local preferences that enhance your interaction with the tool. " +
-                "No data is transmitted externally or used beyond the customization of Sortify. You can delete or reset these files anytime " +
+                "All stored Data is strictly limited to local preferences that enhance your interaction with the tool. " +
+                "No Data is transmitted externally or used beyond the customization of Sortify. You can delete or reset these files anytime " +
                 "by navigating to the specified storage location on your device.",
                 EditorStyles.wordWrappedLabel);
             EditorGUILayout.Space(20);
@@ -566,7 +566,7 @@ namespace Sortify
             GUILayout.Space(5);
             bool saveInProject = EditorPrefs.GetBool(SAVE_IN_PROJECT_KEY, false);
             DrawToggle("Save in Project", ref saveInProject,
-                "If enabled, Sortify save data will be stored in the project folder. If disabled, data is stored locally.");
+                "If enabled, Sortify save Data will be stored in the project folder. If disabled, Data is stored locally.");
 
             if (saveInProject != EditorPrefs.GetBool(SAVE_IN_PROJECT_KEY, false))
             {

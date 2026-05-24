@@ -2,14 +2,13 @@ using UnityEngine;
 
 namespace KSY.Clients
 {
-    [CreateAssetMenu(fileName = "GameData", menuName = "SO/KSY/GameData")]
-    public class GameDataSO : ScriptableObject
+    [CreateAssetMenu(fileName = "GameData", menuName = "KSY/SO/GameData")]
+    public class MiniGameDataSO : ScriptableObject
     {
 #if UNITY_EDITOR
         [SerializeField] private UnityEditor.SceneAsset sceneAsset;
 #endif
 
-        [HideInInspector]
         [SerializeField] private string sceneName;
 
         public string SceneName => sceneName;
