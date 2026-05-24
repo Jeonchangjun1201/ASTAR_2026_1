@@ -43,8 +43,8 @@ namespace BFS
 
         private void UpdateTeamScore()
         {
-            _uiManager.ChangeText(_uiManager.TeamOneText, $"Team One: {scoreBoard[PlayerTeamTOW.TEAMONE]}");
-            _uiManager.ChangeText(_uiManager.TeamTwoText, $"Team Two: {scoreBoard[PlayerTeamTOW.TEAMTWO]}");
+            _uiManager.ChangeText(_uiManager.TeamOneText, $"{scoreBoard[PlayerTeamTOW.TEAMONE]}");
+            _uiManager.ChangeText(_uiManager.TeamTwoText, $"{scoreBoard[PlayerTeamTOW.TEAMTWO]}");
         }
     }
 }
