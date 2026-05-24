@@ -676,7 +676,7 @@ GameObject:
   - component: {fileID: 5823603032277340135}
   - component: {fileID: 8877472131321864734}
   m_Layer: 5
-  m_Name: BFS_Reqeust_Canvas
+  m_Name: BFS_Reqeust_Canvas_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -50,8 +50,13 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         [SerializeField] private string _teamTwoName = "RED TEAM"; // UI에 표시할 둘째 팀 이름이다.
         [SerializeField] private float _weaponRollDuration = 1.2f; // 무기 뽑기 연출 시간이다.
         [SerializeField] private float _weaponRevealDuration = 1f; // 최종 무기 공개 후 대기 시간이다.
+        [SerializeField] private AudioClip _weaponRollSfx; // 무기 뽑기 룰렛 루프 SFX (기본: roll.wav).
+        [SerializeField] [Range(0f, 1f)] private float _weaponRollSfxVolume = 0.9f;
+        [SerializeField] private AudioClip _weaponRevealSfx; // 무기 확정 SFX (기본: wow.mp3).
+        [SerializeField] [Range(0f, 1f)] private float _weaponRevealSfxVolume = 1f;
         [SerializeField] private float _countdownStepDuration = 1f; // 카운트다운 한 숫자당 초 단위이다.
         [SerializeField] private int _countdownStart = 3; // 카운트다운 시작 숫자이다.
+        [SerializeField] [Range(0f, 1f)] private float _countdownSfxVolume = 0.9f;
         [SerializeField] private float _respawnDelay = 3f; // 로컬 시뮬 리스폰 대기 시간이다.
         [SerializeField] private float _spawnProtectionDuration = 2f; // 리스폰 직후 무적 시간이다.
         [SerializeField] private float _arenaBoundaryPadding = 1.4f; // 낙사 복구 경계 패딩이다.
@@ -77,6 +82,9 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         private int[] _teamCurrentScores = new int[2]; // 팀별 현재 점수이다.
         private bool _matchEnded; // 승리 처리 후 true이다.
         private bool _matchPresentationStarted; // 인트로 코루틴 중복 방지 플래그이다.
+
+        private static AudioClip _cachedCountdownTickClip;
+        private static AudioClip _cachedCountdownGoClip;
 
         public event System.Action MatchSetupRequested; // 서버 권한 모드에서 Start가 여기까지 실행된 뒤 한 번 올려 네트워크 초기화를 트리거한다.
 
@@ -105,6 +113,7 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
 
             if (_battleCamera == null) _battleCamera = Object.FindFirstObjectByType<BattleFirstPersonCamera>(); // 인스펙터 미연결이면 씬에서 탐색한다.
             if (_battleCamera != null) _battleCamera.SetThirdPersonMode(_battleUseThirdPersonCamera); // 카메라 모드 플래그를 적용한다.
+            JcjAudioAmbience.EnsureAudioListener();
             ResolveScoreService(); // ScoreService 참조를 확보한다.
             ApplyRanksFromScoreService(); // 외부 점수 서비스에서 랭크를 끌어온다.
             RandomizeTeamAssignments(); // 로컬 시뮬일 때만 의미 있는 팀 셔플이다.
@@ -135,6 +144,7 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
         /// <summary>중력 복구 및 <see cref="BattleMatchRegistry.Unregister"/>로 전역 참조 해제.</summary>
         private void OnDestroy()
         {
+            EndWeaponRollSfx();
             Physics.gravity = _originalGravity; // 전역 중력 설정을 원래 값으로 돌린다.
             if (_instance == this)
             {
@@ -201,10 +211,12 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
                 for (int count = Mathf.Max(1, _countdownStart); count > 0; count--)
                 {
                     _introUI.ShowCountdown(GetTeamName(localSlot.TeamIndex), GetTeamColor(localSlot.TeamIndex), count);
+                    PlayCountdownTickSfx();
                     yield return new WaitForSeconds(_countdownStepDuration);
                 }
 
                 _introUI.ShowCountdown(GetTeamName(localSlot.TeamIndex), GetTeamColor(localSlot.TeamIndex), 0);
+                PlayCountdownGoSfx();
                 EnableGameplay();
                 yield return new WaitForSeconds(0.35f);
                 _introUI.Hide();
@@ -226,6 +238,7 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
             float endTime = Time.time + Mathf.Max(0.1f, _weaponRollDuration);
             int lastIndex = -1;
 
+            BeginWeaponRollSfx();
             while (Time.time < endTime)
             {
                 int nextIndex = candidates.Length > 1 ? Random.Range(0, candidates.Length) : 0;
@@ -237,10 +250,57 @@ namespace _TeamFolder.JCJ.Battle // 배틀 모드 전용 코드 네임스페이�
                 yield return new WaitForSeconds(0.08f);
             }
 
+            EndWeaponRollSfx();
+
             slot.SelectedWeapon = finalWeapon;
             slot.WeaponManager.EquipWeapon(finalWeapon);
             _introUI.ShowWeaponRoll(GetTeamName(slot.TeamIndex), GetTeamColor(slot.TeamIndex), slot.Rank, finalWeapon, true);
+            PlayWeaponRevealSfx();
             yield return new WaitForSeconds(Mathf.Max(2.25f, _weaponRevealDuration));
+        }
+
+        private void BeginWeaponRollSfx()
+        {
+            ResolveWeaponRollClip();
+            if (_weaponRollSfx == null) return;
+            JcjSoundPlayback.PlayVfxLoop(_weaponRollSfx, _weaponRollSfxVolume, 1f, sceneTrim: 1f);
+        }
+
+        private void EndWeaponRollSfx() => JcjSoundPlayback.StopVfxLoop();
+
+        private void ResolveWeaponRollClip()
+        {
+            if (_weaponRollSfx != null) return;
+#if UNITY_EDITOR
+            _weaponRollSfx = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/#TeamFolder/JCJ/roll.wav");
+#endif
+        }
+
+        private void PlayWeaponRevealSfx()
+        {
+            ResolveWeaponRevealClip();
+            if (_weaponRevealSfx == null) return;
+            JcjSoundPlayback.PlayVfx(_weaponRevealSfx, _weaponRevealSfxVolume, 1f, sceneTrim: 1f);
+        }
+
+        private void ResolveWeaponRevealClip()
+        {
+            if (_weaponRevealSfx != null) return;
+#if UNITY_EDITOR
+            _weaponRevealSfx = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/#TeamFolder/JCJ/wow.mp3");
+#endif
+        }
+
+        private void PlayCountdownTickSfx()
+        {
+            _cachedCountdownTickClip ??= SfxSynth.MakeCountdownTick();
+            JcjSoundPlayback.PlayVfx(_cachedCountdownTickClip, _countdownSfxVolume, 1f, sceneTrim: 1f);
+        }
+
+        private void PlayCountdownGoSfx()
+        {
+            _cachedCountdownGoClip ??= SfxSynth.MakeGoBeep();
+            JcjSoundPlayback.PlayVfx(_cachedCountdownGoClip, _countdownSfxVolume, 1f, sceneTrim: 1f);
         }
 
         // 비로컬 슬롯 무기 장착. 프로토타입은 PickWeapon으로 클라마다 랜덤이라 멀티에 부적합하다. 서버에서는 동일 WeaponId를 브로드캐스트한 뒤 여기서 EquipWeapon만 호출하도록 바꾸면 된다.
