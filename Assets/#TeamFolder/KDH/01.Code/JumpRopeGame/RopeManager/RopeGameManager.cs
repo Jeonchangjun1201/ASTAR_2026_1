@@ -14,7 +14,7 @@ namespace _TeamFolder.KDH._01.Code.JumpRopeGame.RopeManager
         [SerializeField] private TextMeshProUGUI statusText;
 
         [Header("맵 설정")]
-        [SerializeField] private GameObject[] maps; // Element0: 1번맵, Element1: 2번맵
+        [SerializeField] private GameObject[] maps;
         [SerializeField] private float mapChangeDelay = 2f;
 
         [Header("카운트다운")]
@@ -67,11 +67,9 @@ namespace _TeamFolder.KDH._01.Code.JumpRopeGame.RopeManager
             if (_alivePlayers.Count <= 1)
             {
                 _isSwitching = true;
-
                 string winText = _alivePlayers.Count == 1
                     ? $"{_alivePlayers[0]} Win!"
                     : "jola mothano";
-
                 UpdateText(winText);
                 StartCoroutine(SwitchMap());
             }
@@ -88,7 +86,7 @@ namespace _TeamFolder.KDH._01.Code.JumpRopeGame.RopeManager
             UpdateText("");
 
             // 현재 맵 끄기
-            if (maps[_currentMapIndex] != null)
+            if (_currentMapIndex < maps.Length && maps[_currentMapIndex] != null)
                 maps[_currentMapIndex].SetActive(false);
 
             _currentMapIndex++;
@@ -108,29 +106,21 @@ namespace _TeamFolder.KDH._01.Code.JumpRopeGame.RopeManager
             // 플레이어 부활
             for (int i = 0; i < players.Length; i++)
             {
-                if (players[i] != null)
-                {
-                    players[i].transform.position = _playerStartPositions[i];
-                    players[i].SetActive(true);
+                if (players[i] == null) continue;
 
-                    JHJPlayerController controller =
-                        players[i].GetComponent<JHJPlayerController>();
-                    if (controller != null)
-                        controller.enabled = true;
-                }
+                players[i].transform.position = _playerStartPositions[i];
+                players[i].SetActive(true);
+
+                JHJPlayerController controller = players[i].GetComponent<JHJPlayerController>();
+                if (controller != null)
+                    controller.enabled = true;
             }
 
-            _alivePlayers = new List<string>
-            {
-                "Player1", "Player2", "Player3", "Player4"
-            };
+            _alivePlayers = new List<string> { "Player1", "Player2", "Player3", "Player4" };
             _isSwitching = false;
 
-            if (cameraSequence != null)
-                cameraSequence.StartSequence();
-
-            if (countDown != null)
-                countDown.RestartCountdown();
+            if (cameraSequence != null) cameraSequence.StartSequence();
+            if (countDown != null) countDown.RestartCountdown();
         }
 
         private void UpdateText(string message)

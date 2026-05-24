@@ -106,8 +106,8 @@ namespace _TeamFolder.JCJ.Script
             if (tile != null)
             {
                 lockCursor = lockCursor
-                    || tile.State == _TeamFolder.JCJ.TileGame.GameState.Playing
-                    || tile.State == _TeamFolder.JCJ.TileGame.GameState.Countdown;
+                    || tile.State == GameState.Playing
+                    || tile.State == GameState.Countdown;
             }
 
             GameplayCursor.SetLocked(lockCursor);

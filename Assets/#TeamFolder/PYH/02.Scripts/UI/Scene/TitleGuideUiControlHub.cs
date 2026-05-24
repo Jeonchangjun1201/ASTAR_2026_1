@@ -35,7 +35,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
                 btn.OnButtonClickEvent += ShowContent;
             }
             
-            AStarEventBus.Subscribe<GuideUiEvent>(InteractPopup);
+            AStarEventBus.Subscribe<GuideUiEvent>(InteractGuide);
         }
         private void OnDestroy()
         {
@@ -44,14 +44,15 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
                 button.OnButtonClickEvent -= ShowContent;
             }
             
-            AStarEventBus.Unsubscribe<GuideUiEvent>(InteractPopup);
+            AStarEventBus.Unsubscribe<GuideUiEvent>(InteractGuide);
         }
 
         private void ShowContent(GuideUiSO guideSo)
         {
             contentLabel.text = guideSo.MiniGameInfo;
         }
-        private void InteractPopup(GuideUiEvent @event)
+
+        public override bool InteractPopup() // don't use on button => on click event
         {
             IsOpen = !IsOpen;
             
@@ -59,20 +60,14 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
             canvas.blocksRaycasts = IsOpen;
             canvas.alpha = IsOpen ? 1 : 0;
             
-            if (!IsOpen) AStarEventBus.Publish(new UiInteractEvent(this));
-        }
-        public override void InteractPopup()
-        {
-            IsOpen = !IsOpen;
-            
-            canvas.interactable = IsOpen;
-            canvas.blocksRaycasts = IsOpen;
-            canvas.alpha = IsOpen ? 1 : 0;
-            
-            if (!IsOpen) AStarEventBus.Publish(new UiInteractEvent(this));
+            return IsOpen;
         }
 
         public void InteractGuide()
+        {
+            AStarEventBus.Publish(new UiInteractEvent(this));
+        }
+        private void InteractGuide(GuideUiEvent @event)
         {
             AStarEventBus.Publish(new UiInteractEvent(this));
         }

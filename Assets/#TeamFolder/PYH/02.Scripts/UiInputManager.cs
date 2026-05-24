@@ -20,49 +20,68 @@ namespace _TeamFolder.PYH._02.Scripts
             base.Awake();
 
             AStarEventBus.Subscribe<UiInteractEvent>(UiInteract);
-            uiInputData.OnGuideEvent += GuideEventHandler;
+            //uiInputData.OnPlayEvent += 
             uiInputData.OnSettingEvent += SettingEventHandler;
+            uiInputData.OnGuideEvent += GuideEventHandler;
+            uiInputData.OnQuitEvent += QuitEventHandler;
         }
         private void OnDestroy()
         {
             AStarEventBus.Unsubscribe<UiInteractEvent>(UiInteract);
-            uiInputData.OnGuideEvent -= GuideEventHandler;
+            //uiInputData.OnPlayEvent -=
             uiInputData.OnSettingEvent -= SettingEventHandler;
+            uiInputData.OnGuideEvent -= GuideEventHandler;
+            uiInputData.OnQuitEvent -= QuitEventHandler;
         }
 
+        private void QuitEventHandler()
+        {
+            if (!canInput) return;
+            
+            if (_isOccupied)
+                return;
+            
+            AStarEventBus.Publish(new QuitUiEvent());
+        }
         private void GuideEventHandler()
         {
-            if (!_isOccupied || _curPop is TitleGuideUiControlHub) return;
-            
-            _isOccupied = true;
+            if (!canInput) return;
+        
+            if (_isOccupied)
+                return;
+        
             AStarEventBus.Publish(new GuideUiEvent());
         }
         private void SettingEventHandler()
         {
-            if (!canInput || _curPop is SettingUiControlHub) return;
-            
-            Debug.Log("진입함.");
-            
-            _isOccupied = true;
+            if (!canInput) return;
+        
+            if (_isOccupied && _curPop is not SettingUiControlHub)
+            {
+                switch (_curPop)
+                {
+                    case TitleGuideUiControlHub:
+                        AStarEventBus.Publish(new GuideUiEvent());
+                        break;
+                    case QuitUiControlHub:
+                        AStarEventBus.Publish(new QuitUiEvent());
+                        break;
+                }
+
+                return;
+            }
             AStarEventBus.Publish(new SettingUiEvent());
         }
         
         private void UiInteract(UiInteractEvent @event)
         {
-            Debug.Log("진입점 333");
-            Debug.Log($"현제 UI가 없고, 호출 UI가 동일한가? : {_curPop != null && _curPop.GetType() == @event.Ui.GetType()}");
-            Debug.Log($"누군가가 점유 중인가? : {_isOccupied}");
-            Debug.Log($"입력이 가능한가? : {canInput}");
-            
             if ((_curPop != null && _curPop.GetType() != @event.Ui.GetType() && _isOccupied) || !canInput)
                 return;
-
             
-            Debug.Log("진입점 444");
-            _isOccupied = !@event.Ui.IsOpen;
-            @event.Ui.InteractPopup();
+            bool isOpen = @event.Ui.InteractPopup();
+            _isOccupied = @event.Ui.IsOpen;
 
-            if (!@event.Ui.IsOpen)
+            if (!isOpen)
             {
                 _curPop = null;
             }

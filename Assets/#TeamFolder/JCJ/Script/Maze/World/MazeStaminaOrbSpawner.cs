@@ -47,8 +47,8 @@ namespace _TeamFolder.JCJ.Script
                 }
             }
 
-            Shuffle(deadEnds);
-            Shuffle(others);
+            JcjCollectionUtil.Shuffle(deadEnds);
+            JcjCollectionUtil.Shuffle(others);
 
             int placed = 0;
             placed += PlaceFrom(deadEnds, occupied, goal, cellSize, parent, _orbCount - placed);
@@ -92,14 +92,5 @@ namespace _TeamFolder.JCJ.Script
 
         private static int Manhattan(Vector2Int a, Vector2Int b)
             => Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-
-        private static void Shuffle<T>(List<T> list)
-        {
-            for (int i = list.Count - 1; i > 0; i--)
-            {
-                int j = Random.Range(0, i + 1);
-                (list[i], list[j]) = (list[j], list[i]);
-            }
-        }
     }
 }
