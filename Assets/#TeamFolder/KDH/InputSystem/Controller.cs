@@ -94,7 +94,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""event"": ""Value"",
+                    ""type"": ""Value"",
                     ""id"": ""31082812-8add-4a6b-ac73-49e6849b1b36"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -188,7 +188,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Navigate"",
-                    ""event"": ""PassThrough"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""719f35f6-dfce-4978-a9b9-a7e12e3dd505"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -197,7 +197,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Submit"",
-                    ""event"": ""Button"",
+                    ""type"": ""Button"",
                     ""id"": ""075089ff-12ad-44f0-a5f6-2540ea96e2b8"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -206,7 +206,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Cancel"",
-                    ""event"": ""Button"",
+                    ""type"": ""Button"",
                     ""id"": ""3c16be94-d957-45cb-945b-2f360b227dd9"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -215,7 +215,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Point"",
-                    ""event"": ""PassThrough"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""a4dc7a8c-4231-4c5d-bf94-ec8d65bbb098"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -224,7 +224,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Click"",
-                    ""event"": ""PassThrough"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""b0618905-864e-4b14-9f98-3fae3101b942"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -233,7 +233,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""RightClick"",
-                    ""event"": ""PassThrough"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""935a2ece-4f8f-4eda-9918-d505d2d70f0c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -242,7 +242,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""MiddleClick"",
-                    ""event"": ""PassThrough"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""310ccf18-2db0-49c3-ba89-2f6226451bdf"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -251,7 +251,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""ScrollWheel"",
-                    ""event"": ""PassThrough"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""1cbfa9e5-efc3-4a37-b83b-b7fbdfdfb0db"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -260,7 +260,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""TrackedDevicePosition"",
-                    ""event"": ""PassThrough"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""f0404a31-cf08-4065-92e8-50141a5b5add"",
                     ""expectedControlType"": ""Vector3"",
                     ""processors"": """",
@@ -269,7 +269,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""TrackedDeviceOrientation"",
-                    ""event"": ""PassThrough"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""00d7374e-761a-45c8-8fab-5ad227e95f6e"",
                     ""expectedControlType"": ""Quaternion"",
                     ""processors"": """",

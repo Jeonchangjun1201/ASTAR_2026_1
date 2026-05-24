@@ -9,7 +9,7 @@ namespace _TeamFolder.PYH._04.Datas
     {
         private Controls _controls;
 
-        public event Action OnSettingEvent, OnGuideEvent;
+        public event Action OnPlayEvent, OnSettingEvent, OnGuideEvent, OnQuitEvent;
         
         private void OnEnable()
         {
@@ -25,14 +25,26 @@ namespace _TeamFolder.PYH._04.Datas
             if(_controls != null)
                 _controls.UI.Disable();
         }
-        
+
+        public void OnPlay(InputAction.CallbackContext context)
+        {
+            if (context.started)
+                OnPlayEvent?.Invoke();
+        }
         public void OnSetting(InputAction.CallbackContext context)
         {
-            OnSettingEvent?.Invoke();
+            if (context.started)
+                OnSettingEvent?.Invoke();
         }
         public void OnGuide(InputAction.CallbackContext context)
         {
-            OnGuideEvent?.Invoke();
+            if (context.started)
+                OnGuideEvent?.Invoke();
+        }
+        public void OnQuit(InputAction.CallbackContext context)
+        {
+            if (context.started)
+                OnQuitEvent?.Invoke();
         }
     }
 }

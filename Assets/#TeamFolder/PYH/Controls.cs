@@ -93,6 +93,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             ""id"": ""272f6d14-89ba-496f-b7ff-215263d3219f"",
             ""actions"": [
                 {
+                    ""name"": ""Play"",
+                    ""type"": ""Button"",
+                    ""id"": ""7c53f4d1-8db1-4cc8-b465-959dba08b1e1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Setting"",
                     ""type"": ""Button"",
                     ""id"": ""0522014e-8556-41cf-819d-e0159aca3f78"",
@@ -105,6 +114,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""name"": ""Guide"",
                     ""type"": ""Button"",
                     ""id"": ""f1d611fb-4726-4a9b-8028-a9419311b651"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Quit"",
+                    ""type"": ""Button"",
+                    ""id"": ""c7a94f87-30fc-4a8c-908b-1bc4be5eabce"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -131,6 +149,28 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Guide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""30189f1c-b181-4a94-9f9c-d481da640d96"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Play"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""576bf6b1-9424-4f4f-9d33-8ad8354d90f5"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Quit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -202,8 +242,10 @@ public partial class @Controls: IInputActionCollection2, IDisposable
 }");
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_Play = m_UI.FindAction("Play", throwIfNotFound: true);
         m_UI_Setting = m_UI.FindAction("Setting", throwIfNotFound: true);
         m_UI_Guide = m_UI.FindAction("Guide", throwIfNotFound: true);
+        m_UI_Quit = m_UI.FindAction("Quit", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -284,8 +326,10 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+    private readonly InputAction m_UI_Play;
     private readonly InputAction m_UI_Setting;
     private readonly InputAction m_UI_Guide;
+    private readonly InputAction m_UI_Quit;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -298,6 +342,10 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// </summary>
         public UIActions(@Controls wrapper) { m_Wrapper = wrapper; }
         /// <summary>
+        /// Provides access to the underlying input action "UI/Play".
+        /// </summary>
+        public InputAction @Play => m_Wrapper.m_UI_Play;
+        /// <summary>
         /// Provides access to the underlying input action "UI/Setting".
         /// </summary>
         public InputAction @Setting => m_Wrapper.m_UI_Setting;
@@ -305,6 +353,10 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/Guide".
         /// </summary>
         public InputAction @Guide => m_Wrapper.m_UI_Guide;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/Quit".
+        /// </summary>
+        public InputAction @Quit => m_Wrapper.m_UI_Quit;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -331,12 +383,18 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            @Play.started += instance.OnPlay;
+            @Play.performed += instance.OnPlay;
+            @Play.canceled += instance.OnPlay;
             @Setting.started += instance.OnSetting;
             @Setting.performed += instance.OnSetting;
             @Setting.canceled += instance.OnSetting;
             @Guide.started += instance.OnGuide;
             @Guide.performed += instance.OnGuide;
             @Guide.canceled += instance.OnGuide;
+            @Quit.started += instance.OnQuit;
+            @Quit.performed += instance.OnQuit;
+            @Quit.canceled += instance.OnQuit;
         }
 
         /// <summary>
@@ -348,12 +406,18 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UIActions" />
         private void UnregisterCallbacks(IUIActions instance)
         {
+            @Play.started -= instance.OnPlay;
+            @Play.performed -= instance.OnPlay;
+            @Play.canceled -= instance.OnPlay;
             @Setting.started -= instance.OnSetting;
             @Setting.performed -= instance.OnSetting;
             @Setting.canceled -= instance.OnSetting;
             @Guide.started -= instance.OnGuide;
             @Guide.performed -= instance.OnGuide;
             @Guide.canceled -= instance.OnGuide;
+            @Quit.started -= instance.OnQuit;
+            @Quit.performed -= instance.OnQuit;
+            @Quit.canceled -= instance.OnQuit;
         }
 
         /// <summary>
@@ -460,6 +524,13 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         /// <summary>
+        /// Method invoked when associated input action "Play" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPlay(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "Setting" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -473,5 +544,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnGuide(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Quit" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnQuit(InputAction.CallbackContext context);
     }
 }

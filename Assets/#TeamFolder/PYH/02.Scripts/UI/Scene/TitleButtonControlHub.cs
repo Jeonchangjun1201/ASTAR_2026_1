@@ -1,4 +1,3 @@
-using _TeamFolder.PYH._02.Scripts.UI.Event;
 using UnityEngine;
 
 namespace _TeamFolder.PYH._02.Scripts.UI.Scene
@@ -7,17 +6,17 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
     {
         public void OnClickPlayButton()
         {
-            
+            // 시작씬을 여기로 연결
         }
 
         public void OnClickSettingButton()
         {
-            SettingControlHub.Instance.InteractSetting(new SettingUiEvent());
+            SettingControlHub.Instance.InteractSetting();
         }
         
         public void OnClickQuitButton()
         {
-            Application.Quit();
+            QuitControlHub.Instance.InteractQuit();
         }
     }
 }
