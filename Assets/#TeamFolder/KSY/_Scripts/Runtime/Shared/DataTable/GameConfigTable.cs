@@ -47,6 +47,7 @@ namespace KSY.Shared
             return null;
         }
 
-        public float GetPlayerMaxSpeed() => GetRow("UnitMaxSpeed").numberValue;
+        public float GetPlayerSpeed() => GetRow("PlayerSpeed").numberValue;
+        public float GetPlayerRotationSpeed() => GetRow("PlayerRotationSpeed").numberValue;
     }
 }

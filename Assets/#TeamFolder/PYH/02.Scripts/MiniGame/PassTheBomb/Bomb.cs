@@ -1,4 +1,5 @@
 using System.Collections;
+using _TeamFolder.PYH._02.Scripts.Player;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,13 +11,13 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
     
         [SerializeField] private int maxTime;
     
-        private Player.Player _currentPlayer;
+        private PassTheBombModule _currentPlayer;
         private Coroutine _timerCoroutine;
 
         [SerializeField] private float cooldown;
         private float _lastTime;
 
-        public void StartBomb(Player.Player startPlayer)
+        public void StartBomb(PassTheBombModule startPlayer)
         {
             Debug.Log(startPlayer.gameObject.name + "에게 부착되어 시작.");
             _currentPlayer = startPlayer;
@@ -33,7 +34,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
             _timerCoroutine = StartCoroutine(BombTimer());
         }
         
-        private void SetPlayer(Player.Player targetPlayer)
+        private void SetPlayer(PassTheBombModule targetPlayer)
         {
             if (targetPlayer == null) return;
             if (targetPlayer == _currentPlayer) return;
@@ -55,7 +56,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
                 StopCoroutine(_timerCoroutine);
         
             _currentPlayer.OnTouchPlayerEvent -= SetPlayer;
-            _currentPlayer.onExplosionEvent?.Invoke(_currentPlayer, _currentPlayer.index);
+            _currentPlayer.onExplosionEvent?.Invoke(_currentPlayer, _currentPlayer.Index);
             _timerCoroutine = null;
             Debug.Log("초기화 완료.");
         }

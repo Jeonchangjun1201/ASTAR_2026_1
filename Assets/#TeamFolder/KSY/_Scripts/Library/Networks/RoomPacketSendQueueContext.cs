@@ -1,3 +1,4 @@
+using KSY.Utility;
 using System;
 using System.Threading;
 
@@ -14,10 +15,7 @@ namespace KSY.Networks
         public RoomPacketSendQueueContext(PacketSerializer packetSerializer, IPacket packet, int referenceCount)
         {
             if (referenceCount <= 0)
-            {
-                //Arguemnt : 인수
-                throw new ArgumentOutOfRangeException("referenceCount");
-            }
+                CustomLog.Log("Reference count is zero");
 
             bufferWriter = packetSerializer.Serialize(packet);
             data = bufferWriter.WrittenSegment;
@@ -42,6 +40,7 @@ namespace KSY.Networks
         }
         public void Dispose()
         {
+            CustomLog.Log("Dispose RoomPacketSendqueueContext");
             //Interlocked.Decrement() : -1 감소 시킨 후의 값을 반환함.
             //Interlocked.Exchange() : 변경 이전의 값을 반환함.
             if(Interlocked.Decrement(ref remainingReferenceCount) <= 0 && Interlocked.Exchange(ref isDisposed, 1) == 0)

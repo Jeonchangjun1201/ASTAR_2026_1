@@ -4,7 +4,6 @@ using _TeamFolder.PYH._02.Scripts.UI.Event;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace _TeamFolder.PYH._02.Scripts.UI
 {
@@ -68,7 +67,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI
             float stayDuration = totalDuration - appearDuration - hideDuration;
             if (stayDuration < 0f) stayDuration = 0f;
 
-            _seq = DOTween.Sequence();
+            _seq = DOTween.Sequence().SetUpdate(true);
 
             _seq.Append(DOTween.To(
                 () => label.fontSize,

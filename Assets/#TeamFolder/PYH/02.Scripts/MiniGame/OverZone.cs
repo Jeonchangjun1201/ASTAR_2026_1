@@ -1,3 +1,4 @@
+using _TeamFolder.PYH._02.Scripts.Player;
 using UnityEngine;
 
 namespace _TeamFolder.PYH._02.Scripts.MiniGame
@@ -7,7 +8,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame
     {
         public void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.TryGetComponent(out Player.Player player))
+            if (collision.gameObject.TryGetComponent(out HumanGolfModule player))
             {
                 player.OverPlayer();
             }

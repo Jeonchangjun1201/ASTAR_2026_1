@@ -27,7 +27,7 @@ namespace InfimaGames.LowPolyShooterPack
             Internal_Log("You have been warned that: " + warning, LogType.Warning);
         }
 
-        public static void kill() { Internal_Log("I will find you, and I will kill you", LogType.Error); }
+        public static void kill() { Internal_Log("Unload will find you, and Unload will kill you", LogType.Error); }
         public static void kill(object toKill)
         {
             //Null check.

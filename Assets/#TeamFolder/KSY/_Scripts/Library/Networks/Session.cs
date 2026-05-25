@@ -119,7 +119,7 @@ namespace KSY.Networks
             {
                 sendQueueContext.Dispose();
                 Close();
-                throw new InvalidOperationException("Session is not opened");
+                CustomLog.LogError("The session has not been opened");
             }
 
             List<ArraySegment<byte>> bufferList = null;
