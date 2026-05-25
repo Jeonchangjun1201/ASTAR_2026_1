@@ -17,7 +17,8 @@ namespace KSY.Clients
 
 
         private Dictionary<string, MiniGame> miniGames = null;
-        private Dictionary<string, Player> players = 
+        private Dictionary<string, MiniGamePlayer> players = null;
+
         private void Awake()
         {
             if (Instance == null)
@@ -38,7 +39,12 @@ namespace KSY.Clients
             );
         }
 
-        public void EnterGame(string sceneName)
+        public void OnEnterRoom(string playerName)
+        {
+            if(!players.TryGetValue(playerName))
+        }
+
+        public void StartGame(string sceneName)
         {
             if (miniGames != null && miniGames.TryGetValue(sceneName, out MiniGame targetGame))
             {

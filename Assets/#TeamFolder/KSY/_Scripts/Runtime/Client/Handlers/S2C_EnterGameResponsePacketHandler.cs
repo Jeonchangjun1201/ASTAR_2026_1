@@ -27,7 +27,7 @@ namespace KSY.Clients.Handlers
         {
             ClientInstance.MyPlayerID = packet.PlayerID;
 
-            await MiniGameManager.LoadSceneAsync(TestDefine.TEST_LOAD_SCENE_NAME, LoadSceneMode.Single);
+            await SceneManager.LoadSceneAsync(TestDefine.TEST_LOAD_SCENE_NAME, LoadSceneMode.Single);
 
             foreach (KeyValuePair<string, UnitDataDTO> element in packet.Players)
             {
