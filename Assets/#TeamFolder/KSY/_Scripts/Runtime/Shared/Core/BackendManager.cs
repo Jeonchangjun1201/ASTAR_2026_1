@@ -1,3 +1,5 @@
+using System.Net; 
+using System.Net.Sockets;
 using BackEnd;
 using BackEnd.Tcp;
 using KSY.Shared.UI;
@@ -13,6 +15,8 @@ namespace KSY.Shared
         public static BackendManager Instance { get; private set; }
 
         private const string TABLE_NAME_RoomCodes = "RoomCodes";
+        private const string COLUMN_NAME_RoomCode = "RoomCode";
+        private const string COLUMN_NAME_HostIP = "HostIP";
         private string _myRoomCode;
 
         private void Awake()
@@ -44,7 +48,6 @@ namespace KSY.Shared
             if (bro.IsSuccess())
             {
                 CustomLog.Log("초기화 성공 : " + bro);
-
                 SendQueue.StartSendQueue();
             }
             else
@@ -65,6 +68,7 @@ namespace KSY.Shared
             CustomLog.Log("Success clear guest data", Color.green);
         }
 
+        #region Login
         [ContextMenu("Login")]
         public void Login()
         {
@@ -172,7 +176,9 @@ namespace KSY.Shared
                 loadingView.Hide();
             }
         }
+        #endregion
 
+        #region Create Room
         [ContextMenu("CreateRoom")]
         public void CreateRoom()
         {
@@ -196,14 +202,12 @@ namespace KSY.Shared
             }
 
             CustomLog.Log("대기방 생성 성공!", Color.green);
-
-            // 최초 시도 횟수 0으로 시작
             SaveRoomCodeWithCheck(0);
         }
 
         private void SaveRoomCodeWithCheck(int attemptCount)
         {
-            const int maxAttempts = 5; // 무한 루프 예방을 위한 최대 재시도 횟수
+            const int maxAttempts = 5;
 
             if (attemptCount >= maxAttempts)
             {
@@ -211,11 +215,11 @@ namespace KSY.Shared
                 return;
             }
 
-            string targetRoomCode = Random.Range(1000, 100000).ToString();
+            string targetRoomCode = Random.Range(1000, 10000).ToString();
             CustomLog.Log($"방코드 검증 시도 ({attemptCount + 1}회차): {targetRoomCode}");
 
             Where where = new Where();
-            where.Equal("roomCode", targetRoomCode);
+            where.Equal(COLUMN_NAME_RoomCode, targetRoomCode); 
 
             SendQueue.Enqueue(Backend.GameData.Get, TABLE_NAME_RoomCodes, where, (bro) =>
             {
@@ -230,6 +234,7 @@ namespace KSY.Shared
                 if (rows.Count > 0)
                 {
                     CustomLog.LogWarning($"방코드 중복 발견 ({targetRoomCode}). 새로운 코드를 생성합니다.");
+
                     SaveRoomCodeWithCheck(attemptCount + 1);
                     return;
                 }
@@ -240,15 +245,18 @@ namespace KSY.Shared
 
         private void InsertUniqueRoomCode(string uniqueRoomCode)
         {
+            string localIP = GetLocalIPAddress();
+
             Param param = new Param();
-            param.Add("roomCode", uniqueRoomCode);
+            param.Add(COLUMN_NAME_RoomCode, uniqueRoomCode);
+            param.Add(COLUMN_NAME_HostIP, localIP); 
 
             SendQueue.Enqueue(Backend.GameData.Insert, TABLE_NAME_RoomCodes, param, (bro) =>
             {
                 if (bro.IsSuccess())
                 {
-                    _myRoomCode = uniqueRoomCode; // 멤버 변수에 확정 할당
-                    CustomLog.Log($"최종 방코드 [{_myRoomCode}] 등록 성공! 플레이어를 기다립니다.", Color.green);
+                    _myRoomCode = uniqueRoomCode;
+                    CustomLog.Log($"최종 방코드 [{_myRoomCode}] (IP: {localIP}) 등록 성공! 플레이어를 기다립니다.", Color.green);
                 }
                 else
                 {
@@ -271,24 +279,10 @@ namespace KSY.Shared
             Backend.Match.CreateMatchRoom();
         }
 
-        private void SaveRoomCode(string roomCode)
-        {
-            Param param = new Param();
-            param.Add("roomCode", roomCode);
-
-            SendQueue.Enqueue(Backend.GameData.Insert, TABLE_NAME_RoomCodes, param, (bro) =>
-            {
-                if (bro.IsSuccess())
-                    CustomLog.Log($"방코드 {roomCode} 저장 성공", Color.green);
-                else
-                    CustomLog.LogError("방코드 저장 실패: " + bro);
-            });
-        }
-
         public void JoinRoomByCode(string roomCode)
         {
             Where where = new Where();
-            where.Equal("roomCode", roomCode);
+            where.Equal(COLUMN_NAME_RoomCode, roomCode);
 
             SendQueue.Enqueue(Backend.GameData.Get, TABLE_NAME_RoomCodes, where, (bro) =>
             {
@@ -305,9 +299,7 @@ namespace KSY.Shared
                     return;
                 }
 
-                CustomLog.Log("방코드 확인 완료. 매칭 서버 접속 중...");
-
-                Backend.Match.JoinMatchMakingServer(out var matchErrorInfo);
+                CustomLog.Log("방코드 확인 완료. 매칭 서버 접속 준비 중...");
 
                 Backend.Match.OnJoinMatchMakingServer = (args) =>
                 {
@@ -316,15 +308,7 @@ namespace KSY.Shared
                         CustomLog.LogError("매칭 서버 접속 실패: " + args.ErrInfo);
                         return;
                     }
-                    CustomLog.Log("매칭 서버 접속 완료. 방장의 초대를 기다리는 중...");
-                };
-
-                Backend.Match.OnMatchMakingRoomSomeoneInvited = (args) =>
-                {
-                    if (!IsMatchSuccess(args.ErrInfo)) return;
-
-                    CustomLog.Log("초대 수신! 자동 수락 중...");
-                    Backend.Match.AcceptInvitation(args.RoomId, args.RoomToken);
+                    CustomLog.Log("매칭 서버 접속 완료.");
                 };
 
                 Backend.Match.OnMatchMakingRoomInviteResponse = (args) =>
@@ -334,6 +318,8 @@ namespace KSY.Shared
                     else
                         CustomLog.LogError("방 입장 실패: " + args.ErrInfo);
                 };
+
+                Backend.Match.JoinMatchMakingServer(out var matchErrorInfo);
             });
         }
 
@@ -342,7 +328,7 @@ namespace KSY.Shared
             if (string.IsNullOrEmpty(_myRoomCode)) return;
 
             Where where = new Where();
-            where.Equal("roomCode", _myRoomCode);
+            where.Equal(COLUMN_NAME_RoomCode, _myRoomCode);
 
             SendQueue.Enqueue(Backend.GameData.Delete, TABLE_NAME_RoomCodes, where, (bro) =>
             {
@@ -350,5 +336,27 @@ namespace KSY.Shared
                     CustomLog.Log("방코드 삭제 완료");
             });
         }
+
+        private string GetLocalIPAddress()
+        {
+            try
+            {
+                var host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return ip.ToString();
+                    }
+                }
+                return "0.0.0.0";
+            }
+            catch (System.Exception ex)
+            {
+                CustomLog.LogWarning("로컬 IP 주소를 조회하는 중 오류 발생: " + ex.Message);
+                return "0.0.0.0";
+            }
+        }
+        #endregion
     }
 }
