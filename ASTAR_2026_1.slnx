@@ -1,5 +1,12 @@
 ﻿<Solution>
   <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="KSY.Utility.csproj" />
+  <Project Path="KSY.Networks.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="KSY.Shared.csproj" />
+  <Project Path="KSY.Servers.csproj" />
+  <Project Path="SoundManager.editor.csproj" />
+  <Project Path="KSY.Clients.csproj" />
+  <Project Path="SoundManager.runtime.csproj" />
 </Solution>
