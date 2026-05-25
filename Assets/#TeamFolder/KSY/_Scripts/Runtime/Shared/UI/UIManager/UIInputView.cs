@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 namespace KSY.Shared.UI
@@ -8,11 +9,12 @@ namespace KSY.Shared.UI
         [SerializeField] private UIStringInputField inputField;
         [SerializeField] private UIInsertButton insertButton;
 
+        public bool Initialized { get; private set; } = false;
         public string Name => gameObject.name;
 
-        private void OnEnable()
+        public void Initialize(TMP_InputField.ContentType contentType, int inputCount)
         {
-            inputField.Initialize();
+            inputField.Initialize(contentType, inputCount);
             insertButton.Initialize();
         }
 

@@ -5,6 +5,7 @@ using BackEnd.Tcp;
 using KSY.Shared.UI;
 using KSY.Utility;
 using LitJson;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -91,6 +92,7 @@ namespace KSY.Shared
                 Backend.BMember.GuestLogin(OnLogin);
                 CustomLog.Log("로컬 게스트 정보 없음");
                 UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+                Initialize();
                 inputView.Show("사용하실 이름을 입력해주세요!");
                 inputView.RegisterInsertEvent(() =>
                 {
@@ -132,6 +134,7 @@ namespace KSY.Shared
             {
                 CustomLog.Log($"닉네임 생성 성공! 현재 닉네임: {Backend.UserNickName}", Color.green);
                 UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+                inputView.Initialize(TMP_InputField.ContentType.Name, 10);
                 inputView.Hide();
                 SceneManager.LoadScene("KSY_HostOrVisitor");
             }
@@ -278,7 +281,13 @@ namespace KSY.Shared
             CustomLog.Log("매칭 서버 접속 성공", Color.green);
             Backend.Match.CreateMatchRoom();
         }
-
+        [ContextMenu("Join Room")]
+        public void JoinRoomByCode()
+        {
+            UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+            inputView.Initialize(TMP_InputField.ContentType.IntegerNumber, 4);
+            inputView.Show("방 코드를 입력해주세요");
+        }
         public void JoinRoomByCode(string roomCode)
         {
             Where where = new Where();
@@ -300,6 +309,8 @@ namespace KSY.Shared
                 }
 
                 CustomLog.Log("방코드 확인 완료. 매칭 서버 접속 준비 중...");
+                UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+                inputView.Hide();
 
                 Backend.Match.OnJoinMatchMakingServer = (args) =>
                 {

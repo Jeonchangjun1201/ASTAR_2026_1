@@ -883,7 +883,7 @@ PrefabInstance:
     - target: {fileID: 4366663557015573924, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
       propertyPath: inputString
       value: 
-      objectReference: {fileID: 608597070}
+      objectReference: {fileID: 633265123}
     - target: {fileID: 4786088662901119280, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
       propertyPath: inputField
       value: 
@@ -2041,17 +2041,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 574930828}
   m_CullTransparentMesh: 1
---- !u!114 &608597070 stripped
+--- !u!114 &633265123 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2753141610146690185, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+  m_CorrespondingSourceObject: {fileID: 6956620050138953619, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
   m_PrefabInstance: {fileID: 294138349}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TMP_InputField
 --- !u!1 &635253039
 GameObject:
   m_ObjectHideFlags: 0
