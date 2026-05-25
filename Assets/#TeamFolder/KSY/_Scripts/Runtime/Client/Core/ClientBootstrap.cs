@@ -1,7 +1,5 @@
 using KSY.Shared;
-using KSY.Utility;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace KSY.Clients
 {

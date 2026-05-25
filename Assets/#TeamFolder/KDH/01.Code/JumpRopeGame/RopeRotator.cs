@@ -1,3 +1,4 @@
+using csiimnida.CSILib.SoundManager.RunTime;
 using UnityEngine;
 
 namespace KDH
@@ -11,10 +12,20 @@ namespace KDH
 
         public float CurrentSpeed => rotateSpeed;
 
+        private float _totalRotation = 0f;
+
         private void Update()
         {
-            // Z축 회전 (줄넘기 앞뒤로 회전)
-            transform.Rotate(Vector3.forward, rotateSpeed * Time.deltaTime);
+            float rotationThisFrame = rotateSpeed * Time.deltaTime;
+
+            transform.Rotate(Vector3.forward, rotationThisFrame);
+
+            _totalRotation += rotationThisFrame;
+            if (_totalRotation >= 360f)
+            {
+                _totalRotation = 0f;
+                SoundManager.Instance.PlaySound("LopeJump");
+            }
 
             rotateSpeed += speedIncrement * Time.deltaTime;
             rotateSpeed = Mathf.Min(rotateSpeed, maxSpeed);

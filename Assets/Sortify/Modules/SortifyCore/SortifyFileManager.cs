@@ -68,7 +68,7 @@ namespace Sortify
                     {
                         string bakData = File.ReadAllText(backup.FullName);
                         var recovered = JsonUtility.FromJson<T>(bakData);
-                        Debug.Log($"[Sortify] Loaded data from backup: {backup.Name}");
+                        Debug.Log($"[Sortify] Loaded Data from backup: {backup.Name}");
                         File.Copy(backup.FullName, filePath, overwrite: true);
                         return recovered;
                     }
@@ -78,7 +78,7 @@ namespace Sortify
                     }
                 }
 
-                Debug.LogError($"[Sortify] All attempts to load data failed. Returning a new instance of {typeof(T).Name}.");
+                Debug.LogError($"[Sortify] All attempts to load Data failed. Returning a new instance of {typeof(T).Name}.");
                 return new T();
             }
         }

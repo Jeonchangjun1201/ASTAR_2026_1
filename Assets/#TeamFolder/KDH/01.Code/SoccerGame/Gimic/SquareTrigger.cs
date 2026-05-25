@@ -1,4 +1,5 @@
 using System.Collections;
+using csiimnida.CSILib.SoundManager.RunTime;
 using UnityEngine;
 
 namespace KDH
@@ -42,6 +43,7 @@ namespace KDH
                 rb.linearVelocity = Vector3.zero;
                 rb.AddForce(Vector3.up * _launchForce, ForceMode.Impulse);
 
+                SoundManager.Instance.PlaySound("PlayerSky");
                 Debug.Log($"{target.name} 하늘로 날아감!");
             } 
         }

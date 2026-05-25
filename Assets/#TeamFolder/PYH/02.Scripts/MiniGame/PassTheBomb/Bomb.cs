@@ -1,4 +1,7 @@
 using System.Collections;
+using _TeamFolder.PYH._02.Scripts.Data;
+using _TeamFolder.PYH._02.Scripts.Player;
+using _TeamFolder.PYH._02.Scripts.UI.Event;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,21 +13,39 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
     
         [SerializeField] private int maxTime;
     
-        private Player.Player _currentPlayer;
+        private PassTheBombModule _currentPlayer;
         private Coroutine _timerCoroutine;
 
         [SerializeField] private float cooldown;
         private float _lastTime;
+        
+        [SerializeField] private float distanceY;
 
-        public void StartBomb(Player.Player startPlayer)
+        [SerializeField] private ParticleSystem prefab;
+        private Effecter _curParticl;
+
+        private void Awake()
+        {
+            _curParticl = Instantiate(prefab).GetComponent<Effecter>();
+        }
+        private void Start()
+        {
+            _curParticl.gameObject.SetActive(false);
+        }
+
+        public void StartBomb(PassTheBombModule startPlayer)
         {
             Debug.Log(startPlayer.gameObject.name + "에게 부착되어 시작.");
             _currentPlayer = startPlayer;
             _currentPlayer.OnTouchPlayerEvent += SetPlayer;
-            transform.position = _currentPlayer.transform.position;
+            transform.position = new Vector3(
+                _currentPlayer.transform.position.x,
+                _currentPlayer.transform.position.y + distanceY,
+                _currentPlayer.transform.position.z);
             transform.SetParent(startPlayer.transform);
         
             _lastTime = Time.time;
+            AStarEventBus.Publish(new DigitalClockUiTimeSetEvent((int)_lastTime));
             
             _timerCoroutine ??= StartCoroutine(BombTimer());
         }
@@ -33,7 +54,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
             _timerCoroutine = StartCoroutine(BombTimer());
         }
         
-        private void SetPlayer(Player.Player targetPlayer)
+        private void SetPlayer(PassTheBombModule targetPlayer)
         {
             if (targetPlayer == null) return;
             if (targetPlayer == _currentPlayer) return;
@@ -43,21 +64,29 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
             _currentPlayer.OnTouchPlayerEvent -= SetPlayer;
             _currentPlayer = targetPlayer;
             _currentPlayer.OnTouchPlayerEvent += SetPlayer;
-            transform.position = _currentPlayer.transform.position;
+            transform.position = new Vector3(
+                _currentPlayer.transform.position.x,
+                _currentPlayer.transform.position.y + distanceY,
+                _currentPlayer.transform.position.z);
             transform.SetParent(targetPlayer.transform);
         
             _lastTime = Time.time;
         }
         private void ExplosionBomb()
         {
-            Debug.Log("펑");
             if (_timerCoroutine != null)
                 StopCoroutine(_timerCoroutine);
-        
+
+            _curParticl.transform.position = new Vector3(
+                _currentPlayer.transform.position.x,
+                _currentPlayer.transform.position.y + distanceY,
+                _currentPlayer.transform.position.z);
+            _curParticl.gameObject.SetActive(true);
+            _curParticl.ParticleTrigger();
+
             _currentPlayer.OnTouchPlayerEvent -= SetPlayer;
-            _currentPlayer.onExplosionEvent?.Invoke(_currentPlayer, _currentPlayer.index);
+            _currentPlayer.onExplosionEvent?.Invoke(_currentPlayer, _currentPlayer.Index);
             _timerCoroutine = null;
-            Debug.Log("초기화 완료.");
         }
         public void OnGameEnded() => StopAllCoroutines();
 
@@ -69,6 +98,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
             {
                 leftTime -= 1;
                 onTickEvent?.Invoke(leftTime);
+                AStarEventBus.Publish(new DigitalClockUiTimeSetEvent(leftTime));
                 yield return new WaitForSeconds(1);
             }
 

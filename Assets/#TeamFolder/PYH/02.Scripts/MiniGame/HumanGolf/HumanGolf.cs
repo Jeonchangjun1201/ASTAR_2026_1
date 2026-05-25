@@ -1,4 +1,5 @@
 using System.Linq;
+using _TeamFolder.PYH._02.Scripts.Player;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,37 +9,34 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
     {
         private bool _init;
 
-        [field:SerializeField] public Player.Player[] PlayerList { get; private set; }
-
+        [field:SerializeField] public AbstractMiniGameModule[] ModuleList { get; private set; }
         public int MaxPlayer { get; private set; }
         public int CurrentPlayer { get; private set; }
-        public UnityEvent OnMiniGameEndEvent { get; }
+        [field:SerializeField] public UnityEvent OnMiniGameEndEvent { get; private set; }
 
         public void Initialize()
         {
             if (_init) return;
             _init = true;
 
-            PlayerList = FindObjectsOfType<Player.Player>().ToArray<Player.Player>(); // Temporary, Load Player
+            ModuleList = FindObjectsOfType<HumanGolfModule>().ToArray();
 
-            for (int i = 0; i < PlayerList.Length; i++)
+            for (int i = 0; i < ModuleList.Length; i++)
             {
-                Player.Player player = PlayerList[i];
+                HumanGolfModule module = ModuleList[i] as HumanGolfModule;
 
-                player.index = i;
-                player.OnOutPlayerEvent += OutPlayer;
+                module.Index = i;
+                module.OnOutPlayerEvent += OutPlayer;
             }
 
-            CurrentPlayer = PlayerList.Length;
+            CurrentPlayer = ModuleList.Length;
         }
 
-        public void OutPlayer(Player.Player player, int index)
+        public void OutPlayer(HumanGolfModule module, int index)
         {
-            Debug.Log($"{player.gameObject.name} �÷��̾�, �̺�Ʈ ����");
-
             CurrentPlayer--;
-            player.OnOutPlayerEvent -= OutPlayer;
-            player.DelPlayer();
+            module.OnOutPlayerEvent -= OutPlayer;
+            module.DelPlayer();
 
             if (CurrentPlayer == 1)
             {
@@ -56,11 +54,11 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
                 Debug.Log("All Player Def.");
             }
 
-            for (int i = 0; i < PlayerList.Length; i++)
+            for (int i = 0; i < ModuleList.Length; i++)
             {
-                if (PlayerList[i].gameObject.activeSelf)
+                if (ModuleList[i].gameObject.activeSelf)
                 {
-                    Debug.Log($"Player {PlayerList[i].index}, Win.");
+                    Debug.Log($"Player {ModuleList[i].Index}, Win.");
                 }
             }
             
@@ -69,8 +67,10 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
 
         private void PlayerAllDelEvent()
         {
-            foreach (var player in PlayerList)
+            foreach (var module in ModuleList)
             {
+                HumanGolfModule player = module as HumanGolfModule;
+                
                 player.OnOutPlayerEvent -= OutPlayer;
             }
         }
