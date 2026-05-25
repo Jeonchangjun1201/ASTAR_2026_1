@@ -1,3 +1,4 @@
+using csiimnida.CSILib.SoundManager.RunTime;
 using UnityEngine;
 
 namespace KDH.Gimic
@@ -20,7 +21,7 @@ namespace KDH.Gimic
                 PlayerBlind blind = collision.gameObject.GetComponent<PlayerBlind>();
                 if(blind != null)
                     blind.StartBlind(redBlindTime);
-                
+                SoundManager.Instance.PlaySound("PlayerFire");
                 _used = true;
             }
         }

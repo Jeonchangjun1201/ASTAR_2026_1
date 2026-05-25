@@ -1,4 +1,5 @@
 using System.Collections;
+using csiimnida.CSILib.SoundManager.RunTime;
 using UnityEngine;
 
 namespace KDH
@@ -59,6 +60,7 @@ namespace KDH
         public void NotifyGoal(string goalOwnerName)
         {
             OnGoalScored?.Invoke(LastTouchPlayer, goalOwnerName);
+            SoundManager.Instance.PlaySound("Goal");
             Debug.Log($"골! {LastTouchPlayer?.name ?? "알 수 없음"} → {goalOwnerName} 골대");
         }
 
@@ -71,6 +73,7 @@ namespace KDH
             StartCoroutine(ReadyDelay());
             LastTouchPlayer = null;
             LaunchBall();
+            SoundManager.Instance.PlaySound("SoccerBall");
         }
 
         // 서버에서 위치/방향 받아서 적용

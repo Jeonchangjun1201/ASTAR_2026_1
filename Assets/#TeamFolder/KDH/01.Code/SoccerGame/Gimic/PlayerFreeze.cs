@@ -1,5 +1,6 @@
 using System.Collections;
 using _TeamFolder.JCJ.Script;
+using csiimnida.CSILib.SoundManager.RunTime;
 using UnityEngine;
 
 namespace KDH.Gimic
@@ -42,6 +43,7 @@ namespace KDH.Gimic
             if (_playerController != null)
                 _playerController.enabled = true;
 
+            SoundManager.Instance.PlaySound("PlayerIce");
             _isfreezen = false;
         }
     }
