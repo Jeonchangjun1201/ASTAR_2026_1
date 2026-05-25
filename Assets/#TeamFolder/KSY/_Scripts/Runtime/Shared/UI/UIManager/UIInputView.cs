@@ -15,5 +15,13 @@ namespace KSY.Shared.UI
 
         public string GetInput() => inputField.GetInput();
         public void SetInputInfo(string info) => inputField.SetInputInfo(info);
+
+        public void Show(string info)
+        {
+            gameObject.SetActive(true);
+            SetInputInfo(info);
+        }
+
+        public void Hide() => gameObject.SetActive(false);
     }
 }
