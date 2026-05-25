@@ -2,6 +2,8 @@ using UnityEngine;
 using BackEnd;
 using KSY.Utility;
 using UnityEngine.SceneManagement;
+using Unity.Loading;
+using KSY.Shared.UI;
 namespace KSY.Shared
 {
     public class BackendManager : MonoBehaviour
@@ -30,19 +32,36 @@ namespace KSY.Shared
                 CustomLog.LogError("초기화 실패 : " + bro);
         }
 
+        [ContextMenu("Clear Guest Data")]
+        private void DEBUG_ClearGuestData()
+        {
+            Backend.BMember.DeleteGuestInfo();
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+            CustomLog.Log("Success clear guest data", Color.green);
+        }
+
         [ContextMenu("Login")]
         public void Login()
         {
-            BackendReturnObject bro = Backend.BMember.GuestLogin("게스트 로그인으로 로그인함");
-            if (bro.IsSuccess())
-            {
-                CustomLog.Log("게스트 로그인에 성공했습니다");
-            }
+            UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+            loadingView.Show("게스트 로그인 중입니다");
+            Backend.BMember.GuestLogin(OnLogin);
         }
 
-        private void OnLogin()
+        private void OnLogin(BackendReturnObject bro)
         {
-            SceneManager.LoadScene("KSY_HostOrVisitor");
+            UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+            if (bro.IsSuccess())
+            {
+                loadingView.Hide();
+                SceneManager.LoadScene("KSY_HostOrVisitor");
+            }
+            else
+            {
+                CustomLog.LogError("게스트 로그인 실패 : " + bro);
+                loadingView.Hide();
+            }
         }
     }
 }

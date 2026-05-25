@@ -2,10 +2,12 @@ using UnityEngine;
 
 namespace KSY.Shared.UI
 {
-    public class UILoadingView : MonoBehaviour
+    public class UILoadingView : MonoBehaviour, IView
     {
         [SerializeField] private UILoadingText loadDot;
         [SerializeField] private UILoadingText loadInfo;
+
+        public string Name => gameObject.name;
 
         private void OnEnable()
         {
@@ -21,8 +23,14 @@ namespace KSY.Shared.UI
 
         public void Show(string info)
         {
+            gameObject.SetActive(true);
             loadDot?.Load();
             loadInfo?.Load(info);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

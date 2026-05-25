@@ -41,7 +41,6 @@ namespace KSY.Shared.UI
             _animateCoroutine = StartCoroutine(LoadingText());
         }
 
-
         public void Load(string info)
         {
             baseText = info;

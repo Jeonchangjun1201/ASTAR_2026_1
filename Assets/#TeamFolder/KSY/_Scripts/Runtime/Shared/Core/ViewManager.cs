@@ -27,7 +27,7 @@ namespace KSY.Shared
         {
             _views.Clear();
 
-            IView[] views = gameObject.GetComponentsInChildren<IView>();
+            IView[] views = gameObject.GetComponentsInChildren<IView>(includeInactive : true);
             foreach (var view in views)
             {
                 if (!_views.ContainsKey(view.Name))
