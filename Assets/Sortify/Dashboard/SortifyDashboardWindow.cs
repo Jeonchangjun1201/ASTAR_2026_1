@@ -517,7 +517,7 @@ namespace Sortify
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
 
             bool showComponentIcons = SortifyUserDataManager.GetUserSetting("ShowComponentIcons", true);
-            DrawToggle("Show Component Icons", ref showComponentIcons,
+            DrawToggle("Load Component Icons", ref showComponentIcons,
                 "Enabling this setting will display component icons next to each object in the hierarchy.");
 
             if (showComponentIcons != SortifyUserDataManager.GetUserSetting("ShowComponentIcons", true))
@@ -525,7 +525,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showStyleSection = SortifyUserDataManager.GetUserSetting("ShowStyleSection", true);
-            DrawToggle("Show Style Section", ref showStyleSection,
+            DrawToggle("Load Style Section", ref showStyleSection,
                 "Enabling this setting will display the Style section in the hierarchy, allowing you to assign custom styles to objects for better visual organization.");
 
             if (showStyleSection != SortifyUserDataManager.GetUserSetting("ShowStyleSection", true))
@@ -533,7 +533,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showColorsSection = SortifyUserDataManager.GetUserSetting("ShowColorsSection", true);
-            DrawToggle("Show Colors Section", ref showColorsSection,
+            DrawToggle("Load Colors Section", ref showColorsSection,
                 "Enabling this setting will display the Colors section in the hierarchy, allowing you to assign custom colors to objects.");
 
             if (showColorsSection != SortifyUserDataManager.GetUserSetting("ShowColorsSection", true))
@@ -541,7 +541,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showNotesSection = SortifyUserDataManager.GetUserSetting("ShowNotesSection", true);
-            DrawToggle("Show Notes Section", ref showNotesSection,
+            DrawToggle("Load Notes Section", ref showNotesSection,
                 "Enabling this setting will display the Notes section in the hierarchy, allowing you to add personal notes to objects.");
 
             if (showNotesSection != SortifyUserDataManager.GetUserSetting("ShowNotesSection", true))
@@ -549,7 +549,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showAddComponentSection = SortifyUserDataManager.GetUserSetting("ShowAddComponentSection", true);
-            DrawToggle("Show Add Component Section", ref showAddComponentSection,
+            DrawToggle("Load Add Component Section", ref showAddComponentSection,
                 "Enabling this setting will display the Add Component section in the hierarchy, allowing you to quickly add components to objects.");
 
             if (showAddComponentSection != SortifyUserDataManager.GetUserSetting("ShowAddComponentSection", true))
@@ -557,7 +557,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showDefaultComponents = SortifyUserDataManager.GetUserSetting("ShowDefaultComponents", true);
-            DrawToggle("Show Default Components", ref showDefaultComponents,
+            DrawToggle("Load Default Components", ref showDefaultComponents,
                 "Enabling this setting will display the default component icons in the Add Component section.");
 
             if (showDefaultComponents != SortifyUserDataManager.GetUserSetting("ShowDefaultComponents", true))
@@ -609,7 +609,7 @@ namespace Sortify
             GUILayout.Space(20);
 
             EditorGUILayout.LabelField("Need assistance or have feedback? Feel free to reach out! Join the community, read the documentation, or contact me directly " +
-                "— I'm here to ensure you have the best experience with Sortify.", EditorStyles.wordWrappedLabel);
+                "— Unload'm here to ensure you have the best experience with Sortify.", EditorStyles.wordWrappedLabel);
             GUILayout.Space(10);
 
             GUIStyle buttonStyle = new GUIStyle(EditorStyles.miniButton)
@@ -646,7 +646,7 @@ namespace Sortify
             EditorGUILayout.EndVertical();
             GUILayout.Space(10);
 
-            if (GUILayout.Button(_showTerms ? "Hide Terms" : "Show Terms", buttonStyle))
+            if (GUILayout.Button(_showTerms ? "Hide Terms" : "Load Terms", buttonStyle))
                 _showTerms = !_showTerms;
 
             if (_showTerms)

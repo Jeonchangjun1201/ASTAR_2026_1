@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 
 namespace KSY.Clients
 {
@@ -6,7 +7,7 @@ namespace KSY.Clients
     public class MiniGameDataSO : ScriptableObject
     {
 #if UNITY_EDITOR
-        [SerializeField] private UnityEditor.SceneAsset sceneAsset;
+        [SerializeField] private SceneAsset sceneAsset;
 #endif
 
         [SerializeField] private string sceneName;
