@@ -1,6 +1,7 @@
 using UnityEngine;
 using BackEnd;
 using KSY.Utility;
+using UnityEngine.SceneManagement;
 namespace KSY.Shared
 {
     public class BackendManager : MonoBehaviour
@@ -37,6 +38,11 @@ namespace KSY.Shared
             {
                 CustomLog.Log("게스트 로그인에 성공했습니다");
             }
+        }
+
+        private void OnLogin()
+        {
+            SceneManager.LoadScene("KSY_HostOrVisitor");
         }
     }
 }
