@@ -3,13 +3,16 @@ using _TeamFolder.PYH._02.Scripts.Enum;
 using _TeamFolder.PYH._02.Scripts.UI.Event;
 using _TeamFolder.PYH._02.Scripts.Util;
 using UnityEngine;
+using UnityEngine.Audio;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace _TeamFolder.PYH._02.Scripts.UI
 {
     public class SettingControlHub : MonoSingleton<SettingControlHub>
     {
         [SerializeField] private SettingUiControlHub settingUi;
-        
+        [SerializeField] private AudioMixer mixer;
+
         private bool _isOpenSound;
         private bool _isOpenDisplay;
         
@@ -60,14 +63,23 @@ namespace _TeamFolder.PYH._02.Scripts.UI
 
         public void SetMasterVolume(float amount)
         {
+            float dB = Mathf.Log10(amount) * 20f;
+            mixer.SetFloat("Master", dB);
+
             PlayerPrefs.SetFloat("MasterVolume", amount);
         }
         public void SetBGMVolume(float amount)
         {
+            float dB = Mathf.Log10(amount) * 20f;
+            mixer.SetFloat("BGM", dB);
+
             PlayerPrefs.SetFloat("BGMVolume", amount);
         }
         public void SetSfxVolume(float amount)
         {
+            float dB = Mathf.Log10(amount) * 20f;
+            mixer.SetFloat("SFX", dB);
+
             PlayerPrefs.SetFloat("SFXVolume", amount);
         }
     }

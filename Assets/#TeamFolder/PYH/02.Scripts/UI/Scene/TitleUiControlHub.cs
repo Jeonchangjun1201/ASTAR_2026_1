@@ -1,6 +1,6 @@
 using _TeamFolder.PYH._02.Scripts.UI.Deco;
+using csiimnida.CSILib.SoundManager.RunTime;
 using DG.Tweening;
-using JHJ.Scripts.SoundManager;
 using UnityEngine;
 
 namespace _TeamFolder.PYH._02.Scripts.UI.Scene
@@ -22,8 +22,8 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
 
         private void Awake()
         {
-            AudioManager.Instance.PlaySound("TitleOST_1");
-            
+            SoundManager.Instance.PlaySound("Title_OST_1");
+
             starDeco
                 .DORotate(new Vector3(0, 0, -360f), rotDuration, RotateMode.FastBeyond360)
                 .SetEase(Ease.Linear)
