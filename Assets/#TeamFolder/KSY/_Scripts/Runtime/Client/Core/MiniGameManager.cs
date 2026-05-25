@@ -41,7 +41,7 @@ namespace KSY.Clients
 
         public void OnEnterRoom(string playerName)
         {
-            if(!players.TryGetValue(playerName))
+            //if(!players.TryGetValue(playerName))
         }
 
         public void StartGame(string sceneName)
