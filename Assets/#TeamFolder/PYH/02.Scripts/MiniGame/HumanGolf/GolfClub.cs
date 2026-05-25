@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _TeamFolder.PYH._02.Scripts.Player;
+using KSY.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,20 +9,23 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
 {
     public class GolfClub : PlayerModuleBase
     {
-        private Player.Player _owner;
+        private HumanGolfModule _owner;
+
         [SerializeField] private LayerMask _whatIsPlayer;
         [SerializeField] private float hitboxDistance;
         [SerializeField] private float hitboxSize;
+
         [SerializeField] private float _maxPower;
         [SerializeField] private float _powerMultpler;
 
-        [SerializeField] private float _perPower = 0;
+        [SerializeField] private float _perPower = 0f;
 
         [SerializeField] private GameObject _visual;
+
         private Coroutine _swingCoroutine;
         private bool _isSwing;
 
-        public override void Initialize(Player.Player player)
+        public override void Initialize(HumanGolfModule player)
         {
             _owner = player;
         }
@@ -32,67 +36,80 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
             {
                 _visual.transform.localRotation = Quaternion.Euler(-25, 0, 0);
 
-                _perPower = Mathf.Clamp((_perPower + (1 * _powerMultpler) * Time.deltaTime), 0, 100);
+                _perPower = Mathf.Clamp(
+                    _perPower + _powerMultpler * Time.deltaTime,
+                    0f,
+                    100f
+                );
             }
-            else if (Mouse.current.leftButton.wasReleasedThisFrame && !_isSwing)
-            {
-                if (_swingCoroutine != null)
-                {
-                    _swingCoroutine = null;
-                }
 
-                _swingCoroutine ??= StartCoroutine(SwingHitbox());
+            if (Mouse.current.leftButton.wasReleasedThisFrame && !_isSwing)
+            {
+                if (_swingCoroutine == null)
+                {
+                    _swingCoroutine = StartCoroutine(SwingHitbox());
+                }
             }
         }
 
         private IEnumerator SwingHitbox()
         {
             _isSwing = true;
-            Debug.Log("Swing!");
 
             _visual.transform.localRotation = Quaternion.Euler(90, 0, 0);
 
-            List<Collider> hitted = new List<Collider>();
+            List<Collider> hitted = new();
 
             for (int i = 0; i < 5; i++)
             {
+                Vector3 hitboxCenter = transform.position + transform.forward * hitboxDistance;
+
                 Collider[] hits = Physics.OverlapSphere(
-                    (transform.position + transform.forward) * hitboxDistance,
+                    hitboxCenter,
                     hitboxSize,
-                    _whatIsPlayer);
+                    _whatIsPlayer
+                );
 
                 SwingPlayers(hitted, hits);
+
+                yield return null;
             }
 
-            _visual.transform.localRotation = Quaternion.Euler(0, 0, 0); 
-           _perPower = 0;
+            _visual.transform.localRotation = Quaternion.Euler(0, 0, 0);
+
+            _perPower = 0f;
 
             yield return new WaitForSeconds(0.25f);
 
             _isSwing = false;
+            _swingCoroutine = null;
         }
 
         private void SwingPlayers(List<Collider> hitted, Collider[] hits)
         {
-            if (hits.Length != 0)
+            foreach (Collider hit in hits)
             {
-                foreach (Collider a in hits)
-                {
-                    if (hitted.Contains(a)) continue;
+                if (hitted.Contains(hit)) continue;
 
-                    if (a.gameObject.TryGetComponent(out Player.Player player))
-                    {
-                        player.Push(transform.position + transform.forward, (_maxPower / 100) * _perPower);
-                    }
-                    hitted.Add(a);
+                if (hit.gameObject.TryGetComponentInChildren(out HumanGolfModule player))
+                {
+                    if (player == _owner) continue;
+
+                    float power = _maxPower * (_perPower / 100f);
+                    Vector3 pushDir = transform.forward.normalized;
+
+                    player.Push(pushDir, power);
                 }
+
+                hitted.Add(hit);
             }
         }
 
         private void OnDrawGizmos()
         {
-            Gizmos.DrawSphere((transform.position + transform.forward) * hitboxDistance, hitboxSize);
+            Vector3 hitboxCenter = transform.position + transform.forward * hitboxDistance;
+
+            Gizmos.DrawSphere(hitboxCenter, hitboxSize);
         }
     }
-
 }
