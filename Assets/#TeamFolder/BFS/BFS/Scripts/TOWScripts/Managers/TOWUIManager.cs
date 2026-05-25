@@ -8,7 +8,6 @@ namespace BFS
     {
         [field: SerializeField] public TextMeshProUGUI TeamOneText;
         [field: SerializeField] public TextMeshProUGUI TeamTwoText;
-        [field: SerializeField] public TextMeshProUGUI TimerText;
         [field: SerializeField] public TextMeshProUGUI GameOverText;
         [field: SerializeField] public TextMeshProUGUI GoalText;
         [field: SerializeField] public Slider TeamSlider;

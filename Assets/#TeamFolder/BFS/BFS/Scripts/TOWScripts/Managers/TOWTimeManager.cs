@@ -27,7 +27,6 @@ namespace BFS
                 return;
             _elapsedTime += Time.deltaTime;
             int timer = (int)_endTime - (int)_elapsedTime;
-            _uiManager.ChangeText(_uiManager.TimerText, timer.ToString());
             if (_elapsedTime > _endTime)
             {
                 EndTimer();
