@@ -3,10 +3,8 @@ using BackEnd.Tcp;
 using KSY.Shared.UI;
 using KSY.Utility;
 using LitJson;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.XR;
 
 namespace KSY.Shared
 {
@@ -14,7 +12,7 @@ namespace KSY.Shared
     {
         public static BackendManager Instance { get; private set; }
 
-        private const string TABLE_NAME = "RoomCodes";
+        private const string TABLE_NAME_RoomCodes = "RoomCodes";
         private string _myRoomCode;
 
         private void Awake()
@@ -32,15 +30,27 @@ namespace KSY.Shared
         private void Update()
         {
             Backend.Match.Poll();
+            SendQueue.Poll();
+        }
+
+        private void OnApplicationQuit()
+        {
+            SendQueue.StopSendQueue();
         }
 
         private void Initialize()
         {
             var bro = Backend.Initialize();
             if (bro.IsSuccess())
+            {
                 CustomLog.Log("초기화 성공 : " + bro);
+
+                SendQueue.StartSendQueue();
+            }
             else
+            {
                 CustomLog.LogError("초기화 실패 : " + bro);
+            }
         }
 
         private bool IsMatchSuccess(ErrorInfo errInfo) => errInfo.Category == ErrorCode.Success;
@@ -67,12 +77,14 @@ namespace KSY.Shared
         {
             if (bro.IsSuccess())
             {
+                UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+                loadingView.Hide();
                 CustomLog.Log("로컬에 유효한 게스트 계정 정보가 존재합니다.", Color.green);
                 SceneManager.LoadScene("KSY_HostOrVisitor");
             }
             else
             {
-                Backend.BMember.GuestLogin(OnLogin);    
+                Backend.BMember.GuestLogin(OnLogin);
                 CustomLog.Log("로컬 게스트 정보 없음");
                 UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
                 inputView.Show("사용하실 이름을 입력해주세요!");
@@ -129,12 +141,12 @@ namespace KSY.Shared
         {
             UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
 
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 inputView.Show("빈 닉네임이거나 입력 데이터가 비어있습니다.", Color.red);
                 CustomLog.Log("빈 닉네임이거나 입력 데이터가 비어있습니다.", Color.red);
             }
-            else if(name.Length > 10)
+            else if (name.Length > 10)
             {
                 inputView.Show("닉네임이 너무 깁니다. (최대 10자 미만)", Color.red);
                 CustomLog.Log("닉네임이 너무 깁니다. (최대 10자 미만)", Color.red);
@@ -174,17 +186,75 @@ namespace KSY.Shared
 
         public void OnMatchMakingRoomCreate(MatchMakingInteractionEventArgs args)
         {
+            UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+            loadingView.Hide();
+
             if (!IsMatchSuccess(args.ErrInfo))
             {
                 CustomLog.LogError("대기방 생성 실패: " + args.ErrInfo);
-
-                UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
-                loadingView.Hide();
                 return;
             }
-            _myRoomCode = Random.Range(1000, 10000).ToString();
-            CustomLog.Log($"대기방 생성 성공! 방코드 : {_myRoomCode}", Color.green);
-            SaveRoomCode(_myRoomCode);
+
+            CustomLog.Log("대기방 생성 성공!", Color.green);
+
+            // 최초 시도 횟수 0으로 시작
+            SaveRoomCodeWithCheck(0);
+        }
+
+        private void SaveRoomCodeWithCheck(int attemptCount)
+        {
+            const int maxAttempts = 5; // 무한 루프 예방을 위한 최대 재시도 횟수
+
+            if (attemptCount >= maxAttempts)
+            {
+                CustomLog.LogError($"방코드 생성 실패: {maxAttempts}회 재시도했으나 모두 중복되거나 실패했습니다.");
+                return;
+            }
+
+            string targetRoomCode = Random.Range(1000, 100000).ToString();
+            CustomLog.Log($"방코드 검증 시도 ({attemptCount + 1}회차): {targetRoomCode}");
+
+            Where where = new Where();
+            where.Equal("roomCode", targetRoomCode);
+
+            SendQueue.Enqueue(Backend.GameData.Get, TABLE_NAME_RoomCodes, where, (bro) =>
+            {
+                if (!bro.IsSuccess())
+                {
+                    CustomLog.LogError("방코드 중복 조회 중 서버 에러 발생: " + bro);
+                    return;
+                }
+
+                JsonData rows = bro.FlattenRows();
+
+                if (rows.Count > 0)
+                {
+                    CustomLog.LogWarning($"방코드 중복 발견 ({targetRoomCode}). 새로운 코드를 생성합니다.");
+                    SaveRoomCodeWithCheck(attemptCount + 1);
+                    return;
+                }
+
+                InsertUniqueRoomCode(targetRoomCode);
+            });
+        }
+
+        private void InsertUniqueRoomCode(string uniqueRoomCode)
+        {
+            Param param = new Param();
+            param.Add("roomCode", uniqueRoomCode);
+
+            SendQueue.Enqueue(Backend.GameData.Insert, TABLE_NAME_RoomCodes, param, (bro) =>
+            {
+                if (bro.IsSuccess())
+                {
+                    _myRoomCode = uniqueRoomCode; // 멤버 변수에 확정 할당
+                    CustomLog.Log($"최종 방코드 [{_myRoomCode}] 등록 성공! 플레이어를 기다립니다.", Color.green);
+                }
+                else
+                {
+                    CustomLog.LogError("방코드 최종 저장 실패: " + bro);
+                }
+            });
         }
 
         public void OnJoinMatchMakingServer(JoinChannelEventArgs args)
@@ -192,12 +262,10 @@ namespace KSY.Shared
             if (!IsMatchSuccess(args.ErrInfo))
             {
                 CustomLog.LogError("매칭 서버 접속 실패: " + args.ErrInfo);
-                
+
                 UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
                 loadingView.Hide();
-
                 return;
-
             }
             CustomLog.Log("매칭 서버 접속 성공", Color.green);
             Backend.Match.CreateMatchRoom();
@@ -208,7 +276,7 @@ namespace KSY.Shared
             Param param = new Param();
             param.Add("roomCode", roomCode);
 
-            SendQueue.Enqueue(Backend.GameData.Insert, TABLE_NAME, param, (bro) =>
+            SendQueue.Enqueue(Backend.GameData.Insert, TABLE_NAME_RoomCodes, param, (bro) =>
             {
                 if (bro.IsSuccess())
                     CustomLog.Log($"방코드 {roomCode} 저장 성공", Color.green);
@@ -222,7 +290,7 @@ namespace KSY.Shared
             Where where = new Where();
             where.Equal("roomCode", roomCode);
 
-            SendQueue.Enqueue(Backend.GameData.Get, TABLE_NAME, where, (bro) =>
+            SendQueue.Enqueue(Backend.GameData.Get, TABLE_NAME_RoomCodes, where, (bro) =>
             {
                 if (!bro.IsSuccess())
                 {
@@ -276,7 +344,7 @@ namespace KSY.Shared
             Where where = new Where();
             where.Equal("roomCode", _myRoomCode);
 
-            SendQueue.Enqueue(Backend.GameData.Delete, TABLE_NAME, where, (bro) =>
+            SendQueue.Enqueue(Backend.GameData.Delete, TABLE_NAME_RoomCodes, where, (bro) =>
             {
                 if (bro.IsSuccess())
                     CustomLog.Log("방코드 삭제 완료");
