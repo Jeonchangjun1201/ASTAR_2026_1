@@ -4,6 +4,7 @@
   <Project Path="KSY.Networks.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="KSY.Shared.UI.csproj" />
   <Project Path="KSY.Shared.csproj" />
   <Project Path="KSY.Servers.csproj" />
   <Project Path="SoundManager.editor.csproj" />
