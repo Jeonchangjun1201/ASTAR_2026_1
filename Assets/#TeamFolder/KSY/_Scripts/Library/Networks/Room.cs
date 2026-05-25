@@ -6,15 +6,12 @@ namespace KSY.Networks
 {
     public class Room
     {
-        //인터페이스에서는 내부에서 암묵적으로 public 접근 제한자를 띄고 있다.
         public interface ICallback
         {
             void OnAdded(Room room, Session session);
             void OnRemoved(Room room, Session session);
         }
 
-        //여러 스레드가 동시에 접근하더라도 데이터의 무결성을 보장하는 스레드 세이프한 딕셔너리.
-        //Concurrent : 동시 발생의, 공동으로 작용하는
         private readonly ConcurrentDictionary<string, Session> sessions;
         private readonly ConcurrentDictionary<Session, Action<Session>> sessionClosedHandlers;
         private readonly int roomIDHash;
@@ -41,7 +38,6 @@ namespace KSY.Networks
                 session.OnClosedEvent += HandleSessionClosed;
             }
 
-            //함수 내에서 매개변수를 사용하지 않음을 명시적으로 드러냄 '_'
             void HandleSessionClosed(Session _)
             {
                 Remove(sessionID);
@@ -77,13 +73,9 @@ namespace KSY.Networks
                 if (value != null && value.IsOpened && (filter == null || filter(key, value)))
                 {
                     if(roomPacketSendQueueContext == null)
-                    {
                         roomPacketSendQueueContext = new RoomPacketSendQueueContext(packetSerializer, packet, 1);
-                    }
                     else
-                    {
                         roomPacketSendQueueContext.AddReference();
-                    }
 
                     try
                     {

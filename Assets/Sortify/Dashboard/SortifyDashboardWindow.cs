@@ -152,11 +152,11 @@ namespace Sortify
             GUILayout.Label(
                 "Sortify stores certain user preferences locally on your device to provide a personalized and efficient experience." +
                 "\n\n" +
-                "By installing this tool, you agree to the following terms regarding data storage:",
+                "By installing this tool, you agree to the following terms regarding Data storage:",
                 EditorStyles.wordWrappedLabel);
             EditorGUILayout.Space(10);
 
-            GUILayout.Label("Why we save data locally:", EditorStyles.boldLabel);
+            GUILayout.Label("Why we save Data locally:", EditorStyles.boldLabel);
             GUILayout.Label(
                 "Sortify was designed to work seamlessly in team environments. Instead of storing settings in the project files, " +
                 "we use a local storage approach to prevent personal preferences, such as colors, favorites, custom components, or user names, from " +
@@ -164,18 +164,18 @@ namespace Sortify
                 EditorStyles.wordWrappedLabel);
             EditorGUILayout.Space(10);
 
-            GUILayout.Label("What data we store:", EditorStyles.boldLabel);
+            GUILayout.Label("What Data we store:", EditorStyles.boldLabel);
             GUILayout.Label(
-                "The data saved locally does not include any sensitive or private information. " +
+                "The Data saved locally does not include any sensitive or private information. " +
                 "We only store user-specific settings, including color themes, favorite objects, custom component lists, and user names, " +
                 "to personalize your Sortify experience. These files are stored as simple .json files, so you can view and modify them directly if needed.",
                 EditorStyles.wordWrappedLabel);
             EditorGUILayout.Space(10);
 
-            GUILayout.Label("Privacy and data security:", EditorStyles.boldLabel);
+            GUILayout.Label("Privacy and Data security:", EditorStyles.boldLabel);
             GUILayout.Label(
-                "All stored data is strictly limited to local preferences that enhance your interaction with the tool. " +
-                "No data is transmitted externally or used beyond the customization of Sortify. You can delete or reset these files anytime " +
+                "All stored Data is strictly limited to local preferences that enhance your interaction with the tool. " +
+                "No Data is transmitted externally or used beyond the customization of Sortify. You can delete or reset these files anytime " +
                 "by navigating to the specified storage location on your device.",
                 EditorStyles.wordWrappedLabel);
             EditorGUILayout.Space(20);
@@ -517,7 +517,7 @@ namespace Sortify
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
 
             bool showComponentIcons = SortifyUserDataManager.GetUserSetting("ShowComponentIcons", true);
-            DrawToggle("Show Component Icons", ref showComponentIcons,
+            DrawToggle("Load Component Icons", ref showComponentIcons,
                 "Enabling this setting will display component icons next to each object in the hierarchy.");
 
             if (showComponentIcons != SortifyUserDataManager.GetUserSetting("ShowComponentIcons", true))
@@ -525,7 +525,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showStyleSection = SortifyUserDataManager.GetUserSetting("ShowStyleSection", true);
-            DrawToggle("Show Style Section", ref showStyleSection,
+            DrawToggle("Load Style Section", ref showStyleSection,
                 "Enabling this setting will display the Style section in the hierarchy, allowing you to assign custom styles to objects for better visual organization.");
 
             if (showStyleSection != SortifyUserDataManager.GetUserSetting("ShowStyleSection", true))
@@ -533,7 +533,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showColorsSection = SortifyUserDataManager.GetUserSetting("ShowColorsSection", true);
-            DrawToggle("Show Colors Section", ref showColorsSection,
+            DrawToggle("Load Colors Section", ref showColorsSection,
                 "Enabling this setting will display the Colors section in the hierarchy, allowing you to assign custom colors to objects.");
 
             if (showColorsSection != SortifyUserDataManager.GetUserSetting("ShowColorsSection", true))
@@ -541,7 +541,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showNotesSection = SortifyUserDataManager.GetUserSetting("ShowNotesSection", true);
-            DrawToggle("Show Notes Section", ref showNotesSection,
+            DrawToggle("Load Notes Section", ref showNotesSection,
                 "Enabling this setting will display the Notes section in the hierarchy, allowing you to add personal notes to objects.");
 
             if (showNotesSection != SortifyUserDataManager.GetUserSetting("ShowNotesSection", true))
@@ -549,7 +549,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showAddComponentSection = SortifyUserDataManager.GetUserSetting("ShowAddComponentSection", true);
-            DrawToggle("Show Add Component Section", ref showAddComponentSection,
+            DrawToggle("Load Add Component Section", ref showAddComponentSection,
                 "Enabling this setting will display the Add Component section in the hierarchy, allowing you to quickly add components to objects.");
 
             if (showAddComponentSection != SortifyUserDataManager.GetUserSetting("ShowAddComponentSection", true))
@@ -557,7 +557,7 @@ namespace Sortify
 
             GUILayout.Space(5);
             bool showDefaultComponents = SortifyUserDataManager.GetUserSetting("ShowDefaultComponents", true);
-            DrawToggle("Show Default Components", ref showDefaultComponents,
+            DrawToggle("Load Default Components", ref showDefaultComponents,
                 "Enabling this setting will display the default component icons in the Add Component section.");
 
             if (showDefaultComponents != SortifyUserDataManager.GetUserSetting("ShowDefaultComponents", true))
@@ -566,7 +566,7 @@ namespace Sortify
             GUILayout.Space(5);
             bool saveInProject = EditorPrefs.GetBool(SAVE_IN_PROJECT_KEY, false);
             DrawToggle("Save in Project", ref saveInProject,
-                "If enabled, Sortify save data will be stored in the project folder. If disabled, data is stored locally.");
+                "If enabled, Sortify save Data will be stored in the project folder. If disabled, Data is stored locally.");
 
             if (saveInProject != EditorPrefs.GetBool(SAVE_IN_PROJECT_KEY, false))
             {
@@ -609,7 +609,7 @@ namespace Sortify
             GUILayout.Space(20);
 
             EditorGUILayout.LabelField("Need assistance or have feedback? Feel free to reach out! Join the community, read the documentation, or contact me directly " +
-                "— I'm here to ensure you have the best experience with Sortify.", EditorStyles.wordWrappedLabel);
+                "— Unload'm here to ensure you have the best experience with Sortify.", EditorStyles.wordWrappedLabel);
             GUILayout.Space(10);
 
             GUIStyle buttonStyle = new GUIStyle(EditorStyles.miniButton)
@@ -646,7 +646,7 @@ namespace Sortify
             EditorGUILayout.EndVertical();
             GUILayout.Space(10);
 
-            if (GUILayout.Button(_showTerms ? "Hide Terms" : "Show Terms", buttonStyle))
+            if (GUILayout.Button(_showTerms ? "Hide Terms" : "Load Terms", buttonStyle))
                 _showTerms = !_showTerms;
 
             if (_showTerms)

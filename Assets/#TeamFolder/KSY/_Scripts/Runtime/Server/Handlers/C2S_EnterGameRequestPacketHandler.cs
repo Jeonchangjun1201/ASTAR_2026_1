@@ -36,7 +36,7 @@ namespace KSY.Servers.Handlers
 
             Dictionary<string, UnitDataDTO> players = new Dictionary<string, UnitDataDTO>();
             gameManager.ForEachPlayer((otherPlayerID, otherPlayer) => {
-                players[otherPlayerID] = new CreateUnitData(otherPlayer).unitData;
+                players[otherPlayerID] = new CreatePlayerData(otherPlayer).unitData;
             });
 
             S2C_EnterGameResponsePacket responsePacket = new S2C_EnterGameResponsePacket()
@@ -49,7 +49,7 @@ namespace KSY.Servers.Handlers
             S2C_EnterGameBroadcastPacket broadcastPacket = new S2C_EnterGameBroadcastPacket()
             {
                 PlayerID = playerID,
-                UnitData = new CreateUnitData(unit).unitData
+                UnitData = new CreatePlayerData(unit).unitData
             };
             gameServer.Send(broadcastPacket, (sessionID, session) => sessionID != playerID);
             CustomLog.Log("Send : S2C_EnterGameBroadcastPacket", UnityEngine.Color.red);
