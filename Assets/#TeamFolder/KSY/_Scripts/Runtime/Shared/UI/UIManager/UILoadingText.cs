@@ -1,3 +1,4 @@
+using KSY.Utility;
 using System.Collections;
 using System.Text;
 using TMPro;
@@ -29,34 +30,40 @@ namespace KSY.Shared.UI
             Initialized = true;
         }
 
-        public void SetText(string baseText) => this.baseText = baseText;
-
         public void Load()
         {
+            CustomLog.Log("Load");
             if (_animateCoroutine != null)
             {
+                CustomLog.Log("Stop Coroutine");
                 StopCoroutine(_animateCoroutine);
             }
 
             _animateCoroutine = StartCoroutine(LoadingText());
+            CustomLog.Log("Success Load");
         }
 
         public void Load(string info)
         {
+            CustomLog.Log("Load info");
             baseText = info;
+            _loadingText.text = info;
 
             if (_animateCoroutine != null)
             {
+                CustomLog.Log("Stop Coroutine");
                 StopCoroutine(_animateCoroutine);
             }
 
             _animateCoroutine = StartCoroutine(LoadingText());
+            CustomLog.Log("Success Load");
         }
 
         public void Unload()
         {
             if (_animateCoroutine != null)
             {
+                CustomLog.Log("Stop Coroutine");
                 StopCoroutine(_animateCoroutine);
                 _animateCoroutine = null;
             }
@@ -64,6 +71,7 @@ namespace KSY.Shared.UI
 
         private IEnumerator LoadingText()
         {
+            CustomLog.Log("Start Coroutine");
             if (_animateCoroutine == null) yield break;
 
             int currentDotCount = 1;
@@ -79,6 +87,7 @@ namespace KSY.Shared.UI
                     _stringBuilder.Append('.');
                 }
 
+                CustomLog.Log(_stringBuilder.ToString());
                 _loadingText.SetText(_stringBuilder);
 
                 currentDotCount++;
@@ -86,6 +95,8 @@ namespace KSY.Shared.UI
                     currentDotCount = 1;
 
                 yield return new WaitForSeconds(dotChangeInterval);
+
+                CustomLog.Log("Start Coroutine");
             }
         }
     }
