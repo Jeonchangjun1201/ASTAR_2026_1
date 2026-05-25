@@ -1,6 +1,7 @@
 using System.Collections;
 using _TeamFolder.PYH._02.Scripts.Data;
 using _TeamFolder.PYH._02.Scripts.UI.Event;
+using csiimnida.CSILib.SoundManager.RunTime;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -43,8 +44,18 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.Manager
             while (_currentTime > 0)
             {
                 _currentTime -= 1;
+
                 OnTickEvent?.Invoke(_currentTime);
                 AStarEventBus.Publish(new DigitalClockUiTimeSetEvent(_currentTime));
+
+                if (_currentTime > 5)
+                {
+                    SoundManager.Instance.PlaySound("General-Countdown-S");
+                }
+                else
+                {
+                    SoundManager.Instance.PlaySound("General-Countdown-S-Stress");
+                }
                 yield return new WaitForSeconds(1);
             }
 

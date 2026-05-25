@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: SoundManager.runtime::csiimnida.CSILib.SoundManager.RunTime.SoundSo
   soundName: General-Countdown-S-Stress
   soundType: 1
-  clip: {fileID: 8300000, guid: 1868950b046c1794d9cf31926a66d15c, type: 3}
+  clip: {fileID: 8300000, guid: 4abb8fbd41a915d4fbaa591dee436dc6, type: 3}
   loop: 0
   Priority: 128
   volume: 1
-  pitch: 1
+  pitch: 2
   stereoPan: 0
   SpatialBlend: 0
   RandomPitch: 0

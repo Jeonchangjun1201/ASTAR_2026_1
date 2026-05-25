@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _TeamFolder.PYH._02.Scripts.Player;
+using csiimnida.CSILib.SoundManager.RunTime;
 using KSY.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,6 +25,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
 
         private Coroutine _swingCoroutine;
         private bool _isSwing;
+        private bool _sounded;
 
         public override void Initialize(HumanGolfModule player)
         {
@@ -36,6 +38,12 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
             {
                 _visual.transform.localRotation = Quaternion.Euler(-25, 0, 0);
 
+                if (!_sounded)
+                {
+                    SoundManager.Instance.PlaySound("HumanGolf-Charging-S");
+                    _sounded = true;
+                }
+
                 _perPower = Mathf.Clamp(
                     _perPower + _powerMultpler * Time.deltaTime,
                     0f,
@@ -47,6 +55,8 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
             {
                 if (_swingCoroutine == null)
                 {
+                    SoundManager.Instance.PlaySound("HumanGolf-Swing-S");
+                    _sounded = false;
                     _swingCoroutine = StartCoroutine(SwingHitbox());
                 }
             }
