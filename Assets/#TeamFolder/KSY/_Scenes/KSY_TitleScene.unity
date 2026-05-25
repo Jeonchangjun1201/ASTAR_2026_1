@@ -753,6 +753,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 1
+--- !u!114 &239419904 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4366663557015573924, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+  m_PrefabInstance: {fileID: 294138349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45cffc159c2b132449b5272392ee2ba1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: KSY.Shared.UI::KSY.Shared.UI.UIStringInputField
 --- !u!1 &284707408
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,15 +847,52 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2177763193886720228, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2753141610146690185, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: m_text
+      value: "\u200B"
+      objectReference: {fileID: 0}
     - target: {fileID: 3611683443071269810, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
       propertyPath: m_Name
       value: ViewManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5966146278402461957, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
-      propertyPath: m_Name
-      value: UILoadingView
+    - target: {fileID: 3938557242390931488, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: m_text
+      value: "\uC785\uB825\uC5D0 \uAD00\uD55C \uC124\uBA85\uC774 \uB4E4\uC5B4\uAC08
+        \uACF3\uC785\uB2C8\uB2E4"
       objectReference: {fileID: 0}
-    - target: {fileID: 5966146278402461957, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+    - target: {fileID: 4298164656648380362, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4298164656648380362, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4298164656648380362, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 2164260863
+      objectReference: {fileID: 0}
+    - target: {fileID: 4366663557015573924, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: inputInfo
+      value: 
+      objectReference: {fileID: 1013261386}
+    - target: {fileID: 4366663557015573924, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: inputString
+      value: 
+      objectReference: {fileID: 608597070}
+    - target: {fileID: 4786088662901119280, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: inputField
+      value: 
+      objectReference: {fileID: 239419904}
+    - target: {fileID: 4786088662901119280, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+      propertyPath: insertButton
+      value: 
+      objectReference: {fileID: 1744260709}
+    - target: {fileID: 5718095375768531841, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -892,9 +940,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5966146278402461957, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 55237994585831776, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1436496740}
+      addedObject: {fileID: 1744260709}
   m_SourcePrefab: {fileID: 100100000, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
 --- !u!1 &303754912
 GameObject:
@@ -1993,6 +2041,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 574930828}
   m_CullTransparentMesh: 1
+--- !u!114 &608597070 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2753141610146690185, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+  m_PrefabInstance: {fileID: 294138349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &635253039
 GameObject:
   m_ObjectHideFlags: 0
@@ -3962,6 +4021,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1011290457}
   m_CullTransparentMesh: 1
+--- !u!114 &1013261386 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3938557242390931488, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+  m_PrefabInstance: {fileID: 294138349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1020270521
 GameObject:
   m_ObjectHideFlags: 0
@@ -5703,25 +5773,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1408342779}
   m_CullTransparentMesh: 1
---- !u!1 &1436496737 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5966146278402461957, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
-  m_PrefabInstance: {fileID: 294138349}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1436496740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1436496737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93013fe9e4bff5544b34ec9a4998b2c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: KSY.Shared.UI::KSY.Shared.UI.UILoadingView
-  loadDot: {fileID: 1718402965}
-  loadInfo: {fileID: 1675016574}
 --- !u!1 &1447505949
 GameObject:
   m_ObjectHideFlags: 0
@@ -7362,17 +7413,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1666248942}
   m_CullTransparentMesh: 1
---- !u!114 &1675016574 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2115906768643223941, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
-  m_PrefabInstance: {fileID: 294138349}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bedbcf3e0acc4ab48a93597c5f203ea5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: KSY.Shared.UI::KSY.Shared.UI.UILoadingText
 --- !u!1 &1689933646
 GameObject:
   m_ObjectHideFlags: 0
@@ -7660,17 +7700,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1712154935}
   m_CullTransparentMesh: 1
---- !u!114 &1718402965 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8812634872682335478, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+--- !u!1 &1744260704 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 55237994585831776, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
   m_PrefabInstance: {fileID: 294138349}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+--- !u!114 &1744260706 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6369512641987331581, guid: 189aac7b657d56d47ad2c8f63d628557, type: 3}
+  m_PrefabInstance: {fileID: 294138349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744260704}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bedbcf3e0acc4ab48a93597c5f203ea5, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: KSY.Shared.UI::KSY.Shared.UI.UILoadingText
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+--- !u!114 &1744260709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744260704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eba7bc2a387bd094690789c17be9890f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: KSY.Shared.UI::KSY.Shared.UI.UIInsertButton
+  button: {fileID: 1744260706}
 --- !u!1 &1750812857
 GameObject:
   m_ObjectHideFlags: 0

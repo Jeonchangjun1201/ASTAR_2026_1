@@ -2,6 +2,7 @@ using System.Collections;
 using _TeamFolder.PYH._02.Scripts.Data;
 using _TeamFolder.PYH._02.Scripts.Player;
 using _TeamFolder.PYH._02.Scripts.UI.Event;
+using csiimnida.CSILib.SoundManager.RunTime;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -36,6 +37,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
         public void StartBomb(PassTheBombModule startPlayer)
         {
             Debug.Log(startPlayer.gameObject.name + "에게 부착되어 시작.");
+            SoundManager.Instance.PlaySound("PassTheBomb_Attachment-S");
             _currentPlayer = startPlayer;
             _currentPlayer.OnTouchPlayerEvent += SetPlayer;
             transform.position = new Vector3(
@@ -61,6 +63,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
             if (Time.time - _lastTime < cooldown) return;
             
             Debug.Log(targetPlayer.gameObject.name + "부착됨.");
+            SoundManager.Instance.PlaySound("PassTheBomb_Attachment-S");
             _currentPlayer.OnTouchPlayerEvent -= SetPlayer;
             _currentPlayer = targetPlayer;
             _currentPlayer.OnTouchPlayerEvent += SetPlayer;
@@ -77,6 +80,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
             if (_timerCoroutine != null)
                 StopCoroutine(_timerCoroutine);
 
+            SoundManager.Instance.PlaySound("PassTheBomb_Belch");
             _curParticl.transform.position = new Vector3(
                 _currentPlayer.transform.position.x,
                 _currentPlayer.transform.position.y + distanceY,
@@ -97,8 +101,18 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
             while (leftTime > 0)
             {
                 leftTime -= 1;
+
                 onTickEvent?.Invoke(leftTime);
                 AStarEventBus.Publish(new DigitalClockUiTimeSetEvent(leftTime));
+
+                if (leftTime > 5)
+                {
+                    SoundManager.Instance.PlaySound("General-Countdown-S");
+                }
+                else
+                {
+                    SoundManager.Instance.PlaySound("General-Countdown-S-Stress");
+                }
                 yield return new WaitForSeconds(1);
             }
 

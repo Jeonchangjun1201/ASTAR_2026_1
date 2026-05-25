@@ -24,13 +24,35 @@ namespace KSY.Shared.UI
         public void Show(string info)
         {
             gameObject.SetActive(true);
-            loadDot?.Load();
-            loadInfo?.Load(info);
+
+            if(loadDot.Initialized && loadInfo.Initialized)
+            {
+                loadDot?.Load();
+                loadInfo?.Load(info);
+            }
+        }
+
+        public void Show(string info, Color color)
+        {
+            gameObject.SetActive(true);
+
+            if (loadDot.Initialized && loadInfo.Initialized)
+            {
+                loadDot?.Load();
+                loadInfo?.Load(info, color);
+            }
         }
 
         public void Hide()
         {
+            if (loadDot.Initialized && loadInfo.Initialized)
+            {
+                loadDot?.Unload();
+                loadInfo?.Unload();
+            }
+
             gameObject.SetActive(false);
         }
+
     }
 }

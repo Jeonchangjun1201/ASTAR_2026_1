@@ -1,4 +1,5 @@
-﻿using System;
+﻿using csiimnida.CSILib.SoundManager.RunTime;
+using System;
 using UnityEngine;
 
 namespace _TeamFolder.PYH._02.Scripts.Player
@@ -19,6 +20,7 @@ namespace _TeamFolder.PYH._02.Scripts.Player
         
         public void Push(Vector3 dir, float force)
         {
+            SoundManager.Instance.PlaySound("HumanGolf-Hit-S");
             rigid.AddForce(dir * force, ForceMode.Impulse);
         }
     }

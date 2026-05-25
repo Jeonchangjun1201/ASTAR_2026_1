@@ -4,6 +4,8 @@ using _TeamFolder.PYH._02.Scripts.UI.Event;
 using _TeamFolder.PYH._02.Scripts.UI.Scene;
 using _TeamFolder.PYH._02.Scripts.Util;
 using _TeamFolder.PYH._04.Datas;
+using Assets._TeamFolder.PYH._02.Scripts.UI;
+using Assets._TeamFolder.PYH._02.Scripts.UI.Event;
 using UnityEngine;
 
 namespace _TeamFolder.PYH._02.Scripts
@@ -65,6 +67,15 @@ namespace _TeamFolder.PYH._02.Scripts
                         break;
                     case QuitUiControlHub:
                         AStarEventBus.Publish(new QuitUiEvent());
+                        break;
+                    case PlayModeUiControlHub:
+                        AStarEventBus.Publish(new PlayModeUiEvent());
+                        break;
+                    case HostUiControlHub:
+                        AStarEventBus.Publish(new HostUiEvent());
+                        break;
+                    case JoinUiControlHub:
+                        AStarEventBus.Publish(new JoinUiEvent());
                         break;
                 }
 
