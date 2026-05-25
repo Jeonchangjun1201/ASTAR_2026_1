@@ -1,4 +1,5 @@
 using System.Collections;
+using csiimnida.CSILib.SoundManager.RunTime;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +33,7 @@ namespace KDH.Gimic
             }
 
             blindImage.gameObject.SetActive(false);
+            
         }
     }
 }
