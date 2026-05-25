@@ -3,8 +3,10 @@ using BackEnd.Tcp;
 using KSY.Shared.UI;
 using KSY.Utility;
 using LitJson;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 
 namespace KSY.Shared
 {
@@ -66,11 +68,81 @@ namespace KSY.Shared
             if (bro.IsSuccess())
             {
                 CustomLog.Log("로컬에 유효한 게스트 계정 정보가 존재합니다.", Color.green);
+                SceneManager.LoadScene("KSY_HostOrVisitor");
             }
             else
             {
-                CustomLog.LogError("로컬 게스트 정보 없음");
-                Backend.BMember.GuestLogin(OnLogin);
+                Backend.BMember.GuestLogin(OnLogin);    
+                CustomLog.Log("로컬 게스트 정보 없음");
+                UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+                inputView.Show("사용하실 이름을 입력해주세요!");
+                inputView.RegisterInsertEvent(() =>
+                {
+                    string userName = inputView.GetInput();
+                    CreateNickname(userName);
+                });
+            }
+        }
+
+        public void CreateNickname(string newNickname)
+        {
+            CustomLog.Log($"Try CreateNickname : {newNickname}");
+            if (IsValidNickname(newNickname))
+            {
+                CreateNicknameError(newNickname);
+                return;
+            }
+            Backend.BMember.UpdateNickname(newNickname, OnCreateNickname);
+        }
+
+        public bool IsValidNickname(string nickname)
+        {
+            if (!string.IsNullOrEmpty(nickname))
+            {
+                nickname = System.Text.RegularExpressions.Regex.Replace(nickname, @"[\x00-\x1F\x7F]|\u200b", "");
+                nickname = nickname.Trim();
+            }
+            if (string.IsNullOrEmpty(nickname) || nickname.Length > 10)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void OnCreateNickname(BackendReturnObject bro)
+        {
+            if (bro.IsSuccess())
+            {
+                CustomLog.Log($"닉네임 생성 성공! 현재 닉네임: {Backend.UserNickName}", Color.green);
+                UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+                inputView.Hide();
+                SceneManager.LoadScene("KSY_HostOrVisitor");
+            }
+            else
+            {
+                CustomLog.LogError("닉네임 변경 실패");
+            }
+        }
+
+        private void CreateNicknameError(string name)
+        {
+            UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+
+            if(string.IsNullOrEmpty(name))
+            {
+                inputView.Show("빈 닉네임이거나 입력 데이터가 비어있습니다.", Color.red);
+                CustomLog.Log("빈 닉네임이거나 입력 데이터가 비어있습니다.", Color.red);
+            }
+            else if(name.Length > 10)
+            {
+                inputView.Show("닉네임이 너무 깁니다. (최대 10자 미만)", Color.red);
+                CustomLog.Log("닉네임이 너무 깁니다. (최대 10자 미만)", Color.red);
+            }
+            else
+            {
+                inputView.Show("이미 다른 유저가 사용중이거나 사용할 수 없는 닉네임입니다.", Color.red);
+                CustomLog.Log("이미 다른 유저가 사용중이거나 사용할 수 없는 닉네임입니다.", Color.red);
             }
         }
 
@@ -81,7 +153,6 @@ namespace KSY.Shared
             {
                 CustomLog.Log("게스트 로그인 성공", Color.green);
                 loadingView.Hide();
-                SceneManager.LoadScene("KSY_HostOrVisitor");
             }
             else
             {
@@ -198,9 +269,6 @@ namespace KSY.Shared
             });
         }
 
-        // ────────────────────────────────────────────
-        // 방장: 방코드 삭제
-        // ────────────────────────────────────────────
         public void DeleteRoomCode()
         {
             if (string.IsNullOrEmpty(_myRoomCode)) return;

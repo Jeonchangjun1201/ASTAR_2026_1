@@ -59,6 +59,23 @@ namespace KSY.Shared.UI
             CustomLog.Log("Success Load");
         }
 
+        public void Load(string info, Color color)
+        {
+            CustomLog.Log("Load info");
+            baseText = info;
+            _loadingText.text = info;
+            _loadingText.color = color;
+
+            if (_animateCoroutine != null)
+            {
+                CustomLog.Log("Stop Coroutine");
+                StopCoroutine(_animateCoroutine);
+            }
+
+            _animateCoroutine = StartCoroutine(LoadingText());
+            CustomLog.Log("Success Load");
+        }
+
         public void Unload()
         {
             if (_animateCoroutine != null)

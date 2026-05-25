@@ -13,6 +13,7 @@ namespace KSY.Shared.UI
         private void OnEnable()
         {
             inputField.Initialize();
+            insertButton.Initialize();
         }
 
         public void RegisterInsertEvent(Action OnInsertButtonClicked) => insertButton.OnClicked += OnInsertButtonClicked;
@@ -20,11 +21,17 @@ namespace KSY.Shared.UI
         public string GetInput() => inputField.GetInput();
 
         public void SetInputInfo(string info) => inputField.SetInputInfo(info);
+        public void SetInputInfo(string info, Color textColor) => inputField.SetInputInfo(info, textColor);
 
         public void Show(string info)
         {
             gameObject.SetActive(true);
             SetInputInfo(info);
+        }
+        public void Show(string info, Color color)
+        {
+            gameObject.SetActive(true);
+            SetInputInfo(info, color);
         }
 
         public void Hide() => gameObject.SetActive(false);

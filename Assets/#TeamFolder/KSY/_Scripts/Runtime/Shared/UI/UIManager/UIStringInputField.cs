@@ -16,5 +16,10 @@ namespace KSY.Shared.UI
 
         public string GetInput() => inputString.text;
         public void SetInputInfo(string info) => inputInfo.text = info;
+        public void SetInputInfo(string info, Color textColor)
+        {
+            inputInfo.text = info;
+            inputInfo.color = textColor;
+        }
     }
 }

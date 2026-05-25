@@ -32,6 +32,17 @@ namespace KSY.Shared.UI
             }
         }
 
+        public void Show(string info, Color color)
+        {
+            gameObject.SetActive(true);
+
+            if (loadDot.Initialized && loadInfo.Initialized)
+            {
+                loadDot?.Load();
+                loadInfo?.Load(info, color);
+            }
+        }
+
         public void Hide()
         {
             if (loadDot.Initialized && loadInfo.Initialized)
@@ -42,5 +53,6 @@ namespace KSY.Shared.UI
 
             gameObject.SetActive(false);
         }
+
     }
 }
