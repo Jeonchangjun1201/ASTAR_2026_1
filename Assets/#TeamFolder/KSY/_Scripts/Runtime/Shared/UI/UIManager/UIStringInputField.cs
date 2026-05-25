@@ -8,12 +8,10 @@ namespace KSY.Shared.UI
         [SerializeField] private TMP_Text inputString;
         [SerializeField] private TMP_Text inputInfo;
 
-        public bool Initialized { get; private set; }
-
         public void Initialize()
         {
-            if (Initialized) return;
-            Initialized = true;
+            inputString.text = string.Empty;
+            inputInfo.text = string.Empty;
         }
 
         public string GetInput() => inputString.text;

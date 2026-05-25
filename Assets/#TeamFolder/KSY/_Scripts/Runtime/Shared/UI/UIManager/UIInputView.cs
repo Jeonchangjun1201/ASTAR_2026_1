@@ -2,18 +2,18 @@ using UnityEngine;
 
 namespace KSY.Shared.UI
 {
-    public class UIInputView : MonoBehaviour
+    public class UIInputView : MonoBehaviour, IView
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        [SerializeField] private UIStringInputField inputField;
+
+        public string Name => gameObject.name;
+
+        private void OnEnable()
         {
-        
+            inputField.Initialize();
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        public string GetInput() => inputField.GetInput();
+        public void SetInputInfo(string info) => inputField.SetInputInfo(info);
     }
 }

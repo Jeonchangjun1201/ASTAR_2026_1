@@ -1,5 +1,4 @@
 using UnityEngine;
-using static PlasticGui.WorkspaceWindow.Merge.MergeInProgress;
 
 namespace KSY.Shared.UI
 {
