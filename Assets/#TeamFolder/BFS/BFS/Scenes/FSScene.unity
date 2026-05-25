@@ -6597,6 +6597,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Real Player 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2827347532904647120, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2953382790874061599, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
       propertyPath: m_Name
       value: Player3
@@ -6966,6 +6970,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Real Player 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2827347532904647120, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2953382790874061599, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
       propertyPath: m_Name
       value: Player2
@@ -7175,6 +7183,10 @@ PrefabInstance:
     - target: {fileID: 2827347532904647120, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
       propertyPath: m_Name
       value: Real Player 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827347532904647120, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4246946446171550340, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
       propertyPath: m_LocalPosition.y
@@ -18712,6 +18724,10 @@ PrefabInstance:
     - target: {fileID: 2827347532904647120, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
       propertyPath: m_Name
       value: Real Player 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2827347532904647120, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2953382790874061599, guid: bfd3256f490874f4fa20006c2e310026, type: 3}
       propertyPath: m_Name
