@@ -22,6 +22,10 @@ namespace _TeamFolder.PYH._02.Scripts.UI
             settingUi.OnSettingUiHide += SettingSave;
             AStarEventBus.Subscribe<SettingUiEvent>(InteractSetting);
             AStarEventBus.Subscribe<SettingPopupUiEvent>(OpenPopup);
+
+            mixer.SetFloat("Master", PlayerPrefs.GetFloat("MasterDB"));
+            mixer.SetFloat("BGM", PlayerPrefs.GetFloat("BGMDB"));
+            mixer.SetFloat("SFX", PlayerPrefs.GetFloat("SFXDB"));
         }
         private void OnDestroy()
         {
@@ -63,24 +67,63 @@ namespace _TeamFolder.PYH._02.Scripts.UI
 
         public void SetMasterVolume(float amount)
         {
-            float dB = Mathf.Log10(amount) * 20f;
+            float dB;
+
+            if (amount <= 0.0001f)
+            {
+                dB = -80f;
+            }
+            else
+            {
+                dB = Mathf.Log10(amount) * 20f;
+            }
+
+            dB = Mathf.Clamp(dB, -80f, 0f);
+
             mixer.SetFloat("Master", dB);
 
             PlayerPrefs.SetFloat("MasterVolume", amount);
+            PlayerPrefs.SetFloat("MasterDB", dB);
         }
         public void SetBGMVolume(float amount)
         {
-            float dB = Mathf.Log10(amount) * 20f;
+            float dB;
+
+            if (amount <= 0.0001f)
+            {
+                dB = -80f;
+            }
+            else
+            {
+                dB = Mathf.Log10(amount) * 20f;
+            }
+
+            dB = Mathf.Clamp(dB, -80f, 0f);
+
             mixer.SetFloat("BGM", dB);
 
             PlayerPrefs.SetFloat("BGMVolume", amount);
+            PlayerPrefs.SetFloat("BGMDB", dB);
         }
         public void SetSfxVolume(float amount)
         {
-            float dB = Mathf.Log10(amount) * 20f;
+            float dB;
+
+            if (amount <= 0.0001f)
+            {
+                dB = -80f;
+            }
+            else
+            {
+                dB = Mathf.Log10(amount) * 20f;
+            }
+
+            dB = Mathf.Clamp(dB, -80f, 0f);
+
             mixer.SetFloat("SFX", dB);
 
             PlayerPrefs.SetFloat("SFXVolume", amount);
+            PlayerPrefs.SetFloat("SFXDB", dB);
         }
     }
 }
