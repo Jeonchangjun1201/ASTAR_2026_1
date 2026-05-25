@@ -1,4 +1,5 @@
 using System.Linq;
+using _TeamFolder.PYH._02.Scripts.Player;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,8 +8,8 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
     public class PassTheBomb : AbstractMiniGame, IMiniGame
     {
         private bool _init;
-        
-        public Player.Player[] PlayerList { get; private set; }
+
+        public AbstractMiniGameModule[] ModuleList { get; private set; }
         public int MaxPlayer { get; private set; }
         public int CurrentPlayer { get; private set; }
         [field: SerializeField] public UnityEvent OnMiniGameEndEvent { get; private set; }
@@ -21,21 +22,21 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
 
             Debug.Assert(currentBomb != null, "currentBomb is null");
             
-            PlayerList = FindObjectsOfType<Player.Player>().ToArray<Player.Player>(); // Temporary, Load Player
+            ModuleList = FindObjectsOfType<PassTheBombModule>().ToArray(); // Temporary, Load Player
 
-            for (int i = 0; i < PlayerList.Length; i++)
+            for (int i = 0; i < ModuleList.Length; i++)
             {
-                Player.Player player = PlayerList[i];
+                PassTheBombModule module = ModuleList[i] as PassTheBombModule;
 
-                player.index = i;
-                player.onExplosionEvent += OutPlayer;
+                module.Index = i;
+                module.onExplosionEvent += OutPlayer;
             }
 
-            CurrentPlayer = PlayerList.Length;
+            CurrentPlayer = ModuleList.Length;
             currentBomb.StartBomb(RandomPlayer());
         }
         
-        public void OutPlayer(Player.Player player, int index)
+        public void OutPlayer(PassTheBombModule player, int index)
         {
             CurrentPlayer--;
             player.onExplosionEvent -= OutPlayer;
@@ -62,11 +63,11 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
                 Debug.Log("All Player Def.");
             }
 
-            for (int i = 0; i < PlayerList.Length; i++)
+            for (int i = 0; i < ModuleList.Length; i++)
             {
-                if (PlayerList[i].gameObject.activeSelf)
+                if (ModuleList[i].gameObject.activeSelf)
                 {
-                    Debug.Log($"Player {PlayerList[i].index}, Win.");
+                    Debug.Log($"Player {ModuleList[i].Index}, Win.");
                 }
             }
             
@@ -75,15 +76,16 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.PassTheBomb
         
         private void PlayerAllDelEvent()
         {
-            foreach (var player in PlayerList)
+            foreach (var module in ModuleList)
             {
+                PassTheBombModule player = module as PassTheBombModule;
                 player.onExplosionEvent -= OutPlayer;
             }
         }
 
-        private Player.Player RandomPlayer()
+        private PassTheBombModule RandomPlayer()
         {
-            Player.Player player = PlayerList[Random.Range(0, PlayerList.Length)];
+            PassTheBombModule player = ModuleList[Random.Range(0, ModuleList.Length)] as PassTheBombModule;
 
             return !player.gameObject.activeSelf ? RandomPlayer() : player;
         }

@@ -31,6 +31,13 @@ namespace _TeamFolder.PYH._02.Scripts.UI
         private void SetTime(DigitalClockUiTimeSetEvent @event)
         {
             _selectedTime = @event.SEC;
+            
+            int minutes = _selectedTime / 60;
+            int seconds = _selectedTime % 60;
+
+            string timeText = $"{minutes:00}:{seconds:00}";
+            
+            label.text = timeText;
         }
 
         private void StartTimer(DigitalClockUiStartEvent @event)
