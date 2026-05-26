@@ -7,38 +7,74 @@ using _TeamFolder.PYH._04.Datas;
 using Assets._TeamFolder.PYH._02.Scripts.UI;
 using Assets._TeamFolder.PYH._02.Scripts.UI.Event;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _TeamFolder.PYH._02.Scripts
 {
     public class UiInputManager : MonoSingleton<UiInputManager>
     {
+        private string _curSceneName;
+        
         private PopupUi _curPop;
         [SerializeField] private UiInputSO uiInputData;
         private bool _isOccupied;
-        private bool canInput = true;
+        private bool _canInput = true;
 
         private new void Awake()
         {
             base.Awake();
 
+            AStarEventBus.Subscribe<SetUiInputEvent>(SetInputControl);
             AStarEventBus.Subscribe<UiInteractEvent>(UiInteract);
-            //uiInputData.OnPlayEvent += 
+            uiInputData.OnPlayEvent += PlayModeEventHandler;
             uiInputData.OnSettingEvent += SettingEventHandler;
             uiInputData.OnGuideEvent += GuideEventHandler;
             uiInputData.OnQuitEvent += QuitEventHandler;
+            
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         private void OnDestroy()
         {
+            AStarEventBus.Unsubscribe<SetUiInputEvent>(SetInputControl);
             AStarEventBus.Unsubscribe<UiInteractEvent>(UiInteract);
-            //uiInputData.OnPlayEvent -=
+            uiInputData.OnPlayEvent -= PlayModeEventHandler;
             uiInputData.OnSettingEvent -= SettingEventHandler;
             uiInputData.OnGuideEvent -= GuideEventHandler;
             uiInputData.OnQuitEvent -= QuitEventHandler;
+            
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (_curPop != null)
+            {
+                if (_curPop is SettingUiControlHub)
+                {
+                    SettingEventHandler();
+                }
+                else
+                {
+                    _isOccupied = false;
+                }
+                
+                _curPop = null;
+            }
+            
+            _curSceneName = scene.name;
+        }
+        
+        private void PlayModeEventHandler()
+        {
+            if (!_canInput) return;
+            if (_curSceneName != "Title Scene") return;
+            
+            AStarEventBus.Publish(new PlayModeUiEvent());
+        }
         private void QuitEventHandler()
         {
-            if (!canInput) return;
+            if (!_canInput) return;
+            if (_curSceneName != "Title Scene") return;
             
             if (_isOccupied)
                 return;
@@ -47,7 +83,8 @@ namespace _TeamFolder.PYH._02.Scripts
         }
         private void GuideEventHandler()
         {
-            if (!canInput) return;
+            if (!_canInput) return;
+            if (_curSceneName != "Title Scene") return;
         
             if (_isOccupied)
                 return;
@@ -56,7 +93,7 @@ namespace _TeamFolder.PYH._02.Scripts
         }
         private void SettingEventHandler()
         {
-            if (!canInput) return;
+            if (!_canInput) return;
         
             if (_isOccupied && _curPop is not SettingUiControlHub)
             {
@@ -86,7 +123,7 @@ namespace _TeamFolder.PYH._02.Scripts
         
         private void UiInteract(UiInteractEvent @event)
         {
-            if ((_curPop != null && _curPop.GetType() != @event.Ui.GetType() && _isOccupied) || !canInput)
+            if ((_curPop != null && _curPop.GetType() != @event.Ui.GetType() && _isOccupied) || !_canInput)
                 return;
             
             bool isOpen = @event.Ui.InteractPopup();
@@ -100,6 +137,16 @@ namespace _TeamFolder.PYH._02.Scripts
             {
                 _curPop = @event.Ui;
             }
+        }
+
+        private void SetInputControl(SetUiInputEvent @event)
+        {
+            _canInput = @event.CanInput;   
+        }
+
+        private void PopupClear()
+        {
+            
         }
     }
 }
