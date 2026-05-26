@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using UnityEngine;
 
 namespace KSY.Networks
 {
@@ -16,6 +17,8 @@ namespace KSY.Networks
         private SocketAsyncEventArgs acceptArgs;
         private int isClosed;
 
+        public Action OnAccepted;
+
         public IRoomManager Rooms => roomManager;
         public bool IsOpened => Volatile.Read(ref isClosed) == 0;
 
@@ -28,11 +31,13 @@ namespace KSY.Networks
             roomManager = GetInstance<IRoomManager>();
         }
 
-        public void Listen(int port, int backlog = 10)
+        public void Listen(string ipAddress, int port, Action onAccepted = null, int backlog = 10)
         {
+            this.OnAccepted = onAccepted;
+            IPAddress.TryParse(ipAddress, out IPAddress address);
             Volatile.Write(ref isClosed, 0);
             listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            listenSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+            listenSocket.Bind(new IPEndPoint(address, port));
             listenSocket.Listen(backlog);
             acceptArgs = new SocketAsyncEventArgs();
             acceptArgs.Completed += HandleAccepted;
@@ -78,6 +83,12 @@ namespace KSY.Networks
                 return;
             }
 
+            if (OnAccepted == null)
+                CustomLog.Log("OnAccepted is null", Color.red);
+            else
+                CustomLog.Log($"OnAccepted is {OnAccepted.Method}", Color.green);
+
+            OnAccepted?.Invoke();
             sessionFactory.Create(this, acceptArgs.AcceptSocket).Open(acceptArgs.AcceptSocket, packetSerializer, packetDispatcher);
             AcceptAsync();
         }
