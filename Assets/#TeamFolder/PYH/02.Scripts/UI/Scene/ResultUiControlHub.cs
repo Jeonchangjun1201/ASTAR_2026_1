@@ -4,7 +4,6 @@ using _TeamFolder.PYH._02.Scripts.Data;
 using _TeamFolder.PYH._02.Scripts.UI.Event;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace _TeamFolder.PYH._02.Scripts.UI.Scene
@@ -48,7 +47,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
                 PlayerInfo info = @event.PlayerResultInfos[i];
 
                 ResultBox obj = Instantiate(resultBoxPrefab, point);
-                obj.Initialize(info.NickName, info.Point, info.Ranking);
+                obj.Initialize(info.Index, info.NickName, info.Point, info.Ranking);
 
                 boxes[i] = obj;
                 _boxMap.Add(info.NickName, obj);
@@ -118,7 +117,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
 
                 if (updateText)
                 {
-                    box.Initialize(info.NickName, info.Point, info.Ranking);
+                    box.Initialize(info.Index, info.NickName, info.Point, info.Ranking);
                 }
             }
         }

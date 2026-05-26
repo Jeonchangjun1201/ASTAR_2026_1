@@ -1,5 +1,5 @@
 using _TeamFolder.PYH._02.Scripts.Data;
-using _TeamFolder.PYH._02.Scripts.MiniGame.UI;
+using _TeamFolder.PYH._02.Scripts.UI.Scene;
 using DG.Tweening;
 using UnityEngine;
 
@@ -56,6 +56,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI
                 boxes[i].transform.localScale = Vector3.zero;
 
                 boxes[i].Initialize(
+                    @event.Results[i].index,
                     @event.Results[i].nickname,
                     @event.Results[i].score,
                     i + 1

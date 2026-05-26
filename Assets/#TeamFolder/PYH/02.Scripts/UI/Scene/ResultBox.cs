@@ -1,10 +1,14 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _TeamFolder.PYH._02.Scripts.UI.Scene
 {
     public class ResultBox : MonoBehaviour
     {
+        [SerializeField] private Sprite[] icons;
+        
+        [SerializeField] private Image icon;
         [SerializeField] private TMP_Text nickNameLabel;
         [SerializeField] private TMP_Text pointLabel;
         [SerializeField] private TMP_Text rankingLabel;
@@ -17,8 +21,9 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
             Rect = GetComponent<RectTransform>();
         }
 
-        public void Initialize(string nickName, int point, int ranking)
+        public void Initialize(int index, string nickName, int point, int ranking)
         {
+            icon.sprite = icons[index];
             NickName = nickName;
             nickNameLabel.text = nickName;
             pointLabel.text = point + "p";
