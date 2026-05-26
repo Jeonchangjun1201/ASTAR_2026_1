@@ -2,9 +2,9 @@ using System;
 using UnityEngine;
 namespace BFS
 {
-    public class TOWTimeManager
-    {
-        private TOWUIManager _uiManager;
+    public class TOWTimeManager                                                                     // 이거 필요 없음!!!!!!!!!!!!!!!
+    {   
+        private TOWUIManager _uiManager;                                                            // 이 클래스 TOWTIMEMANAGER는 사용하지 않음!!!
         private float _elapsedTime;
         private float _endTime;
         public event Action OnTimerEnd;
