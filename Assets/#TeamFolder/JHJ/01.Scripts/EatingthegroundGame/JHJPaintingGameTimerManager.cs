@@ -10,6 +10,9 @@ namespace JHJ.Scripts.EatingthegroundGame
         [SerializeField] private float _readyTimer = 3f;
         [SerializeField] private float _gameTimer = 60f;
 
+        // 👉 추가된 부분: 현재 게임이 진행 중인지 (움직여도 되는지) 체크하는 변수
+        public bool IsGamePlaying { get; private set; } = false;
+
         public event Action OnGameStarted;
         public event Action<float> OnReadyTimeUpdated;
         public event Action<float> OnTimeUpdated;
@@ -22,6 +25,8 @@ namespace JHJ.Scripts.EatingthegroundGame
 
         private IEnumerator GameFlowRoutine()
         {
+            IsGamePlaying = false; // 레디 중에는 못 움직임
+
             // 1. 대기 시간 카운트다운
             float readyTime = _readyTimer;
             while (readyTime > 0)
@@ -31,7 +36,8 @@ namespace JHJ.Scripts.EatingthegroundGame
                 yield return null;
             }
 
-            // 2. 게임 시작 이벤트 발생
+            // 2. 게임 시작
+            IsGamePlaying = true; // 본 게임 시작! 이제 움직임 가능
             OnGameStarted?.Invoke();
 
             // 3. 본 게임 시간 카운트다운
@@ -43,7 +49,8 @@ namespace JHJ.Scripts.EatingthegroundGame
                 yield return null;
             }
 
-            // 4. 게임 종료 처리
+            // 4. 게임 종료
+            IsGamePlaying = false; // 겜 끝났으니 다시 못 움직임
             OnTimeUpdated?.Invoke(0);
             OnGameEnded?.Invoke();
         }
