@@ -1,4 +1,5 @@
 using KSY.Shared;
+using System;
 using UnityEngine;
 
 namespace KSY.Clients
@@ -11,14 +12,14 @@ namespace KSY.Clients
         [SerializeField]
         private DataTableManager dataTableManager;
 
-        public void StartClient()
+        public void StartClient(string host, int port, Action onConnected)
         {
             InputManager.Initialize();
             gameManager.Initialize();
 
             GameClient gameClient = new GameClient();
             gameClient.Initialize(gameManager, dataTableManager);
-            gameClient.Connect(ConnectInfo.IPAddress, ConnectInfo.Port);
+            gameClient.Connect(host, port, onConnected);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace KSY.Shared
             CustomLog.Log($"ÃÑ {_views.Count}°³ÀÇ UI µî·Ï", Color.green);
         }
 
-        public T GetUI<T>(string uiName) where T : class, IView  
+        public T GetView<T>(string uiName) where T : class, IView  
         {
             if (_views.TryGetValue(uiName, out IView ui))
                 return ui as T;

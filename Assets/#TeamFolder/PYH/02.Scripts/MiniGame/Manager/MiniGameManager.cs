@@ -25,6 +25,8 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.Manager
         {
             int count = 4;
             Time.timeScale = 0;
+            AStarEventBus.Publish(new PopupClearEvent());
+            AStarEventBus.Publish(new SetUiInputEvent(false));
             AStarEventBus.Publish(new CountdownUiEvent());
             
             while (count > 0)
@@ -33,6 +35,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.Manager
                 yield return new WaitForSecondsRealtime(1);
             }
             
+            AStarEventBus.Publish(new SetUiInputEvent(true));
             Time.timeScale = 1;
             mini.Initialize();
             OnMiniGameInitEvent?.Invoke();

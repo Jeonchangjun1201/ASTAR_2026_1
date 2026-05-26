@@ -11,7 +11,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI
 {
     public class SettingUiControlHub : PopupUi
     {
-        public event Action<float, float, float> OnSettingUiHide;
+        public event Action<float, float, float> OnSettingVolumeSaveEvent;
         [SerializeField] private CanvasGroup popupCanvas;
         [SerializeField] private CanvasGroup settingCanvas;
         [SerializeField] private GameObject eventSystemPrefab;
@@ -44,7 +44,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI
         private float _masterAmount = 1f; // 0 ~ 1
         private float _bgmAmount = 0.5f; // 0 ~ 1
         private float _sfxAmount = 0.5f; // 0 ~ 1
-        
+
         private void Awake()
         {
             if (EventSystem.current == null)
@@ -145,7 +145,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI
 
             if (!IsOpen)
             {
-                OnSettingUiHide?.Invoke(_masterAmount, _bgmAmount, _sfxAmount);
+                OnSettingVolumeSaveEvent?.Invoke(_masterAmount, _bgmAmount, _sfxAmount);
             }
             
             return IsOpen;
@@ -186,17 +186,17 @@ namespace _TeamFolder.PYH._02.Scripts.UI
             {
                 case SoundLabelEnum.MASTER:
                 {
-                    masterLabel.text = ((int)(amount * 100f)).ToString() + '%';
+                    masterLabel.text = Math.Clamp((int)(amount * 100f), 0, 100).ToString() + '%';
                     break;
                 }
                 case SoundLabelEnum.BGM:
                 {
-                    bgmLabel.text = ((int)(amount * 100f)).ToString() + '%';
+                    bgmLabel.text = Math.Clamp((int)(amount * 100f), 0, 100).ToString() + '%';
                     break;
                 }
                 case SoundLabelEnum.SFX:
                 {
-                    sfxLabel.text = ((int)(amount * 100f)).ToString() + '%';
+                    sfxLabel.text = Math.Clamp((int)(amount * 100f), 0, 100).ToString() + '%';
                     break;
                 }
             }
