@@ -1,15 +1,18 @@
-using System;
-using System.Net;
-using System.Net.Sockets;
+using Assets._TeamFolder.PYH._02.Scripts.UI;
 using BackEnd;
 using BackEnd.Tcp;
+using Cysharp.Threading.Tasks;
 using KSY.Clients;
 using KSY.Servers;
 using KSY.Shared.UI;
 using KSY.Utility;
 using LitJson;
+using System;
+using System.Net;
+using System.Net.Sockets;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace KSY.Shared
 {
@@ -19,7 +22,9 @@ namespace KSY.Shared
         public ServerBootstrap serverBootstrap { get; private set; }
         public ClientBootstrap clientBootstrap { get; private set; }
 
-        private UIHost hostUI;
+        private UIHost _hostUI;
+        private PlayModeUiControlHub _controlHub;
+        private UILoadingView _loadingView;
 
         private const string TABLE_NAME_RoomCodes = "RoomCodes";
         private const string COLUMN_NAME_RoomCode = "RoomCode";
@@ -40,11 +45,19 @@ namespace KSY.Shared
                 DontDestroyOnLoad(gameObject);
                 Initialize();
 
-                hostUI = GameObject.Find("Host").GetComponent<UIHost>();
-                Debug.Assert(hostUI != null, "hostUI is null");
+                _hostUI = GameObject.Find("Host").GetComponent<UIHost>();
+                Debug.Assert(_hostUI != null, "_hostUI is null");
+                _controlHub = GameObject.Find("Play").GetComponent<PlayModeUiControlHub>();
+                Debug.Assert(_controlHub != null, "_controlHub is null");
+
             }
             else
                 Destroy(gameObject);
+        }
+
+        private void Start()
+        {
+            _loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
         }
 
         private void Update()
@@ -98,8 +111,7 @@ namespace KSY.Shared
             }
             else
             {
-                UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
-                loadingView.Show("게스트 로그인 중입니다");
+                _loadingView.Show("게스트 로그인 중입니다");
                 Backend.BMember.LoginWithTheBackendToken(OnLoginWithTheBackendToken);
             }
         }
@@ -108,8 +120,7 @@ namespace KSY.Shared
         {
             if (bro.IsSuccess())
             {
-                UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
-                loadingView.Hide();
+                _loadingView.Hide();
                 CustomLog.Log("로컬에 유효한 게스트 계정 정보가 존재합니다.", Color.green);
                 SelectHostOrVisitor();
             }
@@ -190,16 +201,15 @@ namespace KSY.Shared
 
         private void OnLogin(BackendReturnObject bro)
         {
-            UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
             if (bro.IsSuccess())
             {
                 CustomLog.Log("게스트 로그인 성공", Color.green);
-                loadingView.Hide();
+                _loadingView.Hide();
             }
             else
             {
                 CustomLog.LogError("게스트 로그인 실패 : " + bro);
-                loadingView.Hide();
+                _loadingView.Hide();
             }
         }
         #endregion
@@ -207,12 +217,10 @@ namespace KSY.Shared
         #region Create / Join / Delete Room Control
         public void SelectHostOrVisitor()
         {
-            var hub = GameObject.Find("Play").GetComponent<PlayModeUiControlHub>();
-
-            if (hub.IsOpen)
+            if (_controlHub.IsOpen)
                 return;
 
-            hub.InteractPopup();
+            _controlHub.InteractPopup();
         }
 
         private Action _onLeaveRoomCallback;
@@ -251,12 +259,11 @@ namespace KSY.Shared
         [ContextMenu("CreateRoom")]
         public void CreateRoom()
         {
-            UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
-            loadingView.Show("대기방 상태를 조회하고 있습니다...");
+            _loadingView.Show("대기방 상태를 조회하고 있습니다...");
 
             LeaveAndClearExistingRoom(() =>
             {
-                loadingView.Show("방을 생성중입니다");
+                _loadingView.Show("방을 생성중입니다");
 
                 Backend.Match.OnJoinMatchMakingServer = OnJoinMatchMakingServer;
                 Backend.Match.OnMatchMakingRoomCreate = OnMatchMakingRoomCreate;
@@ -267,8 +274,7 @@ namespace KSY.Shared
 
         public void OnMatchMakingRoomCreate(MatchMakingInteractionEventArgs args)
         {
-            UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
-            loadingView.Hide();
+            _loadingView.Hide();
 
             if (!IsMatchSuccess(args.ErrInfo))
             {
@@ -329,7 +335,7 @@ namespace KSY.Shared
 
             Action onAccepted = () =>
             {
-                hostUI.IncreaseCount();
+                _hostUI.IncreaseCount();
             };
 
             SendQueue.Enqueue(Backend.GameData.Insert, TABLE_NAME_RoomCodes, param, (bro) =>
@@ -338,7 +344,7 @@ namespace KSY.Shared
                 {
                     _myRoomCode = uniqueRoomCode;
                     CustomLog.Log($"최종 방코드 [{_myRoomCode}] (IP: {localIP}) 등록 성공! 플레이어를 기다립니다.", Color.green);
-                    hostUI.SetRoomCode(_myRoomCode);
+                    _hostUI.SetRoomCode(_myRoomCode);
 
                     if (serverBootstrap != null)
                     {
@@ -388,12 +394,20 @@ namespace KSY.Shared
         {
             Action onConnected = () =>
             {
-                UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
-                loadingView.Show("방에서 플레이어를 기다리는 중입니다");
+                // 람다 내부에서 메인 스레드로 전환하여 유니티 UI 크래시를 방지합니다.
+                UniTask.Void(async () =>
+                {
+                    await UniTask.SwitchToMainThread();
+
+                    if (_controlHub != null && _controlHub.IsOpen)
+                        _controlHub.InteractPopup();
+
+                    if (_loadingView != null)
+                        _loadingView.Show("방에서 플레이어를 기다리는 중입니다");
+                });
             };
 
-            UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
-            loadingView.Show("방 정보를 검증하고 기존 세션을 정리 중입니다");
+            _loadingView.Show("방 정보를 검증하고 기존 세션을 정리 중입니다");
 
             LeaveAndClearExistingRoom(() =>
             {
@@ -405,7 +419,7 @@ namespace KSY.Shared
                     if (!bro.IsSuccess())
                     {
                         CustomLog.LogError("방코드 조회 실패: " + bro);
-                        loadingView.Hide();
+                        _loadingView.Hide();
                         return;
                     }
 
@@ -413,7 +427,7 @@ namespace KSY.Shared
                     if (rows.Count == 0)
                     {
                         CustomLog.LogError("존재하지 않는 방코드입니다.");
-                        loadingView.Hide();
+                        _loadingView.Hide();
                         return;
                     }
 
@@ -431,7 +445,7 @@ namespace KSY.Shared
                     CustomLog.Log("방코드 확인 완료. 매칭 서버 접속 준비 중...");
                     UIInputView inputView = ViewManager.Instance.GetView<UIInputView>(typeof(UIInputView).Name);
                     inputView.Hide();
-                    loadingView.Hide();
+                    _loadingView.Hide();
 
                     CustomLog.Log($"ClientBootstrap을 구동합니다. 대상 호스트 IP: {hostIP}:{SERVER_PORT}", Color.cyan);
                     try

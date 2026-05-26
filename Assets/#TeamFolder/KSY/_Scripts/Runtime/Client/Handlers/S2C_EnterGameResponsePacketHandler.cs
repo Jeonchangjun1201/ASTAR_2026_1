@@ -27,7 +27,8 @@ namespace KSY.Clients.Handlers
         {
             ClientInstance.MyPlayerID = packet.PlayerID;
 
-            await SceneManager.LoadSceneAsync(TestDefine.TEST_LOAD_SCENE_NAME, LoadSceneMode.Single);
+            CustomLog.Log("여기서부터 인원수 계산해서 4명이면 씬 진입 로직 구현하기", Color.red);
+            return;
 
             foreach (KeyValuePair<string, UnitDataDTO> element in packet.Players)
             {

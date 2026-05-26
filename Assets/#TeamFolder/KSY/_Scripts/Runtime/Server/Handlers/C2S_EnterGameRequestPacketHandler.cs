@@ -27,12 +27,23 @@ namespace KSY.Servers.Handlers
 
         ValueTask IPacketHandler<C2S_EnterGameRequestPacket>.HandlePacket(Session session, C2S_EnterGameRequestPacket packet)
         {
-            string playerID = Guid.NewGuid().ToString();
-            gameServer.AddPlayer(playerID, session);
-            Player unitPrefab = dataTableManager.gameConfigTable.GetPlayerPrefab();
-            Player unit = Object.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity);
-            unit.Initialize(playerID);
-            gameManager.AddPlayer(playerID, unit);
+            string playerName = packet.PlayerName;
+            gameServer.AddPlayer(playerName, session);
+            int playerCount = gameServer.GetPlayerCount();
+
+            if(playerCount == 3)
+                CustomLog.Log($"플레이어가 모두 접속했습니다. 게임을 시작하겠습니다.", Color.green);
+            else
+            {
+                CustomLog.Log($"플레이어 한 명이 접속했습니다. 현재 인원수 : {playerCount}", Color.green);
+                return default;
+            }
+
+
+            //Player unitPrefab = dataTableManager.gameConfigTable.GetPlayerPrefab();
+            //Player unit = Object.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity);
+            //unit.Initialize(playerName);
+            //gameManager.AddPlayer(playerName, unit);
 
             Dictionary<string, UnitDataDTO> players = new Dictionary<string, UnitDataDTO>();
             gameManager.ForEachPlayer((otherPlayerID, otherPlayer) => {
@@ -41,18 +52,18 @@ namespace KSY.Servers.Handlers
 
             S2C_EnterGameResponsePacket responsePacket = new S2C_EnterGameResponsePacket()
             {
-                PlayerID = playerID,
+                PlayerID = playerName,
                 Players = players,
             };
             session.SendAsync(responsePacket);
 
-            S2C_EnterGameBroadcastPacket broadcastPacket = new S2C_EnterGameBroadcastPacket()
+            S2C_EnterMainGameBroadcastPacket broadcastPacket = new S2C_EnterMainGameBroadcastPacket()
             {
-                PlayerID = playerID,
+                PlayerID = playerName,
                 UnitData = new CreatePlayerData(unit).unitData
             };
-            gameServer.Send(broadcastPacket, (sessionID, session) => sessionID != playerID);
-            CustomLog.Log("Send : S2C_EnterGameBroadcastPacket", UnityEngine.Color.red);
+            gameServer.Send(broadcastPacket, (sessionID, session) => sessionID != playerName);
+            CustomLog.Log("Send : S2C_EnterMainGameBroadcastPacket", UnityEngine.Color.red);
 
             return new ValueTask();
         }

@@ -8,6 +8,6 @@ namespace KSY.Shared.Packets
     [MemoryPackable]
     public partial class C2S_EnterGameRequestPacket : IPacket
     {
-
+        public string PlayerName { get; set; }
     }
 }

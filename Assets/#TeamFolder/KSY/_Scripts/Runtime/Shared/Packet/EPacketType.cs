@@ -4,7 +4,7 @@ namespace KSY.Shared.Packets
     {
         C2S_EnterGameRequestPacket,
         S2C_EnterGameResponsePacket,
-        S2C_EnterGameBroadcastPacket,
+        S2C_S2C_EnterMainGameBroadcastPacket,
 
         C2S_MoveInputPacket,
         S2C_MoveInputBroadcastPacket,

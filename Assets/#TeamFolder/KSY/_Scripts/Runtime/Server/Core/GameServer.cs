@@ -72,5 +72,7 @@ namespace KSY.Servers
             playerIDMap.TryGetValue(session, out string playerID);
             return playerID;
         }
+
+        public int GetPlayerCount() => playerIDMap.Count;
     }
 }
