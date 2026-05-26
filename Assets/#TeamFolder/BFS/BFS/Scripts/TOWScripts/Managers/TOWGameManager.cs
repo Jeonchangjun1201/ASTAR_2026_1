@@ -33,9 +33,14 @@ namespace BFS
             _gameOverManager = new TOWGameOverManager(qteManager, _scoreManager, uiManager);                                            // Constructpr // 생성자
             _rope = GetComponentInChildren<RopeTOW>();
             qteManager.Initialize(_rope, playerList, _scoreManager, uiManager);                                                         // Initialize Key minigame manager // 미니게임 매니저
-            DigitalClockUiTimeSetEvent ev = new DigitalClockUiTimeSetEvent(60);
-            AStarEventBus.Publish(ev);
             gameTimerUi.OnTimeEndedEvent += EndGame;
+        }
+
+        private void Start()
+        {
+            DigitalClockUiTimeSetEvent ev = new DigitalClockUiTimeSetEvent(60);
+            Debug.Log(ev.SEC);
+            AStarEventBus.Publish(ev);
         }
         private void Update()                                                                                                           // TEMPORARY; FOR DEBUGGING // 임시
         {
