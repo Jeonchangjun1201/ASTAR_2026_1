@@ -1,4 +1,3 @@
-using Assets._TeamFolder.PYH._02.Scripts.UI;
 using BackEnd;
 using BackEnd.Tcp;
 using Cysharp.Threading.Tasks;
@@ -12,7 +11,6 @@ using System.Net;
 using System.Net.Sockets;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace KSY.Shared
 {
@@ -49,7 +47,6 @@ namespace KSY.Shared
                 Debug.Assert(_hostUI != null, "_hostUI is null");
                 _controlHub = GameObject.Find("Play").GetComponent<PlayModeUiControlHub>();
                 Debug.Assert(_controlHub != null, "_controlHub is null");
-
             }
             else
                 Destroy(gameObject);
@@ -333,10 +330,7 @@ namespace KSY.Shared
             param.Add(COLUMN_NAME_RoomCode, uniqueRoomCode);
             param.Add(COLUMN_NAME_HostIP, localIP);
 
-            Action onAccepted = () =>
-            {
-                _hostUI.IncreaseCount();
-            };
+            Action onAccepted = (() => _hostUI.IncreaseCount());
 
             SendQueue.Enqueue(Backend.GameData.Insert, TABLE_NAME_RoomCodes, param, (bro) =>
             {
@@ -346,11 +340,12 @@ namespace KSY.Shared
                     CustomLog.Log($"최종 방코드 [{_myRoomCode}] (IP: {localIP}) 등록 성공! 플레이어를 기다립니다.", Color.green);
                     _hostUI.SetRoomCode(_myRoomCode);
 
-                    if (serverBootstrap != null)
+                    if (serverBootstrap != null && clientBootstrap != null)
                     {
                         CustomLog.Log($"ServerBootstrap을 구동합니다. 로컬 호스트 오픈 IP: {localIP}:{SERVER_PORT}", Color.cyan);
 
                         serverBootstrap.StartServer(localIP, SERVER_PORT, onAccepted);
+                        clientBootstrap.StartClient(localIP, SERVER_PORT, null);
                     }
                     else
                     {

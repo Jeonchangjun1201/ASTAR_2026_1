@@ -18,8 +18,8 @@ namespace KSY.Clients.Handlers
 
         ValueTask IPacketHandler<S2C_MoveInputBroadcastPacket>.HandlePacket(Session session, S2C_MoveInputBroadcastPacket packet)
         {
-            //CustomLog.Log("S2C_MoveInputBroadcastPacketHandler : HandlePacket", UnityEngine.Color.orange);
-            Player player = gameManager.GetPlayer(packet.PlayerId);
+            PlayerDataDTO playerData = gameManager.GetPlayer(packet.PlayerId);
+            Player player = null;
             if (player == null)
             {
                 CustomLog.Log("S2C_MoveInputBroadcastPacketHandler : Not Found Player", UnityEngine.Color.orange);
