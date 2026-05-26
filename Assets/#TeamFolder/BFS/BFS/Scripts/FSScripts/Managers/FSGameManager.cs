@@ -1,3 +1,4 @@
+using csiimnida.CSILib.SoundManager.RunTime;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace BFS
         [SerializeField] private FSPlateManager plateManager;
         [SerializeField] private FSCameraManager cameraManager;
         [SerializeField] private FSStageManager stageManager;
+        private SoundManager _soundManager;
         private List<FSPlayer> _playerList = new List<FSPlayer>();
         private FSScreenManager _screenManager;
         private FSUIManager _uiManager;
