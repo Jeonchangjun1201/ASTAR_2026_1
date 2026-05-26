@@ -14,6 +14,6 @@ public class PlayModeButtonControlHub : MonoBehaviour
     public void OnClickJoin()
     {
         SoundManager.Instance.PlaySound("General-Ui_Click");
-        AStarEventBus.Publish(new PlayModeSelectUiEvent(PlayModeEnum.JOIN));
+        //AStarEventBus.Publish(new PlayModeSelectUiEvent(PlayModeEnum.JOIN));
     }
 }

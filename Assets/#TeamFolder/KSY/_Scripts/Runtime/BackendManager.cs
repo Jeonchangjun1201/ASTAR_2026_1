@@ -19,6 +19,8 @@ namespace KSY.Shared
         public ServerBootstrap serverBootstrap { get; private set; }
         public ClientBootstrap clientBootstrap { get; private set; }
 
+        private UIHost hostUI;
+
         private const string TABLE_NAME_RoomCodes = "RoomCodes";
         private const string COLUMN_NAME_RoomCode = "RoomCode";
         private const string COLUMN_NAME_HostIP = "HostIP";
@@ -37,6 +39,9 @@ namespace KSY.Shared
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
                 Initialize();
+
+                hostUI = GameObject.Find("Host").GetComponent<UIHost>();
+                Debug.Assert(hostUI != null, "hostUI is null");
             }
             else
                 Destroy(gameObject);
@@ -202,7 +207,6 @@ namespace KSY.Shared
         #region Create / Join / Delete Room Control
         public void SelectHostOrVisitor()
         {
-            CustomLog.Log("SelectHostOrVisitor", Color.red);
             var hub = GameObject.Find("Play").GetComponent<PlayModeUiControlHub>();
 
             if (hub.IsOpen)
@@ -211,7 +215,7 @@ namespace KSY.Shared
             hub.InteractPopup();
         }
 
-        private System.Action _onLeaveRoomCallback;
+        private Action _onLeaveRoomCallback;
 
         private void OnMatchMakingRoomLeaveInternal(MatchMakingInteractionEventArgs args)
         {
@@ -229,7 +233,7 @@ namespace KSY.Shared
             }
         }
 
-        private void LeaveAndClearExistingRoom(System.Action nextAction)
+        private void LeaveAndClearExistingRoom(Action nextAction)
         {
             if (!string.IsNullOrEmpty(_myRoomCode))
                 DeleteRoomCode();
@@ -323,23 +327,23 @@ namespace KSY.Shared
             param.Add(COLUMN_NAME_RoomCode, uniqueRoomCode);
             param.Add(COLUMN_NAME_HostIP, localIP);
 
+            Action onAccepted = () =>
+            {
+                hostUI.IncreaseCount();
+            };
+
             SendQueue.Enqueue(Backend.GameData.Insert, TABLE_NAME_RoomCodes, param, (bro) =>
             {
                 if (bro.IsSuccess())
                 {
                     _myRoomCode = uniqueRoomCode;
                     CustomLog.Log($"최종 방코드 [{_myRoomCode}] (IP: {localIP}) 등록 성공! 플레이어를 기다립니다.", Color.green);
-                    var hostUI = GameObject.Find("Host").GetComponent<UIHost>();
                     hostUI.SetRoomCode(_myRoomCode);
 
                     if (serverBootstrap != null)
                     {
                         CustomLog.Log($"ServerBootstrap을 구동합니다. 로컬 호스트 오픈 IP: {localIP}:{SERVER_PORT}", Color.cyan);
-                        Action onAccepted = () =>
-                        {
-                            var hostUI = GameObject.Find("Host").GetComponent<UIHost>();
-                            hostUI.IncreaseCount();
-                        };
+
                         serverBootstrap.StartServer(localIP, SERVER_PORT, onAccepted);
                     }
                     else
@@ -382,8 +386,14 @@ namespace KSY.Shared
 
         public void JoinRoomByCode(string roomCode)
         {
+            Action onConnected = () =>
+            {
+                UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
+                loadingView.Show("방에서 플레이어를 기다리는 중입니다");
+            };
+
             UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
-            loadingView.Show("방 정보를 검증하고 기존 세션을 정리 중입니다...");
+            loadingView.Show("방 정보를 검증하고 기존 세션을 정리 중입니다");
 
             LeaveAndClearExistingRoom(() =>
             {
@@ -426,7 +436,7 @@ namespace KSY.Shared
                     CustomLog.Log($"ClientBootstrap을 구동합니다. 대상 호스트 IP: {hostIP}:{SERVER_PORT}", Color.cyan);
                     try
                     {
-                        clientBootstrap.StartClient(hostIP, SERVER_PORT);
+                        clientBootstrap.StartClient(hostIP, SERVER_PORT, onConnected);
                         _isInMatchRoom = true;
                         CustomLog.Log("방 입장 성공!", Color.green);
                     }
