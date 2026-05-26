@@ -90,12 +90,12 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
     ""maps"": [
         {
             ""name"": ""Player"",
-            ""id"": ""5139e80a-88b7-477c-b0ee-9401aa055019"",
+            ""Id"": ""5139e80a-88b7-477c-b0ee-9401aa055019"",
             ""actions"": [
                 {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
-                    ""id"": ""d77d766d-fd7e-4d89-a6cf-1e1aba1e2d07"",
+                    ""Id"": ""d77d766d-fd7e-4d89-a6cf-1e1aba1e2d07"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -104,7 +104,7 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
                 {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
-                    ""id"": ""0e3e0c92-b6a0-4e33-b5b3-db90a32fd75b"",
+                    ""Id"": ""0e3e0c92-b6a0-4e33-b5b3-db90a32fd75b"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -114,7 +114,7 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
             ""bindings"": [
                 {
                     ""name"": ""WASD"",
-                    ""id"": ""01c8a16f-4fd0-4f8a-afe2-d36f0a43e316"",
+                    ""Id"": ""01c8a16f-4fd0-4f8a-afe2-d36f0a43e316"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -125,7 +125,7 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""7fabc056-cd74-4b33-8153-4ab070a504b4"",
+                    ""Id"": ""7fabc056-cd74-4b33-8153-4ab070a504b4"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -136,7 +136,7 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""8e72ad60-823c-40de-adf1-5c71a43bfbbe"",
+                    ""Id"": ""8e72ad60-823c-40de-adf1-5c71a43bfbbe"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -147,7 +147,7 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""6f7216d9-01cc-4eb5-895e-b78b0a0a1520"",
+                    ""Id"": ""6f7216d9-01cc-4eb5-895e-b78b0a0a1520"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -158,7 +158,7 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""b77f4240-155f-4b51-bb2f-06103868ce45"",
+                    ""Id"": ""b77f4240-155f-4b51-bb2f-06103868ce45"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -169,7 +169,7 @@ public partial class @BFSTempPlayerControls: IInputActionCollection2, IDisposabl
                 },
                 {
                     ""name"": """",
-                    ""id"": ""74d23f18-bbe9-4d2f-82d9-a51bb224b6c1"",
+                    ""Id"": ""74d23f18-bbe9-4d2f-82d9-a51bb224b6c1"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",

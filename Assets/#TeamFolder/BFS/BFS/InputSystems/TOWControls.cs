@@ -90,12 +90,12 @@ public partial class @TOWControls: IInputActionCollection2, IDisposable
     ""maps"": [
         {
             ""name"": ""Player"",
-            ""id"": ""19a1b0cc-8671-49c9-bf0f-0d4d47884ee4"",
+            ""Id"": ""19a1b0cc-8671-49c9-bf0f-0d4d47884ee4"",
             ""actions"": [
                 {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
-                    ""id"": ""9b2c00a9-b8ab-48ac-b956-435f4cac8c6b"",
+                    ""Id"": ""9b2c00a9-b8ab-48ac-b956-435f4cac8c6b"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -105,7 +105,7 @@ public partial class @TOWControls: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": ""WASD"",
-                    ""id"": ""dde0d5dd-b946-4498-9606-14fff794dfb6"",
+                    ""Id"": ""dde0d5dd-b946-4498-9606-14fff794dfb6"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -116,7 +116,7 @@ public partial class @TOWControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""4a6b62d5-78ed-4a71-9742-e6bd50b1c62c"",
+                    ""Id"": ""4a6b62d5-78ed-4a71-9742-e6bd50b1c62c"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -127,7 +127,7 @@ public partial class @TOWControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""65860149-ae92-4d5f-af7c-cc9530a641dc"",
+                    ""Id"": ""65860149-ae92-4d5f-af7c-cc9530a641dc"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -138,7 +138,7 @@ public partial class @TOWControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""080abab5-ac04-41b8-94f1-69fa00bfab50"",
+                    ""Id"": ""080abab5-ac04-41b8-94f1-69fa00bfab50"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -149,7 +149,7 @@ public partial class @TOWControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""e2ec663c-f724-40ca-8c33-baeab02fd862"",
+                    ""Id"": ""e2ec663c-f724-40ca-8c33-baeab02fd862"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",

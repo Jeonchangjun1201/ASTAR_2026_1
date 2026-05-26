@@ -1,6 +1,5 @@
 using KSY.Networks;
 using MemoryPack;
-using System.Numerics;
 
 namespace KSY.Shared.Packets
 {
@@ -8,6 +7,6 @@ namespace KSY.Shared.Packets
     [MemoryPackable]
     public partial class C2S_EnterGameRequestPacket : IPacket
     {
-
+        public string PlayerName { get; set; }
     }
 }

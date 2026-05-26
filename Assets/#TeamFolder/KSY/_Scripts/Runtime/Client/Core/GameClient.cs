@@ -1,3 +1,4 @@
+using BackEnd;
 using Cysharp.Threading.Tasks;
 using KSY.Networks;
 using KSY.Shared;
@@ -22,7 +23,11 @@ namespace KSY.Clients
             session.OnOpenedEvent += async session =>
             {
                 await UniTask.Yield();
-                session.SendAsync(new C2S_EnterGameRequestPacket());
+                session.SendAsync(new C2S_EnterGameRequestPacket()
+                {
+                    PlayerName = Backend.UserNickName
+                });
+
             };
 
             UnityPacketDispatcher unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();

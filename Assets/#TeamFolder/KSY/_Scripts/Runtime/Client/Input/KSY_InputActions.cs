@@ -92,12 +92,12 @@ namespace KSY.Clients
     ""maps"": [
         {
             ""name"": ""Player"",
-            ""id"": ""c5aad7a4-49bb-40a2-8e3a-1a1a2cc6c638"",
+            ""Id"": ""c5aad7a4-49bb-40a2-8e3a-1a1a2cc6c638"",
             ""actions"": [
                 {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
-                    ""id"": ""67e8510c-ec32-4be8-867e-2f0edc338f3b"",
+                    ""Id"": ""67e8510c-ec32-4be8-867e-2f0edc338f3b"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -107,7 +107,7 @@ namespace KSY.Clients
             ""bindings"": [
                 {
                     ""name"": ""WSAD"",
-                    ""id"": ""d98d5fb0-1c67-46d7-9429-a9018a95109e"",
+                    ""Id"": ""d98d5fb0-1c67-46d7-9429-a9018a95109e"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -118,7 +118,7 @@ namespace KSY.Clients
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""f40e1226-0cb9-4699-9548-41308526a3c4"",
+                    ""Id"": ""f40e1226-0cb9-4699-9548-41308526a3c4"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -129,7 +129,7 @@ namespace KSY.Clients
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""ce62dacc-872e-4218-a2f7-e7b36cdc9e6a"",
+                    ""Id"": ""ce62dacc-872e-4218-a2f7-e7b36cdc9e6a"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -140,7 +140,7 @@ namespace KSY.Clients
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""6d62e59a-a1a7-46aa-8bfc-8230ead1e11b"",
+                    ""Id"": ""6d62e59a-a1a7-46aa-8bfc-8230ead1e11b"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -151,7 +151,7 @@ namespace KSY.Clients
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""edd97a99-05d0-4586-bcbc-70b4cd4dbf2d"",
+                    ""Id"": ""edd97a99-05d0-4586-bcbc-70b4cd4dbf2d"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",

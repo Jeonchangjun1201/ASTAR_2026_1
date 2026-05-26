@@ -90,12 +90,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     ""maps"": [
         {
             ""name"": ""UI"",
-            ""id"": ""272f6d14-89ba-496f-b7ff-215263d3219f"",
+            ""Id"": ""272f6d14-89ba-496f-b7ff-215263d3219f"",
             ""actions"": [
                 {
                     ""name"": ""Play"",
                     ""type"": ""Button"",
-                    ""id"": ""7c53f4d1-8db1-4cc8-b465-959dba08b1e1"",
+                    ""Id"": ""7c53f4d1-8db1-4cc8-b465-959dba08b1e1"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -104,7 +104,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Setting"",
                     ""type"": ""Button"",
-                    ""id"": ""0522014e-8556-41cf-819d-e0159aca3f78"",
+                    ""Id"": ""0522014e-8556-41cf-819d-e0159aca3f78"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -113,7 +113,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Guide"",
                     ""type"": ""Button"",
-                    ""id"": ""f1d611fb-4726-4a9b-8028-a9419311b651"",
+                    ""Id"": ""f1d611fb-4726-4a9b-8028-a9419311b651"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -122,7 +122,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Quit"",
                     ""type"": ""Button"",
-                    ""id"": ""c7a94f87-30fc-4a8c-908b-1bc4be5eabce"",
+                    ""Id"": ""c7a94f87-30fc-4a8c-908b-1bc4be5eabce"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -132,7 +132,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""80af40c9-3f92-4aa1-b98a-b344cd9b72cb"",
+                    ""Id"": ""80af40c9-3f92-4aa1-b98a-b344cd9b72cb"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -143,7 +143,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""08c93726-ed7e-4a45-ba7d-909dd3c58885"",
+                    ""Id"": ""08c93726-ed7e-4a45-ba7d-909dd3c58885"",
                     ""path"": ""<Keyboard>/i"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -154,7 +154,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""30189f1c-b181-4a94-9f9c-d481da640d96"",
+                    ""Id"": ""30189f1c-b181-4a94-9f9c-d481da640d96"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -165,7 +165,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""576bf6b1-9424-4f4f-9d33-8ad8354d90f5"",
+                    ""Id"": ""576bf6b1-9424-4f4f-9d33-8ad8354d90f5"",
                     ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
