@@ -38,7 +38,7 @@ namespace JHJ.Scripts.EatingthegroundGame
             // 테스트를 위해 바로 시작하도록 둡니다.
             StartGame();
         }
-
+        // !!!!이 스크립트 안 씀 쓰지 마셈 
         public void StartGame()
         {
             _isGameRunning = true;
@@ -84,7 +84,7 @@ namespace JHJ.Scripts.EatingthegroundGame
             ExecuteItemSpawnFromServer(packet);
         }
 
-        // 3️⃣ [서버 응답] 서버 명령을 받아 모든 플레이어 화면에 아이템 생성
+        // 3️⃣ [서버 응답] 서버 명령을 받아 모든 플레이어 화면에 아이템 생성 -> 필요없는 거
         public void ExecuteItemSpawnFromServer(ItemSpawnPacket packet)
         {
             GameObject prefabToSpawn = null;

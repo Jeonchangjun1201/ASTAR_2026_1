@@ -168,9 +168,14 @@ namespace JHJ.Scripts.Test.TestPlayer
             transform.rotation = nextRotation;
 
             SendMovementDataToServer(_playerIndex, transform.position, nextVelocity, nextRotation);
+            if (!JHJPaintingGameTimerManager.Instance.IsGamePlaying)
+            {
+                moveSpeed = 0;
+            }
         }
 
         public void SendMovementDataToServer(PlayerIndex index, Vector3 position, Vector3 velocity, Quaternion rotation)
+
         {
             PlayerMovementPacket packet = new PlayerMovementPacket
             {
