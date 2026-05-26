@@ -1,3 +1,4 @@
+using KSY.Utility;
 using TMPro;
 using UnityEngine;
 
@@ -12,12 +13,14 @@ namespace KSY.Shared.UI
 
         public void IncreaseCount()
         {
-            _personalCount++;
+            ++_personalCount;
+            CustomLog.Log($"Count : {_personalCount}");
             SetPersonnelCount(_personalCount);
         }
         public void Decrease()
         {
-            _personalCount--;
+            ++_personalCount;
+            CustomLog.Log($"Count : {_personalCount}");
             SetPersonnelCount(_personalCount);
         }
 

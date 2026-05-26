@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using UnityEngine;
 
 namespace KSY.Networks
 {
@@ -82,8 +83,12 @@ namespace KSY.Networks
                 return;
             }
 
-            OnAccepted?.Invoke();
+            if (OnAccepted == null)
+                CustomLog.Log("OnAccepted is null", Color.red);
+            else
+                CustomLog.Log($"OnAccepted is {OnAccepted.Method}", Color.green);
 
+            OnAccepted?.Invoke();
             sessionFactory.Create(this, acceptArgs.AcceptSocket).Open(acceptArgs.AcceptSocket, packetSerializer, packetDispatcher);
             AcceptAsync();
         }
