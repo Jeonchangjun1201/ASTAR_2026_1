@@ -20,5 +20,11 @@ namespace _TeamFolder.PYH._02.Scripts.UI
         {
             AStarEventBus.Publish(new SettingPopupUiEvent(SettingPopupEnum.DISPLAY));
         }
+
+        public void OnClickQuitInSetting()
+        {
+            AStarEventBus.Publish(new SettingUiEvent());
+            AStarEventBus.Publish(new QuitUiEvent());
+        }
     }
 }

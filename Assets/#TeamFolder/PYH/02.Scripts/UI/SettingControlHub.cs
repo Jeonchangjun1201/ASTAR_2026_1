@@ -12,9 +12,9 @@ namespace _TeamFolder.PYH._02.Scripts.UI
         [SerializeField] private SettingUiControlHub settingUi;
         [SerializeField] private AudioMixer mixer;
         
-        private float _masterDB = 0;
-        private float _bgmDB = 0;
-        private float _sfxDB = 0;
+        private float _masterDB;
+        private float _bgmDB;
+        private float _sfxDB;
         
         private bool _isOpenSound;
         private bool _isOpenDisplay;
@@ -35,18 +35,24 @@ namespace _TeamFolder.PYH._02.Scripts.UI
             mixer.SetFloat("Master", PlayerPrefs.GetFloat("MasterDB", _masterDB));
             mixer.SetFloat("BGM", PlayerPrefs.GetFloat("BGMDB", _bgmDB));
             mixer.SetFloat("SFX", PlayerPrefs.GetFloat("SFXDB", _sfxDB));
+            
+            Debug.Log("MASTER" + PlayerPrefs.GetFloat("MasterDB", _masterDB));
+            Debug.Log("BGM" + PlayerPrefs.GetFloat("BGMDB", _bgmDB));
+            Debug.Log("SFX" + PlayerPrefs.GetFloat("SFXDB", _sfxDB));
         }
 
         private void OnDestroy()
         {
-            mixer.GetFloat("Master", out float m);
-            mixer.GetFloat("BGM", out float b);
-            mixer.GetFloat("SFX", out float s);
-
-            SettingDBSave(m, b, s);
             settingUi.OnSettingVolumeSaveEvent -= SettingVolumeVolumeSave;
             AStarEventBus.Unsubscribe<SettingUiEvent>(InteractSetting);
             AStarEventBus.Unsubscribe<SettingPopupUiEvent>(OpenPopup);
+        }
+
+        private void OnApplicationQuit()
+        {
+            Debug.Log("QUIT MASTER" + PlayerPrefs.GetFloat("MasterDB", _masterDB));
+            Debug.Log("QUIT BGM" + PlayerPrefs.GetFloat("BGMDB", _bgmDB));
+            Debug.Log("QUIT SFX" + PlayerPrefs.GetFloat("SFXDB", _sfxDB));
         }
         
         public void InteractSetting(SettingUiEvent @event)
@@ -63,14 +69,6 @@ namespace _TeamFolder.PYH._02.Scripts.UI
             PlayerPrefs.SetFloat("MasterVolume", masterVolume);
             PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
             PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
-            PlayerPrefs.Save();
-        }
-
-        private void SettingDBSave(float masterDB, float bgmDB, float sfxDB)
-        {
-            PlayerPrefs.SetFloat("MasterDB", masterDB);
-            PlayerPrefs.SetFloat("BGMDB", bgmDB);
-            PlayerPrefs.SetFloat("SFXDB", sfxDB);
             PlayerPrefs.Save();
         }
         
