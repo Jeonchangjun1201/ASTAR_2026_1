@@ -1,5 +1,3 @@
-using System;
-using UnityEngine;
 namespace BFS
 {
     public interface ITeamTOW

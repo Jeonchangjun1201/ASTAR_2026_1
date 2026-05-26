@@ -1,3 +1,4 @@
+using csiimnida.CSILib.SoundManager.RunTime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ namespace BFS
 {
     public class FSStageManager : MonoBehaviour                                      // Stage manager for Four Sides game 스테이지를 관리하는 관리자
     {
+        [SerializeField] private SoundManager _soundManager;
         [SerializeField] private FSStageListSO stageList;                            // StageList // 스테이지 리스트
         public event Action<FSCameraView> OnCameraViewChange;                        // Action to change camera view // 카메라 시점 변경하는 액션
         public event Action OnPlateQueue;                                            // Action to add plates to queue(and change color screen with game manager) // 발판을 큐에 넣는(그리고 게임 매니저로 모니터 화면을 변경하는) 액션
@@ -42,15 +44,26 @@ namespace BFS
         }
         private void Start()
         {
-            _inGame = true;
-            StartGame(_currentStage);
+            StartCoroutine(StartGameCountDownCoroutine());
         }
         private void Update()
         {
             if (_gameOverManager.UpdateFinalCountdown())
                 EndGame();
         }
-
+        private IEnumerator StartGameCountDownCoroutine()
+        {
+            for (int i = 3; i >= 0; i--)
+            {
+                _uiManager.ChangeText(_uiManager.CountDownText, i.ToString(), 1);
+                yield return new WaitForSeconds(1);
+            }
+            _soundManager.PlaySound("GameStartSFX");
+            _soundManager.PlaySound("FourSide-BGM");
+            _inGame = true;
+            StartGame(_currentStage);
+            _uiManager.ChangeText(_uiManager.CountDownText, "START!", 2);
+        }
         private void StartGame(int index)                                            // Receives index of current stage and checks if stage is available. Start game if it is or ends game if it isn't // 현재 스테이지의 인덱스를 받고 값에 따라 게임을 시작 혹은 끝낸다
         {
             if (IsStageAvailable(index) & _inGame)
@@ -70,6 +83,7 @@ namespace BFS
         private IEnumerator EndGameCoroutine()
         {
             yield return new WaitForSeconds(3.0f);
+            _soundManager.PlaySound("GameEndSFX");
             _gameOverManager.GameOver(_playerList);
         }
         private bool IsStageAvailable(int stageIndex)                                // Method to check if stage is available using index of current stage. Returns true if stage with given index exists in stage list. return false otherwise
@@ -93,6 +107,7 @@ namespace BFS
             for (int i = 0; i < _colorCount; i++)
             {
                 OnPlateQueue?.Invoke();
+                _soundManager.PlaySound("FourSide-MonitorBlink");
                 yield return new WaitForSeconds(_colorDelay);
                 OnScreenReset?.Invoke();
                 yield return new WaitForSeconds(_colorDelay);
@@ -107,9 +122,11 @@ namespace BFS
                 for (int j = _countDownTime; j > 0; j--)
                 {
                     OnCountDown?.Invoke(j);
+                    _soundManager.PlaySound("FourSide-CountDown");
                     yield return new WaitForSeconds(1f);
                 }
                 OnPlateDequeue.Invoke(_plateDisableDuration);
+                _soundManager.PlaySound("FourSide-PlateDisappear");
                 yield return new WaitForSeconds(_plateDisableDuration);
             }
             StartGame(_currentStage);

@@ -1,12 +1,16 @@
+using _TeamFolder.KDH._01.Code.SoccerGame.Manager;
 using _TeamFolder.PYH._02.Scripts.Data;
 using _TeamFolder.PYH._02.Scripts.UI;
 using _TeamFolder.PYH._02.Scripts.UI.Event;
+using csiimnida.CSILib.SoundManager.RunTime;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 namespace BFS
 {
     public class TOWGameManager : MonoBehaviour                                                                                         // Tug Of War manager script // 줄다리기 매니저 
     {
+        [SerializeField] private SoundManager soundManager;
         [SerializeField] private TOWKeyQTEManager qteManager;
         [SerializeField] private float gameTime;
         [SerializeField] private TOWUIManager uiManager;
@@ -32,17 +36,18 @@ namespace BFS
             _scoreManager = new TOWScoreManager(playerList, uiManager);                                                                            // Constructor; sends playerList to ScoreManager then instantiates // 생성자로 스코어 매니저를 만들고 매개변수로 플레이어 리스트 보냄
             _gameOverManager = new TOWGameOverManager(qteManager, _scoreManager, uiManager);                                            // Constructpr // 생성자
             _rope = GetComponentInChildren<RopeTOW>();
-            qteManager.Initialize(_rope, playerList, _scoreManager, uiManager);                                                         // Initialize Key minigame manager // 미니게임 매니저
-            DigitalClockUiTimeSetEvent ev = new DigitalClockUiTimeSetEvent(60);
-            AStarEventBus.Publish(ev);
+            qteManager.Initialize(_rope, playerList, _scoreManager, uiManager, soundManager);                                          // Initialize Key minigame manager // 미니게임 매니저
             gameTimerUi.OnTimeEndedEvent += EndGame;
+        }
+
+        private void Start()
+        {
+            DigitalClockUiTimeSetEvent ev = new DigitalClockUiTimeSetEvent(114);
+            AStarEventBus.Publish(ev);
+            StartCoroutine(StartGameCountdownCoroutine());
         }
         private void Update()                                                                                                           // TEMPORARY; FOR DEBUGGING // 임시
         {
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
-            {
-                StartGame();
-            }
             if (qteManager.IsInGame)
             {
                 if (_gameOverManager.CheckForceEnd())
@@ -55,6 +60,15 @@ namespace BFS
             if (gameTimerUi != null)
                 gameTimerUi.OnTimeEndedEvent -= EndGame;
         }
+        private IEnumerator StartGameCountdownCoroutine()
+        {
+            for(int i = 3; i >= 0; i--)
+            {
+                uiManager.ChangeText(uiManager.GameOverText, i.ToString(), 1);
+                yield return new WaitForSeconds(1);
+            }
+            StartGame();
+        }
         public void StartGame()
         {
             foreach(RopePull rp in playerList)
@@ -62,6 +76,8 @@ namespace BFS
                 rp.TOWAnimator.Play(_pullHash);
             }
             uiManager.ChangeText(uiManager.GameOverText, "START!", 3);
+            soundManager.PlaySound("GameStartSFX");
+            soundManager.PlaySound("TugOfWar-BGM");
             qteManager.StartMinigame();
             DigitalClockUiStartEvent startEv = new DigitalClockUiStartEvent();
             AStarEventBus.Publish(startEv);
@@ -73,6 +89,7 @@ namespace BFS
                 rp.TOWAnimator.Play(_idleHash);
             }
             SetTimerFalse();
+            soundManager.PlaySound("GameEndSFX");
             _gameOverManager.EndGame();
         }
 

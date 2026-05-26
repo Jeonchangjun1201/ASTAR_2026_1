@@ -46,7 +46,7 @@ namespace BFS
                     if (p.IsOut) continue;
                     if (cnt > 0)
                         s += ", ";
-                    s += p.GetComponentInParent<PlayerBFS>().gameObject.name;
+                    s += p.gameObject.name;
                     cnt++;
                 }
                 s += " WON!!!!";
