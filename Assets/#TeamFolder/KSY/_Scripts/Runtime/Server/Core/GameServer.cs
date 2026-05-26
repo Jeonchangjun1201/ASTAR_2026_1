@@ -51,6 +51,10 @@ namespace KSY.Servers
         {
             server.Listen(ipAddress, port);
         }
+        public void Listen(string ipAddress, int port, Action onAccepted)
+        {
+            server.Listen(ipAddress, port, onAccepted);
+        }
 
         public void Send(IPacket packet, Func<string, Session, bool> filter = null)
         {

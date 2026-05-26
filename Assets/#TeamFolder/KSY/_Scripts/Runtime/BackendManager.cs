@@ -93,7 +93,7 @@ namespace KSY.Shared
             }
             else
             {
-                UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+                UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
                 loadingView.Show("게스트 로그인 중입니다");
                 Backend.BMember.LoginWithTheBackendToken(OnLoginWithTheBackendToken);
             }
@@ -103,7 +103,7 @@ namespace KSY.Shared
         {
             if (bro.IsSuccess())
             {
-                UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+                UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
                 loadingView.Hide();
                 CustomLog.Log("로컬에 유효한 게스트 계정 정보가 존재합니다.", Color.green);
                 SelectHostOrVisitor();
@@ -112,7 +112,7 @@ namespace KSY.Shared
             {
                 Backend.BMember.GuestLogin(OnLogin);
                 CustomLog.Log("로컬 게스트 정보 없음");
-                UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+                UIInputView inputView = ViewManager.Instance.GetView<UIInputView>(typeof(UIInputView).Name);
                 inputView.Initialize(TMP_InputField.ContentType.Name, 10);
                 inputView.Show("사용하실 이름을 입력해주세요!");
                 inputView.RegisterInsertEvent(() =>
@@ -152,7 +152,7 @@ namespace KSY.Shared
             if (bro.IsSuccess())
             {
                 CustomLog.Log($"닉네임 생성 성공! 현재 닉네임: {Backend.UserNickName}", Color.green);
-                UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+                UIInputView inputView = ViewManager.Instance.GetView<UIInputView>(typeof(UIInputView).Name);
                 inputView.Hide();
                 SelectHostOrVisitor();
             }
@@ -164,7 +164,7 @@ namespace KSY.Shared
 
         private void CreateNicknameError(string name)
         {
-            UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+            UIInputView inputView = ViewManager.Instance.GetView<UIInputView>(typeof(UIInputView).Name);
 
             if (string.IsNullOrEmpty(name))
             {
@@ -185,7 +185,7 @@ namespace KSY.Shared
 
         private void OnLogin(BackendReturnObject bro)
         {
-            UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+            UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
             if (bro.IsSuccess())
             {
                 CustomLog.Log("게스트 로그인 성공", Color.green);
@@ -225,7 +225,7 @@ namespace KSY.Shared
             else
             {
                 CustomLog.LogError("기존 대기방 세션 정리에 실패했습니다: " + args.ErrInfo);
-                ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name).Hide();
+                ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name).Hide();
             }
         }
 
@@ -247,7 +247,7 @@ namespace KSY.Shared
         [ContextMenu("CreateRoom")]
         public void CreateRoom()
         {
-            UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+            UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
             loadingView.Show("대기방 상태를 조회하고 있습니다...");
 
             LeaveAndClearExistingRoom(() =>
@@ -263,7 +263,7 @@ namespace KSY.Shared
 
         public void OnMatchMakingRoomCreate(MatchMakingInteractionEventArgs args)
         {
-            UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+            UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
             loadingView.Hide();
 
             if (!IsMatchSuccess(args.ErrInfo))
@@ -329,11 +329,18 @@ namespace KSY.Shared
                 {
                     _myRoomCode = uniqueRoomCode;
                     CustomLog.Log($"최종 방코드 [{_myRoomCode}] (IP: {localIP}) 등록 성공! 플레이어를 기다립니다.", Color.green);
+                    var hostUI = GameObject.Find("Host").GetComponent<UIHost>();
+                    hostUI.SetRoomCode(_myRoomCode);
 
                     if (serverBootstrap != null)
                     {
                         CustomLog.Log($"ServerBootstrap을 구동합니다. 로컬 호스트 오픈 IP: {localIP}:{SERVER_PORT}", Color.cyan);
-                        serverBootstrap.StartServer(localIP, SERVER_PORT);
+                        Action onAccepted = () =>
+                        {
+                            var hostUI = GameObject.Find("Host").GetComponent<UIHost>();
+                            hostUI.IncreaseCount();
+                        };
+                        serverBootstrap.StartServer(localIP, SERVER_PORT, onAccepted);
                     }
                     else
                     {
@@ -352,7 +359,7 @@ namespace KSY.Shared
             if (!IsMatchSuccess(args.ErrInfo))
             {
                 CustomLog.LogError("매칭 서버 접속 실패: " + args.ErrInfo);
-                ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name).Hide();
+                ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name).Hide();
                 return;
             }
             CustomLog.Log("매칭 서버 접속 성공", Color.green);
@@ -362,7 +369,7 @@ namespace KSY.Shared
         [ContextMenu("Join Room")]
         public void JoinRoomByCode()
         {
-            UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+            UIInputView inputView = ViewManager.Instance.GetView<UIInputView>(typeof(UIInputView).Name);
             inputView.Initialize(TMP_InputField.ContentType.IntegerNumber, 4);
             inputView.Show("방 코드를 입력해주세요");
 
@@ -375,7 +382,7 @@ namespace KSY.Shared
 
         public void JoinRoomByCode(string roomCode)
         {
-            UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+            UILoadingView loadingView = ViewManager.Instance.GetView<UILoadingView>(typeof(UILoadingView).Name);
             loadingView.Show("방 정보를 검증하고 기존 세션을 정리 중입니다...");
 
             LeaveAndClearExistingRoom(() =>
@@ -412,7 +419,7 @@ namespace KSY.Shared
                     }
 
                     CustomLog.Log("방코드 확인 완료. 매칭 서버 접속 준비 중...");
-                    UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
+                    UIInputView inputView = ViewManager.Instance.GetView<UIInputView>(typeof(UIInputView).Name);
                     inputView.Hide();
                     loadingView.Hide();
 

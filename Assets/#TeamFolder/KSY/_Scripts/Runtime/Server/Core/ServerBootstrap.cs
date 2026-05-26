@@ -1,5 +1,6 @@
 using KSY.Shared;
 using KSY.Utility;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,13 +15,13 @@ namespace KSY.Servers
         [SerializeField]
         private string inGameSceneName;
         
-        public async void StartServer(string ipAddress, int port)
+        public async void StartServer(string ipAddress, int port, Action onAccepted)
         {
             gameManager.Initialize();
 
             GameServer gameServer = new GameServer();
             gameServer.Initialize(gameManager, dataTableManager);
-            gameServer.Listen(ipAddress, port);
+            gameServer.Listen(ipAddress, port, onAccepted);
 
             await SceneManager.LoadSceneAsync(TestDefine.TEST_LOAD_SCENE_NAME, LoadSceneMode.Single);
         }
