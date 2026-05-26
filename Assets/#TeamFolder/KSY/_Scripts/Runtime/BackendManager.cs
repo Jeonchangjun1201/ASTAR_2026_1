@@ -7,7 +7,6 @@ using KSY.Utility;
 using LitJson;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace KSY.Shared
 {
@@ -73,9 +72,17 @@ namespace KSY.Shared
         [ContextMenu("Login")]
         public void Login()
         {
-            UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
-            loadingView.Show("게스트 로그인 중입니다");
-            Backend.BMember.LoginWithTheBackendToken(OnLoginWithTheBackendToken);
+            BackendReturnObject bro = Backend.BMember.IsAccessTokenAlive();
+            if (bro.IsSuccess())
+            {
+                SelectHostOrVisitor();
+            }
+            else
+            {
+                UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
+                loadingView.Show("게스트 로그인 중입니다");
+                Backend.BMember.LoginWithTheBackendToken(OnLoginWithTheBackendToken);
+            }
         }
 
         private void OnLoginWithTheBackendToken(BackendReturnObject bro)
@@ -85,14 +92,14 @@ namespace KSY.Shared
                 UILoadingView loadingView = ViewManager.Instance.GetUI<UILoadingView>(typeof(UILoadingView).Name);
                 loadingView.Hide();
                 CustomLog.Log("로컬에 유효한 게스트 계정 정보가 존재합니다.", Color.green);
-                SceneManager.LoadScene("KSY_HostOrVisitor");
+                SelectHostOrVisitor();
             }
             else
             {
                 Backend.BMember.GuestLogin(OnLogin);
                 CustomLog.Log("로컬 게스트 정보 없음");
                 UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
-                Initialize();
+                inputView.Initialize(TMP_InputField.ContentType.Name, 10);
                 inputView.Show("사용하실 이름을 입력해주세요!");
                 inputView.RegisterInsertEvent(() =>
                 {
@@ -134,9 +141,8 @@ namespace KSY.Shared
             {
                 CustomLog.Log($"닉네임 생성 성공! 현재 닉네임: {Backend.UserNickName}", Color.green);
                 UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
-                inputView.Initialize(TMP_InputField.ContentType.Name, 10);
                 inputView.Hide();
-                SceneManager.LoadScene("KSY_HostOrVisitor");
+                SelectHostOrVisitor();
             }
             else
             {
@@ -182,6 +188,17 @@ namespace KSY.Shared
         #endregion
 
         #region Create Room
+        public void SelectHostOrVisitor()
+        {
+            CustomLog.Log("SelectHostOrVisitor", Color.red);
+            var hub = GameObject.Find("Play").GetComponent<PlayModeUiControlHub>();
+
+            if (hub.IsOpen)
+                return;
+
+            hub.InteractPopup();
+        }
+
         [ContextMenu("CreateRoom")]
         public void CreateRoom()
         {

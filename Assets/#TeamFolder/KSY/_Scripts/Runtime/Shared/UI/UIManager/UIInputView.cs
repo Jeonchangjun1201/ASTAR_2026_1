@@ -1,3 +1,4 @@
+using KSY.Utility;
 using System;
 using TMPro;
 using UnityEngine;
@@ -18,7 +19,11 @@ namespace KSY.Shared.UI
             insertButton.Initialize();
         }
 
-        public void RegisterInsertEvent(Action OnInsertButtonClicked) => insertButton.OnClicked += OnInsertButtonClicked;
+        public void RegisterInsertEvent(Action OnInsertButtonClicked)
+        {
+            CustomLog.Log("RegisterInsertEvent");
+            insertButton.OnClicked += OnInsertButtonClicked;
+        }
 
         public string GetInput() => inputField.GetInput();
 
