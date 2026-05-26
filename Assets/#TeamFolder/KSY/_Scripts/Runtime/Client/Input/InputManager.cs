@@ -9,6 +9,8 @@ namespace KSY.Clients
         private static KSY_InputActions inputActions = null;
         private static Type currentInputReaderType = null;
 
+        public static bool CanInput = false;
+
         static InputManager()
         {
             inputReaders = new Dictionary<Type, InputReaderBase>();
@@ -16,7 +18,12 @@ namespace KSY.Clients
             currentInputReaderType = null;
         }
 
-        public static void Initialize() => currentInputReaderType = null;
+        public static void Initialize()
+        {
+            currentInputReaderType = null;
+        }
+
+        public static void SetInput(bool canInput) => CanInput = canInput;
 
         public static void Release()
         {

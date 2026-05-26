@@ -15,7 +15,7 @@ namespace KSY.Clients
 
         public void Initialize(GameManager gameManager, DataTableManager dataTableManager)
         {
-            GameInstance.PlayMode = EPlayMode.Client;
+            GameInstance.PlayMode |= EPlayMode.Client;
             GameInstance.DataTableManager = dataTableManager;
             ClientInstance.GameClient = this;
 

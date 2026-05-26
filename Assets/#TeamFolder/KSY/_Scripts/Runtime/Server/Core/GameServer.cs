@@ -3,6 +3,7 @@ using KSY.Shared;
 using KSY.Utility;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 
 namespace KSY.Servers
@@ -82,6 +83,6 @@ namespace KSY.Servers
         }
 
         public int GetPlayerCount() => playerNameMap.Count;
-        public Dictionary<string, PlayerDataDTO> GetPlayers() => new Dictionary<string, PlayerDataDTO>(playerDataMap);
+        public List<PlayerDataDTO> GetPlayers() => playerDataMap.Values.ToList();
     }
 }

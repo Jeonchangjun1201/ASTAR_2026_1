@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace KSY.Clients
+namespace KSY.Shared
 {
     [CreateAssetMenu(fileName = "GameData", menuName = "KSY/SO/GameData")]
     public class MiniGameDataSO : ScriptableObject
@@ -11,6 +11,7 @@ namespace KSY.Clients
 #endif
 
         [SerializeField] private string sceneName;
+        [SerializeField] private string gameName;
 
         public string SceneName => sceneName;
 

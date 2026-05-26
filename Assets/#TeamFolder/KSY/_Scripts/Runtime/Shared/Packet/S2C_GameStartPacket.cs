@@ -9,7 +9,7 @@ namespace KSY.Shared
     [MemoryPackable]
     public partial class S2C_GameStartBroadCastPacket : IPacket
     {
-        public Dictionary<string, PlayerDataDTO> Players { get; set; }
+        public List<PlayerDataDTO> PlayerList { get; set; }
         public string StartMiniGame { get; set; }
     }
 }

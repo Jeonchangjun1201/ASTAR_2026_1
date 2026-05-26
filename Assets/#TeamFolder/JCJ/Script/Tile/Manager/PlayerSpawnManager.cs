@@ -73,7 +73,7 @@ namespace _TeamFolder.JCJ.TileGame
                 players.Add(pc);
             }
 
-            Debug.Log($"[PlayerSpawnManager] Spawned {players.Count} Players.");
+            Debug.Log($"[PlayerSpawnManager] Spawned {players.Count} PlayerList.");
             return players;
         }
     }

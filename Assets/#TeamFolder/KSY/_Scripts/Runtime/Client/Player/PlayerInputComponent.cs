@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace KSY.Clients
 {
-    public class UnitInputComponent : MonoBehaviour
+    public class PlayerInputComponent : MonoBehaviour
     {
         private Player player = null;
         private PlayerInputReader playerInputReader = null;
@@ -14,11 +14,13 @@ namespace KSY.Clients
         private void Awake()
         {
             player = GetComponent<Player>();
+            InputManager.Initialize();
             playerInputReader = InputManager.GetInput<PlayerInputReader>();
         }
 
         private void Update()
         {
+            if (!InputManager.CanInput) return;
             if (lastMoveInput != playerInputReader.MovementInput)
             {
                 lastMoveInput = playerInputReader.MovementInput;
