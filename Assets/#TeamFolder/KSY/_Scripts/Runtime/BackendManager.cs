@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Sockets;
 using BackEnd;
@@ -22,6 +23,9 @@ namespace KSY.Shared
         private const string COLUMN_NAME_RoomCode = "RoomCode";
         private const string COLUMN_NAME_HostIP = "HostIP";
         private string _myRoomCode;
+
+        // 포트 번호를 중앙 집중식 상수로 관리합니다.
+        private const int SERVER_PORT = 9678;
 
         // [핵심] 뒤끝 SDK에 방 존재 여부 함수가 없으므로, 로컬에서 상태를 직접 추적합니다.
         private bool _isInMatchRoom = false;
@@ -270,7 +274,7 @@ namespace KSY.Shared
             }
 
             CustomLog.Log("대기방 생성 성공!", Color.green);
-            _isInMatchRoom = true; 
+            _isInMatchRoom = true;
             SaveRoomCodeWithCheck(0);
         }
 
@@ -284,7 +288,7 @@ namespace KSY.Shared
                 return;
             }
 
-            string targetRoomCode = Random.Range(1000, 10000).ToString();
+            string targetRoomCode = UnityEngine.Random.Range(1000, 10000).ToString();
             CustomLog.Log($"방코드 검증 시도 ({attemptCount + 1}회차): {targetRoomCode}");
 
             Where where = new Where();
@@ -325,6 +329,16 @@ namespace KSY.Shared
                 {
                     _myRoomCode = uniqueRoomCode;
                     CustomLog.Log($"최종 방코드 [{_myRoomCode}] (IP: {localIP}) 등록 성공! 플레이어를 기다립니다.", Color.green);
+
+                    if (serverBootstrap != null)
+                    {
+                        CustomLog.Log($"ServerBootstrap을 구동합니다. 로컬 호스트 오픈 IP: {localIP}:{SERVER_PORT}", Color.cyan);
+                        serverBootstrap.StartServer(localIP, SERVER_PORT);
+                    }
+                    else
+                    {
+                        CustomLog.LogError("ServerBootstrap 컴포넌트를 찾을 수 없어 서버를 시작하지 못했습니다.");
+                    }
                 }
                 else
                 {
@@ -400,38 +414,20 @@ namespace KSY.Shared
                     CustomLog.Log("방코드 확인 완료. 매칭 서버 접속 준비 중...");
                     UIInputView inputView = ViewManager.Instance.GetUI<UIInputView>(typeof(UIInputView).Name);
                     inputView.Hide();
+                    loadingView.Hide();
 
-                    Backend.Match.OnJoinMatchMakingServer = (joinArgs) =>
+                    CustomLog.Log($"ClientBootstrap을 구동합니다. 대상 호스트 IP: {hostIP}:{SERVER_PORT}", Color.cyan);
+                    try
                     {
-                        if (!IsMatchSuccess(joinArgs.ErrInfo))
-                        {
-                            CustomLog.LogError("매칭 서버 접속 실패: " + joinArgs.ErrInfo);
-                            loadingView.Hide();
-                            return;
-                        }
-                        CustomLog.Log("매칭 서버 접속 완료. 방 입장을 시도합니다.");
-
-                        int port = 9678;
-                        CustomLog.Log($"ClientBootstrap을 구동합니다. 대상 호스트 IP: {hostIP}:{port}", Color.cyan);
-                        clientBootstrap.StartClient(hostIP, port);
-                    };
-
-                    Backend.Match.OnMatchMakingRoomInviteResponse = (inviteArgs) =>
+                        clientBootstrap.StartClient(hostIP, SERVER_PORT);
+                        _isInMatchRoom = true;
+                        CustomLog.Log("방 입장 성공!", Color.green);
+                    }
+                    catch (Exception ex)
                     {
-                        loadingView.Hide();
-                        if (IsMatchSuccess(inviteArgs.ErrInfo))
-                        {
-                            CustomLog.Log("방 입장 성공!", Color.green);
-                            _isInMatchRoom = true; // 입장 성공 시 상태 변경
-                        }
-                        else
-                        {
-                            CustomLog.LogError("방 입장 실패: " + inviteArgs.ErrInfo);
-                            _isInMatchRoom = false;
-                        }
-                    };
-
-                    Backend.Match.JoinMatchMakingServer(out var matchErrorInfo);
+                        CustomLog.LogError("방 입장 실패: " + ex.ToString());
+                        _isInMatchRoom = false;
+                    }
                 });
             });
         }
@@ -470,44 +466,6 @@ namespace KSY.Shared
                 CustomLog.LogWarning("로컬 IP 주소를 조회하는 중 오류 발생: " + ex.Message);
                 return "0.0.0.0";
             }
-        }
-
-        private void GetHostIPByRoomCode(int roomCode, System.Action<string> onGetComplete)
-        {
-            Where where = new Where();
-            where.Equal(COLUMN_NAME_RoomCode, roomCode.ToString());
-
-            SendQueue.Enqueue(Backend.GameData.Get, TABLE_NAME_RoomCodes, where, (bro) =>
-            {
-                if (!bro.IsSuccess())
-                {
-                    CustomLog.LogError($"방코드 [{roomCode}] IP 조회 실패: {bro}");
-                    onGetComplete?.Invoke(null);
-                    return;
-                }
-
-                JsonData rows = bro.FlattenRows();
-
-                if (rows.Count == 0)
-                {
-                    CustomLog.LogWarning($"방코드 [{roomCode}]에 해당하는 방이 존재하지 않습니다.");
-                    onGetComplete?.Invoke(null);
-                    return;
-                }
-
-                if (rows[0].ContainsKey(COLUMN_NAME_HostIP) && rows[0][COLUMN_NAME_HostIP] != null)
-                {
-                    string hostIP = rows[0][COLUMN_NAME_HostIP].ToString();
-                    CustomLog.Log($"방코드 [{roomCode}]의 Host IP 조회 성공: {hostIP}", Color.green);
-
-                    onGetComplete?.Invoke(hostIP);
-                }
-                else
-                {
-                    CustomLog.LogWarning($"방코드는 존재하나 'hostIP' 컬럼 데이터가 비어있습니다.");
-                    onGetComplete?.Invoke(null);
-                }
-            });
         }
         #endregion
     }
