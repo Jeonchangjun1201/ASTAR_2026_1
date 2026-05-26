@@ -25,6 +25,7 @@ namespace _TeamFolder.PYH._02.Scripts
             base.Awake();
 
             AStarEventBus.Subscribe<SetUiInputEvent>(SetInputControl);
+            AStarEventBus.Subscribe<PopupClearEvent>(PopupClear);
             AStarEventBus.Subscribe<UiInteractEvent>(UiInteract);
             uiInputData.OnPlayEvent += PlayModeEventHandler;
             uiInputData.OnSettingEvent += SettingEventHandler;
@@ -36,6 +37,7 @@ namespace _TeamFolder.PYH._02.Scripts
         private void OnDestroy()
         {
             AStarEventBus.Unsubscribe<SetUiInputEvent>(SetInputControl);
+            AStarEventBus.Unsubscribe<PopupClearEvent>(PopupClear);
             AStarEventBus.Unsubscribe<UiInteractEvent>(UiInteract);
             uiInputData.OnPlayEvent -= PlayModeEventHandler;
             uiInputData.OnSettingEvent -= SettingEventHandler;
@@ -144,9 +146,13 @@ namespace _TeamFolder.PYH._02.Scripts
             _canInput = @event.CanInput;   
         }
 
-        private void PopupClear()
+        private void PopupClear(PopupClearEvent @event)
         {
-            
+            if (_curPop != null)
+            {
+                SettingEventHandler();
+                _curPop = null;
+            }
         }
     }
 }
