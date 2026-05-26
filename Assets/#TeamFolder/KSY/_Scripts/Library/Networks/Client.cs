@@ -51,6 +51,8 @@ namespace KSY.Networks
         {
             if (connectArgs.SocketError == SocketError.Success)
             {
+                if (OnConnected != null)
+                    CustomLog.Log(OnConnected.Method);
                 OnConnected?.Invoke();
                 session.Open(connectArgs.ConnectSocket, packetSerializer, packetDispatcher);
             }

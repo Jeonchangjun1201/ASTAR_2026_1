@@ -9,7 +9,8 @@ namespace KSY.Servers
 {
     public class GameServer : ISessionFactory
     {
-        private Dictionary<Session, string> playerIDMap = null;
+        private Dictionary<Session, string> playerNameMap = null;
+        private Dictionary<string, PlayerDataDTO> playerDataMap = null;
         private Server server = null;
 
         public void Initialize(GameManager gameManager, DataTableManager dataTableManager)
@@ -20,7 +21,8 @@ namespace KSY.Servers
             GameInstance.DataTableManager = dataTableManager;
             ServerInstance.GameServer = this;
 
-            playerIDMap = new Dictionary<Session, string>();
+            playerNameMap = new Dictionary<Session, string>();
+            playerDataMap = new Dictionary<string, PlayerDataDTO>();
 
             UnityPacketDispatcher unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();
             
@@ -61,16 +63,26 @@ namespace KSY.Servers
             server.Rooms.Room(ServerDefine.ROOM_ID).Send(packet, filter);
         }
         
-        public void AddPlayer(string playerId, Session session)
+        public void AddPlayer(string playerName, Session session, PlayerDataDTO playerDataDTO)
         {
-            server.Rooms.Room(ServerDefine.ROOM_ID).Add(playerId, session);
-            playerIDMap[session] = playerId;
+            server.Rooms.Room(ServerDefine.ROOM_ID).Add(playerName, session);
+            playerNameMap[session] = playerName;
+            playerDataMap[playerName] = playerDataDTO;
         }
 
-        public string GetPlayerID(Session session)
+        public string GetPlayerName(Session session)
         {
-            playerIDMap.TryGetValue(session, out string playerID);
-            return playerID;
+            playerNameMap.TryGetValue(session, out string playerName);
+            return playerName;
         }
+
+        public PlayerDataDTO GetPlayerData(string playerName)
+        {
+            playerDataMap.TryGetValue(playerName, out PlayerDataDTO data);
+            return data;
+        }
+
+        public int GetPlayerCount() => playerNameMap.Count;
+        public Dictionary<string, PlayerDataDTO> GetPlayers() => new Dictionary<string, PlayerDataDTO>(playerDataMap);
     }
 }

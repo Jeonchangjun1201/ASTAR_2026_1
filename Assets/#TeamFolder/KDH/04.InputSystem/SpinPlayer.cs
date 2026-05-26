@@ -90,12 +90,12 @@ public partial class @SpinPlayer: IInputActionCollection2, IDisposable
     ""maps"": [
         {
             ""name"": ""Player"",
-            ""id"": ""1dd37697-865e-4787-b622-f4a078f3c010"",
+            ""Id"": ""1dd37697-865e-4787-b622-f4a078f3c010"",
             ""actions"": [
                 {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
-                    ""id"": ""cde45ac4-b0c0-410b-97c3-8669ffb98b17"",
+                    ""Id"": ""cde45ac4-b0c0-410b-97c3-8669ffb98b17"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -105,7 +105,7 @@ public partial class @SpinPlayer: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": ""WASD"",
-                    ""id"": ""0aa5839f-dd15-4d13-b0dc-7c19f60f4fb5"",
+                    ""Id"": ""0aa5839f-dd15-4d13-b0dc-7c19f60f4fb5"",
                     ""path"": ""Dpad"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -116,7 +116,7 @@ public partial class @SpinPlayer: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""fa953c37-2ace-434c-bfa2-ab3c20191a99"",
+                    ""Id"": ""fa953c37-2ace-434c-bfa2-ab3c20191a99"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -127,7 +127,7 @@ public partial class @SpinPlayer: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""8e0d3c51-d4b6-4c9a-93ce-831edcf813bd"",
+                    ""Id"": ""8e0d3c51-d4b6-4c9a-93ce-831edcf813bd"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -138,7 +138,7 @@ public partial class @SpinPlayer: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""730bd089-75d2-462a-87c2-052682685bd7"",
+                    ""Id"": ""730bd089-75d2-462a-87c2-052682685bd7"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -149,7 +149,7 @@ public partial class @SpinPlayer: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""244decea-9508-4c94-ae53-c23da238865f"",
+                    ""Id"": ""244decea-9508-4c94-ae53-c23da238865f"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",

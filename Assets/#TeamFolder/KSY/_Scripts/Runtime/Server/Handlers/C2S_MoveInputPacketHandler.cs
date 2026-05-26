@@ -2,6 +2,7 @@ using KSY.Networks;
 using KSY.Shared;
 using KSY.Shared.Packets;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace KSY.Servers.Handlers
 {
@@ -19,11 +20,13 @@ namespace KSY.Servers.Handlers
 
         ValueTask IPacketHandler<C2S_MoveInputPacket>.HandlePacket(Session session, C2S_MoveInputPacket packet)
         {
-            string playerID = gameServer.GetPlayerID(session);
+            string playerID = gameServer.GetPlayerName(session);
             if (string.IsNullOrEmpty(playerID) == true)
                 return new ValueTask();
 
-            Player player = gameManager.GetPlayer(playerID);
+            PlayerDataDTO playerData = gameManager.GetPlayer(playerID);
+            Player player = null;
+
             if (player == null)
                 return new ValueTask();
 

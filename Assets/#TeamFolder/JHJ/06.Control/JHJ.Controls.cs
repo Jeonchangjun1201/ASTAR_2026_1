@@ -90,12 +90,12 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
     ""maps"": [
         {
             ""name"": ""Player"",
-            ""id"": ""f8615982-9404-47f9-ae18-53659d0e6d07"",
+            ""Id"": ""f8615982-9404-47f9-ae18-53659d0e6d07"",
             ""actions"": [
                 {
                     ""name"": ""Movement1"",
                     ""type"": ""Value"",
-                    ""id"": ""12364eca-f955-4e28-b2bc-d467c1ea45ee"",
+                    ""Id"": ""12364eca-f955-4e28-b2bc-d467c1ea45ee"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -104,7 +104,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Movement2"",
                     ""type"": ""Value"",
-                    ""id"": ""9511ccac-24f4-4b93-93cc-d5cbf4500ac5"",
+                    ""Id"": ""9511ccac-24f4-4b93-93cc-d5cbf4500ac5"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -113,7 +113,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Movement3"",
                     ""type"": ""Value"",
-                    ""id"": ""08596008-eab1-47ef-8b1f-136696b5c8ab"",
+                    ""Id"": ""08596008-eab1-47ef-8b1f-136696b5c8ab"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -122,7 +122,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Movement4"",
                     ""type"": ""Value"",
-                    ""id"": ""ed597533-55ef-4d86-90d7-20973ca9270d"",
+                    ""Id"": ""ed597533-55ef-4d86-90d7-20973ca9270d"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -131,7 +131,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Jump1"",
                     ""type"": ""Button"",
-                    ""id"": ""9e439ed9-519b-437f-9e91-d08263dd45ef"",
+                    ""Id"": ""9e439ed9-519b-437f-9e91-d08263dd45ef"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -140,7 +140,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Look1"",
                     ""type"": ""Value"",
-                    ""id"": ""7d9eeaad-4889-411f-9d35-b723b02bb7e6"",
+                    ""Id"": ""7d9eeaad-4889-411f-9d35-b723b02bb7e6"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -149,7 +149,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Zoom1"",
                     ""type"": ""Value"",
-                    ""id"": ""9e990a9e-5f92-4f85-ac37-7dd4fcb4291b"",
+                    ""Id"": ""9e990a9e-5f92-4f85-ac37-7dd4fcb4291b"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -159,7 +159,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": ""2D Vector"",
-                    ""id"": ""b5937cc2-813c-45d1-9f3c-e4cb190546b9"",
+                    ""Id"": ""b5937cc2-813c-45d1-9f3c-e4cb190546b9"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -170,7 +170,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""4156cca4-744d-4750-bb7a-e1b3144afcd1"",
+                    ""Id"": ""4156cca4-744d-4750-bb7a-e1b3144afcd1"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -181,7 +181,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""94502598-4976-46be-ad50-607844efc515"",
+                    ""Id"": ""94502598-4976-46be-ad50-607844efc515"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -192,7 +192,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""f6079209-33fe-4100-8865-37bcbce826b1"",
+                    ""Id"": ""f6079209-33fe-4100-8865-37bcbce826b1"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -203,7 +203,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""eb60fe0d-179c-451d-9861-f7fd1feb4809"",
+                    ""Id"": ""eb60fe0d-179c-451d-9861-f7fd1feb4809"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -214,7 +214,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""2D Vector"",
-                    ""id"": ""bc4f5e86-714e-4bbf-bcab-aef2f4a4e0ef"",
+                    ""Id"": ""bc4f5e86-714e-4bbf-bcab-aef2f4a4e0ef"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -225,7 +225,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""9756087e-5248-4b3c-a2d7-309904afdb09"",
+                    ""Id"": ""9756087e-5248-4b3c-a2d7-309904afdb09"",
                     ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -236,7 +236,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""1ba73e3e-e094-40f3-a6f7-1eee607b7224"",
+                    ""Id"": ""1ba73e3e-e094-40f3-a6f7-1eee607b7224"",
                     ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -247,7 +247,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""6108410d-5a2a-4179-ad05-f610f71a3e8f"",
+                    ""Id"": ""6108410d-5a2a-4179-ad05-f610f71a3e8f"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -258,7 +258,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""790554a9-d210-4342-b21c-503578bb76e2"",
+                    ""Id"": ""790554a9-d210-4342-b21c-503578bb76e2"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -269,7 +269,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""2D Vector"",
-                    ""id"": ""470ae83d-b1dc-4539-adf3-cfc75df596df"",
+                    ""Id"": ""470ae83d-b1dc-4539-adf3-cfc75df596df"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -280,7 +280,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""8ea5333a-4542-4723-bd46-a7822e74c516"",
+                    ""Id"": ""8ea5333a-4542-4723-bd46-a7822e74c516"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -291,7 +291,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""6e42fc3b-f84b-424d-9a06-2d32f4a2204f"",
+                    ""Id"": ""6e42fc3b-f84b-424d-9a06-2d32f4a2204f"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -302,7 +302,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""866838f7-04a1-46b4-b139-0b6081344b30"",
+                    ""Id"": ""866838f7-04a1-46b4-b139-0b6081344b30"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -313,7 +313,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""cdf2b142-a9ec-4784-b980-7b62ac0cd612"",
+                    ""Id"": ""cdf2b142-a9ec-4784-b980-7b62ac0cd612"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -324,7 +324,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""2D Vector"",
-                    ""id"": ""f324c132-d440-444a-b518-6488316435df"",
+                    ""Id"": ""f324c132-d440-444a-b518-6488316435df"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -335,7 +335,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""2699b917-ba48-4f3e-a3f9-7ec2b589d006"",
+                    ""Id"": ""2699b917-ba48-4f3e-a3f9-7ec2b589d006"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -346,7 +346,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""05e183be-218a-4857-9988-1ab164316bb3"",
+                    ""Id"": ""05e183be-218a-4857-9988-1ab164316bb3"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -357,7 +357,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""ced42f53-f4d5-4fcd-99b3-d9c22593fe5d"",
+                    ""Id"": ""ced42f53-f4d5-4fcd-99b3-d9c22593fe5d"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -368,7 +368,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""ba636f9d-7682-4c1b-88f4-52e6b95d46f9"",
+                    ""Id"": ""ba636f9d-7682-4c1b-88f4-52e6b95d46f9"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -379,7 +379,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8e98c7f3-40c1-4f8a-8f88-9ae6d9e1d5eb"",
+                    ""Id"": ""8e98c7f3-40c1-4f8a-8f88-9ae6d9e1d5eb"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -390,7 +390,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7d4a7c4d-5265-4181-bb8f-89e4f7aae7d7"",
+                    ""Id"": ""7d4a7c4d-5265-4181-bb8f-89e4f7aae7d7"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -401,7 +401,7 @@ public partial class @JHJControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d957d89b-b676-49a2-8ada-77b04ecc1450"",
+                    ""Id"": ""d957d89b-b676-49a2-8ada-77b04ecc1450"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
                     ""processors"": """",
