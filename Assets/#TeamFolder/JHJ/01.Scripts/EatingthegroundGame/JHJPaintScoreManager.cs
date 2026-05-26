@@ -1,34 +1,32 @@
 ﻿using _TeamFolder.PYH._02.Scripts.Util;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace JHJ.Scripts.EatingthegroundGame
 {
     public class JHJPaintScoreManager : MonoSingleton<JHJPaintScoreManager>
     {
         [Header("계산 설정")]
-        [SerializeField] private RenderTexture _paintCanvas; // 우리가 색칠할 메인 캔바스
-        [SerializeField] private float _checkInterval = 1f;  // 검사 주기 (1초)
+        [SerializeField] private RenderTexture _paintCanvas;
+        [SerializeField] private float _checkInterval = 1f;
 
         [Header("플레이어 색상 (4개 세팅)")]
         [SerializeField] private Color[] _playerColors = new Color[4];
 
-        [SerializeField] private float _percentage;
+        // 인스펙터에서 바로 수정 가능한 순위별 보상 점수!
+        [Header("순위별 지급 점수 설정 (1등~4등)")]
+        [SerializeField] private int[] _rankRewardPoints = new int[4] { 100, 50, 30, 10 };
+
         private Texture2D _tempTexture;
+        [SerializeField] private JHJPaintingGameTimerManager _gameTimer;
 
         private void Start()
         {
-            // 1. 텍스쳐 크기랑 같은 종이? 도화지? 같은 거 만들기
             _tempTexture = new Texture2D(_paintCanvas.width, _paintCanvas.height, TextureFormat.RGBA32, false);
-
-            //1초마다 퍼센 테이지를 계산
-            InvokeRepeating(nameof(CalculatePaintPercentage), 1f, _checkInterval);
         }
-
-        [SerializeField] private JHJPaintingGameTimerManager _gameTimer; // 타이머 스크립트 연결
 
         private void OnEnable()
         {
-            // 타이머의 '종료 이벤트'를 구독 (게임이 끝나면 HandleGameEnd 함수 실행)
             if (_gameTimer != null)
                 _gameTimer.OnGameEnded += HandleGameEnd;
         }
@@ -41,50 +39,37 @@ namespace JHJ.Scripts.EatingthegroundGame
 
         private void HandleGameEnd()
         {
-            
-            CalculatePaintPercentage();//여기서 전체 결과 계산
-
-            // _uiManager.ShowResultScreen(scores); 요건 나중에 UI에 반영 했을 때 예시
-
-            //여기서 겜 끝나고 정보 전달하면 됨
+            PrintGameEndLog();
+            CalculateAndPrintRanking();
         }
-    
-        private void CalculatePaintPercentage()
+
+        private void PrintGameEndLog()
         {
-            if (_paintCanvas == null) return;
+            Debug.Log("======================================");
+            Debug.Log(" 게임 종료 ");
+            Debug.Log("======================================");
+        }
 
-            //RenderTexture.active를 키며 작업할 캔버스를 지정
+        private void CalculateAndPrintRanking()
+        {
+            if (_paintCanvas == null || _tempTexture == null) return;
+
             RenderTexture.active = _paintCanvas;
-
-            //_tempTexture.ReadPixels(new Rect(0, 0, _paintCanvas.width, _paintCanvas.height), 0, 0);로 
-            //_tempTexture에 x,y좌표를 기준으로 도화지 저장(아무것도 없는 빈)
             _tempTexture.ReadPixels(new Rect(0, 0, _paintCanvas.width, _paintCanvas.height), 0, 0);
-
-            // 지금까지 작업( _tempTexture.ReadPixels(new Rect(0, 0, _paintCanvas.width, _paintCanvas.height), 0, 0);) 을 저장
             _tempTexture.Apply();
-
-            //RenderTexture.active를 끔
             RenderTexture.active = null;
 
-
-
-            // 이미지의 모든 픽셀 색상 정보를 1줄짜리 긴 배열(목록)로 뽑아주는 함수
             Color[] pixels = _tempTexture.GetPixels();
-
             int totalPixels = pixels.Length;
-            int[] playerScores = new int[4]; // 4명 점수 저장
+            int[] playerScores = new int[4];
 
-            //위에서 뽑은 색상 정보를 전부 검사
             for (int i = 0; i < totalPixels; i++)
             {
                 Color pColor = pixels[i];
-
-                //만약 도화지가 하얀색(아무것도 안 칠해져 있으면) 넘기기
                 if (pColor.r > 0.95f && pColor.g > 0.95f && pColor.b > 0.95f) continue;
 
                 for (int p = 0; p < _playerColors.Length; p++)
                 {
-                    
                     if (Mathf.Abs(pColor.r - _playerColors[p].r) < 1f &&
                         Mathf.Abs(pColor.g - _playerColors[p].g) < 1f &&
                         Mathf.Abs(pColor.b - _playerColors[p].b) < 1f)
@@ -95,20 +80,39 @@ namespace JHJ.Scripts.EatingthegroundGame
                 }
             }
 
-            // 결과 출력
-            Debug.Log("=== 현재 땅따먹기 현황 ===");
+            List<(int playerIndex, float percentage)> rankingList = new List<(int, float)>();
             for (int p = 0; p < _playerColors.Length; p++)
             {
-                _percentage = ((float)playerScores[p] / totalPixels) * 100f;
-                Debug.Log($"Player {p + 1} 점수: {_percentage:F2}%");
+                float percentage = ((float)playerScores[p] / totalPixels) * 100f;
+                rankingList.Add((p + 1, percentage));
+            }
+
+            // 퍼센트가 높은 순서대로 정렬 (1등부터 4등까지)
+            rankingList.Sort((a, b) => b.percentage.CompareTo(a.percentage));
+
+            Debug.Log(" === 땅따먹기 순위 ===");
+            for (int i = 0; i < rankingList.Count; i++)
+            {
+                int playerIndex = rankingList[i].playerIndex;
+                float percentage = rankingList[i].percentage;
+
+                //  현재 등수(i)에 맞는 보상 점수 가져오기
+                int rewardPoint = 0;
+                if (i < _rankRewardPoints.Length)
+                {
+                    rewardPoint = _rankRewardPoints[i];
+                }
+
+                // 디버그로 순위, 퍼센트, 획득한 보상 점수를 한 번에 출력
+                Debug.Log($"{i + 1}등: Player {playerIndex} ({percentage:F2}%) -> 획득 보상: {rewardPoint}점!");
             }
         }
+
         public Color GetPlayerColor(int playerIndex)
         {
             if (playerIndex >= 0 && playerIndex < _playerColors.Length)
                 return _playerColors[playerIndex];
-            return Color.white; 
+            return Color.white;
         }
-
     }
 }

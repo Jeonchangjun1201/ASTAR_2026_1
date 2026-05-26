@@ -88,6 +88,10 @@ namespace JHJ.Scripts.Test.TestPlayer
             }
         }
 
+        private void Update()
+        {
+          
+        }
         private void OnDisable()
         {
             switch (_playerIndex)
@@ -134,6 +138,7 @@ namespace JHJ.Scripts.Test.TestPlayer
 
         private void Move()
         {
+            if (!JHJPaintingGameTimerManager.Instance.IsGamePlaying) return;
             if (_mainCamera == null) return;
             if (!_canMove) return;
 
