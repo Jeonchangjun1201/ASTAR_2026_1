@@ -17,16 +17,15 @@ namespace KSY.Servers
         {
             GameManager.Instance.EventChannel?.AddListener<GameQuitEvent>((evt)=> Close());
 
-            GameInstance.PlayMode = EPlayMode.Server;
+            GameInstance.PlayMode |= EPlayMode.Server;
             GameInstance.DataTableManager = dataTableManager;
             ServerInstance.GameServer = this;
 
             playerNameMap = new Dictionary<Session, string>();
             playerDataMap = new Dictionary<string, PlayerDataDTO>();
 
-            UnityPacketDispatcher unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();
-            
-            //Builder 내부에 있는 DIContainer에 Singleton 인스턴스를 생성해서 추가하고 빌드한다.
+            if (!gameManager.TryGetComponent(out UnityPacketDispatcher unityPacketDispatcher))
+                unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();
             server = new ServerBuilder(this, unityPacketDispatcher)
                 .AddSingleton<GameServer>(this)
                 .AddSingleton<GameManager>(gameManager)

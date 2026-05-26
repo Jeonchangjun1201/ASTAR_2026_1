@@ -15,10 +15,9 @@ namespace KSY.Clients
 
         public void StartClient(string host, int port, Action onConnected)
         {
-            InputManager.Initialize();
+            //InputManager.Initialize();
             gameManager.Initialize();
 
-            CustomLog.Log("StartClient", Color.yellow);
             GameClient gameClient = new GameClient();
             gameClient.Initialize(gameManager, dataTableManager);
             gameClient.Connect(host, port, onConnected);

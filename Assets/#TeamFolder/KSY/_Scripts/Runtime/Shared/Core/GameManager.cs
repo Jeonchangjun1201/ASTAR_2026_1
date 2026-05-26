@@ -9,6 +9,8 @@ namespace KSY.Shared
     {
         [field : SerializeField] public EventChannelSO EventChannel { get; private set; }
 
+        public bool Initialized { get; private set; }
+
         private static GameManager instance = null;
         public static GameManager Instance => instance;
 
@@ -16,6 +18,7 @@ namespace KSY.Shared
 
         public void Initialize()
         {
+            if (Initialized) return;
             if (instance != null)
             {
                 Destroy(instance.gameObject);
@@ -25,6 +28,7 @@ namespace KSY.Shared
             DontDestroyOnLoad(gameObject);
 
             players = new Dictionary<string, PlayerDataDTO>();
+            Initialized = true;
         }
 
         private void OnApplicationQuit()

@@ -17,7 +17,6 @@ namespace KSY.Networks
 
         public RoomManager(IPacketDispatcher roomPacketDispatcher, DIContainer diContainer, int workerCount, int capacityPerWorker)
         {
-            CustomLog.Log($"roomPacketDispatcher : {roomPacketDispatcher}",UnityEngine.Color.purple);
             this.roomPacketDispatcher = roomPacketDispatcher;
             rooms = new ConcurrentDictionary<string, Lazy<Room>>();
             sessionRoomMap = new ConcurrentDictionary<Session, Room>();
@@ -104,13 +103,11 @@ namespace KSY.Networks
 
         private Lazy<RoomWorker> WorkerFactory(int capacityPerWorker)
         {
-            Func<RoomWorker> workerFactory = () => {
-
+            Func<RoomWorker> workerFactory = () =>
+            {
                 IPacketDispatcher activeDispatcher = roomPacketDispatcher is RoomPacketDispatcher
                     ? roomPacketDispatcher
                     : new RoomPacketDispatcher(packetHandlerFactory.Value);
-
-                KSY.Utility.CustomLog.Log($"생성된 워커가 사용하는 디스패처 타입: {activeDispatcher.GetType().Name}", UnityEngine.Color.green);
 
                 return new RoomWorker(activeDispatcher, capacityPerWorker);
             };
@@ -120,7 +117,7 @@ namespace KSY.Networks
 
         //private Lazy<RoomWorker> WorkerFactory(int capacityPerWorker)
         //{
-        //    Func<RoomWorker> workerFactory = ()=> new RoomWorker(roomPacketDispatcher ?? new RoomPacketDispatcher(packetHandlerFactory.Value), capacityPerWorker);
+        //    Func<RoomWorker> workerFactory = () => new RoomWorker(roomPacketDispatcher ?? new RoomPacketDispatcher(packetHandlerFactory.Value), capacityPerWorker);
         //    return new Lazy<RoomWorker>(workerFactory);
         //}
     }

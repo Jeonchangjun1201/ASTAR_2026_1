@@ -1,3 +1,4 @@
+using KSY.Utility;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -80,6 +81,7 @@ namespace KSY.Networks
                     try
                     {
                         value.SendAsync(roomPacketSendQueueContext);
+                        CustomLog.Log($"Send Packet Server to Client : {key}", UnityEngine.Color.green);
                         flag = true;
                     }
                     catch

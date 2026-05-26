@@ -36,10 +36,11 @@ namespace KSY.Servers.Handlers
 
             if (playerCount != 4)
             {
-                CustomLog.Log($"플레이어 한 명이 접속했습니다. 현재 인원수 : {playerCount}", Color.green);
+                CustomLog.Log($"플레이어 한 명이 접속했습니다. 접속한 플레이어 : {playerName}, 현재 인원수 : {playerCount}", Color.green);
             }
             else
             {
+                CustomLog.Log($"플레이어 한 명이 접속했습니다. 접속한 플레이어 : {playerName}, 현재 인원수 : {playerCount}", Color.green);
                 CustomLog.Log($"플레이어가 모두 접속했습니다. 게임을 시작하겠습니다.", Color.green);
                 CustomLog.Log($"여기서 시작 미니게임 씬 이름 넣기.", Color.green);
                 S2C_GameStartBroadCastPacket startPacket = new S2C_GameStartBroadCastPacket()
