@@ -32,55 +32,45 @@ namespace KSY.Shared.UI
 
         public void Load()
         {
-            CustomLog.Log("Load");
             if (_animateCoroutine != null)
             {
-                CustomLog.Log("Stop Coroutine");
                 StopCoroutine(_animateCoroutine);
             }
 
-            _animateCoroutine = StartCoroutine(LoadingText());
-            CustomLog.Log("Success Load");
+            _animateCoroutine = StartCoroutine(LoadingText());;
         }
 
         public void Load(string info)
         {
-            CustomLog.Log("Load info");
             baseText = info;
             _loadingText.text = info;
 
             if (_animateCoroutine != null)
             {
-                CustomLog.Log("Stop Coroutine");
                 StopCoroutine(_animateCoroutine);
             }
 
             _animateCoroutine = StartCoroutine(LoadingText());
-            CustomLog.Log("Success Load");
         }
 
         public void Load(string info, Color color)
         {
-            CustomLog.Log("Load info");
             baseText = info;
             _loadingText.text = info;
             _loadingText.color = color;
 
             if (_animateCoroutine != null)
             {
-                CustomLog.Log("Stop Coroutine");
                 StopCoroutine(_animateCoroutine);
             }
 
             _animateCoroutine = StartCoroutine(LoadingText());
-            CustomLog.Log("Success Load");
         }
 
         public void Unload()
         {
             if (_animateCoroutine != null)
             {
-                CustomLog.Log("Stop Coroutine");
                 StopCoroutine(_animateCoroutine);
                 _animateCoroutine = null;
             }
@@ -88,7 +78,6 @@ namespace KSY.Shared.UI
 
         private IEnumerator LoadingText()
         {
-            CustomLog.Log("Start Coroutine");
             if (_animateCoroutine == null) yield break;
 
             int currentDotCount = 1;
@@ -112,8 +101,6 @@ namespace KSY.Shared.UI
                     currentDotCount = 1;
 
                 yield return new WaitForSeconds(dotChangeInterval);
-
-                CustomLog.Log("Start Coroutine");
             }
         }
     }

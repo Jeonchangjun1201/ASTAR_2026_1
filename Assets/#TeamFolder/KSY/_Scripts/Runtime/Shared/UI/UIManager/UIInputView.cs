@@ -21,7 +21,6 @@ namespace KSY.Shared.UI
 
         public void RegisterInsertEvent(Action OnInsertButtonClicked)
         {
-            CustomLog.Log("RegisterInsertEvent");
             insertButton.OnClicked = OnInsertButtonClicked;
         }
 

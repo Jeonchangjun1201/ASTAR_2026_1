@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KSY.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,8 @@ namespace KSY.Networks
             if (array.Length == 0)
                 return null;
 
+            
+                CustomLog.Log($"GetInstance : {array[0]}",UnityEngine.Color.purple);
             return array[0];
         }
         #endregion

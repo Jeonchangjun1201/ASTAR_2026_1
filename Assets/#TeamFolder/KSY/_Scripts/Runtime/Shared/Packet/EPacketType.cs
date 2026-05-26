@@ -2,7 +2,7 @@ namespace KSY.Shared.Packets
 {
     public enum EPacketType
     {
-        C2S_EnterGameRequestPacket,
+        C2S_EnterRoomRequestPacket,
         S2C_EnterRoomAnswerPacket,
         S2C_GameStartBroadCastPacket,
         S2C_EnterGameResponsePacket,

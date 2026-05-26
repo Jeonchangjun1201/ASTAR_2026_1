@@ -23,11 +23,13 @@ namespace KSY.Clients
             session.OnOpenedEvent += async session =>
             {
                 await UniTask.Yield();
-                session.SendAsync(new C2S_EnterGameRequestPacket()
+                CustomLog.Log("Start session.OnOpenedEvent", UnityEngine.Color.yellow);
+                CustomLog.Log($"Backend.UserNickName : {Backend.UserNickName}", UnityEngine.Color.yellow);
+                session.SendAsync(new C2S_EnterRoomRequestPacket()
                 {
                     PlayerName = Backend.UserNickName
                 });
-
+                CustomLog.Log("End session.OnOpenedEvent", UnityEngine.Color.yellow);
             };
 
             UnityPacketDispatcher unityPacketDispatcher = gameManager.gameObject.AddComponent<UnityPacketDispatcher>();

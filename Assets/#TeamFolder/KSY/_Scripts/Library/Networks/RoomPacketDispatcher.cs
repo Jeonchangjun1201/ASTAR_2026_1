@@ -1,3 +1,4 @@
+using KSY.Utility;
 using System;
 using System.Threading.Tasks;
 
@@ -13,6 +14,10 @@ namespace KSY.Networks
         {
             Type pktType = packet.GetType();
             IPacketHandlerBase pktHandler = packetHandlerFactory.Create(pktType);
+            if (pktHandler == null)
+                CustomLog.LogError("pkt handler is null");
+            else
+                CustomLog.Log("pkt handler is not null", UnityEngine.Color.green);
             return pktHandler?.HandlePacket(session, packet) ?? default(ValueTask);
         }
     }

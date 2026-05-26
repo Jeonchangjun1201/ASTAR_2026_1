@@ -1,3 +1,4 @@
+using KSY.Utility;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace KSY.Networks
 
         public RoomManager(IPacketDispatcher roomPacketDispatcher, DIContainer diContainer, int workerCount, int capacityPerWorker)
         {
+            CustomLog.Log($"roomPacketDispatcher : {roomPacketDispatcher}",UnityEngine.Color.purple);
             this.roomPacketDispatcher = roomPacketDispatcher;
             rooms = new ConcurrentDictionary<string, Lazy<Room>>();
             sessionRoomMap = new ConcurrentDictionary<Session, Room>();
@@ -39,9 +41,9 @@ namespace KSY.Networks
         ValueTask IPacketDispatcher.Dispatch(Session session, IPacket packet)
         {
             if (session == null)
-                throw new ArgumentNullException("session");
+                CustomLog.LogError("session is nul");
             if (packet == null)
-                throw new ArgumentNullException("packet");
+                CustomLog.LogError("packet is null");
                 
             try
             {
@@ -55,6 +57,7 @@ namespace KSY.Networks
             }
             catch
             {
+                CustomLog.LogError("Error : RoomManager.Dispatch");
                 session.Close();
             }
 
@@ -101,8 +104,24 @@ namespace KSY.Networks
 
         private Lazy<RoomWorker> WorkerFactory(int capacityPerWorker)
         {
-            Func<RoomWorker> workerFactory = ()=> new RoomWorker(roomPacketDispatcher ?? new RoomPacketDispatcher(packetHandlerFactory.Value), capacityPerWorker);
+            Func<RoomWorker> workerFactory = () => {
+
+                IPacketDispatcher activeDispatcher = roomPacketDispatcher is RoomPacketDispatcher
+                    ? roomPacketDispatcher
+                    : new RoomPacketDispatcher(packetHandlerFactory.Value);
+
+                KSY.Utility.CustomLog.Log($"생성된 워커가 사용하는 디스패처 타입: {activeDispatcher.GetType().Name}", UnityEngine.Color.green);
+
+                return new RoomWorker(activeDispatcher, capacityPerWorker);
+            };
+
             return new Lazy<RoomWorker>(workerFactory);
         }
+
+        //private Lazy<RoomWorker> WorkerFactory(int capacityPerWorker)
+        //{
+        //    Func<RoomWorker> workerFactory = ()=> new RoomWorker(roomPacketDispatcher ?? new RoomPacketDispatcher(packetHandlerFactory.Value), capacityPerWorker);
+        //    return new Lazy<RoomWorker>(workerFactory);
+        //}
     }
 }

@@ -3,14 +3,15 @@ using KSY.Shared;
 using KSY.Shared.Packets;
 using KSY.Utility;
 using NUnit.Framework.Constraints;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
 namespace KSY.Servers.Handlers
 {
-    [PacketHandler(typeof(C2S_EnterGameRequestPacket))]
-    public class C2S_EnterRoomRequestPacketHandler : IPacketHandler<C2S_EnterGameRequestPacket>
+    [PacketHandler(typeof(C2S_EnterRoomRequestPacket))]
+    public class C2S_EnterRoomRequestPacketHandler : IPacketHandler<C2S_EnterRoomRequestPacket>
     {
         private static int teamCount = 0;
         private Color[] teamColors = { Color.red, Color.yellow, Color.green, Color.blue };
@@ -23,8 +24,9 @@ namespace KSY.Servers.Handlers
             this.gameServer = gameServer;
         }
 
-        ValueTask IPacketHandler<C2S_EnterGameRequestPacket>.HandlePacket(Session session, C2S_EnterGameRequestPacket packet)
+        ValueTask IPacketHandler<C2S_EnterRoomRequestPacket>.HandlePacket(Session session, C2S_EnterRoomRequestPacket packet)
         {
+            CustomLog.Log("C2S_EnterRoomRequestPacketHandler : HamdlePacket", Color.orange);
             string playerName = packet.PlayerName;
             Color teamColor = teamColors[teamCount];
             PlayerDataDTO playerData = new PlayerDataDTO(teamCount, 0, teamColor);

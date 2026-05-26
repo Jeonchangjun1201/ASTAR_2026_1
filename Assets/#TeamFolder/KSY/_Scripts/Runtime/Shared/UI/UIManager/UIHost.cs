@@ -10,7 +10,7 @@ namespace KSY.Shared.UI
         [SerializeField] private TMP_Text roomCode;
         [SerializeField] private TMP_Text personnelCount;
 
-        private int _personalCount = 1;
+        private int _personalCount = 0;
 
         private int applyValue = 0;
         private bool canApplyValue = false;
@@ -27,22 +27,18 @@ namespace KSY.Shared.UI
         public void IncreaseCount()
         {
             ++_personalCount;
-            CustomLog.Log($"Count : {_personalCount}");
             SetPersonnelCount(_personalCount);
         }
         public void Decrease()
         {
             ++_personalCount;
-            CustomLog.Log($"Count : {_personalCount}");
             SetPersonnelCount(_personalCount);
         }
 
         private void SetPersonnelCount(int count)
         {
-            CustomLog.Log("SetPersonnelCount Start");
             applyValue = count;
             canApplyValue = true;
-            CustomLog.Log("SetPersonnelCount Stop");
         }
         public void SetRoomCode(string code) => roomCode.text = $"¹æ ÄÚµå : {code}";
     }

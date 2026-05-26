@@ -83,11 +83,6 @@ namespace KSY.Networks
                 return;
             }
 
-            if (OnAccepted == null)
-                CustomLog.Log("OnAccepted is null", Color.red);
-            else
-                CustomLog.Log($"OnAccepted is {OnAccepted.Method}", Color.green);
-
             OnAccepted?.Invoke();
             sessionFactory.Create(this, acceptArgs.AcceptSocket).Open(acceptArgs.AcceptSocket, packetSerializer, packetDispatcher);
             AcceptAsync();

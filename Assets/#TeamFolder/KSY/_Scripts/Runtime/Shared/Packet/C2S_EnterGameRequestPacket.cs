@@ -3,9 +3,9 @@ using MemoryPack;
 
 namespace KSY.Shared.Packets
 {
-    [Packet((ushort)EPacketType.C2S_EnterGameRequestPacket)]
+    [Packet((ushort)EPacketType.C2S_EnterRoomRequestPacket)]
     [MemoryPackable]
-    public partial class C2S_EnterGameRequestPacket : IPacket
+    public partial class C2S_EnterRoomRequestPacket : IPacket
     {
         public string PlayerName { get; set; }
     }

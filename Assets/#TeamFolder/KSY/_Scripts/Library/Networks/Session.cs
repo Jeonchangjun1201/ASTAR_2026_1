@@ -153,7 +153,7 @@ namespace KSY.Networks
                 return;
             }
 
-            //CustomLog.Log("Success : Send Packet", UnityEngine.Color.red);
+            CustomLog.Log("Success : Send Packet", UnityEngine.Color.red);
 
             List<ArraySegment<byte>> bufferList = null;
             lock (sendLocker)
@@ -189,7 +189,7 @@ namespace KSY.Networks
         {
             if (!IsOpened)
             {
-                CustomLog.Log("Failed : The session has not been opened.");
+                CustomLog.LogError("Failed : The session has not been opened.");
                 Close();
                 return;
             }
@@ -197,10 +197,12 @@ namespace KSY.Networks
             if (receiveArgs.SocketError != SocketError.Success || 
                 receiveArgs.BytesTransferred <= 0)
             {
-                CustomLog.Log("Failed : Receive Packet.");
+                CustomLog.LogError("Failed : Receive Packet.");
                 Close();
                 return;
             }
+
+            CustomLog.Log("Success Receive", UnityEngine.Color.green);
 
             receiveBuffer.MoveWriteIndex(receiveArgs.BytesTransferred);
             while (true)
@@ -218,22 +220,33 @@ namespace KSY.Networks
         private async ValueTask<int> HandlePacket(ArraySegment<byte> buffer)
         {
             if (buffer.Count < 2)
+            {
+                CustomLog.LogError("Buffer hasn't size");
                 return 0;
+            }
 
             ushort packetSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
             if (packetSize > ushort.MaxValue || packetSize > buffer.Count)
+            {
+                CustomLog.LogError("Packet Size is Overflow");
                 return 0;
+            }
 
             ArraySegment<byte> packetData = new ArraySegment<byte>(buffer.Array, buffer.Offset + 2, buffer.Count - 2);
             try
             {
                 IPacket packet = packetSerializer.Deserialize(packetData);
                 if (packet != null)
+                {
                     await packetDispatcher.Dispatch(this, packet);
+                }
+                else
+                    CustomLog.LogError("Packet is null!");
             }
             catch (Exception ex)
             {
                 this.OnErrorEvent?.Invoke(this, ex);
+                CustomLog.LogError("Session : HandlePacket");
             }
 
             return packetSize;
