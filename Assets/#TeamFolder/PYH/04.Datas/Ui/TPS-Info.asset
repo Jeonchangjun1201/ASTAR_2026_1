@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: TPS-Info
   m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.PYH._02.Scripts.UI.Scene.GuideUiSO
   <MiniGameName>k__BackingField: TPS
-  <MiniGameInfo>k__BackingField: "\uC544\uBB34 \uC124\uBA85 \uC5C6\uC5B4\uC694"
+  <MiniGameInfo>k__BackingField: "<size=70>TPS</size>\\n\uC55E\uC120 \uBBF8\uB2C8\uAC8C\uC784
+    \uC21C\uC704\uC5D0 \uB530\uB77C\\n\uCD1D\uAE30 \uB4F1\uAE09\uC774 \uC815\uD574\uC838
+    \uC9C0\uAE09\uB418\uB294 \uD300 \uAC8C\uC784\uC785\uB2C8\uB2E4.\\n\uAC01 \uD300\uC740
+    \uD300 \uAD6C\uC131\uC5D0 \uB9DE\uB294 <color=#519EFB>\uBAA9\uD45C \uC810\uC218</color>\uC5D0
+    \uBA3C\uC800 \uB3C4\uB2EC\uD574\uC57C \uD558\uBA70, \\n<color=#FF2CC6>\uBAA9\uD45C
+    \uC810\uC218\uC5D0 \uBA3C\uC800 \uB3C4\uB2EC\uD55C \uD300</color>\uC774 \uC6B0\uC2B9\uD569\uB2C8\uB2E4!"
   <MiniGameIcon>k__BackingField: {fileID: 21300000, guid: 9b692d30c4009e14ea51c02b2c60542a, type: 3}

@@ -15,7 +15,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
         [SerializeField] private Transform btnPoint;
         [SerializeField] private GameObject btnPrefab;
 
-        [SerializeField] private GuideUiSO[] guideUiData;
+        [SerializeField] private MiniGameInfoSO[] guideUiData;
 
         [Header("Info")]
         [SerializeField] private TMP_Text contentLabel;
@@ -48,7 +48,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
             AStarEventBus.Unsubscribe<GuideUiEvent>(InteractGuide);
         }
 
-        private void ShowContent(GuideUiSO guideSo)
+        private void ShowContent(MiniGameInfoSO guideSo)
         {
             contentLabel.text = guideSo.MiniGameInfo;
         }

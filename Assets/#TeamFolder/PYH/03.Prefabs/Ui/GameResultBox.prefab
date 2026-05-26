@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 1539777378848029524}
   - component: {fileID: 6863923617127737756}
   m_Layer: 5
-  m_Name: Icon-BG_2 (1)
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0348176d7552f7a4a8722381bb9cd95c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fbbc81dd88f5a4f4a8673e19f5bd2971, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1071,6 +1071,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f915681187f48b498dd526c4b88ffd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.PYH._02.Scripts.MiniGame.UI.GameResultBox
+  icons:
+  - {fileID: 21300000, guid: 5c129e173607e55449bbb18aeab460a8, type: 3}
+  - {fileID: 21300000, guid: 11ffaca12f23a2d439e845e0fb39f8d9, type: 3}
+  - {fileID: 21300000, guid: ec936f15622ef794a83df83400f6acc3, type: 3}
+  - {fileID: 21300000, guid: fbbc81dd88f5a4f4a8673e19f5bd2971, type: 3}
+  icon: {fileID: 6863923617127737756}
   nickName: {fileID: 2651808430486922791}
   score: {fileID: 876124071320669511}
   ranking: {fileID: 6665899675631687881}

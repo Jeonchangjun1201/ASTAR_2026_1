@@ -12,12 +12,13 @@ namespace _TeamFolder.PYH._02.Scripts.UI
         [SerializeField] private SettingUiControlHub settingUi;
         [SerializeField] private AudioMixer mixer;
         
-        private float _masterDB;
-        private float _bgmDB;
-        private float _sfxDB;
-        
-        private bool _isOpenSound;
-        private bool _isOpenDisplay;
+        private const string MasterVolumeKey = "MasterVolume";
+        private const string BGMVolumeKey = "BGMVolume";
+        private const string SFXVolumeKey = "SFXVolume";
+
+        private const string MasterMixerKey = "Master";
+        private const string BGMMixerKey = "BGM";
+        private const string SFXMixerKey = "SFX";
         
         private new void Awake()
         {
@@ -25,20 +26,10 @@ namespace _TeamFolder.PYH._02.Scripts.UI
             settingUi.OnSettingVolumeSaveEvent += SettingVolumeVolumeSave;
             AStarEventBus.Subscribe<SettingUiEvent>(InteractSetting);
             AStarEventBus.Subscribe<SettingPopupUiEvent>(OpenPopup);
-
-            _masterDB = PlayerPrefs.GetFloat("MasterDB", _masterDB);
-            _bgmDB = PlayerPrefs.GetFloat("BGMDB", _bgmDB);
-            _sfxDB = PlayerPrefs.GetFloat("SFXDB", _sfxDB);
         }
         private void Start()
         {
-            mixer.SetFloat("Master", PlayerPrefs.GetFloat("MasterDB", _masterDB));
-            mixer.SetFloat("BGM", PlayerPrefs.GetFloat("BGMDB", _bgmDB));
-            mixer.SetFloat("SFX", PlayerPrefs.GetFloat("SFXDB", _sfxDB));
-            
-            Debug.Log("MASTER" + PlayerPrefs.GetFloat("MasterDB", _masterDB));
-            Debug.Log("BGM" + PlayerPrefs.GetFloat("BGMDB", _bgmDB));
-            Debug.Log("SFX" + PlayerPrefs.GetFloat("SFXDB", _sfxDB));
+            LoadVolume();
         }
 
         private void OnDestroy()
@@ -48,11 +39,29 @@ namespace _TeamFolder.PYH._02.Scripts.UI
             AStarEventBus.Unsubscribe<SettingPopupUiEvent>(OpenPopup);
         }
 
-        private void OnApplicationQuit()
+        private void LoadVolume()
         {
-            Debug.Log("QUIT MASTER" + PlayerPrefs.GetFloat("MasterDB", _masterDB));
-            Debug.Log("QUIT BGM" + PlayerPrefs.GetFloat("BGMDB", _bgmDB));
-            Debug.Log("QUIT SFX" + PlayerPrefs.GetFloat("SFXDB", _sfxDB));
+            float masterVolume = PlayerPrefs.GetFloat(MasterVolumeKey, 1f);
+            float bgmVolume = PlayerPrefs.GetFloat(BGMVolumeKey, 1f);
+            float sfxVolume = PlayerPrefs.GetFloat(SFXVolumeKey, 1f);
+
+            mixer.SetFloat(MasterMixerKey, ConvertVolumeToDB(masterVolume));
+            mixer.SetFloat(BGMMixerKey, ConvertVolumeToDB(bgmVolume));
+            mixer.SetFloat(SFXMixerKey, ConvertVolumeToDB(sfxVolume));
+        }
+        private float ConvertVolumeToDB(float amount)
+        {
+            if (amount <= 0.0001f)
+                return -80f;
+
+            return Mathf.Clamp(Mathf.Log10(amount) * 20f, -80f, 0f);
+        }
+        private void SaveVolume(string volumeKey, string mixerKey, float amount)
+        {
+            amount = Mathf.Clamp01(amount);
+
+            PlayerPrefs.SetFloat(volumeKey, amount);
+            mixer.SetFloat(mixerKey, ConvertVolumeToDB(amount));
         }
         
         public void InteractSetting(SettingUiEvent @event)
@@ -89,65 +98,17 @@ namespace _TeamFolder.PYH._02.Scripts.UI
 
         public void SetMasterVolume(float amount)
         {
-            float dB;
-
-            if (amount <= 0.0001f)
-            {
-                dB = -80f;
-            }
-            else
-            {
-                dB = Mathf.Log10(amount) * 20f;
-            }
-
-            dB = Mathf.Clamp(dB, -80f, 0f);
-            
-            mixer.SetFloat("Master", dB);
-
-            PlayerPrefs.SetFloat("MasterVolume", amount);
-            PlayerPrefs.SetFloat("MasterDB", dB);
+            SaveVolume(MasterVolumeKey, MasterMixerKey, amount);
             PlayerPrefs.Save();
         }
         public void SetBGMVolume(float amount)
         {
-            float dB;
-
-            if (amount <= 0.0001f)
-            {
-                dB = -80f;
-            }
-            else
-            {
-                dB = Mathf.Log10(amount) * 20f;
-            }
-            
-            dB = Mathf.Clamp(dB, -80f, 0f);
-            
-            mixer.SetFloat("BGM", dB);
-
-            PlayerPrefs.SetFloat("BGMVolume", amount);
-            PlayerPrefs.SetFloat("BGMDB", dB);
+            SaveVolume(BGMVolumeKey, BGMMixerKey, amount);
             PlayerPrefs.Save();
         }
         public void SetSfxVolume(float amount)
         {
-            float dB;
-
-            if (amount <= 0.0001f)
-            {
-                dB = -80f;
-            }
-            else
-            {
-                dB = Mathf.Log10(amount) * 20f;
-            }
-
-            dB = Mathf.Clamp(dB, -80f, 0f);
-            
-            mixer.SetFloat("SFX", dB);
-
-            PlayerPrefs.SetFloat("SFXVolume", amount);
-            PlayerPrefs.SetFloat("SFXDB", dB);
+            SaveVolume(SFXVolumeKey, SFXMixerKey, amount);
             PlayerPrefs.Save();
         }
     }

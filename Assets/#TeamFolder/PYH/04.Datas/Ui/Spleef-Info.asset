@@ -13,5 +13,11 @@ MonoBehaviour:
   m_Name: Spleef-Info
   m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.PYH._02.Scripts.UI.Scene.GuideUiSO
   <MiniGameName>k__BackingField: "\uC2A4\uD50C\uB9AC\uD504"
-  <MiniGameInfo>k__BackingField: "\uC544\uBB34 \uC124\uBA85 \uC5C6\uC5B4\uC694"
+  <MiniGameInfo>k__BackingField: "<size=70>\uC2A4\uD50C\uB9AC\uD504</size>\\n3\uCE35\uC73C\uB85C
+    \uC313\uC778 \uC0C9\uAE54 \uD0C0\uC77C \uC704\uC5D0\uC11C\uBD80\uD130 \uAC00\uC7A5
+    \uB0AE\uC740 \uBC14\uB2E5\uAE4C\uC9C0\\n\uB5A8\uC5B4\uC9C0\uC9C0 \uC54A\uACE0
+    \uBC84\uD2F0\uB294 \uC11C\uBC14\uC774\uBC8C \uAC8C\uC784\uC785\uB2C8\uB2E4.\\n\uBC1F\uC740
+    \uD0C0\uC77C\uC758 \uC0C9\uB9C8\uB2E4 <color=#519EFB>\uD2B9\uBCC4\uD55C \uAE30\uBBF9\uC774
+    \uBC1C\uC0DD\uD558\uBA70</color>,\\n<color=#FF2CC6>\uC624\uB798 \uC0DD\uC874\uD560\uC218\uB85D
+    </color>\uB192\uC740 \uC810\uC218\uB97C \uC5BB\uC744 \uC218 \uC788\uB2F5\uB2C8\uB2E4! "
   <MiniGameIcon>k__BackingField: {fileID: 21300000, guid: a13ab404deaa9a44ba1ba5b2dc754974, type: 3}

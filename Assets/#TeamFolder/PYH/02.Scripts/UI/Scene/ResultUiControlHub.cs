@@ -4,7 +4,6 @@ using _TeamFolder.PYH._02.Scripts.Data;
 using _TeamFolder.PYH._02.Scripts.UI.Event;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace _TeamFolder.PYH._02.Scripts.UI.Scene
@@ -45,10 +44,10 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
 
             for (int i = 0; i < 4; i++)
             {
-                PlayerResultInfo info = @event.PlayerResultInfos[i];
+                PlayerInfo info = @event.PlayerResultInfos[i];
 
                 ResultBox obj = Instantiate(resultBoxPrefab, point);
-                obj.Initialize(info.NickName, info.Point, info.Ranking);
+                obj.Initialize(info.Index, info.NickName, info.Point, info.Ranking);
 
                 boxes[i] = obj;
                 _boxMap.Add(info.NickName, obj);
@@ -58,7 +57,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
         {
             _reorderSeq?.Kill();
 
-            PlayerResultInfo[] curInfos = @event.CurInfos
+            PlayerInfo[] curInfos = @event.CurInfos
                 .OrderBy(info => info.Ranking)
                 .ToArray();
 
@@ -105,11 +104,11 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
                     .ToArray();
             });
         }
-        private void ApplyOrder(PlayerResultInfo[] infos, bool updateText)
+        private void ApplyOrder(PlayerInfo[] infos, bool updateText)
         {
             for (int i = 0; i < infos.Length; i++)
             {
-                PlayerResultInfo info = infos[i];
+                PlayerInfo info = infos[i];
 
                 if (!_boxMap.TryGetValue(info.NickName, out ResultBox box))
                     continue;
@@ -118,7 +117,7 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
 
                 if (updateText)
                 {
-                    box.Initialize(info.NickName, info.Point, info.Ranking);
+                    box.Initialize(info.Index, info.NickName, info.Point, info.Ranking);
                 }
             }
         }
