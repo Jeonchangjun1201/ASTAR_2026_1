@@ -12,7 +12,7 @@ namespace KSY.Servers.Handlers
     [PacketHandler(typeof(C2S_EnterGameRequestPacket))]
     public class C2S_EnterRoomRequestPacketHandler : IPacketHandler<C2S_EnterGameRequestPacket>
     {
-        private static int teamCount;
+        private static int teamCount = 0;
         private Color[] teamColors = { Color.red, Color.yellow, Color.green, Color.blue };
 
         private readonly GameServer gameServer = null;
@@ -26,12 +26,13 @@ namespace KSY.Servers.Handlers
         ValueTask IPacketHandler<C2S_EnterGameRequestPacket>.HandlePacket(Session session, C2S_EnterGameRequestPacket packet)
         {
             string playerName = packet.PlayerName;
-            Color teamColor = teamColors[teamCount++];
+            Color teamColor = teamColors[teamCount];
             PlayerDataDTO playerData = new PlayerDataDTO(teamCount, 0, teamColor);
             gameServer.AddPlayer(playerName, session, playerData);
             int playerCount = gameServer.GetPlayerCount();
+            teamCount++;
 
-            if(playerCount != 4)
+            if (playerCount != 4)
             {
                 CustomLog.Log($"플레이어 한 명이 접속했습니다. 현재 인원수 : {playerCount}", Color.green);
             }
