@@ -2,9 +2,9 @@
 {
     public class ResultUiReorderEvent
     {
-        public PlayerResultInfo[] CurInfos { get; private set; }
+        public PlayerInfo[] CurInfos { get; private set; }
 
-        public ResultUiReorderEvent(PlayerResultInfo[] curInfos)
+        public ResultUiReorderEvent(PlayerInfo[] curInfos)
         {
             CurInfos = curInfos;
         }

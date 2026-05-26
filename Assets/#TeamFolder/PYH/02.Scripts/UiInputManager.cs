@@ -110,9 +110,6 @@ namespace _TeamFolder.PYH._02.Scripts
                     case PlayModeUiControlHub:
                         AStarEventBus.Publish(new PlayModeUiEvent());
                         break;
-                    case HostUiControlHub:
-                        AStarEventBus.Publish(new HostUiEvent());
-                        break;
                     case JoinUiControlHub:
                         AStarEventBus.Publish(new JoinUiEvent());
                         break;

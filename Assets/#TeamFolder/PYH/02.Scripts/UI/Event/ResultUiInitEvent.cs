@@ -2,9 +2,9 @@
 {
     public class ResultUiInitEvent
     {
-        public PlayerResultInfo[] PlayerResultInfos { get; private set; }
+        public PlayerInfo[] PlayerResultInfos { get; private set; }
 
-        public ResultUiInitEvent(PlayerResultInfo[] playerResultInfos)
+        public ResultUiInitEvent(PlayerInfo[] playerResultInfos)
         {
             PlayerResultInfos = playerResultInfos;
         }

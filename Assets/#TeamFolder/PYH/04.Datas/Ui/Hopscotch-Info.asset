@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: Hopscotch-Info
   m_EditorClassIdentifier: Assembly-CSharp::_TeamFolder.PYH._02.Scripts.UI.Scene.GuideUiSO
   <MiniGameName>k__BackingField: "\uB545 \uB530\uBA39\uAE30"
-  <MiniGameInfo>k__BackingField: "\uC544\uBB34 \uC124\uBA85 \uC5C6\uC5B4\uC694"
+  <MiniGameInfo>k__BackingField: "<size=70>\uB545\uB530\uBA39\uAE30</size>\\n\uC81C\uD55C
+    \uC2DC\uAC04 \uB3D9\uC548 \uAC01\uAC01 \uBC11\uC5D0 \uBB3C\uAC10\uC774 \uBB3B\uC73C\uBA70,\\n\uC81C\uD55C
+    \uC2DC\uAC04\uC774 \uB05D\uB0A0 \uB54C\uAE4C\uC9C0 <color=#519EFB>\uB354 \uB9CE\uC740
+    \uB545</color>\uC744 \uCC28\uC9C0\uD55C \uC0AC\uB78C\uC774\\n\uC21C\uC704\uC5D0
+    \uB530\uB77C <color=#FF2CC6>\uD3EC\uC778\uD2B8</color>\uB97C \uC5BB\uAC8C \uB429\uB2C8\uB2E4!"
   <MiniGameIcon>k__BackingField: {fileID: 21300000, guid: d3ff67a2eafcb9f44a274185cc6507d8, type: 3}

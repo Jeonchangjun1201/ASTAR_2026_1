@@ -7,12 +7,12 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
 {
     public class GuideButton : MonoBehaviour
     {
-        public event Action<GuideUiSO> OnButtonClickEvent;
-        private GuideUiSO _so;
+        public event Action<MiniGameInfoSO> OnButtonClickEvent;
+        private MiniGameInfoSO _so;
         [SerializeField] private TMP_Text label;
         [SerializeField] private Image icon;
         
-        public void Initialize(GuideUiSO so)
+        public void Initialize(MiniGameInfoSO so)
         {
             _so = so;
             label.text = so.MiniGameName;
