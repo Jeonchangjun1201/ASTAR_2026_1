@@ -1154,11 +1154,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 629942722}
+  - component: {fileID: 629942723}
   - component: {fileID: 629942721}
   - component: {fileID: 629942720}
   - component: {fileID: 629942719}
   - component: {fileID: 629942718}
-  - component: {fileID: 629942723}
   m_Layer: 5
   m_Name: MiniGameRoulette
   m_TagString: Untagged

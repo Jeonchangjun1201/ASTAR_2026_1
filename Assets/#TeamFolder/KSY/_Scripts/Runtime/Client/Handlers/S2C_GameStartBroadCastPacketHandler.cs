@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using KSY.Networks;
 using KSY.Shared;
 using KSY.Shared.Packets;
@@ -15,48 +16,72 @@ namespace KSY.Clients.Handlers
     {
         private readonly GameManager _gameManager;
         private readonly GameClient _gameClient;
+
         public S2C_GameStartBroadCastPacketHandler(GameManager gameManager, GameClient gameClient)
         {
-            CustomLog.Log("Create : S2C_EnterRoomBroadcastPacketHandler", Color.orange);
             this._gameManager = gameManager;
-            this._gameClient = gameClient; 
+            this._gameClient = gameClient;
         }
 
         ValueTask IPacketHandler<S2C_GameStartBroadCastPacket>.HandlePacket(Session session, S2C_GameStartBroadCastPacket packet)
         {
-            CustomLog.Log("S2C_EnterRoomBroadcastPacketHandler : HandlePacket", Color.orange);
+            return HandlePacketInternal(session, packet);
+        }
+
+        private async ValueTask HandlePacketInternal(Session session, S2C_GameStartBroadCastPacket packet)
+        {
+            CustomLog.Log("S2C_GameStartBroadCastPacketHandler : HandlePacket 시작", Color.orange);
 
             string miniGameSceneName = packet.StartMiniGame;
-
             List<PlayerDataDTO> players = packet.PlayerList;
-            foreach(var element in players)
+
+            await UniTask.SwitchToMainThread();
+
+            foreach (var element in players)
                 _gameManager.AddPlayer(element.Nickname, element);
 
-            SceneManager.sceneLoaded += (scene, mode)=> 
+            CustomLog.Log("선택 씬 로드 시작...", Color.cyan);
+            await SceneManager.LoadSceneAsync("KSY_MiniGameSelect");
+            CustomLog.Log("선택 씬 로드 완료!", Color.cyan);
+
+            var rouletteObj = GameObject.Find("MiniGameRoulette");
+            if (rouletteObj == null)
             {
-                var miniGameRouletteUI = GameObject.Find("MiniGameRoulette").GetComponent<UIMiniGameRoulette>();
+                CustomLog.Log("ERROR: MiniGameRoulette 오브젝트를 찾을 수 없습니다!", Color.red);
+                return;
+            }
 
-                for(int i = 0; i < 4; i++)
-                {
-                    miniGameRouletteUI.playerBoxUis[i].Initialize(i, players[i].Nickname);
-                }
+            var miniGameRouletteUI = rouletteObj.GetComponent<UIMiniGameRoulette>();
 
-                miniGameRouletteUI.OnRouletteSpinStopping += (data) =>
-                {
-                    SceneManager.LoadScene(data.SceneName);
-                    SceneManager.sceneLoaded += (scene, mode) =>
-                    {
-                        C2S_PlayerResponsePacket packet = new C2S_PlayerResponsePacket()
-                        {
-                            PlayerName = GameManager.Instance.MyPlayerName
-                        };
-                        _gameClient.Send(packet);
-                    };
-                };
-                miniGameRouletteUI.RouletteUI(GameManager.Instance.GetMiniGameData(miniGameSceneName));
+            for (int i = 0; i < 4; i++)
+            {
+                miniGameRouletteUI.playerBoxUis[i].Initialize(i, players[i].Nickname);
+            }
+
+            string nextSceneName = string.Empty;
+            bool isSpinStopping = false;
+
+            miniGameRouletteUI.OnRouletteSpinStopping += (data) =>
+            {
+                nextSceneName = data.SceneName;
+                isSpinStopping = true;
             };
-            SceneManager.LoadScene("KSY_MiniGameSelect");
-            return new ValueTask();
+
+            miniGameRouletteUI.RouletteUI(_gameManager.GetMiniGameData(miniGameSceneName));
+
+            await UniTask.WaitUntil(() => isSpinStopping);
+            CustomLog.Log($"룰렛 신호 감지! 미니게임 씬으로 이동합니다: {nextSceneName}", Color.yellow);
+
+            await SceneManager.LoadSceneAsync(nextSceneName);
+            CustomLog.Log("미니게임 씬 로드 완료! 패킷을 보냅니다.", Color.cyan);
+
+            C2S_PlayerResponsePacket responsePacket = new C2S_PlayerResponsePacket()
+            {
+                PlayerName = _gameManager.MyPlayerName
+            };
+
+            _gameClient.Send(responsePacket);
+            CustomLog.Log("gameClient Send", Color.green);
         }
     }
 }

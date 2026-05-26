@@ -50,16 +50,12 @@ namespace KSY.Servers.Handlers
 
                 var miniGameData = gameManager.SelectRandomMiniGame();
 
-                CustomLog.Log($"중단점 1.", Color.beige);
-
                 S2C_GameStartBroadCastPacket startPacket = new S2C_GameStartBroadCastPacket()
                 {
                     PlayerList = gameServer.GetPlayers(),
                     StartMiniGame = miniGameData.SceneName
                 };
 
-                CustomLog.Log($"중단점 2.", Color.beige)
-                    ;
                 gameServer.Send(startPacket);
 
                 CustomLog.Log("Send : S2C_GameStartBroadCastPacket", Color.green);

@@ -106,7 +106,6 @@ namespace KSY.Networks
                 return null;
             }
 
-            CustomLog.Log($"Create : {value(diContainer)}", UnityEngine.Color.orange);
             return value(diContainer);
         }
     } 
