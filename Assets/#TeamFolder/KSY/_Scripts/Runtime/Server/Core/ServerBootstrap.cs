@@ -11,24 +11,18 @@ namespace KSY.Servers
         private GameManager gameManager = null;
         [SerializeField]
         private DataTableManager dataTableManager = null;
-        [SerializeField] 
-        private ListeningDataSO listeningData;
         [SerializeField]
         private string inGameSceneName;
         
-        public async void StartServer()
+        public async void StartServer(string ipAddress, int port)
         {
-            CustomLog.Assert(listeningData != null, $"ServerBootStrap :{listeningData.name}가 null입니다!! ");
-            if(listeningData == null) return;
-            int port = listeningData.Port;
-
             gameManager.Initialize();
 
             GameServer gameServer = new GameServer();
             gameServer.Initialize(gameManager, dataTableManager);
-            gameServer.Listen(port);
+            gameServer.Listen(ipAddress, port);
 
-            await SceneManager.LoadSceneAsync(TestDefine.TEST_LOAD_SCENE_NAME, LoadSceneMode.Single);
+            //await SceneManager.LoadSceneAsync(TestDefine.TEST_LOAD_SCENE_NAME, LoadSceneMode.Single);
         }
     }
 }

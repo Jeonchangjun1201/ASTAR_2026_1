@@ -11,14 +11,14 @@ namespace KSY.Clients
         [SerializeField]
         private DataTableManager dataTableManager;
 
-        public void StartClient()
+        public void StartClient(string host, int port)
         {
             InputManager.Initialize();
             gameManager.Initialize();
 
             GameClient gameClient = new GameClient();
             gameClient.Initialize(gameManager, dataTableManager);
-            gameClient.Connect(ConnectInfo.IPAddress, ConnectInfo.Port);
+            gameClient.Connect(host, port);
         }
     }
 }

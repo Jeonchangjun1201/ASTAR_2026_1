@@ -28,11 +28,12 @@ namespace KSY.Networks
             roomManager = GetInstance<IRoomManager>();
         }
 
-        public void Listen(int port, int backlog = 10)
+        public void Listen(string ipAddress, int port, int backlog = 10)
         {
+            IPAddress.TryParse(ipAddress, out IPAddress address);
             Volatile.Write(ref isClosed, 0);
             listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            listenSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+            listenSocket.Bind(new IPEndPoint(address, port));
             listenSocket.Listen(backlog);
             acceptArgs = new SocketAsyncEventArgs();
             acceptArgs.Completed += HandleAccepted;

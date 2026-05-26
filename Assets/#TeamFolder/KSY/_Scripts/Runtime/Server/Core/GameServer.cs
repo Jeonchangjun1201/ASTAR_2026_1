@@ -47,9 +47,9 @@ namespace KSY.Servers
             }
         }
 
-        public void Listen(int port)
+        public void Listen(string ipAddress, int port)
         {
-            server.Listen(port);
+            server.Listen(ipAddress, port);
         }
 
         public void Send(IPacket packet, Func<string, Session, bool> filter = null)
