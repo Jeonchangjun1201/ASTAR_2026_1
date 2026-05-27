@@ -1,3 +1,4 @@
+using csiimnida.CSILib.SoundManager.RunTime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,13 +12,14 @@ namespace BFS
         private Dictionary<ITeamTOW, Vector2> _goalDict = new Dictionary<ITeamTOW, Vector2>();                   // Dictionary that contains required key to press for each player(Key: ITeamTOW interface(player), Value: Vector2(Required input key to press)) //플레이어와 플레이어가 눌러야 하는 키를 담은 딕셔너리
         private TOWScoreManager _scoreManager;                                                                   // Score manager, this exists so that rope doesn't move when team's score is 0 // 스코어 매니저
         private TOWUIManager _uiManager;
+        private SoundManager _soundManager;
         private char _inputShower;                                                                               // Char variable that shows which key to press // 무슨 키를 눌러야 하는 지 알려주는 char변수
         private bool _isPenalty = false;                                                                         // Bool variable, used to detect if player should have penalty or not // bool변수, 패널티 주는 용도
         private bool _isInGame = false;
         private float _penaltyTime = 2.5f;                                                                       // How long minigame is going to be disabled for player // 얼마나 오래동안 미니게임을 멈출 지
         private float _defaultRopePower = 0.12f;
         public bool IsInGame => _isInGame;
-        public void Initialize(IRopeTOW rope, AbstractTeamTOW[] playerList, TOWScoreManager scoreManager, TOWUIManager uiManager)        // Initialize
+        public void Initialize(IRopeTOW rope, AbstractTeamTOW[] playerList, TOWScoreManager scoreManager, TOWUIManager uiManager, SoundManager soundManager)        // Initialize
         {
             _rope = rope;
             foreach (AbstractTeamTOW t in playerList)                                                            // Subs to each player's OnInputPressed action // 플레이어의 OnInputPressed에 구독
@@ -31,6 +33,7 @@ namespace BFS
             }
             _scoreManager = scoreManager;
             _uiManager = uiManager;
+            _soundManager = soundManager;
         }
         public void StartMinigame()
         {
@@ -98,10 +101,12 @@ namespace BFS
             if (vt == _goalDict[team])                                                                           // If input equals to required key given to each player // 입력 키에 따라 true또는 false로 GiveScore메서드 실행 
             {
                 GiveScore(team, true);                                                                           // Call GiveScore, IsCorrect = true
+                _soundManager.PlaySound("TugOfWar-Success");
             }
             else                                                                                                 // Else then call GiveScore, IsCorrect = false
             {
                 GiveScore(team, false);
+                _soundManager.PlaySound("TugOfWar-Fail");
             }
         }
         private Vector2 RollInput(ITeamTOW team)                                                                 // Method to shuffle required input key, then return it // 입력 키를 얻는 메서드
