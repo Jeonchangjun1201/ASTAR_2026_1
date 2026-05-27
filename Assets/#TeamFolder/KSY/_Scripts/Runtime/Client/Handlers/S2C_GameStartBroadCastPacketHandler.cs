@@ -30,7 +30,7 @@ namespace KSY.Clients.Handlers
 
         private async ValueTask HandlePacketInternal(Session session, S2C_GameStartBroadCastPacket packet)
         {
-            CustomLog.Log("S2C_GameStartBroadCastPacketHandler : HandlePacket 시작", Color.orange);
+            CustomLog.Log("S2C_GameStartBroadCastPacketHandler : HandlePacket", Color.orange);
 
             string miniGameSceneName = packet.StartMiniGame;
             List<PlayerDataDTO> players = packet.PlayerList;
@@ -38,11 +38,9 @@ namespace KSY.Clients.Handlers
             await UniTask.SwitchToMainThread();
 
             foreach (var element in players)
-                _gameManager.AddPlayer(element.Nickname, element);
+                _gameManager.AddPlayerData(element.Nickname, element);
 
-            CustomLog.Log("선택 씬 로드 시작...", Color.cyan);
             await SceneManager.LoadSceneAsync("KSY_MiniGameSelect");
-            CustomLog.Log("선택 씬 로드 완료!", Color.cyan);
 
             var rouletteObj = GameObject.Find("MiniGameRoulette");
             if (rouletteObj == null)
@@ -70,18 +68,16 @@ namespace KSY.Clients.Handlers
             miniGameRouletteUI.RouletteUI(_gameManager.GetMiniGameData(miniGameSceneName));
 
             await UniTask.WaitUntil(() => isSpinStopping);
-            CustomLog.Log($"룰렛 신호 감지! 미니게임 씬으로 이동합니다: {nextSceneName}", Color.yellow);
 
             await SceneManager.LoadSceneAsync(nextSceneName);
-            CustomLog.Log("미니게임 씬 로드 완료! 패킷을 보냅니다.", Color.cyan);
 
             C2S_PlayerResponsePacket responsePacket = new C2S_PlayerResponsePacket()
             {
-                PlayerName = _gameManager.MyPlayerName
+                PlayerName = _gameManager.MyPlayerName,
+                Position = new Vector3(0, 0, 0)
             };
 
             _gameClient.Send(responsePacket);
-            CustomLog.Log("gameClient Send", Color.green);
         }
     }
 }

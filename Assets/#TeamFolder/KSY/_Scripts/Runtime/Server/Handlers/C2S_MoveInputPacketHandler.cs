@@ -24,7 +24,7 @@ namespace KSY.Servers.Handlers
             if (string.IsNullOrEmpty(playerID) == true)
                 return new ValueTask();
 
-            PlayerDataDTO playerData = gameManager.GetPlayer(playerID);
+            PlayerDataDTO playerData = gameManager.GetPlayerData(playerID);
             Player player = null;
 
             if (player == null)

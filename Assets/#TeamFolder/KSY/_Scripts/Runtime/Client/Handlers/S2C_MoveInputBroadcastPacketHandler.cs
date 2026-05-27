@@ -18,7 +18,7 @@ namespace KSY.Clients.Handlers
 
         ValueTask IPacketHandler<S2C_MoveInputBroadcastPacket>.HandlePacket(Session session, S2C_MoveInputBroadcastPacket packet)
         {
-            PlayerDataDTO playerData = gameManager.GetPlayer(packet.PlayerId);
+            PlayerDataDTO playerData = gameManager.GetPlayerData(packet.PlayerId);
             Player player = null;
             if (player == null)
             {

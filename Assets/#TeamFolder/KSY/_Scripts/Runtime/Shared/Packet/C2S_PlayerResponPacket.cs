@@ -1,5 +1,6 @@
 using KSY.Networks;
 using MemoryPack;
+using UnityEngine;
 
 namespace KSY.Shared.Packets
 {
@@ -8,5 +9,6 @@ namespace KSY.Shared.Packets
     public partial class C2S_PlayerResponsePacket : IPacket
     {
         public string PlayerName { get; set; }
+        public Vector3 Position { get; set; }
     }
 }

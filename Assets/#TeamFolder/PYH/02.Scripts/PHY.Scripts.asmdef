@@ -1,12 +1,13 @@
 {
-    "name": "KSY.Clients",
-    "rootNamespace": "KSY.Clients",
+    "name": "PHY.Scripts",
+    "rootNamespace": "PHY.Scripts",
     "references": [
-        "GUID:e257cdee722a1d34c8df75fe9ef15e30",
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
         "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:1f346252476973543b7852c75293428b",
         "GUID:1105a2874dfb7ad45a2c2407b6a3072f",
-        "GUID:a08c8b2acf4c28d439b24821f169846b"
+        "GUID:2adf672e218f7b24da32906f55a37470",
+        "GUID:a1e16fec94a5e7f4ebf635f21b7fb70b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -3,6 +3,8 @@ using KSY.Utility;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace KSY.Shared
 {
@@ -20,7 +22,8 @@ namespace KSY.Shared
 
         public string MyPlayerName => Backend.UserNickName;
 
-        private Dictionary<string, PlayerDataDTO> players = null;
+        private Dictionary<string, PlayerDataDTO> playerDatas = null;
+        private Dictionary<string, Player> players = null;
 
         public void Initialize()
         {
@@ -33,7 +36,8 @@ namespace KSY.Shared
             instance = this;
             DontDestroyOnLoad(gameObject);
 
-            players = new Dictionary<string, PlayerDataDTO>();
+            playerDatas = new Dictionary<string, PlayerDataDTO>();
+            players = new Dictionary<string, Player>();
             Initialized = true;
 
             miniGameDataDic = new Dictionary<string, MiniGameDataSO>();
@@ -51,9 +55,9 @@ namespace KSY.Shared
             EventChannel?.InvokeEvent(new GameQuitEvent());
         }
 
-        public void AddPlayer(string playerName, PlayerDataDTO playerData)
+        public void AddPlayer(string playerName, Player player)
         {
-            players[playerName] = playerData;
+            players[playerName] = player;
         }
 
         public void RemovePlayer(string playerName)
@@ -61,27 +65,44 @@ namespace KSY.Shared
             players.Remove(playerName);
         }
 
-        public PlayerDataDTO GetPlayer(string playerName)
+        public void AddPlayerData(string playerName, PlayerDataDTO playerData)
         {
-            players.TryGetValue(playerName, out PlayerDataDTO playerData);
+            playerDatas[playerName] = playerData;
+        }
+
+        public void RemovePlayerData(string playerName)
+        {
+            playerDatas.Remove(playerName);
+        }
+
+        public Player GetPlayer(string playerName)
+        {
+            players.TryGetValue(playerName, out Player player);
+            return player;
+        }
+
+        public PlayerDataDTO GetPlayerData(string playerName)
+        {
+            playerDatas.TryGetValue(playerName, out PlayerDataDTO playerData);
             return playerData;
         }
 
         public void ForEachPlayer(Action<string, PlayerDataDTO> callback)
         {
-            foreach (KeyValuePair<string, PlayerDataDTO> element in players)
+            foreach (KeyValuePair<string, PlayerDataDTO> element in playerDatas)
                 callback?.Invoke(element.Key, element.Value);
         }
 
-        private System.Random sysRandom = new System.Random(); // 클래스 상단에 멤버 변수로 선언
+        private System.Random sysRandom = new System.Random();
 
         public MiniGameDataSO SelectRandomMiniGame()
         {
-            if (miniGameData == null || miniGameData.Count == 0) return null;
-            int rand = sysRandom.Next(0, miniGameData.Count);
-            string name = miniGameData[rand].SceneName;
+            //if (miniGameData == null || miniGameData.Count == 0) return null;
+            //int rand = sysRandom.Next(0, miniGameData.Count);
+            //string name = miniGameData[rand].SceneName;
+            //MiniGameDataSO data = miniGameDataDic[name];
+            string name = miniGameData[0].SceneName;
             MiniGameDataSO data = miniGameDataDic[name];
-
             return data;
         }
 
