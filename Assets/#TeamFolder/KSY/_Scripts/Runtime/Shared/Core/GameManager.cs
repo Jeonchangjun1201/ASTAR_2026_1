@@ -1,3 +1,4 @@
+using _TeamFolder.PYH._02.Scripts.Enum;
 using BackEnd;
 using KSY.Utility;
 using System;
@@ -16,11 +17,11 @@ namespace KSY.Shared
         [SerializeField] private Dictionary<string, MiniGameDataSO> miniGameDataDic = null;
 
         public bool Initialized { get; private set; }
+        public string MyPlayerName => Backend.UserNickName;
+        public MiniGameEnum currentMiniGame;
 
         private static GameManager instance = null;
         public static GameManager Instance => instance;
-
-        public string MyPlayerName => Backend.UserNickName;
 
         private Dictionary<string, PlayerDataDTO> playerDatas = null;
         private Dictionary<string, Player> players = null;
@@ -62,6 +63,7 @@ namespace KSY.Shared
 
         public void RemovePlayer(string playerName)
         {
+            if (!players.ContainsKey(playerName)) return;
             players.Remove(playerName);
         }
 
@@ -72,6 +74,7 @@ namespace KSY.Shared
 
         public void RemovePlayerData(string playerName)
         {
+            if (!playerDatas.ContainsKey(playerName)) return;
             playerDatas.Remove(playerName);
         }
 

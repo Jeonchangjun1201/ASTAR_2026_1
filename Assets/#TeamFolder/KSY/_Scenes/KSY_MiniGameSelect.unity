@@ -1154,7 +1154,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 629942722}
-  - component: {fileID: 629942723}
   - component: {fileID: 629942721}
   - component: {fileID: 629942720}
   - component: {fileID: 629942719}
@@ -1173,7 +1172,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629942717}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c6f2c360493e47449e1ee20bb20503c, type: 3}
   m_Name: 
@@ -1283,23 +1282,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &629942723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629942717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09270910f4134f54cb83411080d7b188, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIMiniGameRoulette
-  playerBoxUis:
-  - {fileID: 470382201}
-  - {fileID: 1084897821}
-  - {fileID: 1618252458}
-  - {fileID: 251523334}
 --- !u!1 &657713264
 GameObject:
   m_ObjectHideFlags: 0

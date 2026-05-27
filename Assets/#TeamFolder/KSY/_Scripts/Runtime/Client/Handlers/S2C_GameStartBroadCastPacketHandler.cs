@@ -1,9 +1,14 @@
+using _TeamFolder.PYH._02.Scripts.Data;
+using _TeamFolder.PYH._02.Scripts.Enum;
+using _TeamFolder.PYH._02.Scripts.UI;
+using _TeamFolder.PYH._02.Scripts.UI.Event;
 using Cysharp.Threading.Tasks;
 using KSY.Networks;
 using KSY.Shared;
 using KSY.Shared.Packets;
-using KSY.Shared.UI;
 using KSY.Utility;
+using PHY.Scripts;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -33,43 +38,42 @@ namespace KSY.Clients.Handlers
             CustomLog.Log("S2C_GameStartBroadCastPacketHandler : HandlePacket", Color.orange);
 
             string miniGameSceneName = packet.StartMiniGame;
-            List<PlayerDataDTO> players = packet.PlayerList;
+            List<PlayerDataDTO> playersList = packet.PlayerList;
 
+            //유니티의 메인스레드로 전환한다.
             await UniTask.SwitchToMainThread();
 
-            foreach (var element in players)
+            //플레이어 데이터들을 등록한다.
+            foreach (var element in playersList)
                 _gameManager.AddPlayerData(element.Nickname, element);
 
-            await SceneManager.LoadSceneAsync("KSY_MiniGameSelect");
+            //KSY_MiniGameSelect가 전부 Load될 때까지 기다린다.
+            await SceneManager.LoadSceneAsync("KSY_MiniGameSelect").ToUniTask();
 
-            var rouletteObj = GameObject.Find("MiniGameRoulette");
-            if (rouletteObj == null)
+            MiniGameEnum selectGame = MiniGameEnum.ColorMemory;
+            PlayerInfo[] players = new PlayerInfo[4];
+
+            _gameManager.ForEachPlayer((name, data) =>
             {
-                CustomLog.Log("ERROR: MiniGameRoulette 오브젝트를 찾을 수 없습니다!", Color.red);
-                return;
-            }
+                players[data.Id] = new PlayerInfo(data.Id, name);
+            });
 
-            var miniGameRouletteUI = rouletteObj.GetComponent<UIMiniGameRoulette>();
+            var eventArgs1 = new RandomizerMiniGameInitEvent(players);
+            var eventArgs2 = new RandomizerMiniGameEvent(selectGame);
 
-            for (int i = 0; i < 4; i++)
+            Action<RandomizerMiniGameEvent> handler1 = (args) =>
             {
-                miniGameRouletteUI.playerBoxUis[i].Initialize(i, players[i].Nickname);
-            }
-
-            string nextSceneName = string.Empty;
-            bool isSpinStopping = false;
-
-            miniGameRouletteUI.OnRouletteSpinStopping += (data) =>
+                _gameManager.currentMiniGame = args.TargetMiniGameEnum;
+            };
+            Action<RandomizerMiniGameEndEvent> handler2 = (args) =>
             {
-                nextSceneName = data.SceneName;
-                isSpinStopping = true;
+                SceneManager.LoadSceneAsync(args.SelectedMiniGameSceneName);
             };
 
-            miniGameRouletteUI.RouletteUI(_gameManager.GetMiniGameData(miniGameSceneName));
-
-            await UniTask.WaitUntil(() => isSpinStopping);
-
-            await SceneManager.LoadSceneAsync(nextSceneName);
+            AStarEventBus.Publish<RandomizerMiniGameInitEvent>(eventArgs1);
+            AStarEventBus.Subscribe<RandomizerMiniGameEvent>(handler1);
+            AStarEventBus.Subscribe<RandomizerMiniGameEndEvent>(handler2);
+            AStarEventBus.Publish<RandomizerMiniGameEvent>(eventArgs2);
 
             C2S_PlayerResponsePacket responsePacket = new C2S_PlayerResponsePacket()
             {
