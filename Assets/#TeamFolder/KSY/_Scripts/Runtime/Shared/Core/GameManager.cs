@@ -4,8 +4,6 @@ using KSY.Utility;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace KSY.Shared
 {
@@ -13,12 +11,13 @@ namespace KSY.Shared
     {
         [field : SerializeField] public EventChannelSO EventChannel { get; private set; }
 
-        [SerializeField] private List<MiniGameDataSO> miniGameData = null;
-        [SerializeField] private Dictionary<string, MiniGameDataSO> miniGameDataDic = null;
+        [SerializeField] private List<MiniGameDataSO> miniGameDatas = null;
+        [SerializeField] private Dictionary<MiniGameEnum, MiniGameDataSO> miniGameDataDic = null;
 
         public bool Initialized { get; private set; }
         public string MyPlayerName => Backend.UserNickName;
         public MiniGameEnum currentMiniGame;
+        public System.Random random = new System.Random();
 
         private static GameManager instance = null;
         public static GameManager Instance => instance;
@@ -41,12 +40,12 @@ namespace KSY.Shared
             players = new Dictionary<string, Player>();
             Initialized = true;
 
-            miniGameDataDic = new Dictionary<string, MiniGameDataSO>();
-            if(miniGameData != null)
+            miniGameDataDic = new Dictionary<MiniGameEnum, MiniGameDataSO>();
+            if(miniGameDatas != null)
             {
-                foreach (MiniGameDataSO data in miniGameData)
+                foreach (MiniGameDataSO data in miniGameDatas)
                 {
-                    miniGameDataDic.Add(data.SceneName, data);
+                    miniGameDataDic.Add(data.miniGameEnum, data);
                 }
             }
         }
@@ -96,22 +95,19 @@ namespace KSY.Shared
                 callback?.Invoke(element.Key, element.Value);
         }
 
-        private System.Random sysRandom = new System.Random();
 
         public MiniGameDataSO SelectRandomMiniGame()
         {
-            //if (miniGameData == null || miniGameData.Count == 0) return null;
-            //int rand = sysRandom.Next(0, miniGameData.Count);
-            //string name = miniGameData[rand].SceneName;
-            //MiniGameDataSO data = miniGameDataDic[name];
-            string name = miniGameData[0].SceneName;
-            MiniGameDataSO data = miniGameDataDic[name];
+            if (miniGameDatas == null || miniGameDatas.Count == 0) return null;
+            int rand = random.Next(0, miniGameDatas.Count);
+            MiniGameEnum miniGameEnum = miniGameDatas[rand].miniGameEnum;
+            MiniGameDataSO data = miniGameDataDic[miniGameEnum];
             return data;
         }
 
-        public MiniGameDataSO GetMiniGameData(string name)
+        public MiniGameDataSO GetMiniGameData(MiniGameEnum miniGameEnum)
         {
-            return miniGameDataDic[name];
+            return miniGameDataDic[miniGameEnum];
         }
     }
 }

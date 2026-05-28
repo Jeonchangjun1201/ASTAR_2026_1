@@ -1,0 +1,14 @@
+{
+    "name": "PYH.Scripts.Utill",
+    "rootNamespace": "PYH.Scripts.Utill",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -2,9 +2,6 @@ using KSY.Networks;
 using KSY.Shared;
 using KSY.Shared.Packets;
 using KSY.Utility;
-using NUnit.Framework.Constraints;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -16,14 +13,14 @@ namespace KSY.Servers.Handlers
         private static int teamCount = 0;
         private Color[] teamColors = { Color.red, Color.yellow, Color.green, Color.blue };
 
-        private readonly GameManager gameManager = null;
+        private readonly GameManager _gameManager = null;
         private readonly GameServer gameServer = null;
         private readonly DataTableManager dataTableManager = null;
 
         public C2S_EnterRoomRequestPacketHandler(GameManager gameManager, GameServer gameServer, DataTableManager dataTableManager)
         {
             teamCount = 0;
-            this.gameManager = gameManager;
+            this._gameManager = gameManager;
             this.gameServer = gameServer;
             this.dataTableManager = dataTableManager;
         }
@@ -46,15 +43,18 @@ namespace KSY.Servers.Handlers
             {
                 CustomLog.Log($"플레이어 한 명이 접속했습니다. 접속한 플레이어 : {playerName}, 현재 인원수 : {playerCount}", Color.green);
                 CustomLog.Log($"플레이어가 모두 접속했습니다. 게임을 시작하겠습니다.", Color.green);
-                CustomLog.Log($"여기서 시작 미니게임 씬 이름 넣기.", Color.green);
 
-                var miniGameData = gameManager.SelectRandomMiniGame();
+                var miniGameData = _gameManager.SelectRandomMiniGame();
+
+                CustomLog.Log($"랜덤한 미니게임이 선택되었습니다. S2C_GameStartBroadCastPacket 패킷 전송을 시작하겠습니다.", Color.green);
 
                 S2C_GameStartBroadCastPacket startPacket = new S2C_GameStartBroadCastPacket()
                 {
                     PlayerList = gameServer.GetPlayers(),
                     StartMiniGame = miniGameData.SceneName
                 };
+
+                CustomLog.Log($"패킷 생성에 성공했습니다.", Color.green);
 
                 gameServer.Send(startPacket);
 

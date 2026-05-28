@@ -1,0 +1,14 @@
+{
+    "name": "PYH.Scripts.UI.Scene.AbstractUI",
+    "rootNamespace": "PYH.Scripts.UI.Scene.AbstractUI",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

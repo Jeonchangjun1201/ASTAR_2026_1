@@ -12,7 +12,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
     {
         private HumanGolfModule _owner;
 
-        [SerializeField] private LayerMask _whatIsPlayer;
+        [SerializeField] private LayerMask whatIsPlayer;
         [SerializeField] private float hitboxDistance;
         [SerializeField] private float hitboxSize;
 
@@ -77,7 +77,7 @@ namespace _TeamFolder.PYH._02.Scripts.MiniGame.HumanGolf
                 Collider[] hits = Physics.OverlapSphere(
                     hitboxCenter,
                     hitboxSize,
-                    _whatIsPlayer
+                    whatIsPlayer
                 );
 
                 SwingPlayers(hitted, hits);

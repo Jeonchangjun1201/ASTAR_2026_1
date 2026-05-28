@@ -1,7 +1,7 @@
-using _TeamFolder.PYH._02.Scripts.Enum;
-using System.Collections;
 using _TeamFolder.PYH._02.Scripts.Data;
+using _TeamFolder.PYH._02.Scripts.Enum;
 using _TeamFolder.PYH._02.Scripts.UI.Event;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -78,6 +78,9 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
             }
 
             SetMiniGameUi(resultMiniGame);
+            GameManager
+            var args = new RandomizerMiniGameEndEvent(resultMiniGame);
+            AStarEventBus.Publish<RandomizerMiniGameEndEvent>();
             _randomizerRoutine = null;
         }
         private MiniGameEnum GetRandomMiniGame()

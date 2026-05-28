@@ -1,0 +1,26 @@
+{
+    "name": "PYH.Scripts.UI.ControlHub",
+    "rootNamespace": "PYH.Scripts.UI.ControlHub",
+    "references": [
+        "GUID:1f346252476973543b7852c75293428b",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:6729e60f8fd88e84293a9f77a94adfee",
+        "GUID:97f0b119daff6d942ad603bb5958659b",
+        "GUID:c87bc012e154583498f943c49b3f41db",
+        "GUID:bb9a3d28b3261ea4081980a60b1d7949",
+        "GUID:84cb8c23adff0fe4ca602f0a681d2154",
+        "GUID:e1bd3d64c5379ca4caac5a2cff711f61",
+        "GUID:cbf0e660c4512f14cbef664c4f64f3f2",
+        "GUID:77fae0ae2a11eab4b80c6be2ab39a8a9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

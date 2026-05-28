@@ -1,0 +1,21 @@
+{
+    "name": "PHY.Scripts",
+    "rootNamespace": "PYH.Scripts",
+    "references": [
+        "GUID:2adf672e218f7b24da32906f55a37470",
+        "GUID:c87bc012e154583498f943c49b3f41db",
+        "GUID:84cb8c23adff0fe4ca602f0a681d2154",
+        "GUID:6729e60f8fd88e84293a9f77a94adfee",
+        "GUID:e1bd3d64c5379ca4caac5a2cff711f61",
+        "GUID:807befbb2ac7df045b41cc4f8c5e8825"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

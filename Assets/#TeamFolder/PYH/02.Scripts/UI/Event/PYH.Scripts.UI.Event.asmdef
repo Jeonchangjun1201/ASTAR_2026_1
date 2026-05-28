@@ -1,0 +1,20 @@
+{
+    "name": "PYH.Scripts.UI.Event",
+    "rootNamespace": "PYH.Scripts.UI.Event",
+    "references": [
+        "GUID:97f0b119daff6d942ad603bb5958659b",
+        "GUID:ea240476213dcad4a96ce6285873b1bd",
+        "GUID:e1bd3d64c5379ca4caac5a2cff711f61",
+        "GUID:8f54cf49c85a3504b87cb57631912742",
+        "GUID:77fae0ae2a11eab4b80c6be2ab39a8a9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

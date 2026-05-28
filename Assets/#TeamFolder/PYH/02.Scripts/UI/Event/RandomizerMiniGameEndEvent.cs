@@ -1,16 +1,14 @@
 using _TeamFolder.PYH._02.Scripts.Enum;
 
-namespace PHY.Scripts
+namespace PYH.Scripts.UI.Event
 {
     public class RandomizerMiniGameEndEvent 
     {
-        public MiniGameEnum SelectedMiniGame { get; private set; }
-        public string SelectedMiniGameSceneName { get; private set; }
+        public MiniGameEnum SelectedMiniGameEnum { get; private set; }
 
         public RandomizerMiniGameEndEvent(MiniGameEnum selectedMiniGame, string selectedMiniGameSceneName)
         {
-            this.SelectedMiniGame = selectedMiniGame;
-            this.SelectedMiniGameSceneName = selectedMiniGameSceneName;
+            this.SelectedMiniGameEnum = selectedMiniGame;
         }
     }
 }

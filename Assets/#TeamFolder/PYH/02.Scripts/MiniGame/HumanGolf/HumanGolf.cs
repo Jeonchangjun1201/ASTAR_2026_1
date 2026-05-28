@@ -1,5 +1,6 @@
 using System.Linq;
 using _TeamFolder.PYH._02.Scripts.Player;
+using _TeamFolder.PYH._02.Scripts.MiniGame;
 using UnityEngine;
 using UnityEngine.Events;
 

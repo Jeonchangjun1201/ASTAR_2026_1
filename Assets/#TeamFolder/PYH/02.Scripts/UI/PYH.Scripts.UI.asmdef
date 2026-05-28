@@ -1,0 +1,20 @@
+{
+    "name": "PHY.Scripts.UI",
+    "rootNamespace": "PHY.Scripts.UI",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:6729e60f8fd88e84293a9f77a94adfee",
+        "GUID:84cb8c23adff0fe4ca602f0a681d2154",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:77fae0ae2a11eab4b80c6be2ab39a8a9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

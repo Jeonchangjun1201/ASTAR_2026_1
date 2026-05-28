@@ -1,0 +1,21 @@
+{
+    "name": "PYH.Scripts.MiniGame.PassTheBomb",
+    "rootNamespace": "PYH.Scripts.MiniGame.PassTheBomb",
+    "references": [
+        "GUID:2adf672e218f7b24da32906f55a37470",
+        "GUID:84cb8c23adff0fe4ca602f0a681d2154",
+        "GUID:6f9ea359ee3b59a40b1d56f74d12c738",
+        "GUID:ea240476213dcad4a96ce6285873b1bd",
+        "GUID:6729e60f8fd88e84293a9f77a94adfee",
+        "GUID:1f346252476973543b7852c75293428b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

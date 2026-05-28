@@ -1,0 +1,16 @@
+{
+    "name": "PYH.Scripts.UI.Deco",
+    "rootNamespace": "PYH.Scripts.UI.Deco",
+    "references": [
+        "GUID:a1e16fec94a5e7f4ebf635f21b7fb70b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,9 +1,12 @@
 {
-    "name": "PHY.Scripts.Datas",
-    "rootNamespace": "PHY.Scripts.Datas",
+    "name": "PYH.Scripts.MiniGame.HumanGolf",
+    "rootNamespace": "",
     "references": [
+        "GUID:ea240476213dcad4a96ce6285873b1bd",
+        "GUID:1f346252476973543b7852c75293428b",
+        "GUID:1105a2874dfb7ad45a2c2407b6a3072f",
         "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:029c1c1b674aaae47a6841a0b89ad80e"
+        "GUID:6f9ea359ee3b59a40b1d56f74d12c738"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -2,6 +2,7 @@ namespace _TeamFolder.PYH._02.Scripts.Enum
 {
     public enum MiniGameEnum
     {
+        None,
         ColorMemory, 
         Hopscoth, 
         HumanGolf, 
@@ -11,6 +12,7 @@ namespace _TeamFolder.PYH._02.Scripts.Enum
         PassTheBomb, 
         Spleef, 
         TugofWar,
-        MAX = 10
+        PaintGame,
+        MAX
     }
 }

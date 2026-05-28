@@ -1,0 +1,19 @@
+{
+    "name": "PYH.Scripts.MiniGame",
+    "rootNamespace": "PYH.Scripts.MiniGame",
+    "references": [
+        "GUID:97f0b119daff6d942ad603bb5958659b",
+        "GUID:6729e60f8fd88e84293a9f77a94adfee",
+        "GUID:ea240476213dcad4a96ce6285873b1bd",
+        "GUID:c87bc012e154583498f943c49b3f41db"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

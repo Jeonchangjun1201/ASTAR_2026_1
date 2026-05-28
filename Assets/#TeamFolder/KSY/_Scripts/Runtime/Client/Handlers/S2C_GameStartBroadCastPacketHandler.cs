@@ -67,7 +67,8 @@ namespace KSY.Clients.Handlers
             };
             Action<RandomizerMiniGameEndEvent> handler2 = (args) =>
             {
-                SceneManager.LoadSceneAsync(args.SelectedMiniGameSceneName);
+                string sceneName = _gameManager.GetMiniGameData(args.SelectedMiniGameEnum).SceneName;
+                SceneManager.LoadSceneAsync(sceneName);
             };
 
             AStarEventBus.Publish<RandomizerMiniGameInitEvent>(eventArgs1);

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using _TeamFolder.PYH._02.Scripts.Enum;
-using _TeamFolder.PYH._02.Scripts.UI.Scene;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using _TeamFolder.PYH._02.Scripts.UI.Scene;
 
 namespace _TeamFolder.PYH._02.Scripts.UI
 {

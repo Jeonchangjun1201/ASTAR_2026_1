@@ -1,5 +1,6 @@
-using UnityEngine;
+using _TeamFolder.PYH._02.Scripts.Enum;
 using UnityEditor;
+using UnityEngine;
 
 namespace KSY.Shared
 {
@@ -10,21 +11,21 @@ namespace KSY.Shared
         [SerializeField] private SceneAsset sceneAsset;
 #endif
 
-        [SerializeField] private string sceneName;
-        [SerializeField] private string gameName;
+        [field: SerializeField] public string SceneName { get; private set; }
+        [field: SerializeField] public string gameName { get; private set; }
+        [field: SerializeField] public MiniGameEnum miniGameEnum { get; private set; }
 
-        public string SceneName => sceneName;
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
             if (sceneAsset != null)
             {
-                sceneName = sceneAsset.name;
+                SceneName = sceneAsset.name;
             }
             else
             {
-                sceneName = string.Empty;
+                SceneName = string.Empty;
             }
         }
 #endif

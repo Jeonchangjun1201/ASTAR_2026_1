@@ -6322,8 +6322,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KSY.Shared.GameManager
   <EventChannel>k__BackingField: {fileID: 0}
-  miniGameDatas:
-  - {fileID: 11400000, guid: 1f80fa91f1724e94a9ab4da5fcd743cb, type: 2}
+  miniGameData:
+  - {fileID: 11400000, guid: df5e0184e3ebeb441abf1103020265d0, type: 2}
+  - {fileID: 11400000, guid: 11584fd39a55e3c40ad44d3aef1fafa9, type: 2}
   currentMiniGame: 0
 --- !u!4 &1164807836
 Transform:

@@ -10,7 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50c22ad040f8c21469a850d70a452a82, type: 3}
-  m_Name: KSY_SoccerGame
-  m_EditorClassIdentifier: KSY.Clients::KSY.Clients.MiniGameDataSO
-  sceneAsset: {fileID: 102900000, guid: c6c54282bca5437408197cb7e4642f80, type: 3}
-  sceneName: KSY_SoccerScene
+  m_Name: PassTheBomb
+  m_EditorClassIdentifier: KSY.Shared::KSY.Shared.MiniGameDataSO
+  sceneAsset: {fileID: 102900000, guid: 90416c0dd66224045b59c62f5a612382, type: 3}
+  <SceneName>k__BackingField: KSY_PassTheBomb
+  <gameName>k__BackingField: PassTheBomb
+  <miniGameEnum>k__BackingField: 7

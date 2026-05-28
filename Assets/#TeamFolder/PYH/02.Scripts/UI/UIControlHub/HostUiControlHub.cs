@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets._TeamFolder.PYH._02.Scripts.UI
 {
-    internal class HostUiControlHub : PopupUi
+    public class HostUiControlHub : PopupUi
     {
         [SerializeField] private CanvasGroup popupCanvas;
 
