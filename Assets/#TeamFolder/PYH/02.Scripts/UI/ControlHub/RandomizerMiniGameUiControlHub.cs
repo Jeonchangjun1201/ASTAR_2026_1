@@ -78,7 +78,6 @@ namespace _TeamFolder.PYH._02.Scripts.UI.Scene
             }
 
             SetMiniGameUi(resultMiniGame);
-            GameManager
             var args = new RandomizerMiniGameEndEvent(resultMiniGame);
             AStarEventBus.Publish<RandomizerMiniGameEndEvent>();
             _randomizerRoutine = null;
